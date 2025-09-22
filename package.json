@@ -48,7 +48,10 @@
     "telemetry:report": "tsx scripts/telemetry-report.ts",
     "changeset": "changeset",
     "changeset:version": "changeset version",
+    "changeset:tag": "changeset tag",
     "changeset:publish": "changeset publish",
+    "release:preflight": "git diff-index --quiet HEAD || (echo 'Working tree not clean. Commit or stash changes.' && exit 1)",
+    "release": "pnpm release:preflight && pnpm changeset:version && git add -A && git commit -m 'chore(release): version bumps' && pnpm changeset:tag && git push --follow-tags",
     "clean": "rm -rf .turbo coverage test-results playwright-report 2>/dev/null || true; find . -type f -name '*.tsbuildinfo' -print -delete 2>/dev/null || true"
   },
   "devDependencies": {

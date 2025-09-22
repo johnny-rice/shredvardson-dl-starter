@@ -1,18 +1,18 @@
 # 🏥 Starter Doctor Report
 
-**Generated:** 2025-09-21T16:41:18.094Z
+**Generated:** 2025-09-22T10:07:05.654Z
 **Status:** ⚠️ WARNINGS
 
 ## 📊 Summary
 
-- ✅ **Passed:** 13
+- ✅ **Passed:** 16
 - ⚠️ **Warnings:** 2
 - ❌ **Failed:** 0
 
 ## 📚 Learning Loop Metrics
 
 - **Micro-lessons total:** 1
-- **Top-10 updated:** 2025-09-21
+- **Top-10 updated:** 2025-09-22
 - **Display guard violations:** 0
 
 ## 📋 Issues by Category
