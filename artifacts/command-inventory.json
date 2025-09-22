@@ -1,5 +1,5 @@
 {
-  "generated": "2025-09-19T17:00:33.924Z",
+  "generated": "2025-09-21T16:41:18.119Z",
   "packages": {
     "web": {
       "scripts": {
@@ -68,6 +68,8 @@
         "docs:check": "tsx scripts/docs-check.ts",
         "pr:create": "tsx scripts/create-pr.ts",
         "wiki:generate": "node scripts/generate-wiki.js",
+        "learn:index": "node scripts/generate-learnings-index.js",
+        "learn:update-reuse": "bash scripts/update-micro-lesson-reuse.sh",
         "commands:generate": "node scripts/generate-command-index.js",
         "commands:check": "node scripts/generate-command-index.js && git diff --exit-code docs/commands/index.json || (echo 'Command index out of sync. Run: npm run commands:generate' && exit 1)",
         "commands:validate-inventory": "node scripts/validate-command-inventory.js",

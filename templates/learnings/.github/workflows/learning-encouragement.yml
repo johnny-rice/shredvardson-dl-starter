@@ -1,0 +1,85 @@
+name: Learning Encouragement
+
+# Positive reinforcement when micro-lessons are used in PRs
+# Security: Uses minimal permissions and only comments, never pushes code
+# Learnings Loop: idempotent workflow with explicit permissions
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, edited]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  encourage-learning:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.body, 'Used Micro-Lesson:')
+    
+    steps:
+      - name: Check for existing comment
+        id: check_comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Learnings Loop: check if we already posted a comment to avoid spam
+          EXISTING=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+            --jq '.[] | select(.body | contains("<!-- learnings-reinforcement:v1 -->")) | .id' || echo "")
+          
+          if [ -n "$EXISTING" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Found existing comment, skipping to avoid spam"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "No existing comment found"
+          fi
+
+      - name: Extract micro-lesson reference
+        id: extract
+        if: steps.check_comment.outputs.exists == 'false'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          # Extract micro-lesson slug from PR body
+          LESSON=$(echo "$PR_BODY" | grep -i "Used Micro-Lesson:" | head -1 | sed -E 's/.*Used Micro-Lesson:?\s*([a-zA-Z0-9_-]+).*/\1/' | tr -d ' ')
+          echo "lesson=$LESSON" >> $GITHUB_OUTPUT
+          echo "Found micro-lesson reference: $LESSON"
+
+      - name: Post encouragement comment
+        if: steps.check_comment.outputs.exists == 'false' && steps.extract.outputs.lesson != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LESSON: ${{ steps.extract.outputs.lesson }}
+        run: |
+          # Learnings Loop: failure tolerance for forks without write permissions
+          if ! gh auth status > /dev/null 2>&1; then
+            echo "⚠️ Warning: Cannot post comment (likely a fork without pull-requests:write permission)"
+            exit 0
+          fi
+          
+          # Create encouraging comment with hidden marker for idempotency
+          cat > comment.md << 'EOF'
+          🎉 **Great job using a micro-lesson!** 
+
+          You referenced: `${{ steps.extract.outputs.lesson }}`
+
+          This helps prevent repeat issues and keeps our learning sharp. 📚
+
+          **Top-10 Learning Index:** [docs/micro-lessons/INDEX.md](docs/micro-lessons/INDEX.md)
+
+          💡 **Close the loop:** If this lesson prevented rework, tick "Saved rework" in your PR checklist to help track impact.
+
+          <!-- learnings-reinforcement:v1 -->
+          ---
+          _Automated encouragement • Learning Loop v1_
+          EOF
+          
+          # Post the comment with error handling
+          if ! gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+            --field body="$(cat comment.md)" > /dev/null 2>&1; then
+            echo "⚠️ Warning: Failed to post comment (likely insufficient permissions)"
+            exit 0
+          fi
+          
+          echo "✅ Posted encouragement comment"

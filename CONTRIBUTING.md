@@ -24,6 +24,26 @@ pnpm doctor && pnpm lint && pnpm typecheck && pnpm build && pnpm test
 4. **Run quality checks** (see above)
 5. **Open PR** with filled-out template
 
+## Learning Loop in 60s
+
+When you discover a reusable pattern or fix a tricky issue:
+
+1. **Write ≤90s note** using `docs/micro-lessons/template.md`
+2. **Update index:** `pnpm learn:index` 
+3. **Tick PR checklist** and reference the lesson in "Used Micro-Lesson" field
+
+**Top-10 Index:** [docs/micro-lessons/INDEX.md](docs/micro-lessons/INDEX.md) - always fresh, auto-rotates by recency.
+
+**Promote only when repeated ≥2× or high blast radius.**
+**Validate**: run `pnpm doctor` before pushing; CI will block only on guardrail failures.
+
+**Micro-retro** (every other Friday, 10 min):
+- Review learnings metrics from CI job summaries + `uses-micro-lesson` PRs
+- **Decide**: promote (≥2 repeats or Severity=high), prune (90+ days unused), or keep in rotation
+- Capture one concrete "next guardrail" if new failure patterns emerge
+
+This keeps agent context lean and prevents repeat issues. The doctor tracks metrics automatically.
+
 ## Architecture Guardrails
 
 - **Use adapters:** All vendor SDKs go in `/lib/adapters/*` - never import directly in UI

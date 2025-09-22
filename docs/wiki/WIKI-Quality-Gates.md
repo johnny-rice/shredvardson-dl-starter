@@ -15,18 +15,19 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 ## Exact Merge Gates
 
 **Required for ALL merges:**
-1. **`pnpm doctor`** - Project health and compliance ✅
+1. **`pnpm doctor`** - Project health and compliance (includes learnings index & metrics) ✅
 2. **`pnpm typecheck`** - TypeScript compilation ✅
 3. **`pnpm lint`** - Code style and standards ✅  
 4. **`pnpm test:unit`** - Unit test coverage ✅
-5. **`pnpm test:e2e`** - End-to-end user flows ✅
+5. **`pnpm test:e2e`** - End-to-end user flows ✅ (if applicable; infra/docs-only PRs may mark N/A)
 6. **`pnpm build`** - Production build verification ✅
-7. **Human review** - Manual approval required ✅
+7. **Human review** - Manual approval required ✅ (always)
 
 **CI Jobs that must pass:**
-- **ci** – Main build pipeline (lint, typecheck, test, build)
+- **ci** – Main build pipeline (lint, typecheck, unit tests, build)
 - **doctor** – Repository health validation
 - **spec-gate** – Specification and governance checks
+- **e2e** – End-to-end test pipeline (if applicable)
 
 ## Individual Gates
 
@@ -38,8 +39,14 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 - Command inventory is up-to-date
 - Constitution checksum validation
 - Environment configuration validity
+- Learnings index present and up-to-date
+- LEARNINGS_STATS JSON emitted with:
+  - micro_lessons_total
+  - top10_updated_at (ISO‑8601 UTC)
+  - display_guard_violations_last_7d
+- Staleness policy: warn if `top10_updated_at` > 24h (non‑blocking)
 
-**Green Light**: All project references valid, no broken links, configs current
+**Green Light**: All references valid, no broken links, configs current; learnings index healthy; LEARNINGS_STATS JSON well‑formed (ISO‑8601), staleness ≤ 24h (or advisory warning acknowledged)
 
 ### TypeScript (`pnpm typecheck`)
 **Purpose**: Type safety and compilation verification  
@@ -80,7 +87,8 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 - Form submissions and interactions
 - Cross-browser compatibility
 
-**Green Light**: All user journeys complete successfully
+**Green Light**: All impacted user journeys complete successfully  
+Note: Infra/docs-only PRs may mark this gate N/A.
 
 ### Build Verification (`pnpm build`)
 **Purpose**: Production build success and optimization  

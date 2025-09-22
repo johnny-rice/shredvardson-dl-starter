@@ -107,3 +107,6 @@ storybook-static/
 .playwright-mcp/
 *.mcp.log
 .turbo/
+
+# Generated (ephemeral)
+artifacts/

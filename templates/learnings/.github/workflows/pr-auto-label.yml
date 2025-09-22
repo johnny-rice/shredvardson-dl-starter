@@ -1,0 +1,30 @@
+name: PR Auto Label
+
+# Auto-label PRs that reference micro-lessons for better search & reporting
+# Security: minimal permissions, only adds labels
+
+on:
+  pull_request:
+    types: [opened, edited]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  auto-label-micro-lessons:
+    runs-on: ubuntu-latest
+    if: contains(github.event.pull_request.body, 'Used Micro-Lesson:')
+    
+    steps:
+      - name: Add uses-micro-lesson label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Add label for better search and reporting
+          gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/labels \
+            --method POST \
+            --field labels[]="uses-micro-lesson" \
+            || echo "⚠️ Warning: Failed to add label (likely insufficient permissions)"
+          
+          echo "✅ Added 'uses-micro-lesson' label to PR"

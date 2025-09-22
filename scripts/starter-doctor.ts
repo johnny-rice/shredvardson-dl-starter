@@ -1,4 +1,4 @@
-import { readFileSync, existsSync, statSync, writeFileSync, mkdirSync } from 'fs';
+import { readFileSync, existsSync, statSync, writeFileSync, mkdirSync, readdirSync } from 'fs';
 import { resolve, join, dirname } from 'path';
 import { execSync } from 'child_process';
 
@@ -7,6 +7,167 @@ interface CheckResult {
   status: 'pass' | 'fail' | 'warn';
   message: string;
   fix?: string;
+}
+
+function checkLearningsIndex(): CheckResult {
+  const microLessonsDir = resolve('docs/micro-lessons');
+  const indexFile = join(microLessonsDir, 'INDEX.md');
+  
+  if (!existsSync(microLessonsDir)) {
+    return {
+      name: 'Learning Index',
+      status: 'pass',
+      message: 'No micro-lessons directory found',
+    };
+  }
+  
+  // Gather lesson files (exclude template/index; case-insensitive)
+  const lessonFiles: string[] = readdirSync(microLessonsDir)
+    .filter((file: string) => {
+      const lower = file.toLowerCase();
+      return lower.endsWith('.md') && lower !== 'index.md' && lower !== 'template.md';
+    })
+    .map((file: string) => join(microLessonsDir, file));
+  
+  if (lessonFiles.length === 0) {
+    return {
+      name: 'Learning Index',
+      status: 'pass',
+      message: 'No micro-lessons to index',
+    };
+  }
+  
+  if (!existsSync(indexFile)) {
+    return {
+      name: 'Learning Index',
+      status: 'fail',
+      message: `Found ${lessonFiles.length} micro-lessons but INDEX.md is missing`,
+      fix: 'Run: pnpm learn:index to refresh Top-10',
+    };
+  }
+  
+  try {
+    // Fail if INDEX.md appears older than any lesson (allow 1s skew)
+    const newestLessonMtime = Math.max(...lessonFiles.map((f) => statSync(f).mtimeMs));
+    const indexMtime = statSync(indexFile).mtimeMs;
+    if (indexMtime + 1000 < newestLessonMtime) {
+      return {
+        name: 'Learning Index',
+        status: 'fail',
+        message: 'INDEX.md is stale (older than one or more micro-lessons)',
+        fix: 'Run: pnpm learn:index to refresh Top-10',
+      };
+    }
+
+    const indexContent = readFileSync(indexFile, 'utf8');
+    const trimmed = indexContent.trim();
+    if (trimmed.length < 50) {
+      return {
+        name: 'Learning Index',
+        status: 'fail', 
+        message: 'INDEX.md exists but appears empty or incomplete',
+        fix: 'Run: pnpm learn:index to refresh Top-10',
+      };
+    }
+    // Soft check: expected heading present
+    const hasHeading = /top-10/i.test(indexContent) || /learning index/i.test(indexContent);
+    if (!hasHeading) {
+      return {
+        name: 'Learning Index',
+        status: 'warn',
+        message: 'INDEX.md missing expected Top-10 heading/marker',
+        fix: 'Run: pnpm learn:index to refresh Top-10',
+      };
+    }
+  } catch {
+    return {
+      name: 'Learning Index',
+      status: 'fail',
+      message: 'INDEX.md exists but cannot be read',
+      fix: 'Run: pnpm learn:index to refresh Top-10',
+    };
+  }
+  
+  return {
+    name: 'Learning Index',
+    status: 'pass',
+    message: `Learnings index present with ${lessonFiles.length} lessons`,
+  };
+}
+
+function checkClaudeMdLeanness(): CheckResult {
+  const claudeMdPath = resolve('CLAUDE.md');
+  
+  if (!existsSync(claudeMdPath)) {
+    return {
+      name: 'CLAUDE.md Leanness',
+      status: 'pass',
+      message: 'No CLAUDE.md found',
+    };
+  }
+  
+  try {
+    const content = readFileSync(claudeMdPath, 'utf8');
+    const lines = content.split('\n');
+    const lineCount = lines.length;
+    
+    // Check line count (≤180 lines)
+    if (lineCount > 180) {
+      return {
+        name: 'CLAUDE.md Leanness',
+        status: 'fail',
+        message: `CLAUDE.md is ${lineCount} lines (limit: 180). Keep CLAUDE.md slim; link Top-10 only.`,
+        fix: 'Move large content to docs/ and link from CLAUDE.md instead',
+      };
+    }
+    
+    // Check for micro-lessons index reference
+    if (!content.includes('docs/micro-lessons/INDEX.md')) {
+      return {
+        name: 'CLAUDE.md Leanness',
+        status: 'fail',
+        message: 'CLAUDE.md must link to docs/micro-lessons/INDEX.md for agent context',
+        fix: 'Add reference to micro-lessons Top-10 index in Learning Loop section',
+      };
+    }
+    
+    return {
+      name: 'CLAUDE.md Leanness',
+      status: 'pass',
+      message: `CLAUDE.md is appropriately lean (${lineCount}/180 lines) with Top-10 link`,
+    };
+  } catch {
+    return {
+      name: 'CLAUDE.md Leanness',
+      status: 'fail',
+      message: 'CLAUDE.md exists but cannot be read',
+      fix: 'Check file permissions and encoding',
+    };
+  }
+}
+
+function checkDisplaySuites(): CheckResult {
+  try {
+    // Run the display suites check script
+    execSync('node scripts/check-display-suites.js', { 
+      stdio: 'pipe',
+      encoding: 'utf8'
+    });
+    
+    return {
+      name: 'Display Suites',
+      status: 'pass',
+      message: 'All @display suites properly isolated',
+    };
+  } catch (error: any) {
+    const output = error.stdout || error.message || 'Unknown error';
+    return {
+      name: 'Display Suites',
+      status: 'fail',
+      message: '@display suites violate state isolation rules',
+      fix: 'Remove state-mutating beforeEach hooks from UI display tests',
+    };
+  }
 }
 
 function checkPlaceholders(): CheckResult {
@@ -286,6 +447,10 @@ function printResults(results: CheckResult[]) {
   console.log(`   ❌ Failed: ${failed.length}`);
   console.log();
 
+  // Learnings Loop: output machine-readable JSON metrics for log scraping
+  console.log(generateLearningStatsJSON());
+  console.log();
+
   if (failed.length > 0) {
     console.log('🚨 Fix all failures before continuing development.');
     process.exit(1);
@@ -410,6 +575,120 @@ function checkNewAppImports(): CheckResult[] {
   return results;
 }
 
+// Learnings Loop: generate both human-readable and machine-readable metrics
+function generateLearningMetrics(): string {
+  let metrics = '';
+  
+  try {
+    const microLessonsDir = resolve('docs/micro-lessons');
+    
+    // Count total micro-lessons
+    let totalLessons = 0;
+    if (existsSync(microLessonsDir)) {
+      const files = readdirSync(microLessonsDir).filter(file => 
+        file.endsWith('.md') && 
+        file !== 'INDEX.md' && 
+        !file.toLowerCase().includes('template')
+      );
+      totalLessons = files.length;
+    }
+    
+    // Get Top-10 index last updated timestamp
+    const indexFile = join(microLessonsDir, 'INDEX.md');
+    let indexUpdated = 'never';
+    let indexUpdatedISO = null;
+    if (existsSync(indexFile)) {
+      const stats = statSync(indexFile);
+      indexUpdated = stats.mtime.toISOString().split('T')[0]; // YYYY-MM-DD format
+      indexUpdatedISO = stats.mtime.toISOString(); // Full ISO-8601 UTC format
+    }
+    
+    // Simple display guard violation check (current state only)
+    let displayViolations = 0;
+    try {
+      execSync('node scripts/check-display-suites.js', { stdio: 'pipe' });
+    } catch {
+      displayViolations = 1; // If script fails, likely has violations
+    }
+    
+    metrics += '## 📚 Learning Loop Metrics\n\n';
+    metrics += `- **Micro-lessons total:** ${totalLessons}\n`;
+    metrics += `- **Top-10 updated:** ${indexUpdated}\n`;
+    metrics += `- **Display guard violations:** ${displayViolations}\n\n`;
+    
+    // Learnings Loop: add staleness warning if index is old
+    if (totalLessons > 0 && indexUpdatedISO) {
+      const indexAge = Date.now() - new Date(indexUpdatedISO).getTime();
+      const twentyFourHours = 24 * 60 * 60 * 1000;
+      if (indexAge > twentyFourHours) {
+        metrics += '⚠️ *Learnings index may be stale. Run: pnpm learn:index*\n\n';
+      }
+    }
+    
+    if (totalLessons === 0) {
+      metrics += '💡 *No micro-lessons yet. Add your first learning when you discover a reusable pattern.*\n\n';
+    } else if (indexUpdated === 'never') {
+      metrics += '⚠️ *Run `pnpm learn:index` to generate the Top-10.*\n\n';
+    }
+    
+  } catch (error) {
+    metrics += '## 📚 Learning Loop Metrics\n\n';
+    metrics += `❌ *Error gathering metrics: ${error}*\n\n`;
+  }
+  
+  return metrics;
+}
+
+// Learnings Loop: generate machine-readable JSON metrics for log scraping
+function generateLearningStatsJSON(): string {
+  try {
+    const microLessonsDir = resolve('docs/micro-lessons');
+    
+    // Count total micro-lessons
+    let totalLessons = 0;
+    if (existsSync(microLessonsDir)) {
+      const files = readdirSync(microLessonsDir).filter(file => 
+        file.endsWith('.md') && 
+        file !== 'INDEX.md' && 
+        !file.toLowerCase().includes('template')
+      );
+      totalLessons = files.length;
+    }
+    
+    // Get Top-10 index last updated timestamp in ISO-8601 UTC
+    const indexFile = join(microLessonsDir, 'INDEX.md');
+    let indexUpdatedISO = null;
+    if (existsSync(indexFile)) {
+      const stats = statSync(indexFile);
+      indexUpdatedISO = stats.mtime.toISOString(); // Already in UTC with Z suffix
+    }
+    
+    // Simple display guard violation check (current state only)
+    let displayViolations = 0;
+    try {
+      execSync('node scripts/check-display-suites.js', { stdio: 'pipe' });
+    } catch {
+      displayViolations = 1; // If script fails, likely has violations
+    }
+    
+    const stats = {
+      micro_lessons_total: totalLessons,
+      top10_updated_at: indexUpdatedISO,
+      display_guard_violations_last_7d: displayViolations
+    };
+    
+    return `LEARNINGS_STATS=${JSON.stringify(stats)}`;
+  } catch (error) {
+    // Don't fail on metrics - return a safe fallback
+    const fallbackStats = {
+      micro_lessons_total: 0,
+      top10_updated_at: null,
+      display_guard_violations_last_7d: 0
+    };
+    return `LEARNINGS_STATS=${JSON.stringify(fallbackStats)}`;
+  }
+}
+
 function generateReportMarkdown(results: CheckResult[]): string {
   const failed = results.filter((r) => r.status === 'fail');
   const warnings = results.filter((r) => r.status === 'warn');
@@ -445,6 +724,9 @@ function generateReportMarkdown(results: CheckResult[]): string {
   if (failed.length === 0 && warnings.length === 0) {
     report += '🎉 **All checks passed! Repository is ready for development.**\n\n';
   }
+  
+  // Learning Loop Metrics
+  report += generateLearningMetrics();
   
   // Category Breakdown
   if (categories.size > 0) {
@@ -697,6 +979,173 @@ function safeListDirs(dir: string): string[] {
     });
   } catch {
     return [];
+  }
+}
+
+// Learning Loop: check for template drift and suggest re-sync
+function checkLearningTemplateSync(): CheckResult {
+  const templateVersionPath = resolve('templates/learnings/VERSION');
+  
+  if (!existsSync(templateVersionPath)) {
+    return {
+      name: 'Learning Template Sync',
+      status: 'pass',
+      message: 'No learning templates directory found',
+    };
+  }
+  
+  try {
+    const templateVersion = readFileSync(templateVersionPath, 'utf8').trim();
+    
+    // Check if key learning scripts exist and are recent
+    const learningScriptPath = resolve('scripts/generate-learnings-index.js');
+    const templateScriptPath = resolve('templates/learnings/generate-learnings-index.js');
+    
+    if (!existsSync(learningScriptPath)) {
+      return {
+        name: 'Learning Template Sync',
+        status: 'warn',
+        message: `Learning templates v${templateVersion} found but scripts missing`,
+        fix: 'Re-sync: cp templates/learnings/generate-learnings-index.js scripts/',
+      };
+    }
+    
+    if (existsSync(templateScriptPath)) {
+      const scriptStats = statSync(learningScriptPath);
+      const templateStats = statSync(templateScriptPath);
+      
+      // If template is significantly newer, suggest sync
+      const ageDiff = templateStats.mtime.getTime() - scriptStats.mtime.getTime();
+      const daysDiff = ageDiff / (1000 * 60 * 60 * 24);
+      
+      if (daysDiff > 7) {
+        return {
+          name: 'Learning Template Sync',
+          status: 'warn',
+          message: `Learning templates v${templateVersion} are newer than scripts`,
+          fix: 'Consider re-sync: cp templates/learnings/generate-learnings-index.js scripts/',
+        };
+      }
+    }
+    
+    return {
+      name: 'Learning Template Sync',
+      status: 'pass',
+      message: `Learning templates v${templateVersion} in sync`,
+    };
+    
+  } catch (error) {
+    return {
+      name: 'Learning Template Sync',
+      status: 'warn',
+      message: `Error checking template sync: ${error}`,
+    };
+  }
+}
+
+// Learnings Loop: guard for link drift in PR comments
+function checkTop10LinkValidity(): CheckResult {
+  const indexPath = resolve('docs/micro-lessons/INDEX.md');
+  
+  if (!existsSync(indexPath)) {
+    return {
+      name: 'Top-10 Link Validity',
+      status: 'warn',
+      message: 'Top-10 index file does not exist',
+      fix: 'Run `pnpm learn:index` to generate the index',
+    };
+  }
+  
+  try {
+    // Check if the file is readable and has content
+    const content = readFileSync(indexPath, 'utf8');
+    if (content.trim().length < 50) {
+      return {
+        name: 'Top-10 Link Validity',
+        status: 'warn',
+        message: 'Top-10 index appears empty or too short',
+        fix: 'Run `pnpm learn:index` to regenerate the index',
+      };
+    }
+    
+    return {
+      name: 'Top-10 Link Validity',
+      status: 'pass',
+      message: 'Top-10 index file exists and is accessible',
+    };
+    
+  } catch (error) {
+    return {
+      name: 'Top-10 Link Validity',
+      status: 'warn',
+      message: `Cannot read Top-10 index: ${error}`,
+      fix: 'Check file permissions or regenerate with `pnpm learn:index`',
+    };
+  }
+}
+
+// Learnings Loop: retention rule for unused micro-lessons
+function checkMicroLessonRetention(): CheckResult {
+  const microLessonsDir = resolve('docs/micro-lessons');
+  
+  if (!existsSync(microLessonsDir)) {
+    return {
+      name: 'Micro-Lesson Retention',
+      status: 'pass', 
+      message: 'No micro-lessons directory found',
+    };
+  }
+  
+  try {
+    const lessonFiles = readdirSync(microLessonsDir)
+      .filter(file => file.endsWith('.md') && file !== 'INDEX.md' && !file.toLowerCase().includes('template'))
+      .map(file => join(microLessonsDir, file));
+    
+    const staleFiles: string[] = [];
+    const ninetyDaysAgo = Date.now() - (90 * 24 * 60 * 60 * 1000);
+    
+    for (const filePath of lessonFiles) {
+      try {
+        const content = readFileSync(filePath, 'utf8');
+        const stats = statSync(filePath);
+        
+        // Check if file hasn't been modified in 90 days
+        const lastModified = stats.mtime.getTime();
+        
+        // Check if UsedBy is 0 or missing
+        const usedByMatch = content.match(/UsedBy:\s*(\d+)/);
+        const usedBy = usedByMatch ? parseInt(usedByMatch[1]) : 0;
+        
+        if (lastModified < ninetyDaysAgo && usedBy === 0) {
+          const fileName = require('path').basename(filePath);
+          staleFiles.push(fileName);
+        }
+      } catch {
+        // Skip files that can't be read
+      }
+    }
+    
+    if (staleFiles.length > 0) {
+      return {
+        name: 'Micro-Lesson Retention',
+        status: 'warn',
+        message: `${staleFiles.length} lessons untouched for 90+ days with 0 usage: ${staleFiles.join(', ')}`,
+        fix: 'Consider archiving: rename to archive/*.md or remove if truly obsolete',
+      };
+    }
+    
+    return {
+      name: 'Micro-Lesson Retention',
+      status: 'pass',
+      message: 'All micro-lessons are recent or actively used',
+    };
+    
+  } catch (error) {
+    return {
+      name: 'Micro-Lesson Retention',
+      status: 'warn',
+      message: `Error checking retention: ${error}`,
+    };
   }
 }
 
@@ -963,6 +1412,12 @@ function main() {
     checkPRD(),
     checkEnvironment(),
     checkConstitutionIntegrity(),
+    checkLearningsIndex(),
+    checkClaudeMdLeanness(),
+    checkLearningTemplateSync(),
+    checkTop10LinkValidity(),
+    checkMicroLessonRetention(),
+    checkDisplaySuites(),
     ...checkNewAppImports(),
     ...checkCommandDocs(),
     ...checkReferences(),

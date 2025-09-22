@@ -16,6 +16,7 @@
   - Why (link to issue/spec)
   - Screenshots/GIF if UI
   - Test plan (what you ran)
+- If review uncovers a reusable pattern, add a Micro‑Lesson (≤90s) via [template](../micro-lessons/template.md), run `pnpm learn:index`, and tick the PR checklist
 - Prefer using the automation in [Commands](./WIKI-Commands.md) to generate PRs.
 
 ## Required Scripts / Jobs (document the happy path)
