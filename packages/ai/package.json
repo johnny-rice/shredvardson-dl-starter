@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@shared/types": "workspace:*",
-    "zod": "^4.1.8"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@shared/config": "workspace:*",
