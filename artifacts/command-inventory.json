@@ -1,5 +1,5 @@
 {
-  "generated": "2025-09-22T20:36:33.227Z",
+  "generated": "2025-09-23T14:16:35.545Z",
   "packages": {
     "web": {
       "scripts": {
@@ -82,8 +82,8 @@
         "changeset:version": "changeset version",
         "changeset:tag": "changeset tag",
         "changeset:publish": "changeset publish",
-        "release:preflight": "git diff-index --quiet HEAD || (echo 'Working tree not clean. Commit or stash changes.' && exit 1)",
-        "release": "pnpm release:preflight && pnpm changeset:version && git add -A && git commit -m 'chore(release): version bumps' && pnpm changeset:tag && git push --follow-tags",
+        "release:preflight": "test -z \"$(git status --porcelain)\" || (echo 'Working tree not clean. Commit, stash, or clean untracked files.' && exit 1)",
+        "release": "pnpm release:preflight && pnpm changeset:version && git add -A && git diff --cached --quiet || git commit -m 'chore(release): version bumps'; pnpm changeset:tag && git push --follow-tags",
         "clean": "rm -rf .turbo coverage test-results playwright-report 2>/dev/null || true; find . -type f -name '*.tsbuildinfo' -print -delete 2>/dev/null || true"
       },
       "dir": "."

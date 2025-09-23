@@ -1,18 +1,18 @@
 # 🏥 Starter Doctor Report
 
-**Generated:** 2025-09-22T20:36:33.143Z
-**Status:** ❌ FAILED
+**Generated:** 2025-09-23T14:16:35.521Z
+**Status:** ⚠️ WARNINGS
 
 ## 📊 Summary
 
-- ✅ **Passed:** 18
-- ⚠️ **Warnings:** 5
-- ❌ **Failed:** 3
+- ✅ **Passed:** 22
+- ⚠️ **Warnings:** 4
+- ❌ **Failed:** 0
 
 ## 📚 Learning Loop Metrics
 
-- **Micro-lessons total:** 10
-- **Top-10 updated:** 2025-09-22
+- **Micro-lessons total:** 19
+- **Top-10 updated:** 2025-09-23
 - **Display guard violations:** 0
 
 ## 📋 Issues by Category
@@ -25,60 +25,28 @@
 ⚠️ **Missing environment variables: NEXT_PUBLIC_FLAG_BETA_FEATURE, AUTH_ENABLED, NEXT_PUBLIC_POSTHOG_KEY, NEXT_PUBLIC_SENTRY_DSN, SENTRY_DSN, SENTRY_ORG, SENTRY_PROJECT, DATABASE_URL, NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET**
    💡 *Fix: Add missing keys to .env.local or update Vercel Environment Variables*
 
-### ❌ Constitution Integrity
-
-- Failures: 1
-- Warnings: 0
-
-❌ **Constitution checksum is stale - binding sources have changed**
-   💡 *Fix: Checksum has been updated. Review changes and commit the updated CONSTITUTION.CHECKSUM*
-
-### ❌ Learning Index
-
-- Failures: 1
-- Warnings: 0
-
-❌ **INDEX.md is stale (older than one or more micro-lessons)**
-   💡 *Fix: Run: pnpm learn:index to refresh Top-10*
-
-### ⚠️ Commands in CLAUDE.md
-
-- Failures: 0
-- Warnings: 1
-
-⚠️ **22/23 commands referenced in CLAUDE.md**
-   💡 *Fix: Add missing command references to CLAUDE.md*
-
 ### ⚠️ Artifacts Directory
 
 - Failures: 0
 - Warnings: 1
 
-⚠️ **artifacts/ contains 2 files (should be generated only)**
-   💡 *Fix: Remove tracked files from artifacts/ or add to .gitignore*
+⚠️ **artifacts/ has 2 file(s) besides .keep**
+   💡 *Fix: Keep artifacts untracked; remove committed files or add to .gitignore*
 
 ### ⚠️ Docs Headers
 
 - Failures: 0
 - Warnings: 1
 
-⚠️ **41 docs missing standard headers**
+⚠️ **52 docs missing standard headers**
    💡 *Fix: Add H1, summary, and "When to use" sections to docs*
-
-### ❌ Prompt Headers
-
-- Failures: 1
-- Warnings: 0
-
-❌ **1 prompts missing standard headers**
-   💡 *Fix: Add Intent, Inputs, Expected Output, and Risks/Guardrails to prompt headers*
 
 ### ⚠️ Doc Links
 
 - Failures: 0
 - Warnings: 1
 
-⚠️ **13 broken relative links found**
+⚠️ **7 broken relative links found**
    💡 *Fix: Fix or remove broken markdown links*
 
 ## 🔧 How to Reproduce Locally
@@ -87,13 +55,6 @@
 pnpm install
 pnpm run doctor
 ```
-
-## 🛠️ Remediation Steps
-
-1. Address each ❌ failure listed above
-2. Run `pnpm run doctor` locally to verify fixes
-3. Commit fixes and push to re-trigger CI
-4. Add items to `.doctor-allowlist.json` only if they are intentional
 
 ---
 
