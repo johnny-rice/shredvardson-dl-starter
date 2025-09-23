@@ -58,23 +58,30 @@ function main() {
     }
   });
 
-  // Generate checksums (files only)
+  // Generate checksums (files only, sorted alphabetically)
   const checksums: Record<string, string> = {};
   let fileCount = 0;
 
-  bindingSources.forEach((file) => {
-    const hash = hashFile(resolve(file));
-    if (hash !== null) {
-      checksums[file] = hash;
-      fileCount++;
-    }
-  });
+  Array.from(new Set(bindingSources))
+    .sort((a, b) => a.localeCompare(b, 'en'))
+    .forEach((file) => {
+      const hash = hashFile(resolve(file));
+      if (hash && hash !== 'missing') {
+        checksums[file] = hash;
+        fileCount++;
+      }
+    });
 
-  // Write checksum file
+  // Write checksum file with deterministic key ordering
+  const sortedChecksums = Object.fromEntries(
+    Object.entries(checksums).sort(([a], [b]) => a.localeCompare(b))
+  );
+  
   const checksumContent = {
     generated: new Date().toISOString(),
-    version: '0.1.0',
-    checksums,
+    version: '0.1.1',
+    algorithm: 'sha256-trunc16',
+    checksums: sortedChecksums,
   };
 
   writeFileSync(checksumPath, JSON.stringify(checksumContent, null, 2) + '\n');

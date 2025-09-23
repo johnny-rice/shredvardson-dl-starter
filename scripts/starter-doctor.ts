@@ -1626,7 +1626,7 @@ function checkPromptStructure(): CheckResult[] {
   const results: CheckResult[] = [];
   
   try {
-    const promptsPath = resolve('prompts');
+    const promptsPath = resolve('packages/ai/prompts');
     if (!existsSync(promptsPath)) {
       return [{
         name: 'Prompt Structure',
@@ -1811,7 +1811,7 @@ function checkDocLinks(): CheckResult[] {
             }
             
             if (!existsSync(absolutePath)) {
-              brokenLinks.push(`${file}: ${linkPath}`);
+              brokenLinks.push(`${relative(process.cwd(), file).split(sep).join('/')}: ${linkPath}`);
             }
           }
         }
@@ -1927,10 +1927,71 @@ function checkWikiPRDSync(): CheckResult {
   }
 }
 
+function checkForOverrideLabel(): boolean {
+  try {
+    // Prefer GitHub event payload (no external deps)
+    const evPath = process.env.GITHUB_EVENT_PATH;
+    const eventName = process.env.GITHUB_EVENT_NAME;
+    if (evPath && existsSync(evPath) && (eventName === 'pull_request' || eventName === 'pull_request_target')) {
+      const eventData = JSON.parse(readFileSync(evPath, 'utf8'));
+      const labels = (eventData.pull_request?.labels ?? []).map((l: any) => (l.name || '').toLowerCase());
+      return labels.includes('override:adr');
+    }
+    
+    // Fallback to gh CLI if available
+    const prNumber = process.env.GITHUB_PR_NUMBER ||
+      (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
+    if (!prNumber) return false;
+    
+    const env = { ...process.env, GH_TOKEN: process.env.GH_TOKEN || process.env.GITHUB_TOKEN };
+    const labelsJson = execSync(`gh pr view ${prNumber} --json labels`, { 
+      encoding: 'utf8', 
+      stdio: 'pipe', 
+      env 
+    });
+    const labels = JSON.parse(labelsJson).labels || [];
+    return labels.some((label: any) => (label.name || '').toLowerCase() === 'override:adr');
+  } catch (error) {
+    return false;
+  }
+}
+
+function checkForADRReference(): boolean {
+  try {
+    // Prefer GitHub event payload (no external deps)
+    const evPath = process.env.GITHUB_EVENT_PATH;
+    const eventName = process.env.GITHUB_EVENT_NAME;
+    if (evPath && existsSync(evPath) && (eventName === 'pull_request' || eventName === 'pull_request_target')) {
+      const eventData = JSON.parse(readFileSync(evPath, 'utf8'));
+      const prBody = eventData.pull_request?.body || '';
+      const adrPattern = /\bADR-\d+\b/i;
+      return adrPattern.test(prBody);
+    }
+    
+    // Fallback to gh CLI if available
+    let prNumber = process.env.GITHUB_PR_NUMBER ||
+      (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
+    if (!prNumber) return false;
+    
+    const env = { ...process.env, GH_TOKEN: process.env.GH_TOKEN || process.env.GITHUB_TOKEN };
+    const prJson = execSync(`gh pr view ${prNumber} --json body`, { 
+      encoding: 'utf8', 
+      stdio: 'pipe', 
+      env 
+    });
+    const prBody = JSON.parse(prJson).body || '';
+    const adrPattern = /\bADR-\d+\b/i;
+    return adrPattern.test(prBody);
+  } catch (error) {
+    return false;
+  }
+}
+
 function checkADRCompliance(): CheckResult {
   // Only run this check in CI for PR validation
   const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
-  const isPR = process.env.GITHUB_EVENT_NAME === 'pull_request';
+  const eventName = process.env.GITHUB_EVENT_NAME;
+  const isPR = eventName === 'pull_request' || eventName === 'pull_request_target';
   
   if (!isCI || !isPR) {
     return {
@@ -1943,12 +2004,10 @@ function checkADRCompliance(): CheckResult {
   try {
     // Check if PR modifies trigger paths that require ADRs
     const triggerPaths = [
-      'prompts/**',
+      'packages/ai/prompts/**',
       'scripts/**', 
-      'docs/wiki/**',
-      'docs/llm/**',
-      '.claude/commands/**',
-      'docs/llm/CONSTITUTION.md'
+      '.github/workflows/**',
+      'docs/wiki/**'
     ];
     
     // Get list of changed files from git using robust PR base detection
@@ -1989,12 +2048,32 @@ function checkADRCompliance(): CheckResult {
       };
     }
     
-    // For now, just warn about requiring ADR reference
+    // Check for override label first
+    const hasOverride = checkForOverrideLabel();
+    if (hasOverride) {
+      return {
+        name: 'ADR Compliance',
+        status: 'warn',
+        message: `PR modifies ${triggeredPaths.length} files requiring ADR documentation (override:adr label detected)`,
+        fix: 'Override label used - ensure ADR is added post-merge if needed',
+      };
+    }
+
+    // Check if PR body contains ADR reference
+    const hasADRReference = checkForADRReference();
+    if (!hasADRReference) {
+      return {
+        name: 'ADR Compliance',
+        status: 'fail',
+        message: `PR modifies ${triggeredPaths.length} files requiring ADR documentation but no ADR reference found`,
+        fix: 'Add ADR reference (ADR-XXX) to PR description or use override:adr label for emergencies',
+      };
+    }
+
     return {
       name: 'ADR Compliance',
-      status: 'warn',
-      message: `PR modifies ${triggeredPaths.length} files requiring ADR documentation`,
-      fix: 'Ensure PR description includes ADR reference (ADR-XXX) if this is an architectural change',
+      status: 'pass',
+      message: 'ADR reference found for governance changes',
     };
     
   } catch (error) {

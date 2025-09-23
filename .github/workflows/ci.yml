@@ -49,6 +49,8 @@ jobs:
       - name: Run doctor
         env:
           DOCTOR_SILENT: 1
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
         run: pnpm run doctor:report
 
       - name: Audit large files (blocking)

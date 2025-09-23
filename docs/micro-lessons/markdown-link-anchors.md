@@ -7,15 +7,15 @@ Doc link checkers fail when markdown links include anchors (`#section`) or query
 Strip anchors and query parameters before checking file existence:
 
 ```typescript
-// Before: fails on [link](file.md#section)
-const linkPath = match[2];
+// Before: fails when linkPath includes anchors
+const linkPath = match[2]; // e.g., "file.md#section"
 if (!existsSync(resolve(dirname(file), linkPath))) {
-  // Error: file.md#section doesn't exist
+  // Error: tries to find "file.md#section" as filename
 }
 
-// After: handles anchors and queries correctly
+// After: handles anchors and queries correctly  
 const linkPath = match[2];
-const cleanPath = linkPath.split('#')[0].split('?')[0];
+const cleanPath = linkPath.split('#')[0].split('?')[0]; // Remove #section
 if (cleanPath.endsWith('.md') && !cleanPath.startsWith('http')) {
   const absolutePath = resolve(dirname(file), cleanPath);
   if (!existsSync(absolutePath)) {

@@ -8,7 +8,7 @@ _What changed and why in 1–3 sentences._
 - **Spec ID:** `SPEC-YYYYMMDD-feature-name` (if applicable)
 - **Plan ID:** `PLAN-YYYYMMDD-feature-name` (if applicable)
 - **Task ID:** `TASK-YYYYMMDD-feature-name` (if applicable)
-- **ADR Reference:** `ADR-XXX` (required if modifying prompts, workflows, security guardrails, or repo structure)
+- **ADR Reference:** `ADR-XXX` (**REQUIRED** for changes to packages/ai/prompts/**, scripts/**, .github/workflows/**, docs/wiki/**. Use `override:adr` label for emergencies only.)
 
 ## Scope
 - [ ] Single task type (feature/refactor/test/docs)

@@ -133,7 +133,7 @@ When you open a PR:
 See [docs/workflow-security.md](../workflow-security.md) for complete review commands, operational controls, and security guidelines.
 
 ## References
-- [CONTRIBUTING.md](../CONTRIBUTING.md) · [RELEASING.md](../RELEASING.md) · [SECURITY.md](../SECURITY.md)
+- [CONTRIBUTING.md](../../CONTRIBUTING.md) · [RELEASING.md](../../RELEASING.md) · [SECURITY.md](../../SECURITY.md)
 - [Auth Recipe](../recipes/auth.md) · [Database Recipe](../recipes/db.md) · [Environment Setup](../recipes/env-setup.md) · [Stripe Recipe](../recipes/stripe.md) · [ShadCN Recipe](../recipes/shadcn.md)
 
 ## Testing Notes
