@@ -51,6 +51,20 @@ jobs:
           DOCTOR_SILENT: 1
         run: pnpm run doctor:report
 
+      - name: Audit large files (blocking)
+        run: pnpm audit:large
+
+      - name: Audit traceability (if traceability dirs exist)
+        run: |
+          set -euo pipefail
+          if [ -d "specs" ] || [ -d "plans" ] || [ -d "tasks" ]; then
+            echo "📋 Traceability artifacts detected, running validation..."
+            # Ensure tsx is available after dependency installation
+            pnpm audit:traceability || pnpm dlx tsx scripts/validate-traceability.ts
+          else
+            echo "📋 No traceability artifacts found, skipping validation"
+          fi
+
       - name: Scrape AI Reviews from PR Comments
         if: always() && github.event_name == 'pull_request'
         env:
@@ -65,18 +79,18 @@ jobs:
           echo "PR head SHA: $PR_HEAD_SHA"
 
           # Get AI review comment content with anti-poisoning validation
-          AI_REVIEW_CONTENT=$(gh api repos/${{ github.repository }}/issues/$PR_NUMBER/comments \
-            --jq --arg sha "$PR_HEAD_SHA" '.[] |
-            select(.user.login == "github-actions[bot]") |
-            select(.body | contains("<!-- ai-review:v1") and contains($sha)) |
-            .body' 2>/dev/null || true)
+          AI_REVIEW_CONTENT=$(gh api repos/${{ github.repository }}/issues/$PR_NUMBER/comments 2>/dev/null \
+            | jq -r --arg sha "$PR_HEAD_SHA" '.[]
+              | select(.user.login=="github-actions[bot]")
+              | select(.body|contains("<!-- ai-review:v1") and contains($sha))
+              | .body' || true)
 
           # Get AI security review comment content with anti-poisoning validation
-          AI_SEC_CONTENT=$(gh api repos/${{ github.repository }}/issues/$PR_NUMBER/comments \
-            --jq --arg sha "$PR_HEAD_SHA" '.[] |
-            select(.user.login == "github-actions[bot]") |
-            select(.body | contains("<!-- ai-sec-review:v1") and contains($sha)) |
-            .body' 2>/dev/null || true)
+          AI_SEC_CONTENT=$(gh api repos/${{ github.repository }}/issues/$PR_NUMBER/comments 2>/dev/null \
+            | jq -r --arg sha "$PR_HEAD_SHA" '.[]
+              | select(.user.login=="github-actions[bot]")
+              | select(.body|contains("<!-- ai-sec-review:v1") and contains($sha))
+              | .body' || true)
 
           # Extract and append AI review content
           if [ -n "$AI_REVIEW_CONTENT" ]; then
@@ -96,19 +110,21 @@ jobs:
 
           # Add separator if any AI content was found; otherwise append a literal fallback block
           if [ -n "$AI_REVIEW_CONTENT" ] || [ -n "$AI_SEC_CONTENT" ]; then
-            echo "---" >> artifacts/doctor-report.md
-            echo "*AI reviews aggregated by comment-scrape pipeline*" >> artifacts/doctor-report.md
-            echo "" >> artifacts/doctor-report.md
+            {
+              echo "---"
+              echo "*AI reviews aggregated by comment-scrape pipeline*"
+              echo ""
+            } >> artifacts/doctor-report.md
           else
             # Graceful fallback - AI review not available but don't block CI
-            printf '%s\n' \
-              '## ℹ️ AI Review Status' \
-              '' \
-              'AI review not available for this PR (no matching comments found for the current head SHA).' \
-              '' \
-              '> Advisory AI reviews are optional and don'"'"'t affect CI status. Trigger with `@claude /review` in a PR comment.' \
-              >> artifacts/doctor-report.md
-            echo "" >> artifacts/doctor-report.md
+            {
+              echo "## ℹ️ AI Review Status"
+              echo ""
+              echo "AI review not available for this PR (no matching comments found for the current head SHA)."
+              echo ""
+              echo "> Advisory AI reviews are optional and don't affect CI status. Trigger with \`@claude /review\` in a PR comment."
+              echo ""
+            } >> artifacts/doctor-report.md
           fi
 
       - uses: actions/upload-artifact@v4
@@ -119,6 +135,33 @@ jobs:
             artifacts/doctor-report.md
             artifacts/command-inventory.json
           if-no-files-found: warn
+
+  docs-link-check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+          run_install: false
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check docs structure and links
+        run: pnpm tsx scripts/docs-check.ts
 
   spec-gate:
     runs-on: ubuntu-latest
@@ -279,9 +322,10 @@ jobs:
       - name: Check promote label for bot PRs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
-          # Get PR head ref
-          HEAD_REF="${{ github.event.pull_request.head.ref }}"
+          # Get PR head ref from environment (avoid direct interpolation)
+          HEAD_REF="${PR_HEAD_REF}"
           echo "Head ref: $HEAD_REF"
 
           # Check if this is a bot branch
@@ -302,7 +346,7 @@ jobs:
               echo "   A maintainer must review and add the 'promote' label before merge"
               echo ""
               echo "Available labels on this PR:"
-              echo "$LABELS" | sed 's/^/  - /'
+              printf '%s\n' "$LABELS" | awk '{print "  - " $0}'
               exit 1
             fi
           else

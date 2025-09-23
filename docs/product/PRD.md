@@ -66,4 +66,4 @@ _Explicitly define what's out of scope to prevent scope creep:_
 **Next Steps After PRD:**
 
 1. Plan → Scaffold Tests → Implement → Prepare PR
-2. See `/prompts/tasks` for implementation guidance
+2. See [prompts/tasks](../../prompts/tasks/) for implementation guidance

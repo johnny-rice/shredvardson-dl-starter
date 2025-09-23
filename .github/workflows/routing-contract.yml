@@ -166,7 +166,7 @@ jobs:
         echo "🔍 Checking wiki generation sources..."
         
         # Verify all source files for wiki generation exist
-        sources=("docs/constitution.md" "CLAUDE.md" "docs/commands/index.json")
+        sources=("docs/constitution.md" "docs/ai/CLAUDE.md" "docs/commands/index.json")
         
         for source in "${sources[@]}"; do
           if [ ! -f "$source" ]; then

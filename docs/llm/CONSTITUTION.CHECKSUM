@@ -1,9 +1,9 @@
 {
-  "generated": "2025-09-22T10:07:05.610Z",
+  "generated": "2025-09-23T13:35:16.848Z",
   "version": "0.1.0",
   "checksums": {
-    "CLAUDE.md": "ba27dc036814cab6",
-    "docs/llm/context-map.json": "4661e937f799abe1",
+    "docs/ai/CLAUDE.md": "dfbc11acc09eebd7",
+    "docs/llm/context-map.json": "c7531e3ada3dd772",
     "docs/llm/STARTER_MANIFEST.json": "6316b778a8dac713",
     "docs/llm/NEW_APP_KICKOFF.md": "076f42b2072c81fa",
     "docs/llm/CONTRIBUTING_LLMS.md": "0362984efe675fb0",
@@ -13,7 +13,7 @@
     "packages/ui/styles/tokens.css": "1245fb5ec22d4cfe",
     "apps/web/app.config.ts": "73fba51f5be58666",
     "docs/constitution.md": "d4c66ed0379e10b8",
-    "docs/commands/index.json": "e205e28d61918574",
+    "docs/commands/index.json": "dda3379682d96b59",
     "docs/llm/risk-policy.json": "2a2e2e3df6da4502"
   }
 }

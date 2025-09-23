@@ -110,3 +110,25 @@ storybook-static/
 
 # Generated (ephemeral)
 artifacts/
+
+# Backup files
+*.bundle
+backup-*
+!artifacts/.keep
+
+# Builds & caches
+apps/web/.next/
+playwright-report/
+test-results/
+*.trace.zip
+
+# OS/IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Binaries & bundles
+*.bundle
+*.exe
+*.bin
+EOF < /dev/null

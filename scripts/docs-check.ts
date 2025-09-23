@@ -1,10 +1,11 @@
 import { readFileSync, existsSync } from 'fs';
+import { resolveDoc } from './utils/resolveDoc';
 
 const mustHave = [
   { file: 'README.md', sections: ['CI Overview'] },
   { file: 'CONTRIBUTING.md', sections: ['Before Opening a PR', 'Development Workflow', 'Quality Standards'] },
   { file: 'RELEASING.md', sections: ['Release Flow', 'Troubleshooting'] },
-  { file: 'CLAUDE.md', sections: ['Commands Index', 'References'] },
+  { file: resolveDoc('CLAUDE.md'), sections: ['Commands Index', 'References'] },
 ];
 
 const pkg = JSON.parse(readFileSync('package.json','utf8'));
@@ -49,12 +50,13 @@ for (const {file, sections} of mustHave) {
 }
 
 // Check CLAUDE.md command paths exist
-if (existsSync('CLAUDE.md')) {
-  const claudeMd = readFileSync('CLAUDE.md', 'utf8');
+const claudePath = resolveDoc('CLAUDE.md');
+if (existsSync(claudePath)) {
+  const claudeMd = readFileSync(claudePath, 'utf8');
   const commandMatches = claudeMd.matchAll(/→ (\.claude\/commands\/[^\n]+)/g);
   for (const [, path] of commandMatches) {
     if (!existsSync(path)) {
-      console.error(`CLAUDE.md references missing command file: ${path}`);
+      console.error(`${claudePath} references missing command file: ${path}`);
       failed = true;
     }
   }

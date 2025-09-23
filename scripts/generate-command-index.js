@@ -109,6 +109,85 @@ function generateCommandIndex() {
 }
 
 /**
+ * Simple YAML parser for command frontmatter
+ */
+function parseSimpleYAML(yamlContent) {
+  const result = {};
+  const lines = yamlContent.split('\n');
+  let currentKey = null;
+  let isMultiline = false;
+  let multilineValue = [];
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const trimmed = line.trim();
+    
+    if (!trimmed || trimmed.startsWith('#')) continue;
+    
+    // Handle continuation of multiline value
+    if (isMultiline) {
+      if (line.startsWith('  ') || line.startsWith('\t')) {
+        // Indented line - part of multiline value
+        multilineValue.push(line.replace(/^  /, '').trim());
+      } else {
+        // End of multiline value
+        result[currentKey] = multilineValue.join(' ').trim();
+        isMultiline = false;
+        multilineValue = [];
+        currentKey = null;
+        // Process current line as new key-value pair
+        i--; // Reprocess this line
+        continue;
+      }
+    } else {
+      // Handle key: value pairs
+      const colonIndex = trimmed.indexOf(':');
+      if (colonIndex > 0) {
+        const key = trimmed.substring(0, colonIndex).trim();
+        let value = trimmed.substring(colonIndex + 1).trim();
+        
+        // Check for multiline indicators
+        if (value === '>' || value === '|') {
+          currentKey = key;
+          isMultiline = true;
+          multilineValue = [];
+          continue;
+        }
+        
+        // Handle different value types
+        if (value.startsWith('"') && value.endsWith('"')) {
+          // Quoted string
+          value = value.slice(1, -1);
+        } else if (value.startsWith('[') && value.endsWith(']')) {
+          // Array
+          try {
+            value = JSON.parse(value);
+          } catch {
+            // Fallback: split by comma and trim
+            value = value.slice(1, -1).split(',').map(v => v.trim().replace(/['"]/g, ''));
+          }
+        } else if (value === 'true') {
+          value = true;
+        } else if (value === 'false') {
+          value = false;
+        } else if (value.match(/^\d+$/)) {
+          value = parseInt(value, 10);
+        }
+        
+        result[key] = value;
+      }
+    }
+  }
+  
+  // Handle final multiline value if we ended in multiline mode
+  if (isMultiline && currentKey) {
+    result[currentKey] = multilineValue.join(' ').trim();
+  }
+  
+  return result;
+}
+
+/**
  * Parse a command markdown file to extract metadata
  */
 function parseCommandFile(filePath, relativePath, category) {
@@ -116,13 +195,30 @@ function parseCommandFile(filePath, relativePath, category) {
     const content = fs.readFileSync(filePath, 'utf8');
     const lines = content.split('\n');
     
-    // Extract command name from filename or first heading
-    let name = path.basename(filePath, '.md');
+    // Parse YAML frontmatter
+    let metadata = {};
+    if (lines[0]?.trim() === '---') {
+      const endIndex = lines.findIndex((line, index) => index > 0 && line.trim() === '---');
+      if (endIndex > 0) {
+        const yamlLines = lines.slice(1, endIndex);
+        metadata = parseSimpleYAML(yamlLines.join('\n'));
+      }
+    }
+    
+    // Extract command name from YAML metadata, filename, or first heading
+    let name = metadata.name || path.basename(filePath, '.md');
+    if (name.startsWith('"') && name.endsWith('"')) {
+      name = name.slice(1, -1); // Remove quotes
+    }
+    if (name.startsWith('/')) {
+      name = name.substring(1); // Remove leading slash for index
+    }
+    
     const firstHeading = lines.find(line => line.startsWith('#'));
-    if (firstHeading) {
+    if (!metadata.name && firstHeading) {
       const headingText = firstHeading.replace(/^#+\s*/, '').trim();
       if (headingText.startsWith('/')) {
-        name = headingText;
+        name = headingText.substring(1);
       }
     }
     
@@ -146,16 +242,20 @@ function parseCommandFile(filePath, relativePath, category) {
       commandCategory = 'Review & Quality';
     } else if (pathParts.includes('docs')) {
       commandCategory = 'Documentation';
+    } else if (pathParts.includes('ops')) {
+      commandCategory = 'Operations';
     }
     
-    // Extract tags from content
-    const tags = extractTags(content, pathParts);
+    // Extract tags from metadata or content
+    const tags = metadata.tags || extractTags(content, pathParts);
     
-    // Extract purpose/description
-    let purpose = 'No description available';
-    const purposeMatch = content.match(/(?:Purpose|Description):\s*(.+)/i);
-    if (purposeMatch) {
-      purpose = purposeMatch[1].trim();
+    // Extract purpose/description from metadata or content
+    let purpose = metadata.when_to_use || 'No description available';
+    if (!metadata.when_to_use) {
+      const purposeMatch = content.match(/(?:Purpose|Description):\s*(.+)/i);
+      if (purposeMatch) {
+        purpose = purposeMatch[1].trim();
+      }
     }
     
     // Extract when to use
@@ -164,11 +264,11 @@ function parseCommandFile(filePath, relativePath, category) {
     // Extract example
     let example = determineExample(content, commandCategory, name);
     
-    // Determine risk level
-    const riskLevel = determineRiskLevel(content, tags, name);
+    // Determine risk level from metadata or content
+    const riskLevel = metadata.riskLevel || determineRiskLevel(content, tags, name);
     
-    // Determine if requires human-in-the-loop
-    const requiresHITL = determineRequiresHITL(content, tags, riskLevel);
+    // Determine if requires human-in-the-loop from metadata or heuristics
+    const requiresHITL = metadata.requiresHITL !== undefined ? metadata.requiresHITL : determineRequiresHITL(content, tags, riskLevel);
     
     return {
       name,

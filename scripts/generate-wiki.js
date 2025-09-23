@@ -22,12 +22,15 @@ function generateWiki(scrubSecrets = false) {
   generateCommandsPage(outputDir);
   generateConstitutionPage(outputDir);
   generateArchitecturePage(outputDir);
+  generatePRDPage(outputDir);
   
   console.log(`✅ Generated wiki content in ${outputDir}`);
 }
 
 function generateHomePage() {
-  const claudeContent = fs.readFileSync('CLAUDE.md', 'utf8');
+  const candidates = ['docs/ai/CLAUDE.md', 'CLAUDE.md'];
+  const claudePath = candidates.find(p => fs.existsSync(p)) || candidates[0];
+  const claudeContent = fs.readFileSync(claudePath, 'utf8');
   
   return `# Dissonance Labs Starter
 
@@ -49,7 +52,7 @@ ${extractSection(claudeContent, '### Spec-Driven Workflow')}
 
 ## Getting Started
 
-Follow the [CLAUDE.md](../CLAUDE.md) instructions for complete setup details.
+Follow the [CLAUDE.md](${claudePath === 'docs/ai/CLAUDE.md' ? '../docs/ai/CLAUDE.md' : '../CLAUDE.md'}) instructions for complete setup details.
 
 ---
 *Generated automatically from project files*
@@ -196,6 +199,29 @@ const scrubSecrets = args.includes('--scrub-secrets');
 // Run the generator if called directly
 if (require.main === module) {
   generateWiki(scrubSecrets);
+}
+
+function generatePRDPage(outputDir) {
+  const prdPath = 'docs/product/PRD.md';
+  
+  if (!fs.existsSync(prdPath)) {
+    console.warn('⚠️ PRD not found, skipping PRD page');
+    return;
+  }
+  
+  let content = fs.readFileSync(prdPath, 'utf8');
+  
+  // Add generation note
+  content += '\n\n---\n*Copied from docs/product/PRD.md - DO NOT EDIT DIRECTLY*\n*Update the source file and run `pnpm wiki:generate` to sync*\n';
+  
+  fs.writeFileSync(path.join(outputDir, 'WIKI-PRD.md'), content);
+  
+  // Also sync to docs/wiki/WIKI-PRD.md for consistency
+  const wikiDir = path.join(process.cwd(), 'docs/wiki');
+  if (!fs.existsSync(wikiDir)) {
+    fs.mkdirSync(wikiDir, { recursive: true });
+  }
+  fs.writeFileSync(path.join(wikiDir, 'WIKI-PRD.md'), content);
 }
 
 module.exports = { generateWiki };

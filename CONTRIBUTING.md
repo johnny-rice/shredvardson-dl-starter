@@ -53,7 +53,7 @@ This keeps agent context lean and prevents repeat issues. The doctor tracks metr
 
 ## Documentation Standards
 
-- **Command docs:** All `.claude/commands/*.md` must be linked in `CLAUDE.md`
+- **Command docs:** All `.claude/commands/*.md` must be linked in `docs/ai/CLAUDE.md`
 - **Script references:** All `pnpm`/`npm`/`turbo` commands in docs must exist
 - **Path references:** All file/directory paths in docs must exist
 - **Allowlist:** Use `.doctor-allowlist.json` sparingly for intentional exceptions
@@ -67,7 +67,7 @@ All must be true:
 - [ ] `lint`, `typecheck`, `build`, `test` pass
 - [ ] Branch protection checks pass: `doctor`, `build`, `lint`, `typecheck`
 - [ ] `.env.example` covers all env keys used by code
-- [ ] `CLAUDE.md` indexes every command doc (no orphans)
+- [ ] `docs/ai/CLAUDE.md` indexes every command doc (no orphans)
 - [ ] `turbo.json` pipeline tasks are exposed by at least one package script
 
 ### CI Requirements

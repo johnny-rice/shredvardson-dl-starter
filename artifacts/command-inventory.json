@@ -1,5 +1,5 @@
 {
-  "generated": "2025-09-22T10:07:05.680Z",
+  "generated": "2025-09-22T20:36:33.227Z",
   "packages": {
     "web": {
       "scripts": {
@@ -56,6 +56,8 @@
         "new-repo": "tsx scripts/new-repo-from-template.ts",
         "doctor": "tsx scripts/starter-doctor.ts",
         "doctor:report": "tsx scripts/starter-doctor.ts --report artifacts/doctor-report.md",
+        "audit:large": "node scripts/audit-large-files.mjs",
+        "audit:traceability": "tsx scripts/validate-traceability.ts",
         "preflight": "tsx scripts/preflight.ts",
         "constitution:update": "tsx scripts/update-constitution-checksum.ts",
         "check:react-versions": "node scripts/check-react-versions.mjs",
@@ -80,7 +82,8 @@
         "changeset:version": "changeset version",
         "changeset:tag": "changeset tag",
         "changeset:publish": "changeset publish",
-        "release": "pnpm changeset:version && pnpm changeset:tag && git push --follow-tags",
+        "release:preflight": "git diff-index --quiet HEAD || (echo 'Working tree not clean. Commit or stash changes.' && exit 1)",
+        "release": "pnpm release:preflight && pnpm changeset:version && git add -A && git commit -m 'chore(release): version bumps' && pnpm changeset:tag && git push --follow-tags",
         "clean": "rm -rf .turbo coverage test-results playwright-report 2>/dev/null || true; find . -type f -name '*.tsbuildinfo' -print -delete 2>/dev/null || true"
       },
       "dir": "."
@@ -133,6 +136,11 @@
       "paths": [],
       "anchors": []
     },
+    ".claude/commands/git/pr-assistant.md": {
+      "scripts": [],
+      "paths": [],
+      "anchors": []
+    },
     ".claude/commands/git/prepare-pr.md": {
       "scripts": [],
       "paths": [],
@@ -171,6 +179,22 @@
       "paths": [],
       "anchors": []
     },
+    ".claude/commands/ops/learning-capture.md": {
+      "scripts": [],
+      "paths": [
+        "docs/micro-lessons/template.md",
+        "docs/micro-lessons/INDEX.md",
+        "docs/decisions/0001-template.md"
+      ],
+      "anchors": []
+    },
+    ".claude/commands/ops/wiki-sync.md": {
+      "scripts": [
+        "`pnpm wiki:generate`"
+      ],
+      "paths": [],
+      "anchors": []
+    },
     ".claude/commands/quality/run-linter.md": {
       "scripts": [],
       "paths": [],
@@ -179,6 +203,13 @@
     ".claude/commands/review/self-critique.md": {
       "scripts": [],
       "paths": [],
+      "anchors": []
+    },
+    ".claude/commands/spec/adr-draft.md": {
+      "scripts": [],
+      "paths": [
+        "docs/decisions/0001-template.md"
+      ],
       "anchors": []
     },
     ".claude/commands/spec/plan.md": {

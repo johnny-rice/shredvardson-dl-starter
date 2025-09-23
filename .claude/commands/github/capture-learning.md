@@ -1,6 +1,6 @@
 ---
 # Machine-readable metadata (parsed into docs/commands/index.json)
-name: "/github:capture-learning"
+name: "/github:github-learning-capture"
 version: "1.0.0"
 lane: "lightweight"
 tags: ["github", "learning", "documentation"]
@@ -61,7 +61,7 @@ references:
   - "CLAUDE.md#github-integration"
 ---
 
-**Slash Command:** `/github:capture-learning`
+**Slash Command:** `/github:github-learning-capture`
 
 **Goal:**  
 Update an existing issue with implementation outcomes and learnings.
@@ -79,8 +79,8 @@ Update an existing issue with implementation outcomes and learnings.
 5) Emit **Result**: issue updated, learnings captured, and next suggested command.
 
 **Examples:**  
-- `/github:capture-learning #42` → updates issue #42 with learnings
-- `/github:capture-learning --dry-run` → show planned learning capture only.
+- `/github:github-learning-capture #42` → updates issue #42 with learnings
+- `/github:github-learning-capture --dry-run` → show planned learning capture only.
 
 **Failure & Recovery:**  
 - If target issue missing → comment on current PR with remediation steps.

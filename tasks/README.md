@@ -6,6 +6,25 @@ This folder contains actionable task breakdowns created using the `/tasks` comma
 - `feature-[number]-[name].md` - Matches specification and plan
 - Example: `feature-001-user-authentication.md`
 
+## YAML Front-Matter Structure
+Each task breakdown must include YAML front-matter for traceability:
+
+```yaml
+---
+id: TASK-20250922-auth-magic-links
+type: task
+issue: 123
+parentId: PLAN-20250922-auth-magic-links
+links: []
+---
+```
+
+- `id`: Format `TASK-YYYYMMDD-feature-name`
+- `type`: Always "task"
+- `issue`: GitHub issue number (inherited from spec)
+- `parentId`: Must reference the corresponding plan ID
+- `links`: Optional external references
+
 ## Purpose
 - **Actionable breakdown**: Converts technical plan into specific implementation steps
 - **TDD enforcement**: Tasks ordered by constitutional requirements

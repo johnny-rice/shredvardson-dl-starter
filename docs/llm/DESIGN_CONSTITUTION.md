@@ -17,7 +17,7 @@ The following canonical files define the rules for this codebase. Never duplicat
 
 - `docs/llm/context-map.json` - Monorepo routing, allowed/avoided patterns per area
 - `docs/llm/STARTER_MANIFEST.json` - Template defaults and customization scope
-- `CLAUDE.md` - Index, git rules, environment rules, task management flow
+- `docs/ai/CLAUDE.md` - Index, git rules, environment rules, task management flow
 
 ### Process & Workflows
 

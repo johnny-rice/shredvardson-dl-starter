@@ -1,6 +1,8 @@
 import { readFileSync, existsSync, statSync, writeFileSync, mkdirSync, readdirSync } from 'fs';
-import { resolve, join, dirname } from 'path';
+import { resolve, join, dirname, relative, sep, basename } from 'path';
 import { execSync } from 'child_process';
+import { resolveDoc } from './utils/resolveDoc';
+import { TraceabilityValidator } from './validate-traceability';
 
 interface CheckResult {
   name: string;
@@ -96,7 +98,7 @@ function checkLearningsIndex(): CheckResult {
 }
 
 function checkClaudeMdLeanness(): CheckResult {
-  const claudeMdPath = resolve('CLAUDE.md');
+  const claudeMdPath = resolve(resolveDoc('CLAUDE.md'));
   
   if (!existsSync(claudeMdPath)) {
     return {
@@ -121,12 +123,13 @@ function checkClaudeMdLeanness(): CheckResult {
       };
     }
     
-    // Check for micro-lessons index reference
-    if (!content.includes('docs/micro-lessons/INDEX.md')) {
+    // Check for micro-lessons index reference (allow relative paths and anchors)
+    const top10Link = /(?:\[[^\]]*\]\()?\s*(?:\.{0,2}\/)?docs\/micro-lessons\/INDEX\.md(?:#[^)]+)?\)?/i;
+    if (!top10Link.test(content)) {
       return {
         name: 'CLAUDE.md Leanness',
         status: 'fail',
-        message: 'CLAUDE.md must link to docs/micro-lessons/INDEX.md for agent context',
+        message: 'CLAUDE.md must link to docs/micro-lessons/INDEX.md (relative link accepted) for agent context',
         fix: 'Add reference to micro-lessons Top-10 index in Learning Loop section',
       };
     }
@@ -177,14 +180,15 @@ function checkPlaceholders(): CheckResult {
 
   function scanDirectory(dir: string) {
     try {
-      const entries = require('fs').readdirSync(dir);
+      const entries = readdirSync(dir);
       for (const entry of entries) {
         const fullPath = join(dir, entry);
         const stat = statSync(fullPath);
 
         // Skip excluded directories and this file
         if (
-          ['node_modules', '.git', '.next', '.turbo', 'coverage', 'dist'].includes(entry) ||
+          ['node_modules', '.git', '.next', '.turbo', 'coverage', 'dist', 'artifacts'].includes(entry) ||
+          (fullPath.startsWith(resolve('docs/wiki'))) ||
           fullPath.endsWith('scripts/starter-doctor.ts')
         ) {
           continue;
@@ -365,7 +369,7 @@ function checkConstitutionIntegrity(): CheckResult {
     const originalContent = readFileSync(checksumPath, 'utf8');
     const originalChecksums = JSON.parse(originalContent);
 
-    execSync('npx tsx scripts/update-constitution-checksum.ts', { stdio: 'pipe' });
+    execSync('pnpm tsx scripts/update-constitution-checksum.ts', { stdio: 'pipe' });
 
     const newContent = readFileSync(checksumPath, 'utf8');
     const newChecksums = JSON.parse(newContent);
@@ -471,8 +475,7 @@ function checkNewAppImports(): CheckResult[] {
     return results;
   }
 
-  const apps = require('fs')
-    .readdirSync(appsDir)
+  const apps = readdirSync(appsDir)
     .filter((entry: string) => {
       const appPath = join(appsDir, entry);
       return statSync(appPath).isDirectory() && entry !== 'web';
@@ -838,7 +841,7 @@ function generateCommandInventory(): any {
     function analyzeCommandFile(filePath: string) {
       try {
         const content = readFileSync(filePath, 'utf8');
-        const relativePath = filePath.replace(process.cwd() + '/', '');
+        const relativePath = relative(process.cwd(), filePath).split(sep).join('/');
         
         const scripts: string[] = [];
         const paths: string[] = [];
@@ -896,7 +899,7 @@ function generateCommandInventory(): any {
     
     function scanDir(dir: string) {
       try {
-        const entries = require('fs').readdirSync(dir);
+        const entries = readdirSync(dir);
         for (const entry of entries) {
           const fullPath = join(dir, entry);
           if (statSync(fullPath).isDirectory()) {
@@ -974,72 +977,11 @@ function loadTurboPipeline(): Record<string, any> {
 
 function safeListDirs(dir: string): string[] {
   try {
-    return require('fs').readdirSync(dir).filter((entry: string) => {
+    return readdirSync(dir).filter((entry: string) => {
       return statSync(join(dir, entry)).isDirectory();
     });
   } catch {
     return [];
-  }
-}
-
-// Learning Loop: check for template drift and suggest re-sync
-function checkLearningTemplateSync(): CheckResult {
-  const templateVersionPath = resolve('templates/learnings/VERSION');
-  
-  if (!existsSync(templateVersionPath)) {
-    return {
-      name: 'Learning Template Sync',
-      status: 'pass',
-      message: 'No learning templates directory found',
-    };
-  }
-  
-  try {
-    const templateVersion = readFileSync(templateVersionPath, 'utf8').trim();
-    
-    // Check if key learning scripts exist and are recent
-    const learningScriptPath = resolve('scripts/generate-learnings-index.js');
-    const templateScriptPath = resolve('templates/learnings/generate-learnings-index.js');
-    
-    if (!existsSync(learningScriptPath)) {
-      return {
-        name: 'Learning Template Sync',
-        status: 'warn',
-        message: `Learning templates v${templateVersion} found but scripts missing`,
-        fix: 'Re-sync: cp templates/learnings/generate-learnings-index.js scripts/',
-      };
-    }
-    
-    if (existsSync(templateScriptPath)) {
-      const scriptStats = statSync(learningScriptPath);
-      const templateStats = statSync(templateScriptPath);
-      
-      // If template is significantly newer, suggest sync
-      const ageDiff = templateStats.mtime.getTime() - scriptStats.mtime.getTime();
-      const daysDiff = ageDiff / (1000 * 60 * 60 * 24);
-      
-      if (daysDiff > 7) {
-        return {
-          name: 'Learning Template Sync',
-          status: 'warn',
-          message: `Learning templates v${templateVersion} are newer than scripts`,
-          fix: 'Consider re-sync: cp templates/learnings/generate-learnings-index.js scripts/',
-        };
-      }
-    }
-    
-    return {
-      name: 'Learning Template Sync',
-      status: 'pass',
-      message: `Learning templates v${templateVersion} in sync`,
-    };
-    
-  } catch (error) {
-    return {
-      name: 'Learning Template Sync',
-      status: 'warn',
-      message: `Error checking template sync: ${error}`,
-    };
   }
 }
 
@@ -1117,7 +1059,7 @@ function checkMicroLessonRetention(): CheckResult {
         const usedBy = usedByMatch ? parseInt(usedByMatch[1]) : 0;
         
         if (lastModified < ninetyDaysAgo && usedBy === 0) {
-          const fileName = require('path').basename(filePath);
+          const fileName = basename(filePath);
           staleFiles.push(fileName);
         }
       } catch {
@@ -1164,7 +1106,7 @@ function checkCommandDocs(): CheckResult[] {
   
   try {
     function scanCommandDir(dir: string): string[] {
-      const entries = require('fs').readdirSync(dir);
+      const entries = readdirSync(dir);
       const commands: string[] = [];
       
       for (const entry of entries) {
@@ -1190,11 +1132,22 @@ function checkCommandDocs(): CheckResult[] {
     });
 
     // Check if commands are referenced in CLAUDE.md
-    if (existsSync('CLAUDE.md')) {
-      const claudeContent = readFileSync('CLAUDE.md', 'utf8');
-      const referencedCommands = commandFiles.filter(cmd => 
-        claudeContent.includes(cmd) || claudeContent.includes(cmd.replace('.claude/commands/', ''))
-      );
+    const claudePath = resolve(resolveDoc('CLAUDE.md'));
+    if (existsSync(claudePath)) {
+      const claudeContent = readFileSync(claudePath, 'utf8');
+      const referencedCommands = commandFiles.filter(cmd => {
+        const rel = relative(process.cwd(), cmd).split(sep).join('/');
+        const noPrefix = rel.replace(/^\.?claude\/commands\//, '').replace(/^\.claude\/commands\//, '');
+        const candidates = [
+          rel,
+          `(${rel})`,
+          `.claude/commands/${noPrefix}`,
+          `(.claude/commands/${noPrefix})`,
+          noPrefix,
+          `(${noPrefix})`
+        ];
+        return candidates.some(token => claudeContent.includes(token));
+      });
       
       results.push({
         name: 'Commands in CLAUDE.md',
@@ -1401,6 +1354,659 @@ function checkReferences(): CheckResult[] {
   return results;
 }
 
+// Phase 2 validation functions
+
+function checkArtifactsDirectory(): CheckResult {
+  const artifactsPath = resolve('artifacts');
+  
+  if (!existsSync(artifactsPath)) {
+    return {
+      name: 'Artifacts Directory',
+      status: 'fail',
+      message: 'artifacts/ directory missing',
+      fix: 'Create artifacts/ directory and add to .gitignore'
+    };
+  }
+  
+  try {
+    // Check if artifacts/ is in .gitignore
+    const gitignorePath = resolve('.gitignore');
+    let gitignoreContent = '';
+    if (existsSync(gitignorePath)) {
+      gitignoreContent = readFileSync(gitignorePath, 'utf8');
+      const hasArtifactsIgnore = gitignoreContent
+        .split(/\r?\n/)
+        .some(l => /^\s*\/?artifacts(?:\/|\*|\s|$)/.test(l.trim()));
+      if (!hasArtifactsIgnore) {
+        return {
+          name: 'Artifacts Directory',
+          status: 'fail',
+          message: 'artifacts/ not ignored by .gitignore',
+          fix: 'Add "artifacts/" (or equivalent) to .gitignore'
+        };
+      }
+      
+      // Ensure .keep is allowed through ignore
+      if (!gitignoreContent.split(/\r?\n/).some(l => /^\s*!artifacts\/\.keep\s*$/.test(l))) {
+        return {
+          name: 'Artifacts Directory',
+          status: 'fail',
+          message: 'artifacts/.keep not allowlisted in .gitignore',
+          fix: 'Add "!artifacts/.keep" below "artifacts/" in .gitignore'
+        };
+      }
+    }
+
+    // Ensure artifacts/.keep exists
+    const keepPath = join(artifactsPath, '.keep');
+    if (!existsSync(keepPath)) {
+      return {
+        name: 'Artifacts Directory',
+        status: 'warn',
+        message: 'artifacts/.keep is missing',
+        fix: 'Create an empty artifacts/.keep file (tracked)'
+      };
+    }
+    
+    // Check for tracked files (except .keep)
+    let trackedFiles: string[] = [];
+    try {
+      // Only attempt when inside a git work tree
+      const inGit = execSync('git rev-parse --is-inside-work-tree', { stdio: 'pipe', encoding: 'utf8' }).trim() === 'true';
+      if (inGit) {
+        const out: Buffer = execSync('git ls-files -z -- artifacts', { stdio: 'pipe' }) as unknown as Buffer;
+        trackedFiles = out.toString('utf8').split('\0').filter(p => p && p !== 'artifacts/.keep');
+      }
+    } catch {
+      // ignore – we'll fallback to filesystem check
+    }
+    if (trackedFiles.length === 0) {
+      // Fallback: if not in git, treat any files besides .keep as advisory
+      try {
+        const files = readdirSync(artifactsPath).filter(f => f !== '.keep');
+        if (files.length > 0) {
+          trackedFiles = files;
+        }
+      } catch {
+        // ignore
+      }
+    }
+    
+    if (trackedFiles.length > 0) {
+      return {
+        name: 'Artifacts Directory',
+        status: 'warn',
+        message: `artifacts/ has ${trackedFiles.length} file(s) besides .keep`,
+        fix: 'Keep artifacts untracked; remove committed files or add to .gitignore'
+      };
+    }
+    
+    return {
+      name: 'Artifacts Directory',
+      status: 'pass',
+      message: 'artifacts/ properly configured and empty'
+    };
+    
+  } catch (error) {
+    return {
+      name: 'Artifacts Directory',
+      status: 'fail',
+      message: `Cannot check artifacts/: ${error}`
+    };
+  }
+}
+
+function checkRootDocLimits(): CheckResult {
+  const allowedLongDocs = [
+    'README.md',
+    'CONTRIBUTING.md',
+    'SECURITY.md',
+    'RELEASING.md',
+    'CODE_OF_CONDUCT.md',
+    'CHANGELOG.md',
+    'GOVERNANCE.md'
+  ];
+  const maxLines = 80;
+  
+  try {
+    const files = readdirSync('.').filter(f => f.endsWith('.md'));
+    const violations: string[] = [];
+    
+    for (const file of files) {
+      if (allowedLongDocs.includes(file)) continue;
+      
+      const content = readFileSync(file, 'utf8');
+      const lineCount = content.split('\n').length;
+      
+      if (lineCount > maxLines) {
+        violations.push(`${file} (${lineCount} lines)`);
+      }
+    }
+    
+    if (violations.length > 0) {
+      return {
+        name: 'Root Doc Limits',
+        status: 'fail',
+        message: `Root docs exceed ${maxLines} lines: ${violations.join(', ')}`,
+        fix: 'Move large content to docs/ and link from root'
+      };
+    }
+    
+    return {
+      name: 'Root Doc Limits',
+      status: 'pass',
+      message: `Root docs appropriately sized (<${maxLines} lines)`
+    };
+    
+  } catch (error) {
+    return {
+      name: 'Root Doc Limits',
+      status: 'fail',
+      message: `Cannot check root docs: ${error}`
+    };
+  }
+}
+
+function checkDocsPresence(): CheckResult {
+  const requiredDocs = ['docs/INDEX.md', 'docs/ai/INDEX.md'];
+  const missing: string[] = [];
+  
+  for (const doc of requiredDocs) {
+    if (!existsSync(resolve(doc))) {
+      missing.push(doc);
+    }
+  }
+  
+  if (missing.length > 0) {
+    return {
+      name: 'Docs Presence',
+      status: 'fail',
+      message: `Missing required docs: ${missing.join(', ')}`,
+      fix: 'Create missing navigation index files'
+    };
+  }
+  
+  return {
+    name: 'Docs Presence',
+    status: 'pass',
+    message: 'Required navigation docs present'
+  };
+}
+
+function checkDocsHeaders(): CheckResult {
+  try {
+    const docsPath = resolve('docs');
+    if (!existsSync(docsPath)) {
+      return {
+        name: 'Docs Headers',
+        status: 'pass',
+        message: 'No docs directory found'
+      };
+    }
+    
+    const docFiles: string[] = [];
+    
+    // Find all .md files in docs/
+    function findMdFiles(dir: string) {
+      const files = readdirSync(dir);
+      for (const file of files) {
+        const fullPath = join(dir, file);
+        const stat = statSync(fullPath);
+        
+        if (stat.isDirectory()) {
+          // Skip generated wiki subtree (cross-platform)
+          if (fullPath.startsWith(resolve('docs/wiki'))) continue;
+          findMdFiles(fullPath);
+        } else if (file.endsWith('.md')) {
+          // Skip agent file (cross-platform)
+          if (fullPath === resolve('docs/ai/CLAUDE.md')) continue;
+          docFiles.push(fullPath);
+        }
+      }
+    }
+    
+    findMdFiles(docsPath);
+    
+    const violations: string[] = [];
+    
+    for (const file of docFiles) {
+      const content = readFileSync(file, 'utf8');
+      const lines = content.split('\n');
+      
+      // Support YAML front-matter when checking H1
+      let start = 0;
+      if (lines[0]?.trim() === '---') {
+        const end = lines.indexOf('---', 1);
+        start = end > 0 ? end + 1 : 0;
+      }
+      while (start < lines.length && lines[start].trim() === '') start++;
+      // Check for H1 at first content line
+      if (!lines[start]?.startsWith('# ')) {
+        violations.push(`${file}: missing H1 header`);
+        continue;
+      }
+      
+      // Check for summary (3–5 lines after H1)
+      const summaryLines = lines.slice(start + 1, start + 6).filter(l => l.trim());
+      if (summaryLines.length < 3) {
+        violations.push(`${file}: missing 3-5 line summary after H1`);
+      }
+      
+      // Check for "When to use" line
+      if (!content.toLowerCase().includes('when to use')) {
+        violations.push(`${file}: missing "When to use" guidance`);
+      }
+    }
+    
+    if (violations.length > 0) {
+      return {
+        name: 'Docs Headers',
+        status: 'warn',
+        message: `${violations.length} docs missing standard headers`,
+        fix: 'Add H1, summary, and "When to use" sections to docs'
+      };
+    }
+    
+    return {
+      name: 'Docs Headers',
+      status: 'pass',
+      message: `${docFiles.length} docs follow header standard`
+    };
+    
+  } catch (error) {
+    return {
+      name: 'Docs Headers',
+      status: 'fail',
+      message: `Cannot check docs headers: ${error}`
+    };
+  }
+}
+
+function checkPromptStructure(): CheckResult[] {
+  const results: CheckResult[] = [];
+  
+  try {
+    const promptsPath = resolve('prompts');
+    if (!existsSync(promptsPath)) {
+      return [{
+        name: 'Prompt Structure',
+        status: 'pass',
+        message: 'No prompts directory found'
+      }];
+    }
+    
+    // Check directory structure
+    const requiredDirs = ['system', 'task', 'tools'];
+    const missingDirs: string[] = [];
+    
+    for (const dir of requiredDirs) {
+      if (!existsSync(join(promptsPath, dir))) {
+        missingDirs.push(dir);
+      }
+    }
+    
+    if (missingDirs.length > 0) {
+      results.push({
+        name: 'Prompt Structure',
+        status: 'fail',
+        message: `Missing prompt directories: ${missingDirs.join(', ')}`,
+        fix: 'Create prompts/system/, prompts/task/, and prompts/tools/ directories'
+      });
+    }
+    
+    // Check for loose .md files in root
+    const rootFiles = readdirSync(promptsPath).filter(f => f.endsWith('.md') && f !== 'README.md');
+    if (rootFiles.length > 0) {
+      results.push({
+        name: 'Prompt Structure',
+        status: 'fail',
+        message: `Loose prompt files in root: ${rootFiles.join(', ')}`,
+        fix: 'Move prompt files to system/, task/, or tools/ subdirectories'
+      });
+    }
+    
+    // Check prompt headers
+    const promptFiles: string[] = [];
+    
+    function findPromptFiles(dir: string) {
+      try {
+        const files = readdirSync(dir);
+        for (const file of files) {
+          const fullPath = join(dir, file);
+          const stat = statSync(fullPath);
+          
+          if (stat.isDirectory()) {
+            findPromptFiles(fullPath);
+          } else if (file.endsWith('.md') && file !== 'README.md') {
+            promptFiles.push(fullPath);
+          }
+        }
+      } catch (error) {
+        // Directory doesn't exist or can't be read
+      }
+    }
+    
+    findPromptFiles(promptsPath);
+    
+    const headerViolations: string[] = [];
+    
+    for (const file of promptFiles) {
+      try {
+        const content = readFileSync(file, 'utf8');
+        const lines = content.split('\n');
+        
+        // Check for required header format
+        const hasIntent = content.includes('**Intent:**');
+        const hasInputs = content.includes('**Inputs:**');
+        const hasOutput = content.includes('**Expected Output:**');
+        const hasRisks = content.includes('**Risks/Guardrails:**');
+        
+        if (!hasIntent || !hasInputs || !hasOutput || !hasRisks) {
+          headerViolations.push(file.replace(promptsPath + '/', ''));
+        }
+      } catch (error) {
+        headerViolations.push(file.replace(promptsPath + '/', '') + ' (unreadable)');
+      }
+    }
+    
+    if (headerViolations.length > 0) {
+      results.push({
+        name: 'Prompt Headers',
+        status: 'warn',
+        message: `${headerViolations.length} prompts missing standard headers`,
+        fix: 'Add Intent, Inputs, Expected Output, and Risks/Guardrails to prompt headers'
+      });
+    } else if (promptFiles.length > 0) {
+      results.push({
+        name: 'Prompt Headers',
+        status: 'pass',
+        message: `${promptFiles.length} prompts follow header standard`
+      });
+    }
+    
+    if (results.length === 0) {
+      results.push({
+        name: 'Prompt Structure',
+        status: 'pass',
+        message: 'Prompt structure correctly organized'
+      });
+    }
+    
+  } catch (error) {
+    results.push({
+      name: 'Prompt Structure',
+      status: 'fail',
+      message: `Cannot check prompt structure: ${error}`
+    });
+  }
+  
+  return results;
+}
+
+function checkDocLinks(): CheckResult[] {
+  const results: CheckResult[] = [];
+  
+  try {
+    const docsPath = resolve('docs');
+    if (!existsSync(docsPath)) {
+      return [{
+        name: 'Doc Links',
+        status: 'pass',
+        message: 'No docs directory found'
+      }];
+    }
+    
+    const docFiles: string[] = [];
+    
+    function findMdFiles(dir: string) {
+      try {
+        const files = readdirSync(dir);
+        for (const file of files) {
+          const fullPath = join(dir, file);
+          const stat = statSync(fullPath);
+          
+          if (stat.isDirectory()) {
+            if (fullPath.startsWith(resolve('docs/wiki'))) continue;
+            findMdFiles(fullPath);
+          } else if (file.endsWith('.md')) {
+            docFiles.push(fullPath);
+          }
+        }
+      } catch (error) {
+        // Directory doesn't exist or can't be read
+      }
+    }
+    
+    findMdFiles(docsPath);
+    
+    const brokenLinks: string[] = [];
+    
+    for (const file of docFiles) {
+      try {
+        const content = readFileSync(file, 'utf8');
+        
+        // Simple regex to find relative markdown links like [text](./path.md) or [text](path.md)
+        const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+        let match;
+        
+        while ((match = linkRegex.exec(content)) !== null) {
+          const linkPath = match[2];
+          
+          // Strip anchors and query params for file existence check
+          const cleanPath = linkPath.split('#')[0].split('?')[0];
+          
+          // Only check relative links to .md files
+          if (cleanPath.endsWith('.md') && !linkPath.startsWith('http')) {
+            let absolutePath;
+            
+            if (cleanPath.startsWith('./')) {
+              absolutePath = resolve(dirname(file), cleanPath.slice(2));
+            } else if (cleanPath.startsWith('/docs/')) {
+              // Root-absolute docs path (e.g., /docs/foo.md)
+              absolutePath = resolve(cleanPath.slice(1));
+            } else if (!cleanPath.startsWith('/')) {
+              absolutePath = resolve(dirname(file), cleanPath);
+            } else {
+              continue; // Skip absolute paths
+            }
+            
+            if (!existsSync(absolutePath)) {
+              brokenLinks.push(`${file}: ${linkPath}`);
+            }
+          }
+        }
+      } catch (error) {
+        // File can't be read
+      }
+    }
+    
+    if (brokenLinks.length > 0) {
+      results.push({
+        name: 'Doc Links',
+        status: 'warn',
+        message: `${brokenLinks.length} broken relative links found`,
+        fix: 'Fix or remove broken markdown links'
+      });
+    } else {
+      results.push({
+        name: 'Doc Links',
+        status: 'pass',
+        message: `${docFiles.length} docs checked, all relative links valid`
+      });
+    }
+    
+  } catch (error) {
+    results.push({
+      name: 'Doc Links',
+      status: 'fail',
+      message: `Cannot check doc links: ${error}`
+    });
+  }
+  
+  return results;
+}
+
+function checkTraceability(): CheckResult {
+  try {
+    const validator = new TraceabilityValidator();
+    const result = validator.validateTraceability();
+    
+    if (!result.valid) {
+      return {
+        name: 'Traceability Validation',
+        status: 'fail',
+        message: `${result.errors.length} traceability errors found`,
+        fix: 'Run: pnpm tsx scripts/validate-traceability.ts to see details'
+      };
+    }
+    
+    return {
+      name: 'Traceability Validation',
+      status: 'pass',
+      message: 'All traceability chains are valid'
+    };
+  } catch (error) {
+    return {
+      name: 'Traceability Validation',
+      status: 'warn',
+      message: `Could not validate traceability: ${error instanceof Error ? error.message : String(error)}`,
+      fix: 'Check if specs/, plans/, tasks/ directories exist'
+    };
+  }
+}
+
+function checkWikiPRDSync(): CheckResult {
+  const sourcePRD = resolve('docs/product/PRD.md');
+  const wikiPRD = resolve('docs/wiki/WIKI-PRD.md');
+  
+  if (!existsSync(sourcePRD)) {
+    return {
+      name: 'WIKI-PRD Sync',
+      status: 'pass',
+      message: 'No source PRD found (docs/product/PRD.md)',
+    };
+  }
+  
+  if (!existsSync(wikiPRD)) {
+    return {
+      name: 'WIKI-PRD Sync',
+      status: 'fail',
+      message: 'WIKI-PRD.md is missing but PRD.md exists',
+      fix: 'Run: pnpm wiki:generate to sync PRD to WIKI-PRD',
+    };
+  }
+  
+  try {
+    const sourceContent = readFileSync(sourcePRD, 'utf8');
+    const wikiContent = readFileSync(wikiPRD, 'utf8');
+    
+    // Remove the generation footer before comparing
+    const cleanWikiContent = wikiContent.replace(/\n\n---\n\*Copied from docs\/product\/PRD\.md[\s\S]*$/, '');
+    
+    if (sourceContent.trim() !== cleanWikiContent.trim()) {
+      return {
+        name: 'WIKI-PRD Sync',
+        status: 'fail', 
+        message: 'WIKI-PRD.md is out of sync with docs/product/PRD.md',
+        fix: 'Run: pnpm wiki:generate to sync changes',
+      };
+    }
+    
+    return {
+      name: 'WIKI-PRD Sync',
+      status: 'pass',
+      message: 'WIKI-PRD.md is in sync with source PRD',
+    };
+  } catch (error) {
+    return {
+      name: 'WIKI-PRD Sync',
+      status: 'fail',
+      message: `Cannot compare PRD files: ${error}`,
+      fix: 'Check file permissions and run: pnpm wiki:generate',
+    };
+  }
+}
+
+function checkADRCompliance(): CheckResult {
+  // Only run this check in CI for PR validation
+  const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
+  const isPR = process.env.GITHUB_EVENT_NAME === 'pull_request';
+  
+  if (!isCI || !isPR) {
+    return {
+      name: 'ADR Compliance',
+      status: 'pass',
+      message: 'Check skipped (not a PR in CI)',
+    };
+  }
+  
+  try {
+    // Check if PR modifies trigger paths that require ADRs
+    const triggerPaths = [
+      'prompts/**',
+      'scripts/**', 
+      'docs/wiki/**',
+      'docs/llm/**',
+      '.claude/commands/**',
+      'docs/llm/CONSTITUTION.md'
+    ];
+    
+    // Get list of changed files from git using robust PR base detection
+    const baseRef = process.env.GITHUB_BASE_REF || 'origin/main';
+    let changedFiles: string[] = [];
+    
+    try {
+      // Find merge-base to diff against
+      const base = execSync(`git merge-base ${baseRef} HEAD`, {stdio:'pipe', encoding:'utf8'}).trim();
+      changedFiles = execSync(`git diff --name-only ${base}...HEAD`, {
+        encoding: 'utf8',
+        stdio: 'pipe'
+      }).trim().split('\n').filter(f => f.length > 0);
+    } catch (error) {
+      // Fallback to HEAD~1 if merge-base fails
+      changedFiles = execSync('git diff --name-only HEAD~1', { 
+        encoding: 'utf8',
+        stdio: 'pipe'
+      }).trim().split('\n').filter(f => f.length > 0);
+    }
+    
+    // Check if any changed files match trigger patterns
+    const triggeredPaths = changedFiles.filter(file => 
+      triggerPaths.some(pattern => {
+        // Simple glob matching
+        if (pattern.endsWith('**')) {
+          return file.startsWith(pattern.slice(0, -2));
+        }
+        return file === pattern;
+      })
+    );
+    
+    if (triggeredPaths.length === 0) {
+      return {
+        name: 'ADR Compliance',
+        status: 'pass',
+        message: 'No files requiring ADR documentation were changed',
+      };
+    }
+    
+    // For now, just warn about requiring ADR reference
+    return {
+      name: 'ADR Compliance',
+      status: 'warn',
+      message: `PR modifies ${triggeredPaths.length} files requiring ADR documentation`,
+      fix: 'Ensure PR description includes ADR reference (ADR-XXX) if this is an architectural change',
+    };
+    
+  } catch (error) {
+    return {
+      name: 'ADR Compliance',
+      status: 'warn',
+      message: 'Could not check ADR compliance',
+      fix: 'Manual review: ensure architectural changes have corresponding ADRs',
+    };
+  }
+}
+
 function main() {
   const args = process.argv.slice(2);
   const isReportMode = args.includes('--report');
@@ -1414,7 +2020,6 @@ function main() {
     checkConstitutionIntegrity(),
     checkLearningsIndex(),
     checkClaudeMdLeanness(),
-    checkLearningTemplateSync(),
     checkTop10LinkValidity(),
     checkMicroLessonRetention(),
     checkDisplaySuites(),
@@ -1424,6 +2029,17 @@ function main() {
     checkEnvExampleSafety(),
     checkRestrictedPaths(),
     checkAILabelHygiene(),
+    // Phase 2 checks
+    checkArtifactsDirectory(),
+    checkRootDocLimits(),
+    checkDocsPresence(),
+    checkDocsHeaders(),
+    ...checkPromptStructure(),
+    ...checkDocLinks(),
+    checkTraceability(),
+    // Phase 5 governance checks
+    checkWikiPRDSync(),
+    checkADRCompliance(),
   ];
 
   if (isReportMode && reportPath) {

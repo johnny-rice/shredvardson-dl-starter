@@ -4,63 +4,63 @@
     {
       "path": "apps/web/src/app/(marketing)",
       "purpose": "Landing copy & CTA",
-      "allowed": ["docs:update", "feature:add (copy/UI only)"],
+      "allowed": ["docs:update", "feature:create (copy/UI only)"],
       "avoid": ["auth", "db", "payments"],
       "tags": ["routes", "marketing"]
     },
     {
       "path": "apps/web/src/app/(app)",
       "purpose": "Signed-in area (public for now)",
-      "allowed": ["feature:add", "refactor:extract"],
+      "allowed": ["feature:create", "refactor:extract"],
       "avoid": ["direct vendor SDKs"],
       "tags": ["routes", "app"]
     },
     {
       "path": "packages/ui",
       "purpose": "Shared UI components",
-      "allowed": ["feature:add (small)", "refactor:extract"],
+      "allowed": ["feature:create (small)", "refactor:extract"],
       "avoid": ["color hex literals"],
       "tags": ["ui", "tokens"]
     },
     {
       "path": "apps/web/src/styles",
       "purpose": "Design tokens & themes",
-      "allowed": ["feature:add (tokens only)", "docs:update"],
+      "allowed": ["feature:create (tokens only)", "docs:update"],
       "avoid": ["framework resets"],
       "tags": ["tokens", "theme"]
     },
     {
       "path": "apps/web/src/lib/adapters",
       "purpose": "Replaceable vendor boundaries",
-      "allowed": ["feature:add (impl only)", "refactor:extract"],
+      "allowed": ["feature:create (impl only)", "refactor:extract"],
       "avoid": ["leaking vendor types to UI"],
       "tags": ["adapters", "infra"]
     },
     {
       "path": "apps/web/src/lib",
       "purpose": "Env/flags/validate/utils",
-      "allowed": ["feature:add (small)", "test:add"],
+      "allowed": ["feature:create (small)", "test:create"],
       "avoid": ["business logic"],
       "tags": ["utils", "infra"]
     },
     {
       "path": "packages/types",
       "purpose": "Shared TypeScript types",
-      "allowed": ["feature:add (small)", "refactor:extract"],
+      "allowed": ["feature:create (small)", "refactor:extract"],
       "avoid": ["business logic"],
       "tags": ["types", "shared"]
     },
     {
       "path": "packages/ai",
       "purpose": "AI utilities & prompts",
-      "allowed": ["feature:add", "refactor:extract"],
+      "allowed": ["feature:create", "refactor:extract"],
       "avoid": ["direct vendor SDKs"],
       "tags": ["ai", "shared"]
     },
     {
       "path": "packages/config",
       "purpose": "Shared configs (ESLint/Prettier/TS)",
-      "allowed": ["feature:add (config only)", "docs:update"],
+      "allowed": ["feature:create (config only)", "docs:update"],
       "avoid": ["app-specific rules"],
       "tags": ["config", "shared"]
     },
@@ -81,7 +81,7 @@
     {
       "path": "specs/",
       "purpose": "Feature specifications (what/why only)",
-      "allowed": ["spec:create", "spec:update", "clarification:add"],
+      "allowed": ["spec:create", "spec:update", "clarification:create"],
       "avoid": ["tech details", "implementation specifics"],
       "tags": ["specs", "requirements", "spec-driven"]
     },
@@ -95,7 +95,7 @@
     {
       "path": "tasks/",
       "purpose": "Actionable implementation breakdowns",
-      "allowed": ["tasks:create", "tasks:update", "progress:track"],
+      "allowed": ["task:create", "task:update", "progress:track"],
       "avoid": ["skipping TDD order"],
       "tags": ["tasks", "implementation", "spec-driven"]
     },
@@ -109,7 +109,7 @@
     {
       "path": "docs/commands/index.json",
       "purpose": "Command discovery and routing for AI agents",
-      "allowed": ["command:index", "routing:update", "discovery:improve"],
+      "allowed": ["command:index", "routing:update", "discovery:update"],
       "avoid": ["breaking command contracts"],
       "tags": ["commands", "discovery", "routing", "ai-guidance"]
     },
@@ -119,6 +119,27 @@
       "allowed": ["policy:read", "risk:assess", "hitl:enforce"],
       "avoid": ["bypassing safety controls"],
       "tags": ["safety", "mcp", "hitl", "risk-assessment", "ai-guidance"]
+    },
+    {
+      "path": ".claude/commands/ops/",
+      "purpose": "Phase 6 operational assistant commands",
+      "allowed": ["command:update", "automation:update", "workflow:update"],
+      "avoid": ["breaking operational contracts"],
+      "tags": ["commands", "operational", "automation", "phase-6"]
+    },
+    {
+      "path": "docs/decisions/",
+      "purpose": "Architecture Decision Records (ADRs)",
+      "allowed": ["adr:create", "adr:update", "governance:document"],
+      "avoid": ["breaking constitutional decisions"],
+      "tags": ["adr", "governance", "decisions", "architecture"]
+    },
+    {
+      "path": "docs/ai/CLAUDE.md",
+      "purpose": "Main AI agent instructions and workflows",
+      "allowed": ["workflow:update", "command:create", "instruction:update"],
+      "avoid": ["breaking existing workflows"],
+      "tags": ["ai-guidance", "workflows", "instructions"]
     }
   ]
 }

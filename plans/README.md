@@ -6,6 +6,25 @@ This folder contains technical implementation plans created using the `/plan` co
 - `feature-[number]-[name].md` - Matches corresponding specification
 - Example: `feature-001-user-authentication.md`
 
+## YAML Front-Matter Structure
+Each plan must include YAML front-matter for traceability:
+
+```yaml
+---
+id: PLAN-20250922-auth-magic-links
+type: plan
+issue: 123
+parentId: SPEC-20250922-auth-magic-links
+links: []
+---
+```
+
+- `id`: Format `PLAN-YYYYMMDD-feature-name`
+- `type`: Always "plan"
+- `issue`: GitHub issue number (inherited from spec)
+- `parentId`: Must reference the corresponding spec ID
+- `links`: Optional external references
+
 ## Purpose
 - **Technical architecture**: How to implement within constitutional constraints
 - **Implementation strategy**: Component design, state management, API design

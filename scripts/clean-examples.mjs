@@ -137,7 +137,7 @@ async function cleanExamples() {
   console.log('\n🎉 Example cleanup complete!');
   console.log('Your starter template is now clean and ready for development.');
   console.log('\nNext steps:');
-  console.log('1. Review CLAUDE.md for development workflows');
+  console.log('1. Review docs/ai/CLAUDE.md for development workflows');
   console.log('2. Run `pnpm tsx scripts/starter-doctor.ts` to verify setup');
   console.log('3. Start developing with `/dev:plan-feature` for simple changes');
   console.log('4. Use `/specify` → `/plan` → `/tasks` for complex features');

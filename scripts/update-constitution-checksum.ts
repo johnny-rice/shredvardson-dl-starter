@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, statSync } from 'fs';
 import { createHash } from 'crypto';
 import { resolve } from 'path';
+import { resolveDoc } from './utils/resolveDoc';
 
 interface ContextMapArea {
   path: string;
@@ -38,9 +39,9 @@ function main() {
 
   // Additional binding sources not in context-map
   const bindingSources = [
-    'CLAUDE.md',
-    'docs/llm/context-map.json',
-    'docs/llm/STARTER_MANIFEST.json',
+    resolveDoc('CLAUDE.md'),
+    resolveDoc('docs/llm/context-map.json'),
+    resolveDoc('docs/llm/STARTER_MANIFEST.json'),
     'docs/llm/NEW_APP_KICKOFF.md',
     'docs/llm/CONTRIBUTING_LLMS.md',
     'docs/llm/QUALITY_PIPELINE.md',
