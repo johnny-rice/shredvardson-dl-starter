@@ -1956,34 +1956,40 @@ function checkForOverrideLabel(): boolean {
   }
 }
 
-function checkForADRReference(): boolean {
+function checkForADRReference(): { hasReference: boolean; adrIds: string[] } {
   try {
     // Prefer GitHub event payload (no external deps)
     const evPath = process.env.GITHUB_EVENT_PATH;
     const eventName = process.env.GITHUB_EVENT_NAME;
-    if (evPath && existsSync(evPath) && (eventName === 'pull_request' || eventName === 'pull_request_target')) {
+    let prBody = '';
+    
+    // Always use gh CLI for most current PR body (event payload can be stale)
+    if (false && evPath && existsSync(evPath) && (eventName === 'pull_request' || eventName === 'pull_request_target')) {
       const eventData = JSON.parse(readFileSync(evPath, 'utf8'));
-      const prBody = eventData.pull_request?.body || '';
-      const adrPattern = /\bADR-\d+\b/i;
-      return adrPattern.test(prBody);
+      prBody = eventData.pull_request?.body || '';
+    } else {
+      // Fallback to gh CLI if available
+      let prNumber = process.env.GITHUB_PR_NUMBER ||
+        (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
+      if (!prNumber) return { hasReference: false, adrIds: [] };
+      
+      const env = { ...process.env, GH_TOKEN: process.env.GH_TOKEN || process.env.GITHUB_TOKEN };
+      const prJson = execSync(`gh pr view ${prNumber} --json body`, { 
+        encoding: 'utf8', 
+        stdio: 'pipe', 
+        env 
+      });
+      prBody = JSON.parse(prJson).body || '';
     }
     
-    // Fallback to gh CLI if available
-    let prNumber = process.env.GITHUB_PR_NUMBER ||
-      (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
-    if (!prNumber) return false;
+    // Match ADR-YYYYMMDD-slug or ADR-NNN format (case-insensitive)
+    const adrPattern = /\bADR-\d+(?:-[A-Za-z0-9_-]+)?\b/gi;
+    const matches = prBody.match(adrPattern) || [];
+    const adrIds = [...new Set(matches.map(m => m.toUpperCase()))];
     
-    const env = { ...process.env, GH_TOKEN: process.env.GH_TOKEN || process.env.GITHUB_TOKEN };
-    const prJson = execSync(`gh pr view ${prNumber} --json body`, { 
-      encoding: 'utf8', 
-      stdio: 'pipe', 
-      env 
-    });
-    const prBody = JSON.parse(prJson).body || '';
-    const adrPattern = /\bADR-\d+\b/i;
-    return adrPattern.test(prBody);
+    return { hasReference: adrIds.length > 0, adrIds };
   } catch (error) {
-    return false;
+    return { hasReference: false, adrIds: [] };
   }
 }
 
@@ -2059,9 +2065,9 @@ function checkADRCompliance(): CheckResult {
       };
     }
 
-    // Check if PR body contains ADR reference
-    const hasADRReference = checkForADRReference();
-    if (!hasADRReference) {
+    // Check if PR body contains ADR reference and validate file existence
+    const adrCheck = checkForADRReference();
+    if (!adrCheck.hasReference) {
       return {
         name: 'ADR Compliance',
         status: 'fail',
@@ -2070,10 +2076,32 @@ function checkADRCompliance(): CheckResult {
       };
     }
 
+    // Validate that referenced ADRs actually exist
+    const missingAdrs: string[] = [];
+    for (const adrId of adrCheck.adrIds) {
+      // Search for ADR file by ID (handle different naming conventions)
+      const adrPattern = new RegExp(`^(adr-|ADR-)${adrId.slice(4)}`, 'i'); // Remove ADR- prefix for pattern
+      const adrFiles = readdirSync('docs/decisions/')
+        .filter(file => file.endsWith('.md') && adrPattern.test(file));
+      
+      if (adrFiles.length === 0) {
+        missingAdrs.push(adrId);
+      }
+    }
+
+    if (missingAdrs.length > 0) {
+      return {
+        name: 'ADR Compliance',
+        status: 'fail',
+        message: `Referenced ADRs not found: ${missingAdrs.join(', ')}`,
+        fix: `Create missing ADR files: ${missingAdrs.map(id => `docs/decisions/${id.toLowerCase()}.md`).join(', ')}`,
+      };
+    }
+
     return {
       name: 'ADR Compliance',
       status: 'pass',
-      message: 'ADR reference found for governance changes',
+      message: `ADR references found and validated: ${adrCheck.adrIds.join(', ')}`,
     };
     
   } catch (error) {

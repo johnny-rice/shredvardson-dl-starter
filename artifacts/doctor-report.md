@@ -1,17 +1,17 @@
 # 🏥 Starter Doctor Report
 
-**Generated:** 2025-09-23T14:16:35.521Z
+**Generated:** 2025-09-23T20:17:11.328Z
 **Status:** ⚠️ WARNINGS
 
 ## 📊 Summary
 
-- ✅ **Passed:** 22
-- ⚠️ **Warnings:** 4
+- ✅ **Passed:** 23
+- ⚠️ **Warnings:** 3
 - ❌ **Failed:** 0
 
 ## 📚 Learning Loop Metrics
 
-- **Micro-lessons total:** 19
+- **Micro-lessons total:** 21
 - **Top-10 updated:** 2025-09-23
 - **Display guard violations:** 0
 
@@ -38,16 +38,8 @@
 - Failures: 0
 - Warnings: 1
 
-⚠️ **52 docs missing standard headers**
+⚠️ **57 docs missing standard headers**
    💡 *Fix: Add H1, summary, and "When to use" sections to docs*
-
-### ⚠️ Doc Links
-
-- Failures: 0
-- Warnings: 1
-
-⚠️ **7 broken relative links found**
-   💡 *Fix: Fix or remove broken markdown links*
 
 ## 🔧 How to Reproduce Locally
 

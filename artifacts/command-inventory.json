@@ -1,5 +1,5 @@
 {
-  "generated": "2025-09-23T14:16:35.545Z",
+  "generated": "2025-09-23T20:17:11.354Z",
   "packages": {
     "web": {
       "scripts": {
@@ -58,6 +58,7 @@
         "doctor:report": "tsx scripts/starter-doctor.ts --report artifacts/doctor-report.md",
         "audit:large": "node scripts/audit-large-files.mjs",
         "audit:traceability": "tsx scripts/validate-traceability.ts",
+        "ai-review": "tsx scripts/ai-review-analyzer.ts",
         "preflight": "tsx scripts/preflight.ts",
         "constitution:update": "tsx scripts/update-constitution-checksum.ts",
         "check:react-versions": "node scripts/check-react-versions.mjs",
