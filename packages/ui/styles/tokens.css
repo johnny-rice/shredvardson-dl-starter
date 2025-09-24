@@ -10,17 +10,45 @@
   --brand-500: var(--brand-hue) 85% 55%;
   --brand-600: var(--brand-hue) 75% 48%;
 
-  /* semantics */
-  --bg: var(--gray-50);
-  --surface: var(--gray-0);
-  --overlay: var(--gray-100);
-  --text: 210 10% 18%;
-  --text-muted: 210 8% 35%;
-  --border: 210 12% 85%;
+  /* shadcn standard tokens */
+  --background: var(--gray-50);
+  --foreground: 210 10% 18%;
+  
+  --card: var(--gray-0);
+  --card-foreground: 210 10% 18%;
+  
+  --popover: var(--gray-0);
+  --popover-foreground: 210 10% 18%;
+  
   --primary: var(--brand-600);
-  --primary-contrast: 0 0% 100%;
+  --primary-foreground: 0 0% 100%;
+  
+  --secondary: var(--gray-100);
+  --secondary-foreground: 210 10% 18%;
+  
+  --muted: var(--gray-100);
+  --muted-foreground: 210 8% 35%;
+  
+  --accent: var(--gray-100);
+  --accent-foreground: 210 10% 18%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  
+  --border: 210 12% 85%;
+  --input: 210 12% 85%;
   --ring: var(--brand-500);
 
+  --radius: 0.5rem;
+
+  /* legacy tokens (keep for existing components) */
+  --bg: var(--background);
+  --surface: var(--card);
+  --overlay: var(--muted);
+  --text: var(--foreground);
+  --text-muted: var(--muted-foreground);
+  --primary-contrast: var(--primary-foreground);
+  
   /* shape + motion */
   --radius-sm: 0.25rem;
   --radius-md: 0.5rem;
@@ -30,13 +58,40 @@
   --dur-2: 240ms;
 }
 
-:root[data-theme='dark'] {
-  --bg: 210 15% 10%;
-  --surface: 210 15% 12%;
-  --overlay: 210 15% 16%;
-  --text: 0 0% 98%;
-  --text-muted: 0 0% 75%;
-  --border: 210 10% 25%;
+.dark {
+  --background: 210 15% 10%;
+  --foreground: 0 0% 98%;
+  
+  --card: 210 15% 12%;
+  --card-foreground: 0 0% 98%;
+  
+  --popover: 210 15% 12%;
+  --popover-foreground: 0 0% 98%;
+  
   --primary: var(--brand-500);
+  --primary-foreground: 222 47% 11%;
+  
+  --secondary: 210 15% 16%;
+  --secondary-foreground: 0 0% 98%;
+  
+  --muted: 210 15% 16%;
+  --muted-foreground: 0 0% 75%;
+  
+  --accent: 210 15% 16%;
+  --accent-foreground: 0 0% 98%;
+  
+  --destructive: 0 62% 50%;
+  --destructive-foreground: 0 0% 98%;
+  
+  --border: 210 10% 25%;
+  --input: 210 10% 25%;
   --ring: var(--brand-500);
+
+  /* legacy tokens */
+  --bg: var(--background);
+  --surface: var(--card);
+  --overlay: var(--muted);
+  --text: var(--foreground);
+  --text-muted: var(--muted-foreground);
+  --primary-contrast: var(--primary-foreground);
 }
