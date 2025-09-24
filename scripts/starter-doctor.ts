@@ -1929,10 +1929,10 @@ function checkWikiPRDSync(): CheckResult {
 
 function checkForOverrideLabel(): boolean {
   try {
-    // Prefer GitHub event payload (no external deps)
+    // Always use gh CLI for most current labels (event payload can be stale)
     const evPath = process.env.GITHUB_EVENT_PATH;
     const eventName = process.env.GITHUB_EVENT_NAME;
-    if (evPath && existsSync(evPath) && (eventName === 'pull_request' || eventName === 'pull_request_target')) {
+    if (false && evPath && existsSync(evPath) && (eventName === 'pull_request' || eventName === 'pull_request_target')) {
       const eventData = JSON.parse(readFileSync(evPath, 'utf8'));
       const labels = (eventData.pull_request?.labels ?? []).map((l: any) => (l.name || '').toLowerCase());
       return labels.includes('override:adr');
