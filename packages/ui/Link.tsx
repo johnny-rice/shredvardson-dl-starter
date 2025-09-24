@@ -7,14 +7,14 @@ type Props = AnchorHTMLAttributes<HTMLAnchorElement> & {
 
 export function Link({ className, variant = 'primary', ...props }: Props) {
   const base =
-    'inline-flex items-center justify-center px-4 py-2 rounded-[var(--radius-md)] transition-[background,opacity,box-shadow] duration-1 ease-[var(--ease-std)] no-underline';
+    'inline-flex items-center justify-center px-4 py-2 rounded-md transition-colors duration-200 no-underline font-medium';
 
   if (variant === 'ghost') {
     return (
       <a
         className={cn(
           base,
-          'bg-transparent hover:bg-[hsl(var(--overlay))] text-[hsl(var(--text))]',
+          'bg-transparent hover:bg-muted text-foreground',
           className
         )}
         {...props}
@@ -26,8 +26,8 @@ export function Link({ className, variant = 'primary', ...props }: Props) {
     <a
       className={cn(
         base,
-        'bg-[hsl(var(--primary))] text-[hsl(var(--primary-contrast))]',
-        'focus:outline-none focus:ring-2 focus:ring-[hsl(var(--ring))] hover:opacity-95',
+        'bg-primary text-primary-foreground',
+        'hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
         className
       )}
       {...props}
