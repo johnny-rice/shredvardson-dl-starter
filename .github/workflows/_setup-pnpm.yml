@@ -1,4 +1,5 @@
 name: setup-pnpm
+
 on:
   workflow_call:
     inputs:
@@ -6,6 +7,9 @@ on:
         required: false
         type: string
         default: '20'
+
+permissions:
+  contents: read
 
 jobs:
   setup:
