@@ -1,0 +1,97 @@
+name: Doctor Recheck Command
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  actions: write
+
+jobs:
+  recheck-doctor:
+    # Only run on PRs and when the comment contains the recheck command (skip bots)
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/doctor recheck') && github.event.comment.user.type != 'Bot' }}
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check if commenter has write access
+        id: check-access
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                username: context.payload.comment.user.login
+              });
+              
+              const hasAccess = ['admin', 'write', 'maintain'].includes(permission.permission);
+              console.log(`User ${context.payload.comment.user.login} has ${permission.permission} permission`);
+              return hasAccess;
+            } catch (error) {
+              console.log(`Error checking permissions: ${error.message}`);
+              return false;
+            }
+          result-encoding: string
+
+      - name: React to comment
+        if: steps.check-access.outputs.result == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'rocket'
+            });
+
+      - name: Trigger doctor recheck
+        if: steps.check-access.outputs.result == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            // Get PR number
+            const prNumber = context.payload.issue.number;
+            
+            // Trigger repository dispatch to re-run doctor
+            await github.rest.repos.createDispatchEvent({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              event_type: 'doctor-recheck',
+              client_payload: {
+                pr_number: prNumber,
+                requested_by: context.payload.comment.user.login,
+                comment_id: context.payload.comment.id
+              }
+            });
+            
+            // Add a comment confirming the recheck was triggered
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: `🔄 Doctor recheck triggered by @${context.payload.comment.user.login}`
+            });
+
+      - name: Access denied response
+        if: steps.check-access.outputs.result != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssueComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              comment_id: context.payload.comment.id,
+              content: 'confused'
+            });
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: `Access denied: @${context.payload.comment.user.login} lacks required permissions to trigger a doctor recheck. Ask a maintainer to comment '/doctor recheck'.`
+            });

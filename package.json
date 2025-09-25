@@ -39,6 +39,7 @@
     "git:cleanup": "bash scripts/git-workflow.sh cleanup-dry",
     "git:cleanup-force": "bash scripts/git-workflow.sh cleanup",
     "git:finish": "bash scripts/git-workflow.sh finish-branch",
+    "hooks:install": "bash scripts/git-hooks/install.sh",
     "docs:check": "tsx scripts/docs-check.ts",
     "pr:create": "tsx scripts/create-pr.ts",
     "wiki:generate": "node scripts/generate-wiki.js",

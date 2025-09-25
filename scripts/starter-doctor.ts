@@ -9,6 +9,7 @@ interface CheckResult {
   status: 'pass' | 'fail' | 'warn';
   message: string;
   fix?: string;
+  auditInfo?: unknown;
 }
 
 function checkLearningsIndex(): CheckResult {
@@ -1928,32 +1929,121 @@ function checkWikiPRDSync(): CheckResult {
 }
 
 function checkForOverrideLabel(): boolean {
-  try {
-    // Always use gh CLI for most current labels (event payload can be stale)
-    const evPath = process.env.GITHUB_EVENT_PATH;
-    const eventName = process.env.GITHUB_EVENT_NAME;
-    if (false && evPath && existsSync(evPath) && (eventName === 'pull_request' || eventName === 'pull_request_target')) {
-      const eventData = JSON.parse(readFileSync(evPath, 'utf8'));
-      const labels = (eventData.pull_request?.labels ?? []).map((l: any) => (l.name || '').toLowerCase());
-      return labels.includes('override:adr');
+  const prNumber = process.env.GITHUB_PR_NUMBER ||
+    (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
+  if (!prNumber) return false;
+
+  // Retry with backoff to handle timing issues
+  const delays = [0, 1500, 3000, 5000]; // ms - total ~10s
+  const env = { ...process.env, GH_TOKEN: process.env.GH_TOKEN || process.env.GITHUB_TOKEN };
+  
+  for (const delay of delays) {
+    try {
+      if (delay > 0) {
+        // Simple sleep implementation
+        execSync(`sleep ${delay / 1000}`, { stdio: 'ignore' });
+      }
+      
+      const labelsJson = execSync(`gh pr view ${prNumber} --json labels`, { 
+        encoding: 'utf8', 
+        stdio: 'pipe', 
+        env 
+      });
+      const labels = JSON.parse(labelsJson).labels || [];
+      const hasOverride = labels.some((label: any) => {
+        const labelName = (label.name || '').toLowerCase();
+        return labelName === 'override:adr' || labelName === 'security:break-glass';
+      });
+      
+      if (hasOverride) return true;
+      
+      // If no labels yet and we have more retries, continue
+      if (labels.length === 0 && delay < delays[delays.length - 1]) {
+        continue;
+      }
+      
+      // Labels exist but no override found, or this is the last attempt
+      return false;
+    } catch (error) {
+      // On last attempt, return false
+      if (delay === delays[delays.length - 1]) {
+        return false;
+      }
+      // Otherwise continue to next retry
     }
-    
-    // Fallback to gh CLI if available
-    const prNumber = process.env.GITHUB_PR_NUMBER ||
-      (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
-    if (!prNumber) return false;
-    
-    const env = { ...process.env, GH_TOKEN: process.env.GH_TOKEN || process.env.GITHUB_TOKEN };
-    const labelsJson = execSync(`gh pr view ${prNumber} --json labels`, { 
-      encoding: 'utf8', 
-      stdio: 'pipe', 
-      env 
-    });
-    const labels = JSON.parse(labelsJson).labels || [];
-    return labels.some((label: any) => (label.name || '').toLowerCase() === 'override:adr');
-  } catch (error) {
-    return false;
   }
+  
+  return false;
+}
+
+function checkForOverrideLabelWithAudit(): { hasOverride: boolean; usedLabel?: string; prAuthor?: string; auditInfo?: any } {
+  const prNumber = process.env.GITHUB_PR_NUMBER ||
+    (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
+  if (!prNumber) return { hasOverride: false };
+
+  // Retry with backoff to handle timing issues
+  const delays = [0, 1500, 3000, 5000]; // ms - total ~10s
+  const env = { ...process.env, GH_TOKEN: process.env.GH_TOKEN || process.env.GITHUB_TOKEN };
+  
+  for (const delay of delays) {
+    try {
+      if (delay > 0) {
+        execSync(`sleep ${delay / 1000}`, { stdio: 'ignore' });
+      }
+      
+      // Get PR info including labels and author
+      const prJson = execSync(`gh pr view ${prNumber} --json labels,author,createdAt,url`, { 
+        encoding: 'utf8', 
+        stdio: 'pipe', 
+        env 
+      });
+      const prData = JSON.parse(prJson);
+      const labels = prData.labels || [];
+      
+      const overrideLabels = ['override:adr', 'security:break-glass'];
+      const foundLabel = labels.find((label: any) => {
+        const labelName = (label.name || '').toLowerCase();
+        return overrideLabels.includes(labelName);
+      });
+      
+      if (foundLabel) {
+        const auditInfo = {
+          rule: 'ADR',
+          status: 'OVERRIDDEN',
+          prNumber: parseInt(prNumber),
+          prUrl: prData.url,
+          usedLabel: foundLabel.name,
+          prAuthor: prData.author?.login || 'unknown',
+          timestamp: new Date().toISOString(),
+          prCreatedAt: prData.createdAt,
+          reason: `${foundLabel.name} override applied`,
+        };
+        
+        return {
+          hasOverride: true,
+          usedLabel: foundLabel.name,
+          prAuthor: prData.author?.login || 'unknown',
+          auditInfo
+        };
+      }
+      
+      // If no labels yet and we have more retries, continue
+      if (labels.length === 0 && delay < delays[delays.length - 1]) {
+        continue;
+      }
+      
+      // Labels exist but no override found, or this is the last attempt
+      return { hasOverride: false };
+    } catch (error) {
+      // On last attempt, return false
+      if (delay === delays[delays.length - 1]) {
+        return { hasOverride: false };
+      }
+      // Otherwise continue to next retry
+    }
+  }
+  
+  return { hasOverride: false };
 }
 
 function checkForADRReference(): { hasReference: boolean; adrIds: string[] } {
@@ -1982,8 +2072,22 @@ function checkForADRReference(): { hasReference: boolean; adrIds: string[] } {
       prBody = JSON.parse(prJson).body || '';
     }
     
-    // Match ADR-YYYYMMDD-slug or ADR-NNN format (case-insensitive)
-    const adrPattern = /\bADR-\d+(?:-[A-Za-z0-9_-]+)?\b/gi;
+    // First, check for structured ADR field in template
+    const adrLine = prBody.split('\n').find(l => l.startsWith('ADR:'));
+    const adrFromTemplate = adrLine?.replace('ADR:', '').trim();
+    const isNA = adrFromTemplate?.toUpperCase() === 'N/A';
+    
+    if (isNA) {
+      return { hasReference: false, adrIds: [] };
+    }
+    
+    // If structured field has an ADR reference, use that
+    if (adrFromTemplate && /^ADR-\d+(?:-[A-Za-z0-9_-]+)?$/i.test(adrFromTemplate)) {
+      return { hasReference: true, adrIds: [adrFromTemplate.toUpperCase()] };
+    }
+    
+    // Fallback: scan entire PR body for ADR references (strict pattern)
+    const adrPattern = /\bADR-(\d{2,5})(?:-[A-Za-z0-9_-]+)?\b/gi;
     const matches = prBody.match(adrPattern) || [];
     const adrIds = [...new Set(matches.map(m => m.toUpperCase()))];
     
@@ -2055,13 +2159,14 @@ function checkADRCompliance(): CheckResult {
     }
     
     // Check for override label first
-    const hasOverride = checkForOverrideLabel();
-    if (hasOverride) {
+    const overrideResult = checkForOverrideLabelWithAudit();
+    if (overrideResult.hasOverride) {
       return {
         name: 'ADR Compliance',
         status: 'warn',
-        message: `PR modifies ${triggeredPaths.length} files requiring ADR documentation (override:adr label detected)`,
-        fix: 'Override label used - ensure ADR is added post-merge if needed',
+        message: `PR modifies ${triggeredPaths.length} files requiring ADR documentation (${overrideResult.usedLabel} override detected)`,
+        fix: `Override label used by ${overrideResult.prAuthor} - ensure ADR is added post-merge if needed`,
+        auditInfo: overrideResult.auditInfo,
       };
     }
 
@@ -2114,6 +2219,43 @@ function checkADRCompliance(): CheckResult {
   }
 }
 
+function checkMainBranchUsage(): CheckResult {
+  try {
+    const currentBranch = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
+    
+    if (!currentBranch) {
+      return {
+        name: 'Branch Protection Advisory',
+        status: 'warn',
+        message: 'Detached HEAD detected; unable to determine current branch.',
+        fix: 'Check out a feature branch before committing: git checkout -b feature/your-feature-name',
+      };
+    }
+
+    if (currentBranch === 'main') {
+      return {
+        name: 'Branch Protection Advisory',
+        status: 'warn',
+        message: 'You are currently on the main branch',
+        fix: 'Create a feature branch: git checkout -b feature/your-feature-name',
+      };
+    }
+    
+    return {
+      name: 'Branch Protection Advisory',
+      status: 'pass',
+      message: `Working on feature branch: ${currentBranch}`,
+    };
+  } catch (error) {
+    return {
+      name: 'Branch Protection Advisory',
+      status: 'warn',
+      message: 'Could not determine current git branch',
+      fix: 'Ensure you are in a git repository',
+    };
+  }
+}
+
 function main() {
   const args = process.argv.slice(2);
   const isReportMode = args.includes('--report');
@@ -2130,6 +2272,7 @@ function main() {
     checkTop10LinkValidity(),
     checkMicroLessonRetention(),
     checkDisplaySuites(),
+    checkMainBranchUsage(),
     ...checkNewAppImports(),
     ...checkCommandDocs(),
     ...checkReferences(),

@@ -1,0 +1,44 @@
+name: Block Direct Main Pushes
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  block-direct-push:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push'
+          && github.ref == 'refs/heads/main'
+          && github.actor != 'github-actions[bot]'
+          && !startsWith(github.actor, 'dependabot') }}
+    steps:
+      - name: Detect PR association
+        id: pr-check
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data } = await github.rest.repos.listPullRequestsAssociatedWithCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              commit_sha: context.sha,
+            });
+            core.setOutput('has_pr', data.length > 0);
+            if (data.length > 0) {
+              console.log(`✅ Commit ${context.sha} is associated with ${data.length} PR(s)`);
+              data.forEach(pr => console.log(`  - PR #${pr.number}: ${pr.title} (${pr.state})`));
+            } else {
+              console.log(`❌ Commit ${context.sha} is not associated with any PRs`);
+            }
+      - name: Block direct push to main
+        if: steps.pr-check.outputs.has_pr != 'true'
+        run: |
+          echo "❌ Direct pushes to 'main' are not allowed!"
+          echo ""
+          echo "To contribute to this repository:"
+          echo "1. Create a feature branch: git checkout -b feature/your-feature"
+          echo "2. Make your changes and commit them"
+          echo "3. Push your branch: git push origin feature/your-feature"
+          echo "4. Create a Pull Request on GitHub"
+          echo ""
+          echo "This ensures code review and maintains repository quality."
+          exit 1

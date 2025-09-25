@@ -124,13 +124,52 @@ This runbook covers the key operational commands (`/pr:assist`, `/ops:wiki-sync`
 | `/adr:draft` | Governance change context | `docs/decisions/ADR-*.md` | Link in PR |
 | `/ops:learning-capture` | External feedback/patterns | `docs/micro-lessons/*.md` | Update index |
 
+## Branch Protection Workflow
+
+**MANDATORY:** All changes must go through feature branches and Pull Requests. Direct pushes to `main` are blocked.
+
+### Creating Changes
+1. **Always work on feature branches:**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+2. **Push feature branches:**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+3. **Create Pull Request via GitHub UI or CLI:**
+   ```bash
+   gh pr create --title "feat: descriptive title" --body-file .github/pull_request_template.md
+   ```
+
+### Branch Protection Setup
+- **Install git hooks:** `npm run hooks:install` (blocks local pushes to main)
+- **CI Protection:** GitHub Actions automatically rejects direct main pushes
+- **Admin Setup:** See `docs/ops/branch-protection.md` for GitHub settings
+
+### Git Workflow Commands
+- `npm run git:start` - Start new feature branch
+- `npm run git:status` - Check branch status  
+- `npm run git:finish` - Complete feature branch
+- `npm run pr:create` - Create pull request
+
+### Emergency Override
+For genuine emergencies only:
+1. Temporarily disable branch protection in GitHub settings
+2. Make critical fix and push
+3. **Immediately re-enable branch protection**
+4. Create follow-up PR for review
+
 ## Best Practices
 
-1. **Always use `/pr:assist`** - Ensures proper metadata and traceability
-2. **Run `/ops:wiki-sync`** - Keeps documentation consistent
-3. **Draft ADRs early** - Better to have governance clarity upfront
-4. **Capture learnings immediately** - Knowledge is freshest right after discovery
-5. **Check command outputs** - Always verify artifacts before proceeding
+1. **Always work in feature branches** - Main branch is protected
+2. **Always use `/pr:assist`** - Ensures proper metadata and traceability
+3. **Run `/ops:wiki-sync`** - Keeps documentation consistent
+4. **Draft ADRs early** - Better to have governance clarity upfront
+5. **Capture learnings immediately** - Knowledge is freshest right after discovery
+6. **Check command outputs** - Always verify artifacts before proceeding
 
 ## Troubleshooting
 

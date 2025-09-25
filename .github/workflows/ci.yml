@@ -1,8 +1,11 @@
 name: CI
 on:
   pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
   push:
     branches: [main]
+  repository_dispatch:
+    types: [doctor-recheck]
 
 permissions:
   contents: read
@@ -50,7 +53,7 @@ jobs:
         env:
           DOCTOR_SILENT: 1
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_PR_NUMBER: ${{ github.event.pull_request.number || github.event.client_payload.pr_number }}
         run: pnpm run doctor:report
 
       - name: Audit large files (blocking)

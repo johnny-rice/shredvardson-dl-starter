@@ -1,5 +1,8 @@
 # Pull Request
 
+> **⚠️ Direct Push Protection Notice**  
+> Direct pushes to `main` are blocked. If you see the 'Block Direct Main Pushes' workflow fail, you attempted a direct push—create or continue a PR instead.
+
 ## Summary
 _What changed and why in 1–3 sentences._
 
@@ -8,7 +11,11 @@ _What changed and why in 1–3 sentences._
 - **Spec ID:** `SPEC-YYYYMMDD-feature-name` (if applicable)
 - **Plan ID:** `PLAN-YYYYMMDD-feature-name` (if applicable)
 - **Task ID:** `TASK-YYYYMMDD-feature-name` (if applicable)
-- **ADR Reference:** `ADR-XXX` (**REQUIRED** for changes to packages/ai/prompts/**, scripts/**, .github/workflows/**, docs/wiki/**. Use `override:adr` label for emergencies only.)
+
+### ADR
+ADR: ADR-### | N/A
+
+_**Note:** Changes to packages/ai/prompts/**, scripts/**, .github/workflows/**, docs/wiki/** require ADR documentation. Use `override:adr` label for emergencies only._
 
 ## Scope
 - [ ] Single task type (feature/refactor/test/docs)
@@ -34,6 +41,8 @@ Paste real outputs or "OK":
 - [ ] `pnpm audit:traceability` (if using specs/plans/tasks)
 - [ ] `pnpm tsx scripts/docs-check.ts` (docs-link-check)
 - [ ] `pnpm learn:index` (if micro-lessons changed)
+
+_💡 **Tip**: If doctor checks fail due to timing issues, comment `/doctor recheck` to manually re-run (maintainers/write access only)._
 
 ## Doctor & Quality Checks
 - [ ] I ran `pnpm doctor` locally (no fails)

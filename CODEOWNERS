@@ -13,6 +13,8 @@ scripts/generate-command-index.js @Shredvardson
 
 # Critical Infrastructure - Require maintainer review
 /.github/workflows/** @Shredvardson
+/scripts/git-hooks/** @Shredvardson
+/docs/ops/** @Shredvardson
 /scripts/release/** @Shredvardson
 /.env* @Shredvardson
 /**/.env* @Shredvardson
