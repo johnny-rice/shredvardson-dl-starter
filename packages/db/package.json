@@ -1,0 +1,27 @@
+{
+  "name": "@shared/db",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "main": "./index.ts",
+  "types": "./src/types.ts",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "db:types": "supabase gen types typescript --schema public > src/types.ts",
+    "db:migrate": "supabase db push --include-all",
+    "db:reset": "supabase db reset",
+    "db:diff": "supabase db diff --use-migra",
+    "db:status": "supabase status"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@shared/config": "workspace:*",
+    "@types/node": "^20",
+    "typescript": "^5",
+    "supabase": "^1"
+  }
+}

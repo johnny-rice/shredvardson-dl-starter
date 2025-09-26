@@ -27,6 +27,10 @@ export const env = createEnv({
     SUPABASE_URL: z.string().url().optional(),
     SUPABASE_ANON_KEY: z.string().min(1).optional(),
     
+    // Supabase MCP server configuration (for AI tooling)
+    SUPABASE_ACCESS_TOKEN: z.string().min(1).optional(),
+    SUPABASE_PROJECT_REF: z.string().min(1).optional(),
+    
     // Stripe server configuration
     STRIPE_SECRET_KEY: z.string().optional().refine(val => !isProduction || !val?.startsWith('sk_test_'), 'Test secret key forbidden in production'),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),
@@ -62,6 +66,9 @@ export const env = createEnv({
     
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+    
+    SUPABASE_ACCESS_TOKEN: process.env.SUPABASE_ACCESS_TOKEN,
+    SUPABASE_PROJECT_REF: process.env.SUPABASE_PROJECT_REF,
     
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,

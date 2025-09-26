@@ -72,6 +72,18 @@ jobs:
             echo "📋 No traceability artifacts found, skipping validation"
           fi
 
+      - name: Validate Database Changes
+        run: |
+          set -euo pipefail
+          echo "🗄️  Checking for database changes..."
+          git fetch origin main:refs/remotes/origin/main || true
+          if git diff --name-only origin/main...HEAD | grep -E "(supabase/|packages/db/)" >/dev/null 2>&1; then
+            echo "📊 Database changes detected, running validation..."
+            pnpm dlx tsx scripts/db/ci-validate.ts
+          else
+            echo "📊 No database changes detected, skipping validation"
+          fi
+
       - name: Scrape AI Reviews from PR Comments
         if: always() && github.event_name == 'pull_request'
         env:

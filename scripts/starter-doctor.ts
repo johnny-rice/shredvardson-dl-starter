@@ -2072,9 +2072,12 @@ function checkForADRReference(): { hasReference: boolean; adrIds: string[] } {
       prBody = JSON.parse(prJson).body || '';
     }
     
-    // First, check for structured ADR field in template
-    const adrLine = prBody.split('\n').find(l => l.startsWith('ADR:'));
-    const adrFromTemplate = adrLine?.replace('ADR:', '').trim();
+    // First, check for structured ADR field in template (multiple formats supported)
+    const adrLine = prBody.split('\n').find(l => 
+      l.trim().toLowerCase().startsWith('adr:') || 
+      l.trim().toLowerCase().startsWith('adr-reference:')
+    );
+    const adrFromTemplate = adrLine?.replace(/^ADR(-Reference)?:/i, '').trim();
     const isNA = adrFromTemplate?.toUpperCase() === 'N/A';
     
     if (isNA) {
@@ -2158,9 +2161,21 @@ function checkADRCompliance(): CheckResult {
       };
     }
     
+    // Add diagnostic logging for troubleshooting
+    const prNumber = process.env.GITHUB_PR_NUMBER ||
+      (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? 'unknown');
+    
+    console.log(`🔍 ADR Compliance Diagnostics:`);
+    console.log(`   PR Number: ${prNumber}`);
+    console.log(`   Changed files requiring ADR: ${triggeredPaths.length}`);
+    console.log(`   Files: ${triggeredPaths.join(', ')}`);
+
     // Check for override label first
     const overrideResult = checkForOverrideLabelWithAudit();
+    console.log(`   Override labels checked: ${overrideResult.hasOverride ? `✅ ${overrideResult.usedLabel}` : '❌ None'}`);
+    
     if (overrideResult.hasOverride) {
+      console.log(`   Override author: ${overrideResult.prAuthor}`);
       return {
         name: 'ADR Compliance',
         status: 'warn',
@@ -2172,6 +2187,8 @@ function checkADRCompliance(): CheckResult {
 
     // Check if PR body contains ADR reference and validate file existence
     const adrCheck = checkForADRReference();
+    console.log(`   ADR References found: ${adrCheck.hasReference ? `✅ ${adrCheck.adrIds.join(', ')}` : '❌ None'}`);
+    
     if (!adrCheck.hasReference) {
       return {
         name: 'ADR Compliance',
