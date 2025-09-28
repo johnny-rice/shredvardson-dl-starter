@@ -73,15 +73,27 @@ Create conventional commit and PR body when ready to submit changes.
 3) Create conventional commit and PR body:
    - Stage changes: `git add .`
    - Commit with format: `type(scope): description`
-   - Generate PR body with summary, issue link, testing checklist, breaking changes
-4) Reference files in `src/app/` that were modified.
-5) Produce PR **artifacts** and **link** results in related Issue/PR.
-6) Emit **Result**: commit created, PR URL, and next suggested command.
+   - Generate PR body using `.github/pull_request_template.md` format with:
+     - Summary section
+     - Traceability (GitHub Issue, Spec ID, Plan ID, Task ID)
+     - Scope checklist
+     - AI Review Status
+     - Verification commands output
+     - Doctor & Quality Checks
+     - Learning Loop
+     - LLM Guardrails
+     - Breaking changes/Migration
+4) Run verification commands (`pnpm doctor`, `pnpm typecheck`, `pnpm lint`, `pnpm build`)
+5) Reference files in `src/app/` that were modified.
+6) Produce PR **artifacts** and **link** results in related Issue/PR.
+7) Emit **Result**: commit created, PR URL, and next suggested command.
 
-**Examples:**  
+**Examples:**
+
 - `/git:prepare-pr #123` → creates commit and PR linking to issue #123
 - `/git:prepare-pr --dry-run` → show planned commit and PR body only.
 
-**Failure & Recovery:**  
+**Failure & Recovery:**
+
 - If no staged changes → suggest staging files first.
 - If commit fails → check for conflicts and suggest resolution.

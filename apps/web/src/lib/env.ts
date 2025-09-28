@@ -1,6 +1,7 @@
 // src/lib/env.ts
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
+import { AUTH_PROVIDER_VALUES } from './auth/adapter';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const zBool = z.coerce.boolean();
@@ -37,6 +38,7 @@ export const env = createEnv({
     
     // Feature toggles
     AUTH_ENABLED: zBool.default(false),
+    AUTH_PROVIDER: z.enum(AUTH_PROVIDER_VALUES).default('supabase'),
   },
 
   client: {
@@ -73,6 +75,7 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     AUTH_ENABLED: process.env.AUTH_ENABLED,
+    AUTH_PROVIDER: process.env.AUTH_PROVIDER,
 
     NEXT_PUBLIC_APP_NAME: process.env.NEXT_PUBLIC_APP_NAME,
     NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
