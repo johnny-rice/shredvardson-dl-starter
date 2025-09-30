@@ -82,7 +82,7 @@
     "fast-glob": "^3.3.3",
     "gray-matter": "^4.0.3",
     "prettier": "^3.6.2",
-    "tsx": "^4.20.5",
+    "tsx": "^4.20.6",
     "turbo": "^2.5.8",
     "typescript": "^5"
   },
