@@ -194,7 +194,8 @@ function checkPlaceholders(): CheckResult {
             entry
           ) ||
           fullPath.startsWith(resolve('docs/wiki')) ||
-          fullPath.endsWith('scripts/starter-doctor.ts')
+          fullPath.endsWith('scripts/starter-doctor.ts') ||
+          fullPath.endsWith('docs/decisions/0001-template.md') // Skip ADR template with intentional variables
         ) {
           continue;
         }
@@ -2162,7 +2163,7 @@ function checkADRCompliance(): CheckResult {
   try {
     // Check if PR modifies trigger paths that require ADRs
     const triggerPaths = [
-      'packages/ai/prompts/**',
+      'prompts/**',
       'scripts/**',
       '.github/workflows/**',
       'docs/wiki/**',

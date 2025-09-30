@@ -76,6 +76,11 @@ Draft ADR when governance triggers occur (prompts, workflows, security, complian
 4. Save to `docs/decisions/ADR-YYYYMMDD-[slug].md`.
 5. Emit **Result**: ADR ID for PR template reference.
 
+**Quick Manual Creation:**
+```bash
+pnpm adr:create "Your Decision Title"
+```
+
 **Examples:**
 
 - `/adr:draft prompt-change` → drafts ADR for prompt modifications

@@ -41,6 +41,7 @@
     "doctor:report": "tsx scripts/starter-doctor.ts --report artifacts/doctor-report.md",
     "audit:large": "node scripts/audit-large-files.mjs",
     "audit:traceability": "tsx scripts/validate-traceability.ts",
+    "adr:create": "tsx scripts/new-adr.ts",
     "ai-review": "tsx scripts/ai-review-analyzer.ts",
     "ai-review:report": "tsx scripts/ai-review-analyzer.ts --report",
     "preflight": "tsx scripts/preflight.ts",

@@ -14,11 +14,17 @@ _What changed and why in 1–3 sentences._
 - **Plan ID:** `PLAN-YYYYMMDD-feature-name` (if applicable)
 - **Task ID:** `TASK-YYYYMMDD-feature-name` (if applicable)
 
-### ADR
+### ADR (Required for Infrastructure Changes)
 
 ADR: ADR-### | N/A
 
-_**Note:** Changes to packages/ai/prompts/**, scripts/**, .github/workflows/**, docs/wiki/** require ADR documentation. Use `override:adr` label for emergencies only._
+_**⚠️ REQUIRED for changes to:**_
+- _`prompts/**` (AI behavior/prompt engineering)_
+- _`scripts/**` (build/deploy scripts)_ 
+- _`.github/workflows/**` (CI/CD workflows)_
+- _`docs/wiki/**` (public docs)_
+
+_**Quick create:** `pnpm adr:create "Your Title"` → edit file → add `ADR: ADR-XXX` above | **Emergency:** use `override:adr` label_
 
 ## Scope
 

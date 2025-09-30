@@ -1,7 +1,7 @@
-# ADR-0001: Architecture Decision Records Template
+# ADR-{{NUMBER}}: {{TITLE}}
 
-**Status:** Proposed  
-**Date:** 2025-09-22
+**Status:** {{STATUS}}  
+**Date:** {{DATE}}
 
 ## Context
 

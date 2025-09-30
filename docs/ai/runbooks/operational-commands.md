@@ -81,7 +81,7 @@ This runbook covers the key operational commands (`/pr:assist`, `/ops:wiki-sync`
 /adr:draft --template security  # use specific template
 ```
 
-**Required for:** Changes touching `/packages/ai/prompts/**`, `/scripts/**`, `.github/workflows/**`, `docs/wiki/**`
+**Required for:** Changes touching `/prompts/**`, `/scripts/**`, `.github/workflows/**`, `docs/wiki/**`
 
 ### `/ops:learning-capture` - Knowledge Management
 

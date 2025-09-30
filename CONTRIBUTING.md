@@ -18,6 +18,8 @@ Thank you for your interest in contributing! This document outlines the developm
 pnpm doctor && pnpm lint && pnpm typecheck && pnpm build && pnpm test
 ```
 
+**💡 Pro tip:** If you're changing workflow files, scripts, or prompts, create the ADR first to avoid CI failures!
+
 ## Development Workflow
 
 1. **Setup:** `pnpm install`
@@ -60,6 +62,33 @@ This keeps agent context lean and prevents repeat issues. The doctor tracks metr
 - **Script references:** All `pnpm`/`npm`/`turbo` commands in docs must exist
 - **Path references:** All file/directory paths in docs must exist
 - **Allowlist:** Use `.doctor-allowlist.json` sparingly for intentional exceptions
+
+### ADR (Architecture Decision Record) Requirements
+
+**ADR documentation is REQUIRED** for changes to:
+- `prompts/**` - AI behavior and prompt engineering
+- `scripts/**` - Build, deployment, and utility scripts  
+- `.github/workflows/**` - CI/CD and automation workflows
+- `docs/wiki/**` - Public documentation and processes
+
+**Process:**
+1. Create ADR file: `docs/decisions/ADR-XXX-descriptive-name.md`
+2. Use template: `docs/decisions/0001-template.md`
+3. Add ADR reference to PR description: `ADR: ADR-XXX`
+4. **Emergency bypass:** Use `override:adr` label (document ADR within 24h post-merge)
+
+**Quick ADR Creation:**
+```bash
+# Use the helper script (recommended)
+pnpm adr:create "Your Decision Title"
+# Edit the generated file
+# Reference in PR: "ADR: ADR-XXX" (script shows the number)
+
+# Manual approach
+cp docs/decisions/0001-template.md docs/decisions/ADR-004-your-change.md
+# Edit: fill Status, Date, Context, Decision, Consequences  
+# Reference in PR: "ADR: ADR-004"
+```
 
 ## Quality Standards
 

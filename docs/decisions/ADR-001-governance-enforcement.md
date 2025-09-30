@@ -31,7 +31,7 @@ Implement **blocking ADR enforcement** in CI with the following specifications:
 
 ADR documentation is **REQUIRED** for changes to:
 
-- `packages/ai/prompts/**` - AI behavior and prompt engineering
+- `prompts/**` - AI behavior and prompt engineering
 - `scripts/**` - Build, deployment, and utility scripts
 - `.github/workflows/**` - CI/CD and automation workflows
 - `docs/wiki/**` - Public documentation and processes
