@@ -26,7 +26,7 @@ interface AnalyticsProviderProps {
 export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const pathname = usePathname();
   const sessionStarted = useRef(false);
-  
+
   const enabled = env.NEXT_PUBLIC_ENABLE_ANALYTICS;
 
   // Start session on mount
@@ -67,11 +67,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
     enabled,
   };
 
-  return (
-    <AnalyticsContext.Provider value={contextValue}>
-      {children}
-    </AnalyticsContext.Provider>
-  );
+  return <AnalyticsContext.Provider value={contextValue}>{children}</AnalyticsContext.Provider>;
 }
 
 /**
@@ -79,6 +75,6 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
  */
 export function useTrackClick(component: string) {
   const { trackClick } = useAnalytics();
-  
+
   return () => trackClick(component);
 }

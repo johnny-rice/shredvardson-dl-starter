@@ -5,11 +5,5 @@
     "types": ["node", "react", "react-dom"],
     "typeRoots": ["./node_modules/@types", "../../node_modules/@types"]
   },
-  "exclude": [
-    "vitest.config.ts",
-    "vitest.setup.ts",
-    "**/*.test.*",
-    "**/*.spec.*",
-    "tests/**"
-  ]
+  "exclude": ["vitest.config.ts", "vitest.setup.ts", "**/*.test.*", "**/*.spec.*", "tests/**"]
 }

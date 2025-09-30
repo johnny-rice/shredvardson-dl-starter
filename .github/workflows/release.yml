@@ -1,7 +1,7 @@
 name: release
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
 permissions:
   contents: write
   pull-requests: write
@@ -13,11 +13,11 @@ jobs:
         with:
           fetch-depth: 0
       - uses: actions/setup-node@v5
-        with: 
+        with:
           node-version: 20
           cache: 'pnpm'
       - uses: pnpm/action-setup@v4
-        with: 
+        with:
           version: 9
           run_install: false
       - run: pnpm install --frozen-lockfile

@@ -16,7 +16,7 @@ jobs:
   encourage-learning:
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.body, 'Used Micro-Lesson:')
-    
+
     steps:
       - name: Check for existing comment
         id: check_comment
@@ -26,7 +26,7 @@ jobs:
           # Learnings Loop: check if we already posted a comment to avoid spam
           EXISTING=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
             --jq '.[] | select(.body | contains("<!-- learnings-reinforcement:v1 -->")) | .id' || echo "")
-          
+
           if [ -n "$EXISTING" ]; then
             echo "exists=true" >> $GITHUB_OUTPUT
             echo "Found existing comment, skipping to avoid spam"
@@ -57,7 +57,7 @@ jobs:
             echo "⚠️ Warning: Cannot post comment (likely a fork without pull-requests:write permission)"
             exit 0
           fi
-          
+
           # Create encouraging comment with hidden marker for idempotency
           cat > comment.md << 'EOF'
           🎉 **Great job using a micro-lesson!** 
@@ -74,12 +74,12 @@ jobs:
           ---
           _Automated encouragement • Learning Loop v1_
           EOF
-          
+
           # Post the comment with error handling
           if ! gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
             --field body="$(cat comment.md)" > /dev/null 2>&1; then
             echo "⚠️ Warning: Failed to post comment (likely insufficient permissions)"
             exit 0
           fi
-          
+
           echo "✅ Posted encouragement comment"

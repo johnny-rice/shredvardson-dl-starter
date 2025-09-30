@@ -18,6 +18,7 @@ The Supabase MCP (Model Context Protocol) integration enables AI agents to safel
 ### 1. Supabase Project Configuration
 
 Create a personal access token in your Supabase dashboard:
+
 1. Go to [Supabase Dashboard](https://app.supabase.com) → Account Settings
 2. Create new access token with name "DL-Starter-MCP"
 3. Save the token securely
@@ -34,7 +35,7 @@ SUPABASE_PROJECT_REF=your_project_ref_here
 # Standard Supabase Client Configuration
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_ANON_KEY=your_anon_key_here
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co  
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key_here
 ```
 
@@ -51,7 +52,8 @@ claude mcp list
 ```
 
 **Security Features:**
-- `--read-only`: Prevents destructive operations  
+
+- `--read-only`: Prevents destructive operations
 - `--features=database,docs,debugging,development`: Limited scope
 - `--project-ref`: Scoped to specific project only
 - Environment-based credentials (no hardcoded tokens)
@@ -66,14 +68,11 @@ import { createDatabaseClient, type DatabaseConfig } from '@shared/db';
 
 const client = createDatabaseClient({
   url: env.SUPABASE_URL,
-  anonKey: env.SUPABASE_ANON_KEY
+  anonKey: env.SUPABASE_ANON_KEY,
 });
 
 // Type-safe database operations
-const { data, error } = await client.raw
-  .from('profiles')
-  .select('*')
-  .eq('user_id', userId);
+const { data, error } = await client.raw.from('profiles').select('*').eq('user_id', userId);
 ```
 
 ## Available Commands
@@ -96,6 +95,7 @@ pnpm db:plan help
 ```
 
 **Output:**
+
 - Creates timestamped SQL file in `supabase/migrations/`
 - Includes RLS considerations and security notes
 - Provides next-step guidance
@@ -105,7 +105,7 @@ pnpm db:plan help
 Apply pending migrations to development database:
 
 ```bash
-# Apply all pending migrations  
+# Apply all pending migrations
 pnpm db:migrate
 
 # Alternative commands
@@ -115,6 +115,7 @@ pnpm db:status   # Check migration status
 ```
 
 **Safety Features:**
+
 - Development environment only
 - Transaction-wrapped migrations
 - Rollback capability
@@ -128,7 +129,7 @@ Scaffold Row Level Security policies using common patterns:
 # Basic user-scoped policies
 pnpm db:rls:scaffold users
 
-# Custom owner column  
+# Custom owner column
 pnpm db:rls:scaffold posts --owner-column=author_id
 
 # Public read access with dry-run
@@ -143,6 +144,7 @@ pnpm db:rls:scaffold examples
 ```
 
 **Generated Patterns:**
+
 - User-scoped data access with `auth.uid()`
 - CRUD operations with proper conditions
 - Public/anonymous access policies
@@ -162,8 +164,9 @@ pnpm typecheck
 ```
 
 **Features:**
+
 - Generates strongly-typed database interfaces
-- Includes table, view, and function signatures  
+- Includes table, view, and function signatures
 - Zod schema integration support
 - Auto-exported from `@shared/db` package
 
@@ -186,7 +189,7 @@ pnpm db:plan "Add user authentication with profiles and preferences"
 pnpm db:start
 
 # Apply migration
-pnpm db:migrate  
+pnpm db:migrate
 
 # Generate RLS policies
 pnpm db:rls:scaffold profiles --owner-column=user_id
@@ -219,7 +222,7 @@ pnpm typecheck
 PRs touching database files (`supabase/**` or `packages/db/**`) must include:
 
 1. **Migration SQL files** - All schema changes as timestamped migrations
-2. **Updated TypeScript types** - Current `types.ts` files  
+2. **Updated TypeScript types** - Current `types.ts` files
 3. **RLS policy review** - Security considerations documented
 4. **Human approval** - Manual review of generated SQL
 
@@ -234,7 +237,8 @@ The CI pipeline automatically validates:
 ```
 
 **Validation Rules:**
-- Migration files use transactions and proper RLS  
+
+- Migration files use transactions and proper RLS
 - TypeScript types are current (within 24 hours)
 - No dangerous operations without explicit approval
 - Required workspace packages are present
@@ -251,40 +255,42 @@ The CI pipeline automatically validates:
 ### Development Environment
 
 ✅ **Allowed in MCP:**
+
 - Schema introspection and documentation
 - Migration generation and planning
-- RLS policy scaffolding  
+- RLS policy scaffolding
 - TypeScript type generation
 - Development database queries
 
 ❌ **Blocked in MCP:**
+
 - Production database access
 - Ad-hoc data export/import
 - User data mutations
-- Service role escalation  
+- Service role escalation
 
 ### Credential Management
 
 - **MCP Cloud Vault**: Store access tokens securely
 - **Environment Variables**: Use runtime substitution
 - **No Hardcoding**: Never commit credentials to git
-- **Least Privilege**: Read-only + development features only  
+- **Least Privilege**: Read-only + development features only
 
-### RLS Policy Patterns  
+### RLS Policy Patterns
 
 All generated policies follow security-first principles:
 
 ```sql
 -- User-scoped access (most common)
 CREATE POLICY "users_own_data" ON profiles
-  FOR ALL TO authenticated  
+  FOR ALL TO authenticated
   USING (auth.uid() = user_id);
 
 -- Public read with owner write
 CREATE POLICY "public_read" ON posts
   FOR SELECT TO anon USING (published = true);
-  
-CREATE POLICY "owner_write" ON posts  
+
+CREATE POLICY "owner_write" ON posts
   FOR ALL TO authenticated
   USING (auth.uid() = author_id);
 
@@ -298,6 +304,7 @@ CREATE POLICY "admin_override" ON sensitive_table
 ### Common Issues
 
 **MCP Connection Failed:**
+
 ```bash
 # Check environment variables
 echo $SUPABASE_ACCESS_TOKEN
@@ -308,17 +315,19 @@ npx -y @supabase/mcp-server-supabase --read-only --project-ref=your-ref
 ```
 
 **Migration Conflicts:**
+
 ```bash
 # Check current status
 pnpm db:status
 
-# Reset development database  
+# Reset development database
 pnpm db:reset
 
 # Review conflicting migrations in supabase/migrations/
 ```
 
 **Type Generation Errors:**
+
 ```bash
 # Ensure Supabase CLI is current
 supabase --version
@@ -336,7 +345,7 @@ supabase gen types typescript --schema public > packages/db/src/types.ts
 # Test database connection
 pnpm debug:health
 
-# Validate MCP configuration  
+# Validate MCP configuration
 pnpm db:validate
 
 # Check workspace setup
@@ -354,7 +363,7 @@ tsx scripts/db/ci-validate.ts
 # 1. Plan the user system
 pnpm db:plan "Create comprehensive user management with profiles, preferences, and activity tracking"
 
-# 2. Generate RLS policies  
+# 2. Generate RLS policies
 pnpm db:rls:scaffold users
 pnpm db:rls:scaffold profiles --owner-column=user_id --public-read
 pnpm db:rls:scaffold user_preferences --owner-column=user_id
@@ -363,7 +372,7 @@ pnpm db:rls:scaffold user_preferences --owner-column=user_id
 pnpm db:migrate
 
 # 4. Update types
-pnpm db:types  
+pnpm db:types
 
 # 5. Validate setup
 pnpm db:validate && pnpm typecheck
@@ -375,7 +384,7 @@ pnpm db:validate && pnpm typecheck
 # Multi-table content system
 pnpm db:plan "Add content management: posts, comments, likes with moderation queue"
 
-# RLS for different access patterns  
+# RLS for different access patterns
 pnpm db:rls:scaffold posts --public-read
 pnpm db:rls:scaffold comments --owner-column=author_id
 pnpm db:rls:scaffold moderation_queue # Admin-only by default
@@ -387,13 +396,14 @@ pnpm db:migrate && pnpm db:types && pnpm db:validate
 ## Next Steps
 
 1. **Initialize your Supabase project** with the provided configuration
-2. **Set up environment variables** for development  
+2. **Set up environment variables** for development
 3. **Test the MCP connection** with a simple schema query
 4. **Create your first migration** using `pnpm db:plan`
 5. **Establish RLS policies** with `pnpm db:rls:scaffold`
 6. **Integrate database client** in your application code
 
 For additional help, see:
+
 - [Supabase Documentation](https://supabase.com/docs)
-- [MCP Protocol Specification](https://modelcontextprotocol.io/)  
+- [MCP Protocol Specification](https://modelcontextprotocol.io/)
 - [DLStarter Database Patterns](./db.md)

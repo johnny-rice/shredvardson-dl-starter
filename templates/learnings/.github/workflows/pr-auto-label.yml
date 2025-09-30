@@ -15,7 +15,7 @@ jobs:
   auto-label-micro-lessons:
     runs-on: ubuntu-latest
     if: contains(github.event.pull_request.body, 'Used Micro-Lesson:')
-    
+
     steps:
       - name: Add uses-micro-lesson label
         env:
@@ -26,5 +26,5 @@ jobs:
             --method POST \
             --field labels[]="uses-micro-lesson" \
             || echo "⚠️ Warning: Failed to add label (likely insufficient permissions)"
-          
+
           echo "✅ Added 'uses-micro-lesson' label to PR"

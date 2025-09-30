@@ -38,11 +38,11 @@ Tag UI data-display suites with `@display` comment. No state-mutating hooks in t
 test.describe('Analytics Dashboard', () => {
   // ❌ Don't do this in @display suites
   // beforeEach(() => localStorage.clear())
-  
+
   test('shows charts correctly', () => {
     // UI assertion tests only
-  })
-})
+  });
+});
 ```
 
 → **Why**: UI display tests should focus on rendering, not state mutation

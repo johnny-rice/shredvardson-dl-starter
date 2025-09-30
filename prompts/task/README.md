@@ -5,6 +5,7 @@ Specific development task templates for common workflows.
 ## Contents
 
 Templates for structured development tasks:
+
 - Feature planning
 - Test scaffolding
 - App bootstrapping

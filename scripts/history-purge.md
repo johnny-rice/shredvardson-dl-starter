@@ -117,7 +117,7 @@ pnpm install
 - [ ] Target files no longer in git history
 - [ ] `pnpm install` completes successfully
 - [ ] `pnpm run build` passes
-- [ ] `pnpm run test` passes  
+- [ ] `pnpm run test` passes
 - [ ] `pnpm run doctor` shows no new failures
 - [ ] All CI checks pass on main branch
 
@@ -141,7 +141,7 @@ git push --force origin main
 ```markdown
 # Repository History Purged - Re-clone Required
 
-We've cleaned up the git history to remove large files (19.5 MB bundle). 
+We've cleaned up the git history to remove large files (19.5 MB bundle).
 
 **Action Required:** Please re-clone the repository:
 
@@ -150,6 +150,7 @@ We've cleaned up the git history to remove large files (19.5 MB bundle).
 3. Reinstall dependencies: `pnpm install`
 
 **Benefits:**
+
 - Faster clone times
 - Reduced repository size
 - Cleaner git history

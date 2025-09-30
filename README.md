@@ -35,7 +35,7 @@ Lightweight, LLM-friendly Next.js starter template with Turborepo.
 **For developers and AI agents** - comprehensive reference and best practices:
 
 - [🏠 **Home**](https://github.com/Shredvardson/dl-starter/wiki/Home) - Mission, two-lane development model, guardrails
-- [📋 **Spec System**](https://github.com/Shredvardson/dl-starter/wiki/Spec-System) - Kernel templates (Full/Micro) and examples  
+- [📋 **Spec System**](https://github.com/Shredvardson/dl-starter/wiki/Spec-System) - Kernel templates (Full/Micro) and examples
 - [⚡ **Commands**](https://github.com/Shredvardson/dl-starter/wiki/Commands) - Complete slash command reference
 - [✅ **Quality Gates**](https://github.com/Shredvardson/dl-starter/wiki/Quality-Gates) - Pipeline explanation and standards
 - [🏗️ **Architecture**](https://github.com/Shredvardson/dl-starter/wiki/Architecture) - Stack, structure, and UI rules

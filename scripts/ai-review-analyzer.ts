@@ -14,7 +14,15 @@ interface AIReviewPattern {
   /** Recent examples of this pattern */
   examples: string[];
   /** Category classification for organizational purposes */
-  category: 'lint' | 'tests' | 'naming' | 'security' | 'performance' | 'architecture' | 'documentation' | 'other';
+  category:
+    | 'lint'
+    | 'tests'
+    | 'naming'
+    | 'security'
+    | 'performance'
+    | 'architecture'
+    | 'documentation'
+    | 'other';
 }
 
 /**
@@ -47,14 +55,14 @@ class AIReviewAnalyzer {
   analyzeReports(artifactsDir: string = 'artifacts'): AIReviewAnalysis {
     // Reset state to avoid double-counting across runs
     this.patterns.clear();
-    
+
     const reportFiles = this.findReportFiles(artifactsDir);
     let totalReviews = 0;
 
     for (const reportFile of reportFiles) {
       const reviews = this.extractAIReviews(reportFile);
       totalReviews += reviews.length;
-      
+
       for (const review of reviews) {
         this.categorizeAndStore(review);
       }
@@ -68,7 +76,7 @@ class AIReviewAnalyzer {
       totalReviews,
       patterns,
       suggestedLessons,
-      suggestedADRs
+      suggestedADRs,
     };
   }
 
@@ -79,15 +87,15 @@ class AIReviewAnalyzer {
    */
   private findReportFiles(artifactsDir: string): string[] {
     const reportFiles: string[] = [];
-    
+
     // Recursive search function for nested artifacts
     const walkDirectory = (dir: string) => {
       if (!fs.existsSync(dir)) return;
-      
+
       const entries = fs.readdirSync(dir, { withFileTypes: true });
       for (const entry of entries) {
         const fullPath = path.join(dir, entry.name);
-        
+
         if (entry.isDirectory()) {
           // Recurse into subdirectories (e.g., date-partitioned reports)
           walkDirectory(fullPath);
@@ -123,10 +131,10 @@ class AIReviewAnalyzer {
 
   private categorizeAndStore(review: string) {
     const patterns = this.extractPatterns(review);
-    
+
     for (const pattern of patterns) {
       const key = pattern.pattern.toLowerCase();
-      
+
       if (this.patterns.has(key)) {
         const existing = this.patterns.get(key)!;
         existing.count++;
@@ -139,15 +147,21 @@ class AIReviewAnalyzer {
           pattern: pattern.pattern,
           count: 1,
           examples: [pattern.example],
-          category: pattern.category
+          category: pattern.category,
         });
       }
     }
   }
 
-  private extractPatterns(review: string): Array<{pattern: string, example: string, category: AIReviewPattern['category']}> {
-    const patterns: Array<{pattern: string, example: string, category: AIReviewPattern['category']}> = [];
-    
+  private extractPatterns(
+    review: string
+  ): Array<{ pattern: string; example: string; category: AIReviewPattern['category'] }> {
+    const patterns: Array<{
+      pattern: string;
+      example: string;
+      category: AIReviewPattern['category'];
+    }> = [];
+
     // Common patterns to detect
     const patternRules = [
       { regex: /missing\s+tests?/i, pattern: 'Missing tests', category: 'tests' as const },
@@ -158,15 +172,43 @@ class AIReviewAnalyzer {
       { regex: /variable\s+name/i, pattern: 'Variable naming', category: 'naming' as const },
       { regex: /function\s+name/i, pattern: 'Function naming', category: 'naming' as const },
       { regex: /security\s+concern/i, pattern: 'Security concern', category: 'security' as const },
-      { regex: /potential\s+vulnerability/i, pattern: 'Potential vulnerability', category: 'security' as const },
-      { regex: /performance\s+issue/i, pattern: 'Performance issue', category: 'performance' as const },
-      { regex: /optimization/i, pattern: 'Optimization opportunity', category: 'performance' as const },
-      { regex: /type\s+annotation/i, pattern: 'Type annotation', category: 'architecture' as const },
-      { regex: /interface\s+definition/i, pattern: 'Interface definition', category: 'architecture' as const },
-      { regex: /missing\s+documentation/i, pattern: 'Missing documentation', category: 'documentation' as const },
+      {
+        regex: /potential\s+vulnerability/i,
+        pattern: 'Potential vulnerability',
+        category: 'security' as const,
+      },
+      {
+        regex: /performance\s+issue/i,
+        pattern: 'Performance issue',
+        category: 'performance' as const,
+      },
+      {
+        regex: /optimization/i,
+        pattern: 'Optimization opportunity',
+        category: 'performance' as const,
+      },
+      {
+        regex: /type\s+annotation/i,
+        pattern: 'Type annotation',
+        category: 'architecture' as const,
+      },
+      {
+        regex: /interface\s+definition/i,
+        pattern: 'Interface definition',
+        category: 'architecture' as const,
+      },
+      {
+        regex: /missing\s+documentation/i,
+        pattern: 'Missing documentation',
+        category: 'documentation' as const,
+      },
       { regex: /add\s+comments?/i, pattern: 'Add comments', category: 'documentation' as const },
       { regex: /error\s+handling/i, pattern: 'Error handling', category: 'architecture' as const },
-      { regex: /exception\s+handling/i, pattern: 'Exception handling', category: 'architecture' as const },
+      {
+        regex: /exception\s+handling/i,
+        pattern: 'Exception handling',
+        category: 'architecture' as const,
+      },
     ];
 
     for (const rule of patternRules) {
@@ -174,7 +216,7 @@ class AIReviewAnalyzer {
         patterns.push({
           pattern: rule.pattern,
           example: this.extractExampleFromReview(review, rule.regex),
-          category: rule.category
+          category: rule.category,
         });
       }
     }
@@ -184,7 +226,7 @@ class AIReviewAnalyzer {
       patterns.push({
         pattern: 'General feedback',
         example: review.substring(0, 100) + '...',
-        category: 'other'
+        category: 'other',
       });
     }
 
@@ -203,7 +245,7 @@ class AIReviewAnalyzer {
 
   private generateLessonSuggestions(patterns: AIReviewPattern[]): string[] {
     const suggestions: string[] = [];
-    
+
     for (const pattern of patterns) {
       if (pattern.count >= this.PATTERN_THRESHOLD && pattern.count < this.ADR_THRESHOLD) {
         suggestions.push(this.createLessonSuggestion(pattern));
@@ -215,7 +257,7 @@ class AIReviewAnalyzer {
 
   private generateADRSuggestions(patterns: AIReviewPattern[]): string[] {
     const suggestions: string[] = [];
-    
+
     for (const pattern of patterns) {
       if (pattern.count >= this.ADR_THRESHOLD) {
         suggestions.push(this.createADRSuggestion(pattern));
@@ -227,14 +269,14 @@ class AIReviewAnalyzer {
 
   private createLessonSuggestion(pattern: AIReviewPattern): string {
     const filename = `${pattern.category}-${pattern.pattern.toLowerCase().replace(/\s+/g, '-')}.md`;
-    
+
     return `docs/micro-lessons/${filename}: Pattern "${pattern.pattern}" appeared ${pattern.count} times - consider creating micro-lesson`;
   }
 
   private createADRSuggestion(pattern: AIReviewPattern): string {
     const today = new Date().toISOString().split('T')[0].replace(/-/g, '');
     const adrId = `ADR-${today}-${pattern.category}-standards`;
-    
+
     return `docs/decisions/${adrId.toLowerCase()}.md: Pattern "${pattern.pattern}" appeared ${pattern.count} times - consider architectural decision`;
   }
 
@@ -244,7 +286,7 @@ class AIReviewAnalyzer {
    */
   generateReport(): string {
     const analysis = this.analyzeReports();
-    
+
     let report = `# AI Review Pattern Analysis\n\n`;
     report += `**Total AI reviews analyzed:** ${analysis.totalReviews}\n`;
     report += `**Unique patterns found:** ${analysis.patterns.length}\n\n`;
@@ -289,7 +331,7 @@ class AIReviewAnalyzer {
 
   private getCategoryStats(patterns: AIReviewPattern[]): Record<string, number> {
     const stats: Record<string, number> = {};
-    
+
     for (const pattern of patterns) {
       stats[pattern.category] = (stats[pattern.category] || 0) + pattern.count;
     }
@@ -301,7 +343,7 @@ class AIReviewAnalyzer {
 // CLI interface
 function main() {
   const analyzer = new AIReviewAnalyzer();
-  
+
   if (process.argv.includes('--report')) {
     console.log(analyzer.generateReport());
   } else {
@@ -311,7 +353,7 @@ function main() {
     console.log(`Patterns found: ${analysis.patterns.length}`);
     console.log(`Lesson suggestions: ${analysis.suggestedLessons.length}`);
     console.log(`ADR suggestions: ${analysis.suggestedADRs.length}`);
-    
+
     if (analysis.suggestedLessons.length > 0) {
       console.log(`\n💡 Run 'pnpm ai-review --report' for detailed suggestions`);
     }

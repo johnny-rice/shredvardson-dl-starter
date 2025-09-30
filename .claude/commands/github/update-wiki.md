@@ -1,9 +1,9 @@
 ---
 # Machine-readable metadata (parsed into docs/commands/index.json)
-name: "/github:update-wiki"
-version: "1.0.0"
-lane: "lightweight"
-tags: ["github", "wiki", "documentation"]
+name: '/github:update-wiki'
+version: '1.0.0'
+lane: 'lightweight'
+tags: ['github', 'wiki', 'documentation']
 when_to_use: >
   Sync current project state to wiki pages for GPT-5 context.
 
@@ -11,34 +11,34 @@ arguments: []
 
 inputs: []
 outputs:
-  - type: "artifact-links"
+  - type: 'artifact-links'
 
-riskLevel: "LOW"
+riskLevel: 'LOW'
 requiresHITL: true
-riskPolicyRef: "docs/llm/risk-policy.json#commandDefaults"
+riskPolicyRef: 'docs/llm/risk-policy.json#commandDefaults'
 
 allowed-tools:
-  - "Read(*.md)"
-  - "Read(wiki/**/*)"
-  - "Write(wiki/**/*)"
-  - "Glob(**/*.md)"
+  - 'Read(*.md)'
+  - 'Read(wiki/**/*)'
+  - 'Write(wiki/**/*)'
+  - 'Glob(**/*.md)'
 
 preconditions:
-  - "Project state changes exist"
-  - "Wiki structure is established"
+  - 'Project state changes exist'
+  - 'Wiki structure is established'
 postconditions:
-  - "Wiki pages updated with current state"
-  - "GPT-5 context is current"
+  - 'Wiki pages updated with current state'
+  - 'GPT-5 context is current'
 
 artifacts:
   produces:
-    - { path: "wiki-updates.md", purpose: "Generated wiki content updates" }
+    - { path: 'wiki-updates.md', purpose: 'Generated wiki content updates' }
   updates: []
 
 permissions:
   tools:
-    - name: "filesystem"
-      ops: ["read", "write"]
+    - name: 'filesystem'
+      ops: ['read', 'write']
 
 timeouts:
   softSeconds: 300
@@ -47,12 +47,12 @@ timeouts:
 idempotent: true
 dryRun: true
 estimatedRuntimeSec: 180
-costHints: "Medium I/O; documentation generation"
+costHints: 'Medium I/O; documentation generation'
 
 references:
-  - "docs/constitution.md#documentation-standards"
-  - "CLAUDE.md#wiki-maintenance"
-purpose: "Generated wiki content updates"
+  - 'docs/constitution.md#documentation-standards'
+  - 'CLAUDE.md#wiki-maintenance'
+purpose: 'Generated wiki content updates'
 ---
 
 **Slash Command:** `/github:update-wiki`
@@ -60,20 +60,20 @@ purpose: "Generated wiki content updates"
 **Goal:**  
 Sync current project state to wiki pages for GPT-5 context.
 
-> Updates the canonical Wiki pages (list all or "discovered via Glob(**/*.md)").
+> Updates the canonical Wiki pages (list all or "discovered via Glob(\*_/_.md)").
 > Idempotent given identical inputs; non-dry-run will overwrite existing pages.
 
 **Prompt:**
 
-1) Confirm lane (**lightweight**) against `CLAUDE.md` decision rules.  
-2) Update relevant wiki pages with current project state:
+1. Confirm lane (**lightweight**) against `CLAUDE.md` decision rules.
+2. Update relevant wiki pages with current project state:
    - Add new features to Current-Features.md
    - Update architecture changes in Architecture-Overview.md
    - Document new patterns in Data-Model.md
    - Ensure Home.md reflects current project status
-3) Generate updated content and provide copy-paste instructions for manual wiki update.
-4) Produce wiki **artifacts** and **link** results in related Issue/PR.
-5) Emit **Result**: wiki content generated, update instructions provided, and next suggested command.
+3. Generate updated content and provide copy-paste instructions for manual wiki update.
+4. Produce wiki **artifacts** and **link** results in related Issue/PR.
+5. Emit **Result**: wiki content generated, update instructions provided, and next suggested command.
 
 **Examples:**
 

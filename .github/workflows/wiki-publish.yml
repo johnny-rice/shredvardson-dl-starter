@@ -11,6 +11,7 @@ on:
       - 'CONTRIBUTING.md'
       - 'SECURITY.md'
       - 'docs/constitution.md'
+      - '.github/workflows/wiki-publish.yml'
   workflow_dispatch:
     inputs:
       force_full_rebuild:
@@ -32,11 +33,11 @@ jobs:
   prepare-wiki-content:
     name: Prepare Wiki Content
     runs-on: ubuntu-latest
-    
+
     outputs:
       has-changes: ${{ steps.check-changes.outputs.has-changes }}
       changed-files: ${{ steps.check-changes.outputs.changed-files }}
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -51,7 +52,7 @@ jobs:
       - name: Install pnpm
         uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: 9.12.0
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -65,10 +66,10 @@ jobs:
             echo "Force rebuild requested"
             exit 0
           fi
-          
+
           # Check for changes in wiki-relevant files
           changed_files=$(git diff --name-only ${{ github.event.before }}..${{ github.sha }} | grep -E '\.(md|json)$' | grep -E '^(docs/|wiki-content/|\.claude/commands/|CLAUDE\.md|CONTRIBUTING\.md|SECURITY\.md)' || true)
-          
+
           if [ -n "$changed_files" ]; then
             echo "has-changes=true" >> $GITHUB_OUTPUT
             echo "changed-files<<EOF" >> $GITHUB_OUTPUT
@@ -88,58 +89,58 @@ jobs:
         run: |
           cat > wiki-content/generated/Home.md << 'EOF'
           # Dissonance Labs Starter Wiki
-          
+
           Welcome to the Dissonance Labs Starter project wiki. This documentation is automatically generated from the repository contents.
-          
+
           ## Quick Navigation
-          
+
           - [Constitution](Constitution) - Project governance and architectural decisions
           - [Commands](Commands) - Available Claude commands and workflows
           - [Contributing](../CONTRIBUTING.md) - How to contribute to the project
           - [Security](../SECURITY.md) - Security policies and procedures
-          
+
           ## Project Overview
-          
+
           The Dissonance Labs Starter is a modern web application starter template featuring:
-          
+
           - **Dual-Lane Development**: Human and AI-powered development workflows
           - **Security First**: Built-in security best practices and automated scanning
           - **Test-Driven**: Comprehensive testing framework with TDD workflows
           - **Type Safe**: Full TypeScript coverage with strict type checking
           - **Modern Stack**: Next.js, React, Tailwind CSS, and more
-          
+
           ## Architecture
-          
+
           This project implements a dual-lane development model:
-          
+
           ### Human Development Lane
           - Full repository access
           - Standard PR review process
           - Direct merge capabilities
           - Primary decision authority
-          
+
           ### AI-Powered Development Lane
           - Restricted to `bots/claude/*` branches
           - Advisory contributions only
           - Requires human promotion via labels
           - Automated quality gates
-          
+
           ## Getting Started
-          
+
           1. **Installation**: Follow the setup instructions in the README
           2. **Commands**: Explore available commands in the [Commands](Commands) page
           3. **Constitution**: Review the [Constitution](Constitution) for project governance
           4. **Contributing**: Check [CONTRIBUTING.md](../CONTRIBUTING.md) for contribution guidelines
-          
+
           ## Documentation Structure
-          
+
           - `/docs/` - Technical documentation and guides
           - `/wiki-content/` - Wiki-specific content and templates
           - `/.claude/commands/` - AI command definitions
           - `/specs/` - Feature specifications and design documents
-          
+
           ---
-          
+
           *Last updated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")*  
           *Generated from commit: $(git rev-parse --short HEAD)*
           EOF
@@ -151,7 +152,7 @@ jobs:
           else
             cat > wiki-content/generated/Constitution.md << 'EOF'
           # Constitution
-          
+
           The project constitution is not yet available. Please check back later or refer to the main repository.
           EOF
           fi
@@ -160,13 +161,13 @@ jobs:
         run: |
           cat > wiki-content/generated/Commands.md << 'EOF'
           # Available Commands
-          
+
           This page documents all available Claude commands for the Dissonance Labs Starter project.
-          
+
           ## Command Categories
-          
+
           EOF
-          
+
           # Generate command documentation
           if [ -f "scripts/generate-command-index.js" ]; then
             node scripts/generate-command-index.js --format=wiki >> wiki-content/generated/Commands.md
@@ -195,24 +196,24 @@ jobs:
           No commands directory found. Commands will be documented as they are added to the project.
           EOF
           fi
-          
+
           cat >> wiki-content/generated/Commands.md << 'EOF'
-          
+
           ## Command Usage
-          
+
           Commands are invoked by typing them in your Claude conversation. Each command has specific purposes:
-          
+
           - **Spec Commands**: For complex feature development
           - **Dev Commands**: For simple development tasks  
           - **GitHub Commands**: For repository management
           - **Quality Commands**: For code quality and testing
-          
+
           ## Getting Help
-          
+
           For detailed information about any command, refer to the individual command files in `.claude/commands/`.
-          
+
           ---
-          
+
           EOF
           echo "*Generated on: $(date -u +"%Y-%m-%d %H:%M:%S UTC")*" >> wiki-content/generated/Commands.md
 
@@ -221,7 +222,7 @@ jobs:
           # Copy key documentation files to wiki
           cp CONTRIBUTING.md wiki-content/generated/ 2>/dev/null || echo "CONTRIBUTING.md not found"
           cp SECURITY.md wiki-content/generated/ 2>/dev/null || echo "SECURITY.md not found"
-          
+
           # Copy any docs/ files that should be in wiki
           if [ -d "docs" ]; then
             find docs -name "*.md" -not -path "docs/llm/*" | while read -r doc_file; do
@@ -244,7 +245,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: prepare-wiki-content
     if: needs.prepare-wiki-content.outputs.has-changes == 'true'
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -265,7 +266,7 @@ jobs:
       - name: Update wiki pages
         run: |
           echo "Updating wiki pages..."
-          
+
           # Create wiki repo if it doesn't exist
           if [ ! -d "wiki-repo/.git" ]; then
             echo "Creating new wiki repository..."
@@ -280,35 +281,35 @@ jobs:
             git remote add origin https://github.com/${{ github.repository }}.wiki.git
             cd ..
           fi
-          
+
           # Copy generated content to wiki repo
           cd wiki-repo
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           # Remove old generated content
           git rm -rf . || true
-          
+
           # Copy new content
           cp -r ../wiki-staging/* .
-          
+
           # Add all changes
           git add .
-          
+
           # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No wiki changes to commit"
             exit 0
           fi
-          
+
           # Commit and push
           git commit -m "Auto-update wiki from main branch
-          
+
           Updated files:
           ${{ needs.prepare-wiki-content.outputs.changed-files }}
-          
+
           Source commit: ${{ github.sha }}"
-          
+
           git push origin main
 
       - name: Create update summary
@@ -319,7 +320,7 @@ jobs:
           echo "**Source Commit**: ${{ github.sha }}" >> wiki-summary.md
           echo "**Trigger**: ${{ github.event_name }}" >> wiki-summary.md
           echo "" >> wiki-summary.md
-          
+
           if [ "${{ needs.prepare-wiki-content.outputs.changed-files }}" = "force-rebuild" ]; then
             echo "**Type**: Force rebuild" >> wiki-summary.md
           else
@@ -330,14 +331,14 @@ jobs:
               echo "- $file" >> wiki-summary.md
             done
           fi
-          
+
           echo "" >> wiki-summary.md
           echo "**Generated Pages**:" >> wiki-summary.md
           find wiki-staging -name "*.md" | while read -r page; do
             page_name=$(basename "$page" .md)
             echo "- [$page_name](https://github.com/${{ github.repository }}/wiki/$page_name)" >> wiki-summary.md
           done
-          
+
           cat wiki-summary.md
 
       - name: Upload update summary
@@ -352,7 +353,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: publish-to-wiki
     if: always() && needs.prepare-wiki-content.outputs.has-changes == 'true'
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -369,7 +370,7 @@ jobs:
       - name: Validate internal links
         run: |
           echo "Validating wiki page links..."
-          
+
           # Check internal links in generated wiki pages
           find wiki-validation -name "*.md" | while read -r file; do
             echo "Checking links in: $file"
@@ -394,5 +395,5 @@ jobs:
               # Don't fail the job for broken links, just warn
             }
           done
-          
+
           echo "✅ Wiki link validation completed"

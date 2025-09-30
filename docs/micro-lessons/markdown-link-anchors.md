@@ -1,9 +1,11 @@
 # Handle Anchors and Query Params in Markdown Link Checking
 
 ## Problem
+
 Doc link checkers fail when markdown links include anchors (`#section`) or query parameters (`?param=value`) because they treat the entire string as a file path.
 
 ## Solution
+
 Strip anchors and query parameters before checking file existence:
 
 ```typescript
@@ -13,7 +15,7 @@ if (!existsSync(resolve(dirname(file), linkPath))) {
   // Error: tries to find "file.md#section" as filename
 }
 
-// After: handles anchors and queries correctly  
+// After: handles anchors and queries correctly
 const linkPath = match[2];
 const cleanPath = linkPath.split('#')[0].split('?')[0]; // Remove #section
 if (cleanPath.endsWith('.md') && !cleanPath.startsWith('http')) {
@@ -25,6 +27,7 @@ if (cleanPath.endsWith('.md') && !cleanPath.startsWith('http')) {
 ```
 
 ## Context
+
 - Common in documentation with deep-linked sections
 - File existence check should ignore URL fragments
 - Preserve original link in error messages for debugging

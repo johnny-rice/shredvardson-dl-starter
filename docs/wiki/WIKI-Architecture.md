@@ -1,6 +1,7 @@
 # Architecture Overview
 
 ## Table of Contents
+
 - [Stack Overview](#stack-overview)
 - [Repository Structure](#repository-structure)
 - [UI Framework Rules](#ui-framework-rules)
@@ -10,6 +11,7 @@
 ## Stack Overview
 
 ### Core Technologies
+
 - **Frontend**: Next.js 15 with App Router, React 19, TypeScript
 - **Backend**: Supabase (PostgreSQL, Auth, Real-time)
 - **Build System**: Turborepo monorepo with workspace management
@@ -19,6 +21,7 @@
 - **Monitoring**: Sentry for error tracking and performance
 
 ### Development Tools
+
 - **Package Manager**: pnpm with workspace support
 - **Testing**: Vitest (unit), Playwright (E2E)
 - **Linting**: ESLint with TypeScript rules
@@ -53,6 +56,7 @@
 ```
 
 ### Workspace Organization
+
 - **apps/**: Deployable applications (Next.js web app)
 - **packages/**: Shared libraries and utilities
 - **Turborepo**: Manages dependencies and build orchestration
@@ -61,6 +65,7 @@
 ## UI Framework Rules
 
 ### Component Hierarchy
+
 1. **shadcn/ui Components** (Primary)
    - Use for all standard UI patterns
    - Maintains design system consistency
@@ -77,6 +82,7 @@
    - Security and bundle size review required
 
 ### Styling Rules
+
 - **Tailwind CSS Only**: No custom CSS files
 - **Design Tokens**: Use CSS custom properties for theming
 - **No Hardcoded Colors**: Use semantic color tokens like `hsl(var(--primary))`
@@ -84,6 +90,7 @@
 - **Dark Mode**: Support via CSS custom properties
 
 ### Example Component Structure
+
 ```tsx
 // ✅ Good: Uses shadcn/ui + semantic tokens
 import { Button } from '@ui/components';
@@ -98,17 +105,14 @@ export function AnalyticsButton() {
 
 // ❌ Bad: Hardcoded styles, no design system
 export function CustomButton() {
-  return (
-    <button className="bg-blue-500 text-white px-4 py-2">
-      Click Me
-    </button>
-  );
+  return <button className="bg-blue-500 text-white px-4 py-2">Click Me</button>;
 }
 ```
 
 ## App Layout
 
 ### Next.js App Router Structure
+
 ```
 apps/web/src/app/
 ├── (marketing)/           # Public marketing pages
@@ -123,6 +127,7 @@ apps/web/src/app/
 ```
 
 ### Component Organization
+
 ```
 apps/web/src/components/
 ├── AnalyticsProvider.tsx  # Context providers
@@ -131,6 +136,7 @@ apps/web/src/components/
 ```
 
 ### Utilities and Configuration
+
 ```
 apps/web/src/lib/
 ├── analytics.ts          # Feature logic
@@ -142,19 +148,23 @@ apps/web/src/lib/
 ## Development Architecture
 
 ### Dual-Lane System
+
 - **Simple Lane**: Direct implementation for small changes (via `/dev:plan-feature`)
 - **Spec-Driven Lane**: Structured planning for complex features (via `/specify` → `/plan` → `/tasks`)
 
 ### Quality Integration
+
 - All code changes go through [Quality Gates](./WIKI-Quality-Gates.md)
 - TypeScript strict mode enforced
 - Comprehensive testing strategy (unit + E2E)
 - Automated security scanning
 
 ### Feature Flag Architecture
+
 - Environment-based feature toggles
 - Example: `NEXT_PUBLIC_ENABLE_ANALYTICS=true`
 - Safe rollout and instant disable capabilities
 
 ---
-*Architecture balances rapid development velocity with security, quality, and maintainability*
+
+_Architecture balances rapid development velocity with security, quality, and maintainability_

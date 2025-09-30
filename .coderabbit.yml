@@ -1,7 +1,7 @@
-enabled: true  # flip to false if you want a "bot holiday"
+enabled: true # flip to false if you want a "bot holiday"
 review:
   auto_review: false
-  require_label: 'ai-review'     # only runs when YOU add this label
+  require_label: 'ai-review' # only runs when YOU add this label
   high_level_summary: true
   path_includes:
     - 'apps/**'

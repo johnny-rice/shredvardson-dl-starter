@@ -52,12 +52,12 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          
+
           if git diff --quiet; then
             echo "No changes to commit"
             exit 0
           fi
-          
+
           git add docs/micro-lessons/
           git commit -m "chore: update micro-lesson reuse counts (weekly automation)
 

@@ -5,9 +5,5 @@ interface AppLayoutProps {
 }
 
 export default function AppLayout({ children }: AppLayoutProps) {
-  return (
-    <AnalyticsProvider>
-      {children}
-    </AnalyticsProvider>
-  );
+  return <AnalyticsProvider>{children}</AnalyticsProvider>;
 }

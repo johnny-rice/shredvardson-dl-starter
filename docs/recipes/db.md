@@ -6,6 +6,7 @@ Goal: stable DB access (Prisma/Drizzle).
 - Zod schemas colocated with models.
 
 ## Checklist
+
 - [ ] Migrations run in CI
 - [ ] Seed command documented
 

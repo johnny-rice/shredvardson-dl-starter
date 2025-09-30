@@ -1,6 +1,7 @@
 # Quality Gates & Pipeline
 
 ## Table of Contents
+
 - [Overview](#overview)
 - [Exact Merge Gates](#exact-merge-gates)
 - [Individual Gates](#individual-gates)
@@ -15,15 +16,17 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 ## Exact Merge Gates
 
 **Required for ALL merges:**
+
 1. **`pnpm doctor`** - Project health and compliance (includes learnings index & metrics) ✅
 2. **`pnpm typecheck`** - TypeScript compilation ✅
-3. **`pnpm lint`** - Code style and standards ✅  
+3. **`pnpm lint`** - Code style and standards ✅
 4. **`pnpm test:unit`** - Unit test coverage ✅
 5. **`pnpm test:e2e`** - End-to-end user flows ✅ (if applicable; infra/docs-only PRs may mark N/A)
 6. **`pnpm build`** - Production build verification ✅
 7. **Human review** - Manual approval required ✅ (always)
 
 **CI Jobs that must pass:**
+
 - **ci** – Main build pipeline (lint, typecheck, unit tests, build)
 - **doctor** – Repository health validation
 - **spec-gate** – Specification and governance checks
@@ -32,8 +35,10 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 ## Individual Gates
 
 ### Doctor (`pnpm doctor`)
+
 **Purpose**: Comprehensive project health check  
 **Checks**:
+
 - All referenced scripts/paths exist
 - No broken internal links
 - Command inventory is up-to-date
@@ -49,8 +54,10 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 **Green Light**: All references valid, no broken links, configs current; learnings index healthy; LEARNINGS_STATS JSON well‑formed (ISO‑8601), staleness ≤ 24h (or advisory warning acknowledged)
 
 ### TypeScript (`pnpm typecheck`)
+
 **Purpose**: Type safety and compilation verification  
 **Checks**:
+
 - No TypeScript compilation errors
 - Strict type checking compliance
 - No `any` types in new code
@@ -59,8 +66,10 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 **Green Light**: Clean TypeScript compilation, full type safety
 
 ### Linting (`pnpm lint`)
+
 **Purpose**: Code style, best practices, and consistency  
 **Checks**:
+
 - ESLint rule compliance
 - Import organization
 - Unused variable detection
@@ -70,8 +79,10 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 **Green Light**: No linting errors, consistent code style
 
 ### Unit Tests (`pnpm test:unit`)
+
 **Purpose**: Component and function-level testing  
 **Checks**:
+
 - All unit tests pass
 - Minimum coverage thresholds met
 - Test isolation maintained
@@ -80,8 +91,10 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 **Green Light**: 100% test pass rate, coverage targets met
 
 ### E2E Tests (`pnpm test:e2e`)
+
 **Purpose**: User journey and integration testing  
 **Checks**:
+
 - Critical user flows work end-to-end
 - Page rendering and navigation
 - Form submissions and interactions
@@ -91,8 +104,10 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 Note: Infra/docs-only PRs may mark this gate N/A.
 
 ### Build Verification (`pnpm build`)
+
 **Purpose**: Production build success and optimization  
 **Checks**:
+
 - Clean production build
 - Bundle size limits
 - Asset optimization
@@ -104,18 +119,21 @@ Note: Infra/docs-only PRs may mark this gate N/A.
 ## What "Green Lights" Mean
 
 ### ✅ All Checks Passing
+
 - Code is ready for production deployment
 - Meets all quality and security standards
 - Safe to merge to main branch
 - No breaking changes introduced
 
 ### ⚠️ Advisory Warnings
+
 - Non-blocking issues identified (from AI scans)
 - Recommendations for improvement
 - Style or performance suggestions
 - Future maintenance considerations
 
 ### ❌ Blocking Failures
+
 - **Must be fixed before merge**
 - Breaks existing functionality
 - Security vulnerabilities present
@@ -124,6 +142,7 @@ Note: Infra/docs-only PRs may mark this gate N/A.
 ## Red Zone (AI Must Not Touch)
 
 **AI agents are PROHIBITED from modifying:**
+
 - `.github/workflows/**` - CI/CD pipeline configurations
 - `scripts/release/**` - Release and deployment scripts
 - `.env*` files - Environment configurations
@@ -133,6 +152,7 @@ Note: Infra/docs-only PRs may mark this gate N/A.
 - Security policy definitions
 
 **Allowed AI modification paths:**
+
 - `apps/` - Application code
 - `packages/` - Shared packages
 - `docs/**` - Documentation
@@ -143,24 +163,28 @@ Note: Infra/docs-only PRs may mark this gate N/A.
 ### Common Failure Patterns
 
 **TypeScript Errors**:
+
 ```bash
 pnpm typecheck
 # Review and resolve all type errors
 ```
 
 **Linting Issues**:
+
 ```bash
 pnpm lint --fix  # Auto-fix where possible
 # Manually resolve remaining issues
 ```
 
 **Test Failures**:
+
 ```bash
 pnpm test:unit --verbose
 # Fix failing tests or update snapshots
 ```
 
 **Build Failures**:
+
 ```bash
 pnpm build
 # Review bundle analysis and fix imports
@@ -174,4 +198,5 @@ pnpm build
 4. **Dependency Updates**: Ensure all packages are current
 
 ---
-*Quality gates ensure reliable, secure, and maintainable code while supporting rapid development velocity. See Principles in [WIKI-Home](./WIKI-Home.md) for project philosophy.*
+
+_Quality gates ensure reliable, secure, and maintainable code while supporting rapid development velocity. See Principles in [WIKI-Home](./WIKI-Home.md) for project philosophy._

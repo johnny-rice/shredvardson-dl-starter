@@ -3,24 +3,28 @@
 Ensures you're working on a feature branch, not main. Creates a feature branch if needed.
 
 ## Usage
+
 ```
 /git:ensure-branch [feature-name]
 ```
 
 ## What it does
+
 1. Checks if you're currently on main branch
 2. If on main, creates and switches to a feature branch
 3. Suggests appropriate branch naming conventions
 4. Provides guidance on branch protection workflow
 
 ## Branch Naming Conventions
+
 - `feature/description` - New features
-- `fix/description` - Bug fixes  
+- `fix/description` - Bug fixes
 - `refactor/description` - Code refactoring
 - `docs/description` - Documentation updates
 - `chore/description` - Maintenance tasks
 
 ## Implementation
+
 ```bash
 #!/bin/bash
 
@@ -32,7 +36,7 @@ if [ "$current_branch" = "main" ]; then
     echo "🔒 Direct changes to main are not allowed."
     echo "   Creating a feature branch for you..."
     echo ""
-    
+
     if [ -z "$1" ]; then
         echo "💡 Branch name suggestions:"
         echo "   feature/your-feature-name"
@@ -43,7 +47,7 @@ if [ "$current_branch" = "main" ]; then
     else
         branch_name="$1"
     fi
-    
+
     if [ -n "$branch_name" ]; then
         git checkout -b "$branch_name"
         echo "✅ Created and switched to branch: $branch_name"
@@ -64,11 +68,13 @@ fi
 ```
 
 ## Related Commands
+
 - `npm run git:start` - Start new feature workflow
 - `npm run hooks:install` - Install branch protection hooks
 - `npm run pr:create` - Create pull request
 
 ## Safety Features
+
 - Prevents accidental commits to main
 - Guides proper branch naming
 - Integrates with git hook protection

@@ -1,17 +1,11 @@
 {
-  "missingScripts": [
-    "example:script"
-  ],
-  "missingPaths": [
-    "docs/future-feature.md"
-  ],
-  "missingAnchors": [
-    "README.md#planned-section"
-  ],
+  "missingScripts": ["example:script"],
+  "missingPaths": ["docs/future-feature.md"],
+  "missingAnchors": ["README.md#planned-section"],
   "_comments": {
     "purpose": "Allowlist for doctor checker - only add items that are INTENTIONALLY missing",
     "missingScripts": "Scripts referenced in docs that don't exist yet (with good reason)",
-    "missingPaths": "Paths referenced in docs that don't exist yet (like future documentation)",  
+    "missingPaths": "Paths referenced in docs that don't exist yet (like future documentation)",
     "missingAnchors": "Anchor links that reference planned sections not yet written",
     "usage": "Copy this file to .doctor-allowlist.json and customize for your needs",
     "warning": "Use sparingly - most missing references should be fixed, not allowlisted"

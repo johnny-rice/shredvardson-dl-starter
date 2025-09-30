@@ -5,7 +5,7 @@
       "@ui/components": ["packages/ui/index.ts"],
       "@ui/*": ["packages/ui/*"],
       "@shared/types": ["packages/types/index.ts"],
-      "@shared/ai": ["packages/ai/index.ts"], 
+      "@shared/ai": ["packages/ai/index.ts"],
       "@shared/config": ["packages/config/index.js"]
     }
   }

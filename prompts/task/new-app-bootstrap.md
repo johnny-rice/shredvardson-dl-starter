@@ -1,4 +1,5 @@
 # New App Bootstrap Task
+
 **Intent:** Bootstrap a new app using the dl-starter template system
 **Inputs:** App name, domain, company name, bootstrap mode (monorepo/export)  
 **Expected Output:** Fully configured app ready for development

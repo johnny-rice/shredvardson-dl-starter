@@ -1,9 +1,9 @@
 /**
  * 🚧 EXAMPLE ONLY: Secure Analytics Utilities
- * 
+ *
  * This is a secure reference implementation that fixes CodeQL security issues.
  * Uses CSPRNG instead of Math.random() for cryptographically secure IDs.
- * 
+ *
  * Status: Example code - not used in production starter template
  */
 
@@ -59,7 +59,7 @@ function secureRandomString(len = 12): string {
   } catch {
     // Browser path
     let binary = '';
-    bytes.forEach(b => (binary += String.fromCharCode(b)));
+    bytes.forEach((b) => (binary += String.fromCharCode(b)));
     b64 = btoa(binary);
   }
   return b64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '').slice(0, len);
@@ -124,23 +124,23 @@ export function saveAnalyticsData(data: AnalyticsData): void {
  * Track an analytics event
  */
 export function trackEvent(
-  type: AnalyticsEvent['type'], 
-  path: string, 
+  type: AnalyticsEvent['type'],
+  path: string,
   metadata?: Record<string, string | number>
 ): void {
   if (typeof window === 'undefined') return; // SSR safety
-  
+
   const event = createEvent(type, path, metadata);
   const data = getAnalyticsData() || {
     sessionId: generateSessionId(),
     events: [],
     createdAt: Date.now(),
-    lastUpdated: Date.now()
+    lastUpdated: Date.now(),
   };
-  
+
   data.events.push(event);
   data.lastUpdated = Date.now();
-  
+
   saveAnalyticsData(data);
 }
 
@@ -179,15 +179,15 @@ export function getAnalyticsSummary() {
   const data = getAnalyticsData();
   if (!data) return null;
 
-  const pageViews = data.events.filter(e => e.type === 'page_view');
-  const clicks = data.events.filter(e => e.type === 'click');
-  const uniquePages = new Set(pageViews.map(e => e.path)).size;
-  
+  const pageViews = data.events.filter((e) => e.type === 'page_view');
+  const clicks = data.events.filter((e) => e.type === 'click');
+  const uniquePages = new Set(pageViews.map((e) => e.path)).size;
+
   return {
     totalEvents: data.events.length,
     pageViews: pageViews.length,
     clicks: clicks.length,
     uniquePages,
-    sessionDuration: data.lastUpdated - data.createdAt
+    sessionDuration: data.lastUpdated - data.createdAt,
   };
 }

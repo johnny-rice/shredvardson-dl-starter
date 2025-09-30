@@ -1,17 +1,17 @@
 /**
  * @fileoverview Database client adapter following DLStarter adapter patterns
- * 
+ *
  * Provides a clean, typed interface for Supabase database operations while
  * maintaining replaceable vendor boundaries. Includes health checks, auth
  * management, and safe SQL execution capabilities.
- * 
+ *
  * @example
  * ```typescript
  * const client = createDatabaseClient({
  *   url: process.env.SUPABASE_URL,
  *   anonKey: process.env.SUPABASE_ANON_KEY
  * });
- * 
+ *
  * const { data, error } = await client.raw.from('users').select('*');
  * const health = await client.healthCheck();
  * ```
@@ -80,12 +80,15 @@ export class DatabaseClient {
    */
   async healthCheck(): Promise<{ healthy: boolean; error?: string }> {
     try {
-      const { error } = await this.client.from('_health_check').select('id', { head: true, count: 'exact' }).limit(1);
+      const { error } = await this.client
+        .from('_health_check')
+        .select('id', { head: true, count: 'exact' })
+        .limit(1);
       return { healthy: !error };
     } catch (err) {
-      return { 
-        healthy: false, 
-        error: err instanceof Error ? err.message : 'Unknown error' 
+      return {
+        healthy: false,
+        error: err instanceof Error ? err.message : 'Unknown error',
       };
     }
   }

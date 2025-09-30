@@ -1,9 +1,11 @@
 # Be Lenient with YAML Validation and Coerce Types
 
 ## Problem
+
 Strict YAML validation fails when fields are missing/undefined or when YAML parsers return strings instead of expected types (e.g., issue numbers).
 
 ## Solution
+
 Allow missing optional fields and coerce types with validation:
 
 ```typescript
@@ -34,12 +36,14 @@ if (typeof data.issue !== 'number') {
 ```
 
 ## Key Benefits
+
 - Handles missing optional fields gracefully
 - Coerces YAML string numbers to actual numbers
 - Provides clear error messages for invalid data
 - Normalizes data structure for downstream use
 
 ## Context
+
 - Common with gray-matter and other YAML parsers
 - Essential for user-friendly validation of front-matter
 - Prevents failures on technically valid but different formats

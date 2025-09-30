@@ -6,6 +6,7 @@ Goal: consistent UI tokens & components.
 - No ad-hoc colors outside tokens.
 
 ## Checklist
+
 - [ ] Tailwind config shared via packages/config
 
 Links: shadcn/ui docs.

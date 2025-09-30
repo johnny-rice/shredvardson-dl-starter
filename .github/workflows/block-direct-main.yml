@@ -12,9 +12,9 @@ jobs:
   block-direct-push:
     runs-on: ubuntu-latest
     if: ${{ github.event_name == 'push'
-          && github.ref == 'refs/heads/main'
-          && github.actor != 'github-actions[bot]'
-          && !startsWith(github.actor, 'dependabot') }}
+      && github.ref == 'refs/heads/main'
+      && github.actor != 'github-actions[bot]'
+      && !startsWith(github.actor, 'dependabot') }}
     steps:
       - name: Detect PR association
         id: pr-check

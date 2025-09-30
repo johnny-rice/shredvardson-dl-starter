@@ -3,6 +3,7 @@
 ## [1.0.0] - 2025-09-21
 
 ### Added
+
 - Complete learning loop system with heat ranking
 - Heat formula guardrails: capped reuse (≤3×) + bounded severity (0-2)
 - 4-week trend metrics in CI job summaries

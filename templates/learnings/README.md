@@ -10,7 +10,7 @@ Drop this Learning Loop system into any new app to get immediate benefit from pr
 ✅ **Top-10 Index**: Auto-generated, heat-ranked when you have enough data  
 ✅ **CI Integration**: Metrics in PR summaries, auto-comments for encouragement  
 ✅ **Retention Rules**: Automatic archiving of unused lessons  
-✅ **Issue Templates**: Upstream reuse nudging  
+✅ **Issue Templates**: Upstream reuse nudging
 
 ## Quick Setup (5 minutes)
 
@@ -22,8 +22,9 @@ cp -r path/to/dl-starter/templates/learnings/* .
 ```
 
 This copies:
+
 - `docs/micro-lessons/template.md` - standard lesson template
-- `scripts/generate-learnings-index.js` - heat ranking + index generation  
+- `scripts/generate-learnings-index.js` - heat ranking + index generation
 - `scripts/starter-doctor.ts` - doctor checks (extract the learnings functions)
 - `.github/workflows/` - CI workflows for automation
 - `.github/ISSUE_TEMPLATE/` - updated templates with micro-lesson fields
@@ -52,7 +53,7 @@ pnpm learn:index  # Regenerates index
 ### 4. Enable CI automation (optional)
 
 - The workflows will auto-post encouragement comments
-- Add learnings metrics to job summaries  
+- Add learnings metrics to job summaries
 - Run weekly reuse tracking
 
 ## Usage Patterns
@@ -67,8 +68,9 @@ pnpm learn:index  # Regenerates index
 ### The 90-second rule
 
 Write lessons that take ≤90 seconds to read:
+
 - **Problem:** What breaks and why
-- **Solution:** Specific fix (code examples)  
+- **Solution:** Specific fix (code examples)
 - **Context:** When to apply this pattern
 
 ### Heat ranking activation
@@ -96,7 +98,7 @@ Every 2 weeks, spend 10 minutes:
 templates/learnings/
 ├── README.md                           # This setup guide
 ├── docs/micro-lessons/
-│   └── template.md                     # Standard lesson template  
+│   └── template.md                     # Standard lesson template
 ├── scripts/
 │   ├── generate-learnings-index.js     # Heat ranking + index generation
 │   └── doctor-learnings-checks.ts      # Doctor functions (extract these)
@@ -112,7 +114,7 @@ templates/learnings/
 ## Selling points
 
 - **Zero ceremony**: No meetings, no process documents
-- **Immediate value**: First lesson helps the next developer  
+- **Immediate value**: First lesson helps the next developer
 - **Self-improving**: Gets smarter as usage data accumulates
 - **Portable**: Drop into any repo and start benefiting
 
@@ -127,9 +129,10 @@ templates/learnings/
 
 **Current steward**: Repository owner (replace with team member name when delegating)
 
-**Succession plan**: 
+**Succession plan**:
+
 1. Nominate someone who regularly reviews PRs
-2. Share access to this README + `docs/micro-lessons/INDEX.md`  
+2. Share access to this README + `docs/micro-lessons/INDEX.md`
 3. Calendar: bi-weekly Friday 10-min micro-retro
 4. Authority: promote (≥2 repeats or high severity), prune (90+ days unused), capture new guardrails
 

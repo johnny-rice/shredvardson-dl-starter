@@ -2,11 +2,11 @@ name: CodeQL
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   pull_request:
-    branches: [ "main" ]
+    branches: ['main']
   schedule:
-    - cron: "0 3 * * 3"
+    - cron: '0 3 * * 3'
 
 concurrency:
   group: codeql-${{ github.ref }}
@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ "javascript-typescript" ]
+        language: ['javascript-typescript']
     steps:
       - name: Checkout
         uses: actions/checkout@v5

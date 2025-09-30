@@ -1,9 +1,9 @@
 ---
 # Machine-readable metadata (parsed into docs/commands/index.json)
-name: "/specify"
-version: "1.0.0"
-lane: "spec"
-tags: ["spec-kit", "requirements", "planning"]
+name: '/specify'
+version: '1.0.0'
+lane: 'spec'
+tags: ['spec-kit', 'requirements', 'planning']
 when_to_use: >
   Define pure requirements - what and why only, no technical details.
 
@@ -11,35 +11,35 @@ arguments: []
 
 inputs: []
 outputs:
-  - type: "artifact-links"
+  - type: 'artifact-links'
 
-riskLevel: "LOW"
+riskLevel: 'LOW'
 requiresHITL: false
-riskPolicyRef: "docs/llm/risk-policy.json#commandDefaults"
+riskPolicyRef: 'docs/llm/risk-policy.json#commandDefaults'
 
 allowed-tools:
-  - "Read(*)"
-  - "Write(*)"
-  - "Bash(gh issue create:*)"
+  - 'Read(*)'
+  - 'Write(*)'
+  - 'Bash(gh issue create:*)'
 
 preconditions:
-  - "Feature requirements are understood"
-  - "User needs are clear"
+  - 'Feature requirements are understood'
+  - 'User needs are clear'
 postconditions:
-  - "Pure requirements specification created"
-  - "GitHub issue created and linked"
+  - 'Pure requirements specification created'
+  - 'GitHub issue created and linked'
 
 artifacts:
   produces:
-    - { path: "specs/feature-[number]-[name].md", purpose: "Feature specification" }
+    - { path: 'specs/feature-[number]-[name].md', purpose: 'Feature specification' }
   updates: []
 
 permissions:
   tools:
-    - name: "filesystem"
-      ops: ["read", "write"]
-    - name: "github"
-      ops: ["create"]
+    - name: 'filesystem'
+      ops: ['read', 'write']
+    - name: 'github'
+      ops: ['create']
 
 timeouts:
   softSeconds: 300
@@ -48,11 +48,11 @@ timeouts:
 idempotent: true
 dryRun: true
 estimatedRuntimeSec: 240
-costHints: "Low I/O; requirements analysis"
+costHints: 'Low I/O; requirements analysis'
 
 references:
-  - "docs/constitution.md#specification-principles"
-  - "CLAUDE.md#spec-driven-workflow"
+  - 'docs/constitution.md#specification-principles'
+  - 'CLAUDE.md#spec-driven-workflow'
 ---
 
 **Slash Command:** `/specify`
@@ -60,24 +60,27 @@ references:
 **Goal:**  
 Define pure requirements - what and why only, no technical details.
 
-**Prompt:**  
-1) Confirm lane (**spec**) against `CLAUDE.md` decision rules.  
-2) Create a feature specification focused ONLY on what users need and why.
-3) Constraints:
+**Prompt:**
+
+1. Confirm lane (**spec**) against `CLAUDE.md` decision rules.
+2. Create a feature specification focused ONLY on what users need and why.
+3. Constraints:
    - NO tech stack, APIs, or implementation details
    - NO "how" - only "what" and "why"
    - Mark ALL ambiguities with [NEEDS_CLARIFICATION]
    - Reference existing features and user workflows
    - Focus on user value and business requirements
-4) Format output with User Need, Functional Requirements, User Experience, Success Criteria, and Clarifications Needed.
-5) Auto-number the feature sequentially and save to `/specs/` folder.
-6) Create GitHub issue linking to this specification.
-7) Emit **Result**: specification created, issue URL, ready for `/plan` command.
+4. Format output with User Need, Functional Requirements, User Experience, Success Criteria, and Clarifications Needed.
+5. Auto-number the feature sequentially and save to `/specs/` folder.
+6. Create GitHub issue linking to this specification.
+7. Emit **Result**: specification created, issue URL, ready for `/plan` command.
 
-**Examples:**  
+**Examples:**
+
 - `/specify` → creates feature specification and GitHub issue
 - `/specify --dry-run` → show planned specification structure only.
 
-**Failure & Recovery:**  
+**Failure & Recovery:**
+
 - If requirements unclear → ask for clarification on user needs and value.
 - If scope too large → suggest breaking into smaller features.

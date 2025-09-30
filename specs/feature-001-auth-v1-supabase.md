@@ -2,7 +2,7 @@
 id: SPEC-20250927-auth-v1-supabase
 type: spec
 issue: 68
-parentId: ""
+parentId: ''
 links: []
 ---
 
@@ -35,12 +35,14 @@ Prepare DLStarter for optional Supabase Auth behind `AUTH_ENABLED`. Define a thi
 ## Architecture Decisions
 
 ### Core Patterns
+
 - **Adapter Pattern:** `lib/auth/adapter.ts` defines `getSession`, `signIn`, `signOut`, `requireUser`, optional `onAuthStateChange`. First impl: `lib/auth/adapters/supabase.ts`.
 - **Server-First:** All auth mutations are Server Actions.
 - **Middleware Guard:** `middleware.ts` protects `/app/**` when `AUTH_ENABLED=true`.
 - **RLS-Ready:** RLS patterns documented; SQL migrations come later.
 
 ### Supabase-Specific Decisions
+
 - **Use @supabase/ssr for server/browser clients (no legacy helpers).**
 - **Include middleware.ts step to refresh sessions automatically when AUTH_ENABLED=true; no-op otherwise.**
 - **Explicit middleware matcher:** `export const config = { matcher: ["/((?!_next|static|favicon.ico|images).*)"] }` with `/app/**` protection only when AUTH_ENABLED=true.
@@ -49,6 +51,7 @@ Prepare DLStarter for optional Supabase Auth behind `AUTH_ENABLED`. Define a thi
 ## Acceptance Criteria (Spec)
 
 ### Core Requirements
+
 - **A1**: Adapter interface + Supabase adapter responsibilities documented.
 - **A2**: Env contract + `env.ts` validation shapes (no literal keys).
 - **A3**: Public vs protected routes + middleware rules defined.
@@ -57,6 +60,7 @@ Prepare DLStarter for optional Supabase Auth behind `AUTH_ENABLED`. Define a thi
 - **A6**: LLM recipe + two commands: `/auth:enable` and `/auth:add-protected {path}`.
 
 ### Supabase SSR Requirements
+
 - **A7**: Recipe shows calling cookies() prior to Supabase calls in server code to avoid cached responses for authenticated data.
 - **A8**: RLS guidance section: enable RLS and index policy columns (e.g., user_id), with example SQL.
 - **A9**: Document GitHub OAuth setup and Magic Link redirect URLs.
@@ -64,28 +68,33 @@ Prepare DLStarter for optional Supabase Auth behind `AUTH_ENABLED`. Define a thi
 ## Risks & Mitigations
 
 ### Technical Risks
+
 - **Vendor lock-in** → Use adapter; forbid client-side Supabase in components.
 - **Secret leakage** → Placeholders only in `.env.example`; schema validation only.
 - **AuthZ gaps** → Keep writes on server; RLS patterns documented for next milestone.
 
 ### Implementation Risks
+
 - **Cookie drift/SSR nuances** → rely on SSR client/session APIs instead of cookie name checks.
 - **Future RBAC complexity** → plan for custom claims via Auth Hooks if org/roles are later required.
 
 ## Deliverables
 
 ### Documentation
+
 - **D1**: `docs/recipes/auth.md` (enable steps, protect-route recipe, RLS notes).
 - **D2**: Issue B body (Dev Lane) ready to open, with checklist & acceptance.
 - **D3**: File map + code scaffolds (adapter, Supabase adapter, `AuthGate`, middleware, example pages, `env.ts` schema) included in the doc.
 
 ### Code Scaffolds
+
 - **lib/supabase/server.ts, lib/supabase/client.ts, and lib/supabase/middleware.ts stubs using @supabase/ssr.**
 - **Expanded docs/recipes/auth.md sections: "Configure OAuth," "Redirect URLs," "RLS + index," "SSR caching gotcha."**
 
 ## File Structure
 
 ### Files to create under `apps/web`:
+
 - `src/lib/auth/adapter.ts` - Core auth adapter interface
 - `src/lib/auth/adapters/supabase.ts` - Supabase implementation
 - `src/lib/auth/gate.tsx`, `src/lib/auth/hooks.ts` - Client components
@@ -95,7 +104,8 @@ Prepare DLStarter for optional Supabase Auth behind `AUTH_ENABLED`. Define a thi
 - **`lib/supabase/server.ts`, `lib/supabase/client.ts`, `lib/supabase/middleware.ts`** - SSR clients
 
 ### Environment Configuration
-- `.env.example` placeholders: 
+
+- `.env.example` placeholders:
   - `NEXT_PUBLIC_SUPABASE_URL`
   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
   - `SUPABASE_SERVICE_ROLE_KEY` (server)
@@ -103,22 +113,26 @@ Prepare DLStarter for optional Supabase Auth behind `AUTH_ENABLED`. Define a thi
   - `AUTH_PROVIDER="supabase"`
 
 ### Testing & CI
+
 - E2E: `auth.spec.ts` (skips when auth off).
 - CI hooks: doctor check (envs when auth on), lint rule banning client Supabase usage.
 - **ESLint rule specifics:** Ban client bundles from importing `@supabase/*` that can write:
   - Disallow in files containing "use client": imports from `@supabase/ssr` or `@supabase/supabase-js`
   - Repo-wide forbid of `@supabase/auth-helpers-*`
-- **Note: No @supabase/auth-helpers-* usage; @supabase/ssr only.**
+- **Note: No @supabase/auth-helpers-\* usage; @supabase/ssr only.**
 
 ## Future Considerations
 
 ### JWT Claims Strategy
+
 **JWT claim strategy:** If/when you need orgs/roles, prefer Custom Access Token Auth Hooks to inject claims (e.g., user_role, org_id) used in RLS. Document this pattern for future reference without implementing now.
 
 ### Security Considerations
+
 - **SUPABASE_SERVICE_ROLE_KEY is server-only; no client components may import Supabase clients capable of writes (explicit acceptance criterion).**
 
 ### Enhancement Opportunities
+
 - **Minimal rate-limit for auth endpoints:** TODO note for future custom API routes - use tiny edge rate-limit (e.g., token bucket) to protect magic-link spam.
 - **Telemetry hooks:** If PostHog is present, add optional events: `auth_signin_requested`, `auth_signin_completed`, `auth_signout` for flow diagnostics.
 - **Accessibility & UX:** Sign-in page requirements: labeled email input, error/confirmation states ("Magic link sent"), keyboard-accessible buttons.
@@ -126,12 +140,14 @@ Prepare DLStarter for optional Supabase Auth behind `AUTH_ENABLED`. Define a thi
 ## LLM Commands
 
 ### `/auth:enable`
+
 - Validates environment setup
 - Enables auth feature flag
 - Runs initial setup checks
 - Provides next steps guidance
 
 ### `/auth:add-protected {path}`
+
 - Adds route protection to specified path
 - Updates middleware configuration
 - Provides implementation example
@@ -140,15 +156,18 @@ Prepare DLStarter for optional Supabase Auth behind `AUTH_ENABLED`. Define a thi
 ## Definition of Done (Spec)
 
 ### Documentation Complete
+
 - Spec doc merged with all A1–A9 items.
 - Dev Lane issue body attached and ready to execute.
 - No code enabled in runtime (flag remains `false`).
 - **OAuth & magic link allow-lists:** Documentation requires adding redirect URLs for local, preview, prod environments with example `redirectTo` values.
 
 ### Security Validated
+
 - **SUPABASE_SERVICE_ROLE_KEY is server-only; no client components may import Supabase clients capable of writes (explicit acceptance criterion).**
 
 ### Integration Ready
+
 - All file scaffolds documented with clear paths
 - Environment contract fully specified
 - Testing strategy defined with CI integration

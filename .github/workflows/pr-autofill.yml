@@ -52,7 +52,7 @@ jobs:
 
             // Check if body is very short
             const isVeryShort = cleaned.length < 50;
-            
+
             // Check if cleaned body matches template (exact or trimmed equality)
             const matchesTemplate = cleaned === templateCleaned || 
                                    cleaned === templateCleaned.substring(0, 200);
@@ -61,7 +61,7 @@ jobs:
             const first200 = cleaned.substring(0, 200);
             const summarySection = cleaned.match(/(##\s*Summary[\s\S]{0,200})/i);
             const searchArea = summarySection ? summarySection[1] : first200;
-            
+
             const hasPlaceholderTokens = /\b(What changed|TBD|TODO|Fill this in|PLACEHOLDER)\b/i.test(searchArea);
 
             // Determine if this is a placeholder

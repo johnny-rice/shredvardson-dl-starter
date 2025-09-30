@@ -1,15 +1,18 @@
 # Git Workflow & Scripts (LLM-Facing)
 
 ## Branch Strategy
+
 - Feature branches: `feat/<short-kebab>`
 - Fix branches: `fix/<short-kebab>`
 - Chore/tooling: `chore/<short-kebab>`
 
 ## Commits
+
 - **Conventional Commits** (feat, fix, chore, docs, refactor, test, perf, ci)
 - Keep scope small; prefer multiple atomic commits over one giant commit.
 
 ## PRs
+
 - Title: Conventional summary (e.g., `feat: add X to Y`)
 - Description should include:
   - What changed (1–3 bullets)
@@ -20,6 +23,7 @@
 - Prefer using the automation in [Commands](./WIKI-Commands.md) to generate PRs.
 
 ## Required Scripts / Jobs (document the happy path)
+
 - `pnpm lint` - ESLint code quality checks
 - `pnpm typecheck` - TypeScript compilation verification
 - `pnpm test:unit` - Unit test execution with Vitest
@@ -29,17 +33,20 @@
 - `pnpm doctor` - Repository health and integrity checks
 
 ## CI Jobs
+
 - **ci** – build, typecheck, tests, lint (main quality pipeline)
 - **doctor** – repo sanity checks, link validation, configuration integrity
 - **spec-gate** – spec/quality contracts and governance checks
 
 ## Git Helper Scripts
+
 - `pnpm git:start <branch-name>` - Create new feature branch from latest main
 - `pnpm git:status` - Enhanced git status with project-wide information
 - `pnpm git:cleanup` - Clean up merged branches (dry run first)
 - `pnpm git:finish` - Switch to main, pull latest, clean up current branch
 
 ## Definition of Done
+
 - All Quality Gates pass (see [Quality Gates](./WIKI-Quality-Gates.md))
 - PR reviewed (human/AI), risks noted, docs updated
 - If user-facing, changelog/release notes prepared

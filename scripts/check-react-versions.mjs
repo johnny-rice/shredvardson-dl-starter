@@ -1,7 +1,9 @@
 import { execSync } from 'node:child_process';
 
 const out = execSync('pnpm list -r react react-dom --depth -1', { stdio: 'pipe' }).toString();
-const lines = out.split('\n').filter(l => l.trim().startsWith('react ') || l.trim().startsWith('react-dom '));
+const lines = out
+  .split('\n')
+  .filter((l) => l.trim().startsWith('react ') || l.trim().startsWith('react-dom '));
 const versions = { react: new Set(), 'react-dom': new Set() };
 for (const l of lines) {
   const reactMatch = l.match(/^react (\d+\.\d+\.\d+)/);

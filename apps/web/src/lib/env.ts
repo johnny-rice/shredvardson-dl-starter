@@ -23,19 +23,25 @@ export const env = createEnv({
 
     // Database (optional for now; make required per project)
     DATABASE_URL: z.string().url().optional(),
-    
+
     // Supabase server keys (optional for now)
     SUPABASE_URL: z.string().url().optional(),
     SUPABASE_ANON_KEY: z.string().min(1).optional(),
-    
+
     // Supabase MCP server configuration (for AI tooling)
     SUPABASE_ACCESS_TOKEN: z.string().min(1).optional(),
     SUPABASE_PROJECT_REF: z.string().min(1).optional(),
-    
+
     // Stripe server configuration
-    STRIPE_SECRET_KEY: z.string().optional().refine(val => !isProduction || !val?.startsWith('sk_test_'), 'Test secret key forbidden in production'),
+    STRIPE_SECRET_KEY: z
+      .string()
+      .optional()
+      .refine(
+        (val) => !isProduction || !val?.startsWith('sk_test_'),
+        'Test secret key forbidden in production'
+      ),
     STRIPE_WEBHOOK_SECRET: z.string().optional(),
-    
+
     // Feature toggles
     AUTH_ENABLED: zBool.default(false),
     AUTH_PROVIDER: z.enum(AUTH_PROVIDER_VALUES).default('supabase'),
@@ -48,13 +54,19 @@ export const env = createEnv({
     NEXT_PUBLIC_SENTRY_DSN: z.string().url().optional(),
     NEXT_PUBLIC_ENABLE_ANALYTICS: zBool.default(false),
     NEXT_PUBLIC_FLAG_BETA_FEATURE: zBool.default(false),
-    
+
     // Supabase (public - needed for browser client)
     NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(10).optional(),
-    
+
     // Stripe public key
-    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string().optional().refine(val => !isProduction || !val?.startsWith('pk_test_'), 'Test publishable key forbidden in production'),
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z
+      .string()
+      .optional()
+      .refine(
+        (val) => !isProduction || !val?.startsWith('pk_test_'),
+        'Test publishable key forbidden in production'
+      ),
   },
 
   runtimeEnv: {
@@ -65,13 +77,13 @@ export const env = createEnv({
     SENTRY_PROJECT: process.env.SENTRY_PROJECT,
 
     DATABASE_URL: process.env.DATABASE_URL,
-    
+
     SUPABASE_URL: process.env.SUPABASE_URL,
     SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
-    
+
     SUPABASE_ACCESS_TOKEN: process.env.SUPABASE_ACCESS_TOKEN,
     SUPABASE_PROJECT_REF: process.env.SUPABASE_PROJECT_REF,
-    
+
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
     AUTH_ENABLED: process.env.AUTH_ENABLED,
@@ -83,10 +95,10 @@ export const env = createEnv({
     NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_ENABLE_ANALYTICS: process.env.NEXT_PUBLIC_ENABLE_ANALYTICS,
     NEXT_PUBLIC_FLAG_BETA_FEATURE: process.env.NEXT_PUBLIC_FLAG_BETA_FEATURE,
-    
+
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    
+
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
   },
 

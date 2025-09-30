@@ -51,13 +51,13 @@ interface ScaffoldResult {
 
 function generateRLSPolicies(options: ScaffoldOptions): RLSPolicy[] {
   const { table, ownerColumn = 'user_id', publicRead, allowAnon, softDeletes } = options;
-  
+
   // Validate identifiers to prevent SQL injection
   assertIdent(table, 'table');
   assertIdent(ownerColumn, 'owner column');
-  
+
   const policies: RLSPolicy[] = [];
-  
+
   // Owner-based policies (most common pattern)
   if (ownerColumn) {
     policies.push({
@@ -66,37 +66,37 @@ function generateRLSPolicies(options: ScaffoldOptions): RLSPolicy[] {
       operation: 'SELECT',
       role: 'authenticated',
       condition: `auth.uid() = ${ownerColumn}`,
-      description: 'Users can read their own records'
+      description: 'Users can read their own records',
     });
-    
+
     policies.push({
       name: `${table}_insert_own`,
       table,
       operation: 'INSERT',
       role: 'authenticated',
       condition: `auth.uid() = ${ownerColumn}`,
-      description: 'Users can create records for themselves'
+      description: 'Users can create records for themselves',
     });
-    
+
     policies.push({
       name: `${table}_update_own`,
       table,
       operation: 'UPDATE',
       role: 'authenticated',
       condition: `auth.uid() = ${ownerColumn}`,
-      description: 'Users can update their own records'
+      description: 'Users can update their own records',
     });
-    
+
     policies.push({
       name: `${table}_delete_own`,
       table,
       operation: 'DELETE',
       role: 'authenticated',
       condition: `auth.uid() = ${ownerColumn}`,
-      description: 'Users can delete their own records'
+      description: 'Users can delete their own records',
     });
   }
-  
+
   // Public read access
   if (publicRead) {
     policies.push({
@@ -105,43 +105,42 @@ function generateRLSPolicies(options: ScaffoldOptions): RLSPolicy[] {
       operation: 'SELECT',
       role: 'anon',
       condition: 'true',
-      description: 'Allow public read access'
+      description: 'Allow public read access',
     });
   }
-  
+
   // Apply anon-specific policies if explicitly allowed
   if (allowAnon) {
     // For anon users, we can't use auth.uid() since it's NULL
     // Instead, we allow operations based on role check
     policies.push(
       ...policies
-        .filter(p => p.role === 'authenticated')
-        .map(p => ({
+        .filter((p) => p.role === 'authenticated')
+        .map((p) => ({
           ...p,
           role: 'anon' as const,
           name: `${p.name}_anon`,
           condition: `auth.role() = 'anon'`, // Replace auth.uid() check with role check
-          description: `${p.description} (anonymous users - role-based access)`
+          description: `${p.description} (anonymous users - role-based access)`,
         }))
     );
   }
-  
+
   // Soft delete considerations
   if (softDeletes) {
-    policies.forEach(policy => {
+    policies.forEach((policy) => {
       if (policy.operation === 'SELECT') {
         policy.condition += ' AND deleted_at IS NULL';
         policy.description += ' (excluding soft-deleted records)';
       }
     });
   }
-  
+
   return policies;
 }
 
 function generatePolicySQL(policy: RLSPolicy): string {
-  const usingClause =
-    policy.operation === 'INSERT' ? '' : `\n  USING (${policy.condition})`;
+  const usingClause = policy.operation === 'INSERT' ? '' : `\n  USING (${policy.condition})`;
   const withCheckClause =
     policy.operation === 'INSERT' || policy.operation === 'UPDATE'
       ? `\n  WITH CHECK (${policy.condition})`
@@ -155,24 +154,24 @@ CREATE POLICY "${policy.name}" ON public.${policy.table}
 function generateCompleteRLSScript(options: ScaffoldOptions): string {
   const policies = generateRLSPolicies(options);
   const { table } = options;
-  
+
   const sqlParts = [
     `-- Row Level Security policies for ${table}`,
     `-- Generated: ${new Date().toISOString()}`,
     '-- Review and customize before applying\n',
-    
+
     `-- Enable RLS on the table`,
     `ALTER TABLE public.${table} ENABLE ROW LEVEL SECURITY;`,
     `ALTER TABLE public.${table} FORCE ROW LEVEL SECURITY;\n`,
-    
+
     `-- Drop existing policies (uncomment if recreating)`,
     `-- DROP POLICY IF EXISTS "${table}_select_own" ON public.${table};`,
     `-- DROP POLICY IF EXISTS "${table}_insert_own" ON public.${table};`,
     `-- DROP POLICY IF EXISTS "${table}_update_own" ON public.${table};`,
     `-- DROP POLICY IF EXISTS "${table}_delete_own" ON public.${table};\n`,
-    
-    ...policies.map(policy => generatePolicySQL(policy)),
-    
+
+    ...policies.map((policy) => generatePolicySQL(policy)),
+
     '\n-- Common additional considerations:',
     '-- 1. Add admin override policies for service accounts',
     '-- 2. Consider time-based access restrictions',
@@ -183,9 +182,9 @@ function generateCompleteRLSScript(options: ScaffoldOptions): string {
     `-- CREATE POLICY "${table}_admin_all" ON public.${table}`,
     '--   FOR ALL',
     '--   TO service_role',
-    '--   USING (true);'
+    '--   USING (true);',
   ];
-  
+
   return sqlParts.join('\n');
 }
 
@@ -193,8 +192,8 @@ function generateCompleteRLSScript(options: ScaffoldOptions): string {
  * Main execution function with proper error handling
  */
 async function executeScaffolding(
-  tableName: string, 
-  options: { 
+  tableName: string,
+  options: {
     ownerColumn?: string;
     publicRead?: boolean;
     allowAnon?: boolean;
@@ -210,12 +209,12 @@ async function executeScaffolding(
     ownerColumn: options.ownerColumn || 'user_id',
     publicRead: options.publicRead || false,
     allowAnon: options.allowAnon || false,
-    softDeletes: options.softDeletes || false
+    softDeletes: options.softDeletes || false,
   };
 
   try {
     const result = await scaffoldRLSPolicies(scaffoldOptions, { dryRun: options.dryRun });
-    
+
     if (!result.success) {
       console.error('\n❌ RLS scaffolding failed');
       console.error(`Error: ${result.error}`);
@@ -235,7 +234,7 @@ async function executeScaffolding(
     console.log(`🌍 Public read: ${scaffoldOptions.publicRead ? 'Yes' : 'No'}`);
 
     console.log('\n🛡️  Generated policies:');
-    policies.forEach(policy => {
+    policies.forEach((policy) => {
       console.log(`   • ${policy.operation}: ${policy.description}`);
     });
 
@@ -244,7 +243,6 @@ async function executeScaffolding(
     console.log('   2. Customize conditions as needed');
     console.log('   3. Apply with: pnpm db:migrate');
     console.log('   4. Test with different user contexts');
-
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('❌ Failed to scaffold RLS policies:', errorMessage);
@@ -255,29 +253,32 @@ async function executeScaffolding(
 /**
  * Generate RLS policies with proper error handling
  */
-async function scaffoldRLSPolicies(options: ScaffoldOptions, execOptions: { dryRun?: boolean } = {}): Promise<ScaffoldResult> {
+async function scaffoldRLSPolicies(
+  options: ScaffoldOptions,
+  execOptions: { dryRun?: boolean } = {}
+): Promise<ScaffoldResult> {
   try {
     const policies = generateRLSPolicies(options);
     const rlsScript = generateCompleteRLSScript(options);
     const filename = `rls_${options.table}_${Date.now()}.sql`;
-    
+
     if (!execOptions.dryRun) {
       const dir = 'supabase/migrations';
       if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
       const filepath = `${dir}/${filename}`;
       writeFileSync(filepath, rlsScript, { flag: 'wx' });
     }
-    
+
     return {
       success: true,
       policies,
-      filename
+      filename,
     };
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return {
       success: false,
-      error: `Failed to generate RLS policies: ${errorMessage}`
+      error: `Failed to generate RLS policies: ${errorMessage}`,
     };
   }
 }
@@ -315,7 +316,7 @@ program
     console.log('  • Comments: --owner-column=commenter_id --soft-deletes');
     console.log('  • Public content: --public-read --allow-anon (role-based)');
     console.log('  • Private data: (default user_id ownership)');
-    console.log('\\nNote: --allow-anon uses auth.role() = \'anon\' (not auth.uid())');
+    console.log("\\nNote: --allow-anon uses auth.role() = 'anon' (not auth.uid())");
   });
 
 program.parse(process.argv);

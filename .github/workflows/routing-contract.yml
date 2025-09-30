@@ -21,252 +21,252 @@ jobs:
   routing-contract:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    
+
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-    - name: Setup pnpm
-      uses: pnpm/action-setup@v4
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
-    - name: Check context-map paths exist
-      run: |
-        echo "🔍 Checking context-map.json paths..."
-        
-        # Extract paths from context-map.json and verify they exist
-        node -e "
-          const fs = require('fs');
-          const contextMap = JSON.parse(fs.readFileSync('docs/llm/context-map.json', 'utf8'));
-          let errors = 0;
-          
-          for (const area of contextMap.areas) {
-            const path = area.path;
-            console.log('Checking path:', path);
+      - name: Check context-map paths exist
+        run: |
+          echo "🔍 Checking context-map.json paths..."
+
+          # Extract paths from context-map.json and verify they exist
+          node -e "
+            const fs = require('fs');
+            const contextMap = JSON.parse(fs.readFileSync('docs/llm/context-map.json', 'utf8'));
+            let errors = 0;
             
-            // Handle different path types
-            if (path.endsWith('/')) {
-              // Directory path
-              if (!fs.existsSync(path)) {
-                console.error('❌ Directory not found:', path);
-                errors++;
-              }
-            } else if (path.includes('*')) {
-              // Glob pattern - basic check for parent directory
-              const parentDir = path.split('*')[0];
-              if (parentDir && !fs.existsSync(parentDir)) {
-                console.error('❌ Parent directory not found for pattern:', path);
-                errors++;
-              }
-            } else {
-              // Specific file
-              if (!fs.existsSync(path)) {
-                console.error('❌ File not found:', path);
-                errors++;
-              }
-            }
-          }
-          
-          if (errors > 0) {
-            console.error('❌ Found', errors, 'dead paths in context-map.json');
-            process.exit(1);
-          } else {
-            console.log('✅ All context-map paths are valid');
-          }
-        "
-
-    - name: Check command index sync
-      run: |
-        echo "🔍 Checking command index sync..."
-        
-        # Generate fresh command index and compare (ignoring timestamp)
-        node scripts/generate-command-index.js
-        
-        # Create temp files without timestamp for comparison
-        jq 'del(.generated)' docs/commands/index.json > /tmp/index-current.json
-        git show HEAD:docs/commands/index.json | jq 'del(.generated)' > /tmp/index-original.json
-        
-        if ! diff -q /tmp/index-current.json /tmp/index-original.json > /dev/null; then
-          {
-            echo "❌ Command index structure is out of sync with actual command files"
-            echo "Run: npm run commands:generate"
-            echo ""
-            echo "Structural differences:"
-            diff /tmp/index-current.json /tmp/index-original.json || true
-          }
-          exit 1
-        else
-          echo "✅ Command index structure is in sync"
-        fi
-
-    - name: Check issue template artifact references
-      run: |
-        echo "🔍 Checking issue template artifact references..."
-        
-        node -e "
-          const fs = require('fs');
-          const path = require('path');
-          let errors = 0;
-          
-          // Find all issue templates using native Node.js
-          const templateDir = '.github/ISSUE_TEMPLATE';
-          if (fs.existsSync(templateDir)) {
-            const templates = fs.readdirSync(templateDir)
-              .filter(f => f.endsWith('.yml'))
-              .map(f => path.join(templateDir, f));
-          
-            for (const template of templates) {
-              console.log('Checking template:', template);
-              const content = fs.readFileSync(template, 'utf8');
+            for (const area of contextMap.areas) {
+              const path = area.path;
+              console.log('Checking path:', path);
               
-              // Look for artifact path references
-              const specRefs = content.match(/specs\/[^\s\n]+\.md/g) || [];
-              const planRefs = content.match(/plans\/[^\s\n]+\.md/g) || [];
-              const taskRefs = content.match(/tasks\/[^\s\n]+\.md/g) || [];
-              
-              // For now, just verify the directories exist (files are created on-demand)
-              const dirs = ['specs', 'plans', 'tasks'];
-              for (const dir of dirs) {
-                if (!fs.existsSync(dir)) {
-                  console.error('❌ Required directory missing:', dir);
+              // Handle different path types
+              if (path.endsWith('/')) {
+                // Directory path
+                if (!fs.existsSync(path)) {
+                  console.error('❌ Directory not found:', path);
+                  errors++;
+                }
+              } else if (path.includes('*')) {
+                // Glob pattern - basic check for parent directory
+                const parentDir = path.split('*')[0];
+                if (parentDir && !fs.existsSync(parentDir)) {
+                  console.error('❌ Parent directory not found for pattern:', path);
+                  errors++;
+                }
+              } else {
+                // Specific file
+                if (!fs.existsSync(path)) {
+                  console.error('❌ File not found:', path);
                   errors++;
                 }
               }
             }
-          }
-          
-          if (errors > 0) {
-            console.error('❌ Found', errors, 'issues with artifact references');
-            process.exit(1);
-          } else {
-            console.log('✅ All artifact references are valid');
-          }
-        "
-        
-    - name: Check PR template artifact references
-      run: |
-        echo "🔍 Checking PR template artifact references..."
-        
-        if [ -f .github/pull_request_template.md ]; then
-          # Check for any hardcoded paths that might be broken
-          if grep -n "specs/\\|plans/\\|tasks/" .github/pull_request_template.md; then
-            echo "ℹ️ PR template contains artifact references (manual review recommended)"
-          fi
-          echo "✅ PR template check complete"
-        else
-          echo "ℹ️ No PR template found"
-        fi
-
-    - name: Check wiki generation sources
-      run: |
-        echo "🔍 Checking wiki generation sources..."
-        
-        # Verify all source files for wiki generation exist
-        sources=("docs/constitution.md" "docs/ai/CLAUDE.md" "docs/commands/index.json")
-        
-        for source in "${sources[@]}"; do
-          if [ ! -f "$source" ]; then
-            echo "❌ Wiki source file missing: $source"
-            exit 1
-          fi
-        done
-        
-        echo "✅ All wiki source files exist"
-
-    - name: Check PR label workflow compliance
-      env:
-        PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
-      run: |
-        echo "🔍 Checking PR label workflow compliance..."
-        
-        # Get list of labels from environment variable
-        echo "PR Labels: $PR_LABELS"
-        
-        # Get added spec files
-        ADDED_SPECS=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^(specs|plans|tasks)/' || true)
-        
-        # Check Spec-driven workflow compliance
-        if [[ "$PR_LABELS" == *"spec-driven"* ]]; then
-          echo "📋 Spec-driven PR - checking for required artifacts..."
-          
-          MISSING=""
-          if ! echo "$ADDED_SPECS" | grep -q '^specs/'; then
-            MISSING="$MISSING specs/"
-          fi
-          if ! echo "$ADDED_SPECS" | grep -q '^plans/'; then
-            MISSING="$MISSING plans/"
-          fi
-          if ! echo "$ADDED_SPECS" | grep -q '^tasks/'; then
-            MISSING="$MISSING tasks/"
-          fi
-          
-          if [[ -n "$MISSING" ]]; then
-            echo "❌ Spec-driven PR missing required artifacts: $MISSING"
-            echo "Use: npm run new-spec <feature-name> --lane=spec"
-            exit 1
-          else
-            echo "✅ Spec-driven PR has all required artifacts"
-          fi
-        fi
-        
-        # Check Lightweight workflow compliance
-        if [[ "$PR_LABELS" == *"lightweight"* ]]; then
-          echo "🚀 Lightweight PR - checking for artifact prohibition..."
-          
-          if [[ -n "$ADDED_SPECS" ]]; then
-            echo "❌ Lightweight PR contains spec artifacts: $ADDED_SPECS"
-            echo "Remove 'lightweight' label OR remove spec files"
-            exit 1
-          else
-            echo "✅ Lightweight PR correctly avoids spec artifacts"
-          fi
-        fi
-
-    - name: Check wiki generation integrity
-      run: |
-        echo "🔍 Checking wiki generation integrity..."
-        
-        # Generate fresh wiki content
-        node scripts/generate-wiki.js --scrub-secrets
-        
-        # Check that Home.md was generated
-        if [ ! -f "wiki-content/generated/Home.md" ]; then
-          echo "❌ Wiki generation failed - Home.md not created"
-          exit 1
-        fi
-        
-        # Basic markdown link check for generated files
-        cd wiki-content/generated
-        
-        for file in *.md; do
-          echo "Checking links in $file..."
-          
-          # Extract markdown links and check if referenced files exist
-          grep -o '\\[.*\\](.*\\.md)' "$file" | sed 's/.*](\\(.*\\))/\\1/' | while read -r link; do
-            # Skip external links
-            if [[ "$link" =~ ^https?:// ]]; then
-              continue
-            fi
             
-            # Check if local file exists
-            if [[ ! -f "$link" && ! -f "${link}.md" ]]; then
-              echo "⚠️ Broken link in $file: $link"
+            if (errors > 0) {
+              console.error('❌ Found', errors, 'dead paths in context-map.json');
+              process.exit(1);
+            } else {
+              console.log('✅ All context-map paths are valid');
+            }
+          "
+
+      - name: Check command index sync
+        run: |
+          echo "🔍 Checking command index sync..."
+
+          # Generate fresh command index and compare (ignoring timestamp)
+          node scripts/generate-command-index.js
+
+          # Create temp files without timestamp for comparison
+          jq 'del(.generated)' docs/commands/index.json > /tmp/index-current.json
+          git show HEAD:docs/commands/index.json | jq 'del(.generated)' > /tmp/index-original.json
+
+          if ! diff -q /tmp/index-current.json /tmp/index-original.json > /dev/null; then
+            {
+              echo "❌ Command index structure is out of sync with actual command files"
+              echo "Run: npm run commands:generate"
+              echo ""
+              echo "Structural differences:"
+              diff /tmp/index-current.json /tmp/index-original.json || true
+            }
+            exit 1
+          else
+            echo "✅ Command index structure is in sync"
+          fi
+
+      - name: Check issue template artifact references
+        run: |
+          echo "🔍 Checking issue template artifact references..."
+
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            let errors = 0;
+            
+            // Find all issue templates using native Node.js
+            const templateDir = '.github/ISSUE_TEMPLATE';
+            if (fs.existsSync(templateDir)) {
+              const templates = fs.readdirSync(templateDir)
+                .filter(f => f.endsWith('.yml'))
+                .map(f => path.join(templateDir, f));
+            
+              for (const template of templates) {
+                console.log('Checking template:', template);
+                const content = fs.readFileSync(template, 'utf8');
+                
+                // Look for artifact path references
+                const specRefs = content.match(/specs\/[^\s\n]+\.md/g) || [];
+                const planRefs = content.match(/plans\/[^\s\n]+\.md/g) || [];
+                const taskRefs = content.match(/tasks\/[^\s\n]+\.md/g) || [];
+                
+                // For now, just verify the directories exist (files are created on-demand)
+                const dirs = ['specs', 'plans', 'tasks'];
+                for (const dir of dirs) {
+                  if (!fs.existsSync(dir)) {
+                    console.error('❌ Required directory missing:', dir);
+                    errors++;
+                  }
+                }
+              }
+            }
+            
+            if (errors > 0) {
+              console.error('❌ Found', errors, 'issues with artifact references');
+              process.exit(1);
+            } else {
+              console.log('✅ All artifact references are valid');
+            }
+          "
+
+      - name: Check PR template artifact references
+        run: |
+          echo "🔍 Checking PR template artifact references..."
+
+          if [ -f .github/pull_request_template.md ]; then
+            # Check for any hardcoded paths that might be broken
+            if grep -n "specs/\\|plans/\\|tasks/" .github/pull_request_template.md; then
+              echo "ℹ️ PR template contains artifact references (manual review recommended)"
+            fi
+            echo "✅ PR template check complete"
+          else
+            echo "ℹ️ No PR template found"
+          fi
+
+      - name: Check wiki generation sources
+        run: |
+          echo "🔍 Checking wiki generation sources..."
+
+          # Verify all source files for wiki generation exist
+          sources=("docs/constitution.md" "docs/ai/CLAUDE.md" "docs/commands/index.json")
+
+          for source in "${sources[@]}"; do
+            if [ ! -f "$source" ]; then
+              echo "❌ Wiki source file missing: $source"
+              exit 1
             fi
           done
-        done
-        
-        echo "✅ Wiki generation integrity check complete"
 
-    - name: Summary
-      run: |
-        {
-          echo "🎉 Routing contract verification complete"
-          echo "✅ All paths exist and are valid"
-          echo "✅ Command index is synchronized"
-          echo "✅ PR workflow compliance verified"
-          echo "✅ Wiki generation integrity confirmed"
-        }
+          echo "✅ All wiki source files exist"
+
+      - name: Check PR label workflow compliance
+        env:
+          PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
+        run: |
+          echo "🔍 Checking PR label workflow compliance..."
+
+          # Get list of labels from environment variable
+          echo "PR Labels: $PR_LABELS"
+
+          # Get added spec files
+          ADDED_SPECS=$(git diff --name-only origin/${{ github.base_ref }}...HEAD | grep -E '^(specs|plans|tasks)/' || true)
+
+          # Check Spec-driven workflow compliance
+          if [[ "$PR_LABELS" == *"spec-driven"* ]]; then
+            echo "📋 Spec-driven PR - checking for required artifacts..."
+            
+            MISSING=""
+            if ! echo "$ADDED_SPECS" | grep -q '^specs/'; then
+              MISSING="$MISSING specs/"
+            fi
+            if ! echo "$ADDED_SPECS" | grep -q '^plans/'; then
+              MISSING="$MISSING plans/"
+            fi
+            if ! echo "$ADDED_SPECS" | grep -q '^tasks/'; then
+              MISSING="$MISSING tasks/"
+            fi
+            
+            if [[ -n "$MISSING" ]]; then
+              echo "❌ Spec-driven PR missing required artifacts: $MISSING"
+              echo "Use: npm run new-spec <feature-name> --lane=spec"
+              exit 1
+            else
+              echo "✅ Spec-driven PR has all required artifacts"
+            fi
+          fi
+
+          # Check Lightweight workflow compliance
+          if [[ "$PR_LABELS" == *"lightweight"* ]]; then
+            echo "🚀 Lightweight PR - checking for artifact prohibition..."
+            
+            if [[ -n "$ADDED_SPECS" ]]; then
+              echo "❌ Lightweight PR contains spec artifacts: $ADDED_SPECS"
+              echo "Remove 'lightweight' label OR remove spec files"
+              exit 1
+            else
+              echo "✅ Lightweight PR correctly avoids spec artifacts"
+            fi
+          fi
+
+      - name: Check wiki generation integrity
+        run: |
+          echo "🔍 Checking wiki generation integrity..."
+
+          # Generate fresh wiki content
+          node scripts/generate-wiki.js --scrub-secrets
+
+          # Check that Home.md was generated
+          if [ ! -f "wiki-content/generated/Home.md" ]; then
+            echo "❌ Wiki generation failed - Home.md not created"
+            exit 1
+          fi
+
+          # Basic markdown link check for generated files
+          cd wiki-content/generated
+
+          for file in *.md; do
+            echo "Checking links in $file..."
+            
+            # Extract markdown links and check if referenced files exist
+            grep -o '\\[.*\\](.*\\.md)' "$file" | sed 's/.*](\\(.*\\))/\\1/' | while read -r link; do
+              # Skip external links
+              if [[ "$link" =~ ^https?:// ]]; then
+                continue
+              fi
+              
+              # Check if local file exists
+              if [[ ! -f "$link" && ! -f "${link}.md" ]]; then
+                echo "⚠️ Broken link in $file: $link"
+              fi
+            done
+          done
+
+          echo "✅ Wiki generation integrity check complete"
+
+      - name: Summary
+        run: |
+          {
+            echo "🎉 Routing contract verification complete"
+            echo "✅ All paths exist and are valid"
+            echo "✅ Command index is synchronized"
+            echo "✅ PR workflow compliance verified"
+            echo "✅ Wiki generation integrity confirmed"
+          }

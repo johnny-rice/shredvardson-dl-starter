@@ -12,31 +12,35 @@ function archiveOldLessons(olderThanDays = 90, unusedOnly = true) {
     return;
   }
 
-  const files = fs.readdirSync(MICRO_LESSONS_DIR)
-    .filter(file => file.endsWith('.md') && file !== 'INDEX.md' && !file.toLowerCase().includes('template'))
-    .map(file => path.join(MICRO_LESSONS_DIR, file));
+  const files = fs
+    .readdirSync(MICRO_LESSONS_DIR)
+    .filter(
+      (file) =>
+        file.endsWith('.md') && file !== 'INDEX.md' && !file.toLowerCase().includes('template')
+    )
+    .map((file) => path.join(MICRO_LESSONS_DIR, file));
 
-  const cutoffDate = Date.now() - (olderThanDays * 24 * 60 * 60 * 1000);
+  const cutoffDate = Date.now() - olderThanDays * 24 * 60 * 60 * 1000;
   const toArchive = [];
 
   for (const filePath of files) {
     try {
       const stats = fs.statSync(filePath);
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       const lastModified = stats.mtime.getTime();
       const usedByMatch = content.match(/UsedBy:\s*(\d+)/);
       const usedBy = usedByMatch ? parseInt(usedByMatch[1]) : 0;
-      
+
       const isOld = lastModified < cutoffDate;
       const isUnused = usedBy === 0;
-      
+
       if (isOld && (!unusedOnly || isUnused)) {
         toArchive.push({
           file: path.basename(filePath),
           path: filePath,
           usedBy,
-          daysSince: Math.floor((Date.now() - lastModified) / (1000 * 60 * 60 * 24))
+          daysSince: Math.floor((Date.now() - lastModified) / (1000 * 60 * 60 * 24)),
         });
       }
     } catch {
@@ -45,12 +49,14 @@ function archiveOldLessons(olderThanDays = 90, unusedOnly = true) {
   }
 
   if (toArchive.length === 0) {
-    console.log(`No lessons found older than ${olderThanDays} days${unusedOnly ? ' with 0 usage' : ''}`);
+    console.log(
+      `No lessons found older than ${olderThanDays} days${unusedOnly ? ' with 0 usage' : ''}`
+    );
     return;
   }
 
   console.log(`Found ${toArchive.length} lessons to archive:`);
-  toArchive.forEach(item => {
+  toArchive.forEach((item) => {
     console.log(`  - ${item.file} (${item.daysSince} days old, ${item.usedBy} uses)`);
   });
 

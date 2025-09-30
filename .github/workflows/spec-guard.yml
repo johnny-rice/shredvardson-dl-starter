@@ -6,10 +6,12 @@ on:
       - 'specs/**'
       - '.claude/commands/spec/**'
       - 'docs/constitution.md'
+      - '.github/workflows/spec-guard.yml'
   push:
     branches: [main]
     paths:
       - 'specs/**'
+      - '.github/workflows/spec-guard.yml'
 
 permissions:
   contents: read
@@ -23,7 +25,7 @@ jobs:
   validate-spec-structure:
     name: Validate Spec Structure
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -46,13 +48,13 @@ jobs:
       - name: Validate Spec Directory Structure
         run: |
           echo "Validating spec directory structure..."
-          
+
           # Check if specs directory exists
           if [ ! -d "specs" ]; then
             echo "✅ No specs directory found - skipping validation"
             exit 0
           fi
-          
+
           # Validate each spec directory
           for spec_dir in specs/*/; do
             if [ -d "$spec_dir" ]; then
@@ -93,12 +95,12 @@ jobs:
       - name: Validate Spec Content
         run: |
           echo "Validating spec content quality..."
-          
+
           if [ ! -d "specs" ]; then
             echo "✅ No specs directory found - skipping content validation"
             exit 0
           fi
-          
+
           for spec_dir in specs/*/; do
             if [ -d "$spec_dir" ]; then
               spec_name=$(basename "$spec_dir")
@@ -133,14 +135,14 @@ jobs:
       - name: Check Spec Status Consistency
         run: |
           echo "Checking spec status consistency..."
-          
+
           if [ ! -d "specs" ]; then
             echo "✅ No specs directory found - skipping status check"
             exit 0
           fi
-          
+
           declare -A status_counts
-          
+
           for spec_dir in specs/*/; do
             if [ -d "$spec_dir" ]; then
               spec_name=$(basename "$spec_dir")
@@ -167,7 +169,7 @@ jobs:
               echo "Spec $spec_name: status=$status"
             fi
           done
-          
+
           # Report status summary
           echo ""
           echo "Status Summary:"
@@ -178,12 +180,12 @@ jobs:
       - name: Validate Spec Dependencies
         run: |
           echo "Validating spec dependencies..."
-          
+
           if [ ! -d "specs" ]; then
             echo "✅ No specs directory found - skipping dependency validation"
             exit 0
           fi
-          
+
           # Check for circular dependencies or broken references
           for spec_dir in specs/*/; do
             if [ -d "$spec_dir" ]; then
@@ -205,18 +207,18 @@ jobs:
               fi
             fi
           done
-          
+
           echo "✅ Spec dependencies validated"
 
       - name: Check Constitutional Compliance
         run: |
           echo "Checking constitutional compliance for specs..."
-          
+
           if [ ! -d "specs" ]; then
             echo "✅ No specs directory found - skipping constitutional compliance"
             exit 0
           fi
-          
+
           # Check that specs follow TDD principles
           for spec_dir in specs/*/; do
             if [ -d "$spec_dir" ]; then
@@ -239,7 +241,7 @@ jobs:
       - name: Generate Spec Report
         run: |
           echo "Generating spec validation report..."
-          
+
           if [ ! -d "specs" ]; then
             echo "# Spec Guard Report" > spec-report.md
             echo "" >> spec-report.md
@@ -250,17 +252,17 @@ jobs:
             cat spec-report.md
             exit 0
           fi
-          
+
           echo "# Spec Guard Report" > spec-report.md
           echo "" >> spec-report.md
           echo "**Validation Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> spec-report.md
           echo "**Commit**: ${{ github.sha }}" >> spec-report.md
           echo "**PR**: ${{ github.event.number }}" >> spec-report.md
           echo "" >> spec-report.md
-          
+
           echo "## Validated Specs" >> spec-report.md
           echo "" >> spec-report.md
-          
+
           spec_count=0
           for spec_dir in specs/*/; do
             if [ -d "$spec_dir" ]; then
@@ -286,7 +288,7 @@ jobs:
               echo "" >> spec-report.md
             fi
           done
-          
+
           echo "## Summary" >> spec-report.md
           echo "" >> spec-report.md
           echo "- **Total Specs**: $spec_count" >> spec-report.md
@@ -295,7 +297,7 @@ jobs:
           echo "- **Dependency Validation**: ✅ Passed" >> spec-report.md
           echo "- **Constitutional Compliance**: ✅ Checked" >> spec-report.md
           echo "" >> spec-report.md
-          
+
           cat spec-report.md
 
       - name: Upload Spec Report
@@ -310,7 +312,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: validate-spec-structure
     if: github.event_name == 'pull_request'
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -320,17 +322,17 @@ jobs:
       - name: Check Spec Development Lane
         run: |
           echo "Checking spec development lane compliance..."
-          
+
           # Determine if this is an AI-generated PR
           is_ai_branch=false
           if [[ "${{ github.head_ref }}" =~ ^bots/claude/ ]]; then
             is_ai_branch=true
             echo "AI-generated branch detected: ${{ github.head_ref }}"
           fi
-          
+
           # Check for spec changes
           spec_changes=$(git diff --name-only origin/main...HEAD | grep "^specs/" || true)
-          
+
           if [ -n "$spec_changes" ]; then
             echo "Spec changes detected:"
             echo "$spec_changes"

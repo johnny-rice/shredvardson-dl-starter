@@ -1,0 +1,23 @@
+{
+  "name": "@dl-starter/tailwind-config",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "prepare": "pnpm build"
+  },
+  "devDependencies": {
+    "@shared/config": "workspace:*",
+    "typescript": "^5",
+    "tailwindcss": "^3"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^3"
+  }
+}

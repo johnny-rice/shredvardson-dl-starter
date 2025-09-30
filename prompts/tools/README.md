@@ -5,6 +5,7 @@ Tool-specific guidance and configuration templates.
 ## Contents
 
 Specialized prompts for development tools:
+
 - Playwright testing patterns
 - Database migration guides
 - CI/CD configurations

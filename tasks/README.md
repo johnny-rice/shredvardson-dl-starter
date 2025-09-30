@@ -3,10 +3,12 @@
 This folder contains actionable task breakdowns created using the `/tasks` command.
 
 ## File Naming Convention
+
 - `feature-[number]-[name].md` - Matches specification and plan
 - Example: `feature-001-user-authentication.md`
 
 ## YAML Front-Matter Structure
+
 Each task breakdown must include YAML front-matter for traceability:
 
 ```yaml
@@ -26,6 +28,7 @@ links: []
 - `links`: Optional external references
 
 ## Purpose
+
 - **Actionable breakdown**: Converts technical plan into specific implementation steps
 - **TDD enforcement**: Tasks ordered by constitutional requirements
 - **Progress tracking**: Checkboxes for completion status
@@ -33,6 +36,7 @@ links: []
 - **Branch strategy**: Git workflow and commit organization
 
 ## Constitutional Task Order (Enforced)
+
 1. **Contracts & Interfaces**: TypeScript types and API contracts
 2. **Test Foundation**: Integration → E2E → Unit test setup
 3. **Implementation**: Components, business logic, API integration
@@ -40,6 +44,7 @@ links: []
 5. **Documentation & Release**: Docs, security review, deployment
 
 ## Workflow Integration
+
 1. Created via `/tasks` command referencing plan and specification
 2. Updates GitHub issue with task checklist
 3. Guides step-by-step implementation using existing commands
@@ -47,6 +52,7 @@ links: []
 5. Links back to outcomes for learning capture
 
 ## Implementation Commands
+
 - `/test:scaffold` - Create test files
 - `/dev:implement` - Build features
 - `/dev:refactor-secure` - Security improvements

@@ -9,6 +9,7 @@ An Architecture Decision Record (ADR) is a document that captures an important a
 ## When to Create an ADR
 
 Create an ADR when you make a decision that:
+
 - Affects the structure, behavior, or quality attributes of the system
 - Is difficult to reverse (high cost of change)
 - Impacts multiple teams or components
@@ -21,8 +22,9 @@ Create an ADR when you make a decision that:
 ### ADR Checklist
 
 Write an ADR if you answer "YES" to any:
+
 - [ ] Decision affects system structure/behavior/quality attributes
-- [ ] Change is difficult/expensive to reverse  
+- [ ] Change is difficult/expensive to reverse
 - [ ] Impacts multiple teams/components
 - [ ] Involves trade-offs between alternatives
 - [ ] Sets precedent for future decisions
@@ -54,12 +56,15 @@ What is the change that we're proposing or doing?
 What becomes easier or more difficult to do because of this change?
 
 ### Positive
+
 - [List benefits]
 
-### Negative  
+### Negative
+
 - [List drawbacks or risks]
 
 ### Neutral
+
 - [List other impacts]
 ```
 
@@ -84,7 +89,7 @@ ADRs are numbered sequentially (ADR-001, ADR-002, etc.) in the order they are cr
 ## Examples of ADR-worthy Decisions
 
 - Choice of database technology
-- Authentication/authorization approach  
+- Authentication/authorization approach
 - API design patterns
 - Frontend state management strategy
 - Testing strategy and frameworks

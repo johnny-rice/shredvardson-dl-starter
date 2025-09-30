@@ -11,7 +11,10 @@ test.describe('Help Link', () => {
     await expect(helpLink).toHaveText('Help');
 
     // Check the href attribute points to wiki Home
-    await expect(helpLink).toHaveAttribute('href', 'https://github.com/Shredvardson/dl-starter/wiki/Home');
+    await expect(helpLink).toHaveAttribute(
+      'href',
+      'https://github.com/Shredvardson/dl-starter/wiki/Home'
+    );
 
     // Check that target and rel attributes are set correctly for security
     await expect(helpLink).toHaveAttribute('target', '_blank');
@@ -35,7 +38,7 @@ test.describe('Help Link', () => {
     // Listen for new page events
     const pagePromise = context.waitForEvent('page');
     await helpLink.click();
-    
+
     // Verify new page opens with correct URL (GitHub may redirect, so check for wiki path)
     const newPage = await pagePromise;
     await newPage.waitForLoadState();

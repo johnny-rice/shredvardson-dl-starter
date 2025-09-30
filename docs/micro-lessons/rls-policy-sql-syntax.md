@@ -8,13 +8,12 @@
 
 ```typescript
 function generatePolicySQL(policy: RLSPolicy): string {
-  const usingClause = 
-    policy.operation === 'INSERT' ? '' : `\n  USING (${policy.condition})`;
-  const withCheckClause = 
+  const usingClause = policy.operation === 'INSERT' ? '' : `\n  USING (${policy.condition})`;
+  const withCheckClause =
     policy.operation === 'INSERT' || policy.operation === 'UPDATE'
       ? `\n  WITH CHECK (${policy.condition})`
       : '';
-      
+
   return `CREATE POLICY "${policy.name}" ON public.${policy.table}
     FOR ${policy.operation}
     TO ${policy.role}${usingClause}${withCheckClause};`;
@@ -24,7 +23,7 @@ function generatePolicySQL(policy: RLSPolicy): string {
 ## Operation-Specific Rules
 
 - **SELECT/DELETE**: Use `USING` clause only
-- **INSERT**: Use `WITH CHECK` clause only  
+- **INSERT**: Use `WITH CHECK` clause only
 - **UPDATE**: Use both `USING` and `WITH CHECK` clauses
 
 ## Why This Matters
@@ -46,7 +45,7 @@ CREATE POLICY "users_select_own" ON public.users
   TO authenticated
   USING (auth.uid() = user_id);
 
--- INSERT policy  
+-- INSERT policy
 CREATE POLICY "users_insert_own" ON public.users
   FOR INSERT
   TO authenticated

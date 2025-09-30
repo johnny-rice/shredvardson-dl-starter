@@ -15,7 +15,7 @@ interface CheckResult {
 function checkLearningsIndex(): CheckResult {
   const microLessonsDir = resolve('docs/micro-lessons');
   const indexFile = join(microLessonsDir, 'INDEX.md');
-  
+
   if (!existsSync(microLessonsDir)) {
     return {
       name: 'Learning Index',
@@ -23,7 +23,7 @@ function checkLearningsIndex(): CheckResult {
       message: 'No micro-lessons directory found',
     };
   }
-  
+
   // Gather lesson files (exclude template/index; case-insensitive)
   const lessonFiles: string[] = readdirSync(microLessonsDir)
     .filter((file: string) => {
@@ -31,7 +31,7 @@ function checkLearningsIndex(): CheckResult {
       return lower.endsWith('.md') && lower !== 'index.md' && lower !== 'template.md';
     })
     .map((file: string) => join(microLessonsDir, file));
-  
+
   if (lessonFiles.length === 0) {
     return {
       name: 'Learning Index',
@@ -39,7 +39,7 @@ function checkLearningsIndex(): CheckResult {
       message: 'No micro-lessons to index',
     };
   }
-  
+
   if (!existsSync(indexFile)) {
     return {
       name: 'Learning Index',
@@ -48,7 +48,7 @@ function checkLearningsIndex(): CheckResult {
       fix: 'Run: pnpm learn:index to refresh Top-10',
     };
   }
-  
+
   try {
     // Fail if INDEX.md appears older than any lesson (allow 1s skew)
     const newestLessonMtime = Math.max(...lessonFiles.map((f) => statSync(f).mtimeMs));
@@ -67,7 +67,7 @@ function checkLearningsIndex(): CheckResult {
     if (trimmed.length < 50) {
       return {
         name: 'Learning Index',
-        status: 'fail', 
+        status: 'fail',
         message: 'INDEX.md exists but appears empty or incomplete',
         fix: 'Run: pnpm learn:index to refresh Top-10',
       };
@@ -90,7 +90,7 @@ function checkLearningsIndex(): CheckResult {
       fix: 'Run: pnpm learn:index to refresh Top-10',
     };
   }
-  
+
   return {
     name: 'Learning Index',
     status: 'pass',
@@ -100,7 +100,7 @@ function checkLearningsIndex(): CheckResult {
 
 function checkClaudeMdLeanness(): CheckResult {
   const claudeMdPath = resolve(resolveDoc('CLAUDE.md'));
-  
+
   if (!existsSync(claudeMdPath)) {
     return {
       name: 'CLAUDE.md Leanness',
@@ -108,12 +108,12 @@ function checkClaudeMdLeanness(): CheckResult {
       message: 'No CLAUDE.md found',
     };
   }
-  
+
   try {
     const content = readFileSync(claudeMdPath, 'utf8');
     const lines = content.split('\n');
     const lineCount = lines.length;
-    
+
     // Check line count (≤180 lines)
     if (lineCount > 180) {
       return {
@@ -123,18 +123,20 @@ function checkClaudeMdLeanness(): CheckResult {
         fix: 'Move large content to docs/ and link from CLAUDE.md instead',
       };
     }
-    
+
     // Check for micro-lessons index reference (allow relative paths and anchors)
-    const top10Link = /(?:\[[^\]]*\]\()?\s*(?:\.{0,2}\/)?docs\/micro-lessons\/INDEX\.md(?:#[^)]+)?\)?/i;
+    const top10Link =
+      /(?:\[[^\]]*\]\()?\s*(?:\.{0,2}\/)?docs\/micro-lessons\/INDEX\.md(?:#[^)]+)?\)?/i;
     if (!top10Link.test(content)) {
       return {
         name: 'CLAUDE.md Leanness',
         status: 'fail',
-        message: 'CLAUDE.md must link to docs/micro-lessons/INDEX.md (relative link accepted) for agent context',
+        message:
+          'CLAUDE.md must link to docs/micro-lessons/INDEX.md (relative link accepted) for agent context',
         fix: 'Add reference to micro-lessons Top-10 index in Learning Loop section',
       };
     }
-    
+
     return {
       name: 'CLAUDE.md Leanness',
       status: 'pass',
@@ -153,11 +155,11 @@ function checkClaudeMdLeanness(): CheckResult {
 function checkDisplaySuites(): CheckResult {
   try {
     // Run the display suites check script
-    execSync('node scripts/check-display-suites.js', { 
+    execSync('node scripts/check-display-suites.js', {
       stdio: 'pipe',
-      encoding: 'utf8'
+      encoding: 'utf8',
     });
-    
+
     return {
       name: 'Display Suites',
       status: 'pass',
@@ -188,8 +190,10 @@ function checkPlaceholders(): CheckResult {
 
         // Skip excluded directories and this file
         if (
-          ['node_modules', '.git', '.next', '.turbo', 'coverage', 'dist', 'artifacts'].includes(entry) ||
-          (fullPath.startsWith(resolve('docs/wiki'))) ||
+          ['node_modules', '.git', '.next', '.turbo', 'coverage', 'dist', 'artifacts'].includes(
+            entry
+          ) ||
+          fullPath.startsWith(resolve('docs/wiki')) ||
           fullPath.endsWith('scripts/starter-doctor.ts')
         ) {
           continue;
@@ -343,7 +347,7 @@ function checkEnvironment(): CheckResult {
 function checkConstitutionIntegrity(): CheckResult {
   const checksumPath = resolve('docs/llm/CONSTITUTION.CHECKSUM');
   const contextMapPath = resolve('docs/llm/context-map.json');
-  
+
   // Check if this is an infrastructure change (based on file detection)
   const isInfraChange = process.env.IS_INFRA_CHANGE === 'true';
 
@@ -351,7 +355,9 @@ function checkConstitutionIntegrity(): CheckResult {
     return {
       name: 'Constitution Integrity',
       status: isInfraChange ? 'warn' : 'fail',
-      message: 'Constitution checksum file missing' + (isInfraChange ? ' (advisory for infra changes)' : ''),
+      message:
+        'Constitution checksum file missing' +
+        (isInfraChange ? ' (advisory for infra changes)' : ''),
       fix: 'Run: pnpm tsx scripts/update-constitution-checksum.ts',
     };
   }
@@ -476,11 +482,10 @@ function checkNewAppImports(): CheckResult[] {
     return results;
   }
 
-  const apps = readdirSync(appsDir)
-    .filter((entry: string) => {
-      const appPath = join(appsDir, entry);
-      return statSync(appPath).isDirectory() && entry !== 'web';
-    });
+  const apps = readdirSync(appsDir).filter((entry: string) => {
+    const appPath = join(appsDir, entry);
+    return statSync(appPath).isDirectory() && entry !== 'web';
+  });
 
   for (const appName of apps) {
     const globalsCssPath = join(appsDir, appName, 'src/app/globals.css');
@@ -582,21 +587,20 @@ function checkNewAppImports(): CheckResult[] {
 // Learnings Loop: generate both human-readable and machine-readable metrics
 function generateLearningMetrics(): string {
   let metrics = '';
-  
+
   try {
     const microLessonsDir = resolve('docs/micro-lessons');
-    
+
     // Count total micro-lessons
     let totalLessons = 0;
     if (existsSync(microLessonsDir)) {
-      const files = readdirSync(microLessonsDir).filter(file => 
-        file.endsWith('.md') && 
-        file !== 'INDEX.md' && 
-        !file.toLowerCase().includes('template')
+      const files = readdirSync(microLessonsDir).filter(
+        (file) =>
+          file.endsWith('.md') && file !== 'INDEX.md' && !file.toLowerCase().includes('template')
       );
       totalLessons = files.length;
     }
-    
+
     // Get Top-10 index last updated timestamp
     const indexFile = join(microLessonsDir, 'INDEX.md');
     let indexUpdated = 'never';
@@ -606,7 +610,7 @@ function generateLearningMetrics(): string {
       indexUpdated = stats.mtime.toISOString().split('T')[0]; // YYYY-MM-DD format
       indexUpdatedISO = stats.mtime.toISOString(); // Full ISO-8601 UTC format
     }
-    
+
     // Simple display guard violation check (current state only)
     let displayViolations = 0;
     try {
@@ -614,12 +618,12 @@ function generateLearningMetrics(): string {
     } catch {
       displayViolations = 1; // If script fails, likely has violations
     }
-    
+
     metrics += '## 📚 Learning Loop Metrics\n\n';
     metrics += `- **Micro-lessons total:** ${totalLessons}\n`;
     metrics += `- **Top-10 updated:** ${indexUpdated}\n`;
     metrics += `- **Display guard violations:** ${displayViolations}\n\n`;
-    
+
     // Learnings Loop: add staleness warning if index is old
     if (totalLessons > 0 && indexUpdatedISO) {
       const indexAge = Date.now() - new Date(indexUpdatedISO).getTime();
@@ -628,18 +632,18 @@ function generateLearningMetrics(): string {
         metrics += '⚠️ *Learnings index may be stale. Run: pnpm learn:index*\n\n';
       }
     }
-    
+
     if (totalLessons === 0) {
-      metrics += '💡 *No micro-lessons yet. Add your first learning when you discover a reusable pattern.*\n\n';
+      metrics +=
+        '💡 *No micro-lessons yet. Add your first learning when you discover a reusable pattern.*\n\n';
     } else if (indexUpdated === 'never') {
       metrics += '⚠️ *Run `pnpm learn:index` to generate the Top-10.*\n\n';
     }
-    
   } catch (error) {
     metrics += '## 📚 Learning Loop Metrics\n\n';
     metrics += `❌ *Error gathering metrics: ${error}*\n\n`;
   }
-  
+
   return metrics;
 }
 
@@ -647,18 +651,17 @@ function generateLearningMetrics(): string {
 function generateLearningStatsJSON(): string {
   try {
     const microLessonsDir = resolve('docs/micro-lessons');
-    
+
     // Count total micro-lessons
     let totalLessons = 0;
     if (existsSync(microLessonsDir)) {
-      const files = readdirSync(microLessonsDir).filter(file => 
-        file.endsWith('.md') && 
-        file !== 'INDEX.md' && 
-        !file.toLowerCase().includes('template')
+      const files = readdirSync(microLessonsDir).filter(
+        (file) =>
+          file.endsWith('.md') && file !== 'INDEX.md' && !file.toLowerCase().includes('template')
       );
       totalLessons = files.length;
     }
-    
+
     // Get Top-10 index last updated timestamp in ISO-8601 UTC
     const indexFile = join(microLessonsDir, 'INDEX.md');
     let indexUpdatedISO = null;
@@ -666,7 +669,7 @@ function generateLearningStatsJSON(): string {
       const stats = statSync(indexFile);
       indexUpdatedISO = stats.mtime.toISOString(); // Already in UTC with Z suffix
     }
-    
+
     // Simple display guard violation check (current state only)
     let displayViolations = 0;
     try {
@@ -674,20 +677,20 @@ function generateLearningStatsJSON(): string {
     } catch {
       displayViolations = 1; // If script fails, likely has violations
     }
-    
+
     const stats = {
       micro_lessons_total: totalLessons,
       top10_updated_at: indexUpdatedISO,
-      display_guard_violations_last_7d: displayViolations
+      display_guard_violations_last_7d: displayViolations,
     };
-    
+
     return `LEARNINGS_STATS=${JSON.stringify(stats)}`;
   } catch (error) {
     // Don't fail on metrics - return a safe fallback
     const fallbackStats = {
       micro_lessons_total: 0,
       top10_updated_at: null,
-      display_guard_violations_last_7d: 0
+      display_guard_violations_last_7d: 0,
     };
     return `LEARNINGS_STATS=${JSON.stringify(fallbackStats)}`;
   }
@@ -697,11 +700,11 @@ function generateReportMarkdown(results: CheckResult[]): string {
   const failed = results.filter((r) => r.status === 'fail');
   const warnings = results.filter((r) => r.status === 'warn');
   const passed = results.filter((r) => r.status === 'pass');
-  
-  const categories = new Map<string, { fails: CheckResult[], warns: CheckResult[] }>();
-  
+
+  const categories = new Map<string, { fails: CheckResult[]; warns: CheckResult[] }>();
+
   // Categorize results
-  results.forEach(result => {
+  results.forEach((result) => {
     if (!categories.has(result.name)) {
       categories.set(result.name, { fails: [], warns: [] });
     }
@@ -714,37 +717,37 @@ function generateReportMarkdown(results: CheckResult[]): string {
   const allowlist = loadDoctorAllowlist();
 
   let report = '';
-  
+
   report += '# 🏥 Starter Doctor Report\n\n';
   report += `**Generated:** ${new Date().toISOString()}\n`;
   report += `**Status:** ${failed.length > 0 ? '❌ FAILED' : warnings.length > 0 ? '⚠️ WARNINGS' : '✅ PASSED'}\n\n`;
-  
+
   // Executive Summary
   report += '## 📊 Summary\n\n';
   report += `- ✅ **Passed:** ${passed.length}\n`;
   report += `- ⚠️ **Warnings:** ${warnings.length}\n`;
   report += `- ❌ **Failed:** ${failed.length}\n\n`;
-  
+
   if (failed.length === 0 && warnings.length === 0) {
     report += '🎉 **All checks passed! Repository is ready for development.**\n\n';
   }
-  
+
   // Learning Loop Metrics
   report += generateLearningMetrics();
-  
+
   // Category Breakdown
   if (categories.size > 0) {
     report += '## 📋 Issues by Category\n\n';
-    
+
     for (const [category, issues] of categories) {
       const totalIssues = issues.fails.length + issues.warns.length;
       if (totalIssues === 0) continue;
-      
+
       const icon = issues.fails.length > 0 ? '❌' : '⚠️';
       report += `### ${icon} ${category}\n\n`;
       report += `- Failures: ${issues.fails.length}\n`;
       report += `- Warnings: ${issues.warns.length}\n\n`;
-      
+
       // Show top issues with quick fixes
       const allIssues = [...issues.fails, ...issues.warns].slice(0, 5);
       for (const issue of allIssues) {
@@ -755,50 +758,50 @@ function generateReportMarkdown(results: CheckResult[]): string {
         }
         report += '\n';
       }
-      
+
       if (issues.fails.length + issues.warns.length > 5) {
         report += `*... and ${issues.fails.length + issues.warns.length - 5} more issues*\n\n`;
       }
     }
   }
-  
+
   // Allowlist Transparency
   if (Object.keys(allowlist).length > 0) {
     report += '## 🔇 Allowlisted Items\n\n';
     report += '*The following items are intentionally ignored:*\n\n';
-    
+
     if (allowlist.missingScripts?.length) {
       report += '**Scripts:**\n';
-      allowlist.missingScripts.forEach(script => {
+      allowlist.missingScripts.forEach((script) => {
         report += `- \`${script}\`\n`;
       });
       report += '\n';
     }
-    
+
     if (allowlist.missingPaths?.length) {
       report += '**Paths:**\n';
-      allowlist.missingPaths.forEach(path => {
+      allowlist.missingPaths.forEach((path) => {
         report += `- \`${path}\`\n`;
       });
       report += '\n';
     }
-    
+
     if (allowlist.missingAnchors?.length) {
       report += '**Anchors:**\n';
-      allowlist.missingAnchors.forEach(anchor => {
+      allowlist.missingAnchors.forEach((anchor) => {
         report += `- \`${anchor}\`\n`;
       });
       report += '\n';
     }
   }
-  
+
   // How to Reproduce
   report += '## 🔧 How to Reproduce Locally\n\n';
   report += '```bash\n';
   report += 'pnpm install\n';
   report += 'pnpm run doctor\n';
   report += '```\n\n';
-  
+
   if (failed.length > 0) {
     report += '## 🛠️ Remediation Steps\n\n';
     report += '1. Address each ❌ failure listed above\n';
@@ -806,36 +809,36 @@ function generateReportMarkdown(results: CheckResult[]): string {
     report += '3. Commit fixes and push to re-trigger CI\n';
     report += '4. Add items to `.doctor-allowlist.json` only if they are intentional\n\n';
   }
-  
+
   // Footer
   report += '---\n\n';
   report += '*Generated by [Starter Doctor](../scripts/starter-doctor.ts)*\n';
-  
+
   return report;
 }
 
 function generateCommandInventory(): any {
   const inventory = {
     generated: new Date().toISOString(),
-    packages: {} as Record<string, { scripts: Record<string, string>, dir: string }>,
-    commandDocs: {} as Record<string, { scripts: string[], paths: string[], anchors: string[] }>,
+    packages: {} as Record<string, { scripts: Record<string, string>; dir: string }>,
+    commandDocs: {} as Record<string, { scripts: string[]; paths: string[]; anchors: string[] }>,
     orphanedDocs: [] as string[],
-    turboTasks: {} as Record<string, any>
+    turboTasks: {} as Record<string, any>,
   };
-  
+
   // Package scripts inventory
   const workspacePackages = loadWorkspacePackages();
   for (const pkg of workspacePackages) {
     const key = pkg.name || pkg.dir;
     inventory.packages[key] = {
       scripts: pkg.scripts,
-      dir: pkg.dir
+      dir: pkg.dir,
     };
   }
-  
+
   // Turbo pipeline
   inventory.turboTasks = loadTurboPipeline();
-  
+
   // Command docs analysis
   const commandsDir = resolve('.claude/commands');
   if (existsSync(commandsDir)) {
@@ -843,61 +846,62 @@ function generateCommandInventory(): any {
       try {
         const content = readFileSync(filePath, 'utf8');
         const relativePath = relative(process.cwd(), filePath).split(sep).join('/');
-        
+
         const scripts: string[] = [];
         const paths: string[] = [];
         const anchors: string[] = [];
-        
+
         // Extract scripts (simplified)
         const scriptMatches = content.match(/`(?:pnpm|npm|turbo)[^`]+`/g) || [];
         scripts.push(...scriptMatches);
-        
+
         // Extract paths - only clean file paths and globs
         const pathMatches = content.match(/`[^`]*(?:apps|packages|scripts|docs)[^`]*`/g) || [];
         const cleanPaths = pathMatches
-          .map(match => {
+          .map((match) => {
             // Remove backticks
             let path = match.replace(/`/g, '');
-            
+
             // Skip if it looks like a command (starts with /)
             if (path.startsWith('/')) {
               return null;
             }
-            
+
             // Skip if it contains newlines or markdown formatting
             if (path.includes('\n') || path.includes('**') || path.includes(' - ')) {
               return null;
             }
-            
+
             // Extract just the path part if it's mixed with prose
-            const pathRegex = /(?:^|\s)((?:apps|packages|scripts|docs|src|\.)[\/\w.-]*[\/\w.-]+)(?:\s|$)/;
+            const pathRegex =
+              /(?:^|\s)((?:apps|packages|scripts|docs|src|\.)[\/\w.-]*[\/\w.-]+)(?:\s|$)/;
             const pathMatch = path.match(pathRegex);
             if (pathMatch) {
               return pathMatch[1].trim();
             }
-            
+
             // If it's a clean simple path, use it
             if (/^[a-zA-Z0-9\/._-]+$/.test(path.trim()) && path.length < 100) {
               return path.trim();
             }
-            
+
             return null;
           })
-          .filter(path => path !== null && path.length > 0)
+          .filter((path) => path !== null && path.length > 0)
           .filter((path, index, array) => array.indexOf(path) === index); // deduplicate
-        
+
         paths.push(...cleanPaths);
-        
+
         // Extract links with anchors
         const anchorMatches = content.match(/\[[^\]]+\]\([^)]+#[^)]+\)/g) || [];
         anchors.push(...anchorMatches);
-        
+
         inventory.commandDocs[relativePath] = { scripts, paths, anchors };
       } catch {
         // Skip files that can't be read
       }
     }
-    
+
     function scanDir(dir: string) {
       try {
         const entries = readdirSync(dir);
@@ -913,17 +917,17 @@ function generateCommandInventory(): any {
         // Skip directories that can't be read
       }
     }
-    
+
     scanDir(commandsDir);
   }
-  
+
   return inventory;
 }
 
 function loadDoctorAllowlist(): any {
   const allowlistPath = resolve('.doctor-allowlist.json');
   if (!existsSync(allowlistPath)) return {};
-  
+
   try {
     return JSON.parse(readFileSync(allowlistPath, 'utf8'));
   } catch {
@@ -934,11 +938,11 @@ function loadDoctorAllowlist(): any {
 function loadWorkspacePackages(): any[] {
   // Simplified version for inventory - reuse the logic from checkCommandDocs
   const candidates = [
-    ...safeListDirs('apps').map(d => `apps/${d}`),
-    ...safeListDirs('packages').map(d => `packages/${d}`),
+    ...safeListDirs('apps').map((d) => `apps/${d}`),
+    ...safeListDirs('packages').map((d) => `packages/${d}`),
   ];
   const out: any[] = [];
-  
+
   for (const dir of candidates) {
     const pj = join(dir, 'package.json');
     if (existsSync(pj)) {
@@ -950,7 +954,7 @@ function loadWorkspacePackages(): any[] {
       }
     }
   }
-  
+
   // Include root
   if (existsSync('package.json')) {
     try {
@@ -960,7 +964,7 @@ function loadWorkspacePackages(): any[] {
       // Skip malformed root package.json
     }
   }
-  
+
   return out;
 }
 
@@ -968,7 +972,7 @@ function loadTurboPipeline(): Record<string, any> {
   try {
     const turboPath = resolve('turbo.json');
     if (!existsSync(turboPath)) return {};
-    
+
     const turbo = JSON.parse(readFileSync(turboPath, 'utf8'));
     return turbo.pipeline ?? {};
   } catch {
@@ -989,7 +993,7 @@ function safeListDirs(dir: string): string[] {
 // Learnings Loop: guard for link drift in PR comments
 function checkTop10LinkValidity(): CheckResult {
   const indexPath = resolve('docs/micro-lessons/INDEX.md');
-  
+
   if (!existsSync(indexPath)) {
     return {
       name: 'Top-10 Link Validity',
@@ -998,7 +1002,7 @@ function checkTop10LinkValidity(): CheckResult {
       fix: 'Run `pnpm learn:index` to generate the index',
     };
   }
-  
+
   try {
     // Check if the file is readable and has content
     const content = readFileSync(indexPath, 'utf8');
@@ -1010,13 +1014,12 @@ function checkTop10LinkValidity(): CheckResult {
         fix: 'Run `pnpm learn:index` to regenerate the index',
       };
     }
-    
+
     return {
       name: 'Top-10 Link Validity',
       status: 'pass',
       message: 'Top-10 index file exists and is accessible',
     };
-    
   } catch (error) {
     return {
       name: 'Top-10 Link Validity',
@@ -1030,35 +1033,38 @@ function checkTop10LinkValidity(): CheckResult {
 // Learnings Loop: retention rule for unused micro-lessons
 function checkMicroLessonRetention(): CheckResult {
   const microLessonsDir = resolve('docs/micro-lessons');
-  
+
   if (!existsSync(microLessonsDir)) {
     return {
       name: 'Micro-Lesson Retention',
-      status: 'pass', 
+      status: 'pass',
       message: 'No micro-lessons directory found',
     };
   }
-  
+
   try {
     const lessonFiles = readdirSync(microLessonsDir)
-      .filter(file => file.endsWith('.md') && file !== 'INDEX.md' && !file.toLowerCase().includes('template'))
-      .map(file => join(microLessonsDir, file));
-    
+      .filter(
+        (file) =>
+          file.endsWith('.md') && file !== 'INDEX.md' && !file.toLowerCase().includes('template')
+      )
+      .map((file) => join(microLessonsDir, file));
+
     const staleFiles: string[] = [];
-    const ninetyDaysAgo = Date.now() - (90 * 24 * 60 * 60 * 1000);
-    
+    const ninetyDaysAgo = Date.now() - 90 * 24 * 60 * 60 * 1000;
+
     for (const filePath of lessonFiles) {
       try {
         const content = readFileSync(filePath, 'utf8');
         const stats = statSync(filePath);
-        
+
         // Check if file hasn't been modified in 90 days
         const lastModified = stats.mtime.getTime();
-        
+
         // Check if UsedBy is 0 or missing
         const usedByMatch = content.match(/UsedBy:\s*(\d+)/);
         const usedBy = usedByMatch ? parseInt(usedByMatch[1]) : 0;
-        
+
         if (lastModified < ninetyDaysAgo && usedBy === 0) {
           const fileName = basename(filePath);
           staleFiles.push(fileName);
@@ -1067,7 +1073,7 @@ function checkMicroLessonRetention(): CheckResult {
         // Skip files that can't be read
       }
     }
-    
+
     if (staleFiles.length > 0) {
       return {
         name: 'Micro-Lesson Retention',
@@ -1076,13 +1082,12 @@ function checkMicroLessonRetention(): CheckResult {
         fix: 'Consider archiving: rename to archive/*.md or remove if truly obsolete',
       };
     }
-    
+
     return {
       name: 'Micro-Lesson Retention',
       status: 'pass',
       message: 'All micro-lessons are recent or actively used',
     };
-    
   } catch (error) {
     return {
       name: 'Micro-Lesson Retention',
@@ -1094,78 +1099,84 @@ function checkMicroLessonRetention(): CheckResult {
 
 function checkCommandDocs(): CheckResult[] {
   const commandsDir = '.claude/commands';
-  
+
   if (!existsSync(commandsDir)) {
-    return [{
-      name: 'Command Documentation',
-      status: 'warn',
-      message: 'No .claude/commands directory found'
-    }];
+    return [
+      {
+        name: 'Command Documentation',
+        status: 'warn',
+        message: 'No .claude/commands directory found',
+      },
+    ];
   }
 
   const results: CheckResult[] = [];
-  
+
   try {
     function scanCommandDir(dir: string): string[] {
       const entries = readdirSync(dir);
       const commands: string[] = [];
-      
+
       for (const entry of entries) {
         const fullPath = join(dir, entry);
         const stat = statSync(fullPath);
-        
+
         if (stat.isDirectory()) {
           commands.push(...scanCommandDir(fullPath));
         } else if (entry.endsWith('.md')) {
           commands.push(fullPath);
         }
       }
-      
+
       return commands;
     }
 
     const commandFiles = scanCommandDir(commandsDir);
-    
+
     results.push({
       name: 'Slash Commands',
       status: commandFiles.length > 0 ? 'pass' : 'warn',
-      message: `Found ${commandFiles.length} slash command(s): ${commandFiles.map(f => f.replace(commandsDir + '/', '')).join(', ')}`
+      message: `Found ${commandFiles.length} slash command(s): ${commandFiles.map((f) => f.replace(commandsDir + '/', '')).join(', ')}`,
     });
 
     // Check if commands are referenced in CLAUDE.md
     const claudePath = resolve(resolveDoc('CLAUDE.md'));
     if (existsSync(claudePath)) {
       const claudeContent = readFileSync(claudePath, 'utf8');
-      const referencedCommands = commandFiles.filter(cmd => {
+      const referencedCommands = commandFiles.filter((cmd) => {
         const rel = relative(process.cwd(), cmd).split(sep).join('/');
-        const noPrefix = rel.replace(/^\.?claude\/commands\//, '').replace(/^\.claude\/commands\//, '');
+        const noPrefix = rel
+          .replace(/^\.?claude\/commands\//, '')
+          .replace(/^\.claude\/commands\//, '');
         const candidates = [
           rel,
           `(${rel})`,
           `.claude/commands/${noPrefix}`,
           `(.claude/commands/${noPrefix})`,
           noPrefix,
-          `(${noPrefix})`
+          `(${noPrefix})`,
         ];
-        return candidates.some(token => claudeContent.includes(token));
+        return candidates.some((token) => claudeContent.includes(token));
       });
-      
+
       results.push({
         name: 'Commands in CLAUDE.md',
         status: referencedCommands.length === commandFiles.length ? 'pass' : 'warn',
         message: `${referencedCommands.length}/${commandFiles.length} commands referenced in CLAUDE.md`,
-        fix: commandFiles.length > referencedCommands.length ? 'Add missing command references to CLAUDE.md' : undefined
+        fix:
+          commandFiles.length > referencedCommands.length
+            ? 'Add missing command references to CLAUDE.md'
+            : undefined,
       });
     }
-
   } catch (error) {
     results.push({
       name: 'Command Documentation Scan',
       status: 'fail',
-      message: `Error scanning commands: ${error}`
+      message: `Error scanning commands: ${error}`,
     });
   }
-  
+
   return results;
 }
 
@@ -1219,7 +1230,7 @@ function checkRestrictedPaths(): CheckResult {
   // Only run this check in CI or if explicitly requested
   const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
   const isBotBranch = process.env.GITHUB_HEAD_REF?.startsWith('bots/claude/');
-  
+
   if (!isCI || !isBotBranch) {
     return {
       name: 'Restricted Paths',
@@ -1230,23 +1241,22 @@ function checkRestrictedPaths(): CheckResult {
 
   try {
     // Run the restricted paths check script
-    execSync('bash scripts/check-restricted-paths.sh', { 
+    execSync('bash scripts/check-restricted-paths.sh', {
       stdio: 'pipe',
-      env: { ...process.env }
+      env: { ...process.env },
     });
-    
+
     return {
       name: 'Restricted Paths',
       status: 'pass',
       message: '🤖 Bot branch respects path restrictions',
     };
   } catch (error: any) {
-    const details =
-      (error?.stderr?.toString?.() || error?.stdout?.toString?.() || '')
-        .split('\n')
-        .slice(-5)
-        .join(' ')
-        .trim();
+    const details = (error?.stderr?.toString?.() || error?.stdout?.toString?.() || '')
+      .split('\n')
+      .slice(-5)
+      .join(' ')
+      .trim();
     return {
       name: 'Restricted Paths',
       status: 'fail',
@@ -1262,7 +1272,7 @@ function checkAILabelHygiene(): CheckResult {
   // Only run in CI with artifacts directory
   const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
   const isBotBranch = process.env.GITHUB_HEAD_REF?.startsWith('bots/claude/');
-  
+
   if (!isCI || !existsSync('artifacts')) {
     return {
       name: 'AI Label Hygiene',
@@ -1282,11 +1292,13 @@ function checkAILabelHygiene(): CheckResult {
 
   try {
     // Check if AI artifacts exist
-    const hasAIReview = existsSync('artifacts/doctor-report.md') && 
-                       readFileSync('artifacts/doctor-report.md', 'utf8').includes('🤖 AI Review');
-    const hasSecurityReview = existsSync('artifacts/doctor-report.md') && 
-                             readFileSync('artifacts/doctor-report.md', 'utf8').includes('🛡️ AI Security Review');
-    
+    const hasAIReview =
+      existsSync('artifacts/doctor-report.md') &&
+      readFileSync('artifacts/doctor-report.md', 'utf8').includes('🤖 AI Review');
+    const hasSecurityReview =
+      existsSync('artifacts/doctor-report.md') &&
+      readFileSync('artifacts/doctor-report.md', 'utf8').includes('🛡️ AI Security Review');
+
     if (!hasAIReview && !hasSecurityReview) {
       return {
         name: 'AI Label Hygiene',
@@ -1318,40 +1330,42 @@ function checkAILabelHygiene(): CheckResult {
 
 function checkReferences(): CheckResult[] {
   const results: CheckResult[] = [];
-  
+
   // Check recipe files referenced in CLAUDE.md
   const recipeFiles = [
     'docs/recipes/auth.md',
-    'docs/recipes/db.md', 
+    'docs/recipes/db.md',
     'docs/recipes/env-setup.md',
     'docs/recipes/stripe.md',
-    'docs/recipes/shadcn.md'
+    'docs/recipes/shadcn.md',
   ];
-  
-  const missingRecipes = recipeFiles.filter(file => !existsSync(file));
-  
+
+  const missingRecipes = recipeFiles.filter((file) => !existsSync(file));
+
   results.push({
     name: 'Recipe Documentation',
     status: missingRecipes.length === 0 ? 'pass' : 'fail',
-    message: missingRecipes.length === 0 
-      ? 'All recipe files exist'
-      : `Missing recipe files: ${missingRecipes.join(', ')}`,
-    fix: missingRecipes.length > 0 ? 'Create missing recipe files' : undefined
+    message:
+      missingRecipes.length === 0
+        ? 'All recipe files exist'
+        : `Missing recipe files: ${missingRecipes.join(', ')}`,
+    fix: missingRecipes.length > 0 ? 'Create missing recipe files' : undefined,
   });
-  
+
   // Check other referenced files
   const otherFiles = ['CONTRIBUTING.md', 'RELEASING.md', 'SECURITY.md'];
-  const missingOther = otherFiles.filter(file => !existsSync(file));
-  
+  const missingOther = otherFiles.filter((file) => !existsSync(file));
+
   results.push({
-    name: 'Reference Documentation', 
+    name: 'Reference Documentation',
     status: missingOther.length === 0 ? 'pass' : 'fail',
-    message: missingOther.length === 0
-      ? 'All reference files exist'
-      : `Missing reference files: ${missingOther.join(', ')}`,
-    fix: missingOther.length > 0 ? 'Create missing reference files' : undefined
+    message:
+      missingOther.length === 0
+        ? 'All reference files exist'
+        : `Missing reference files: ${missingOther.join(', ')}`,
+    fix: missingOther.length > 0 ? 'Create missing reference files' : undefined,
   });
-  
+
   return results;
 }
 
@@ -1359,16 +1373,16 @@ function checkReferences(): CheckResult[] {
 
 function checkArtifactsDirectory(): CheckResult {
   const artifactsPath = resolve('artifacts');
-  
+
   if (!existsSync(artifactsPath)) {
     return {
       name: 'Artifacts Directory',
       status: 'fail',
       message: 'artifacts/ directory missing',
-      fix: 'Create artifacts/ directory and add to .gitignore'
+      fix: 'Create artifacts/ directory and add to .gitignore',
     };
   }
-  
+
   try {
     // Check if artifacts/ is in .gitignore
     const gitignorePath = resolve('.gitignore');
@@ -1377,23 +1391,23 @@ function checkArtifactsDirectory(): CheckResult {
       gitignoreContent = readFileSync(gitignorePath, 'utf8');
       const hasArtifactsIgnore = gitignoreContent
         .split(/\r?\n/)
-        .some(l => /^\s*\/?artifacts(?:\/|\*|\s|$)/.test(l.trim()));
+        .some((l) => /^\s*\/?artifacts(?:\/|\*|\s|$)/.test(l.trim()));
       if (!hasArtifactsIgnore) {
         return {
           name: 'Artifacts Directory',
           status: 'fail',
           message: 'artifacts/ not ignored by .gitignore',
-          fix: 'Add "artifacts/" (or equivalent) to .gitignore'
+          fix: 'Add "artifacts/" (or equivalent) to .gitignore',
         };
       }
-      
+
       // Ensure .keep is allowed through ignore
-      if (!gitignoreContent.split(/\r?\n/).some(l => /^\s*!artifacts\/\.keep\s*$/.test(l))) {
+      if (!gitignoreContent.split(/\r?\n/).some((l) => /^\s*!artifacts\/\.keep\s*$/.test(l))) {
         return {
           name: 'Artifacts Directory',
           status: 'fail',
           message: 'artifacts/.keep not allowlisted in .gitignore',
-          fix: 'Add "!artifacts/.keep" below "artifacts/" in .gitignore'
+          fix: 'Add "!artifacts/.keep" below "artifacts/" in .gitignore',
         };
       }
     }
@@ -1405,18 +1419,27 @@ function checkArtifactsDirectory(): CheckResult {
         name: 'Artifacts Directory',
         status: 'warn',
         message: 'artifacts/.keep is missing',
-        fix: 'Create an empty artifacts/.keep file (tracked)'
+        fix: 'Create an empty artifacts/.keep file (tracked)',
       };
     }
-    
+
     // Check for tracked files (except .keep)
     let trackedFiles: string[] = [];
     try {
       // Only attempt when inside a git work tree
-      const inGit = execSync('git rev-parse --is-inside-work-tree', { stdio: 'pipe', encoding: 'utf8' }).trim() === 'true';
+      const inGit =
+        execSync('git rev-parse --is-inside-work-tree', {
+          stdio: 'pipe',
+          encoding: 'utf8',
+        }).trim() === 'true';
       if (inGit) {
-        const out: Buffer = execSync('git ls-files -z -- artifacts', { stdio: 'pipe' }) as unknown as Buffer;
-        trackedFiles = out.toString('utf8').split('\0').filter(p => p && p !== 'artifacts/.keep');
+        const out: Buffer = execSync('git ls-files -z -- artifacts', {
+          stdio: 'pipe',
+        }) as unknown as Buffer;
+        trackedFiles = out
+          .toString('utf8')
+          .split('\0')
+          .filter((p) => p && p !== 'artifacts/.keep');
       }
     } catch {
       // ignore – we'll fallback to filesystem check
@@ -1424,7 +1447,7 @@ function checkArtifactsDirectory(): CheckResult {
     if (trackedFiles.length === 0) {
       // Fallback: if not in git, treat any files besides .keep as advisory
       try {
-        const files = readdirSync(artifactsPath).filter(f => f !== '.keep');
+        const files = readdirSync(artifactsPath).filter((f) => f !== '.keep');
         if (files.length > 0) {
           trackedFiles = files;
         }
@@ -1432,27 +1455,26 @@ function checkArtifactsDirectory(): CheckResult {
         // ignore
       }
     }
-    
+
     if (trackedFiles.length > 0) {
       return {
         name: 'Artifacts Directory',
         status: 'warn',
         message: `artifacts/ has ${trackedFiles.length} file(s) besides .keep`,
-        fix: 'Keep artifacts untracked; remove committed files or add to .gitignore'
+        fix: 'Keep artifacts untracked; remove committed files or add to .gitignore',
       };
     }
-    
+
     return {
       name: 'Artifacts Directory',
       status: 'pass',
-      message: 'artifacts/ properly configured and empty'
+      message: 'artifacts/ properly configured and empty',
     };
-    
   } catch (error) {
     return {
       name: 'Artifacts Directory',
       status: 'fail',
-      message: `Cannot check artifacts/: ${error}`
+      message: `Cannot check artifacts/: ${error}`,
     };
   }
 }
@@ -1465,45 +1487,44 @@ function checkRootDocLimits(): CheckResult {
     'RELEASING.md',
     'CODE_OF_CONDUCT.md',
     'CHANGELOG.md',
-    'GOVERNANCE.md'
+    'GOVERNANCE.md',
   ];
   const maxLines = 80;
-  
+
   try {
-    const files = readdirSync('.').filter(f => f.endsWith('.md'));
+    const files = readdirSync('.').filter((f) => f.endsWith('.md'));
     const violations: string[] = [];
-    
+
     for (const file of files) {
       if (allowedLongDocs.includes(file)) continue;
-      
+
       const content = readFileSync(file, 'utf8');
       const lineCount = content.split('\n').length;
-      
+
       if (lineCount > maxLines) {
         violations.push(`${file} (${lineCount} lines)`);
       }
     }
-    
+
     if (violations.length > 0) {
       return {
         name: 'Root Doc Limits',
         status: 'fail',
         message: `Root docs exceed ${maxLines} lines: ${violations.join(', ')}`,
-        fix: 'Move large content to docs/ and link from root'
+        fix: 'Move large content to docs/ and link from root',
       };
     }
-    
+
     return {
       name: 'Root Doc Limits',
       status: 'pass',
-      message: `Root docs appropriately sized (<${maxLines} lines)`
+      message: `Root docs appropriately sized (<${maxLines} lines)`,
     };
-    
   } catch (error) {
     return {
       name: 'Root Doc Limits',
       status: 'fail',
-      message: `Cannot check root docs: ${error}`
+      message: `Cannot check root docs: ${error}`,
     };
   }
 }
@@ -1511,26 +1532,26 @@ function checkRootDocLimits(): CheckResult {
 function checkDocsPresence(): CheckResult {
   const requiredDocs = ['docs/INDEX.md', 'docs/ai/INDEX.md'];
   const missing: string[] = [];
-  
+
   for (const doc of requiredDocs) {
     if (!existsSync(resolve(doc))) {
       missing.push(doc);
     }
   }
-  
+
   if (missing.length > 0) {
     return {
       name: 'Docs Presence',
       status: 'fail',
       message: `Missing required docs: ${missing.join(', ')}`,
-      fix: 'Create missing navigation index files'
+      fix: 'Create missing navigation index files',
     };
   }
-  
+
   return {
     name: 'Docs Presence',
     status: 'pass',
-    message: 'Required navigation docs present'
+    message: 'Required navigation docs present',
   };
 }
 
@@ -1541,19 +1562,19 @@ function checkDocsHeaders(): CheckResult {
       return {
         name: 'Docs Headers',
         status: 'pass',
-        message: 'No docs directory found'
+        message: 'No docs directory found',
       };
     }
-    
+
     const docFiles: string[] = [];
-    
+
     // Find all .md files in docs/
     function findMdFiles(dir: string) {
       const files = readdirSync(dir);
       for (const file of files) {
         const fullPath = join(dir, file);
         const stat = statSync(fullPath);
-        
+
         if (stat.isDirectory()) {
           // Skip generated wiki subtree (cross-platform)
           if (fullPath.startsWith(resolve('docs/wiki'))) continue;
@@ -1565,15 +1586,15 @@ function checkDocsHeaders(): CheckResult {
         }
       }
     }
-    
+
     findMdFiles(docsPath);
-    
+
     const violations: string[] = [];
-    
+
     for (const file of docFiles) {
       const content = readFileSync(file, 'utf8');
       const lines = content.split('\n');
-      
+
       // Support YAML front-matter when checking H1
       let start = 0;
       if (lines[0]?.trim() === '---') {
@@ -1586,96 +1607,99 @@ function checkDocsHeaders(): CheckResult {
         violations.push(`${file}: missing H1 header`);
         continue;
       }
-      
+
       // Check for summary (3–5 lines after H1)
-      const summaryLines = lines.slice(start + 1, start + 6).filter(l => l.trim());
+      const summaryLines = lines.slice(start + 1, start + 6).filter((l) => l.trim());
       if (summaryLines.length < 3) {
         violations.push(`${file}: missing 3-5 line summary after H1`);
       }
-      
+
       // Check for "When to use" line
       if (!content.toLowerCase().includes('when to use')) {
         violations.push(`${file}: missing "When to use" guidance`);
       }
     }
-    
+
     if (violations.length > 0) {
       return {
         name: 'Docs Headers',
         status: 'warn',
         message: `${violations.length} docs missing standard headers`,
-        fix: 'Add H1, summary, and "When to use" sections to docs'
+        fix: 'Add H1, summary, and "When to use" sections to docs',
       };
     }
-    
+
     return {
       name: 'Docs Headers',
       status: 'pass',
-      message: `${docFiles.length} docs follow header standard`
+      message: `${docFiles.length} docs follow header standard`,
     };
-    
   } catch (error) {
     return {
       name: 'Docs Headers',
       status: 'fail',
-      message: `Cannot check docs headers: ${error}`
+      message: `Cannot check docs headers: ${error}`,
     };
   }
 }
 
 function checkPromptStructure(): CheckResult[] {
   const results: CheckResult[] = [];
-  
+
   try {
     const promptsPath = resolve('packages/ai/prompts');
     if (!existsSync(promptsPath)) {
-      return [{
-        name: 'Prompt Structure',
-        status: 'pass',
-        message: 'No prompts directory found'
-      }];
+      return [
+        {
+          name: 'Prompt Structure',
+          status: 'pass',
+          message: 'No prompts directory found',
+        },
+      ];
     }
-    
+
     // Check directory structure
     const requiredDirs = ['system', 'task', 'tools'];
     const missingDirs: string[] = [];
-    
+
     for (const dir of requiredDirs) {
       if (!existsSync(join(promptsPath, dir))) {
         missingDirs.push(dir);
       }
     }
-    
+
     if (missingDirs.length > 0) {
       results.push({
         name: 'Prompt Structure',
         status: 'fail',
         message: `Missing prompt directories: ${missingDirs.join(', ')}`,
-        fix: 'Create prompts/system/, prompts/task/, and prompts/tools/ directories'
+        fix: 'Create prompts/system/, prompts/task/, and prompts/tools/ directories',
       });
     }
-    
+
     // Check for loose .md files in root
-    const rootFiles = readdirSync(promptsPath).filter(f => f.endsWith('.md') && f !== 'README.md');
+    const rootFiles = readdirSync(promptsPath).filter(
+      (f) => f.endsWith('.md') && f !== 'README.md'
+    );
     if (rootFiles.length > 0) {
       results.push({
         name: 'Prompt Structure',
         status: 'fail',
         message: `Loose prompt files in root: ${rootFiles.join(', ')}`,
-        fix: 'Move prompt files to system/, task/, or tools/ subdirectories'
+        fix: 'Move prompt files to system/, task/, or tools/ subdirectories',
       });
     }
-    
+
     // Check prompt headers
     const promptFiles: string[] = [];
-    
+
     function findPromptFiles(dir: string) {
       try {
         const files = readdirSync(dir);
         for (const file of files) {
           const fullPath = join(dir, file);
           const stat = statSync(fullPath);
-          
+
           if (stat.isDirectory()) {
             findPromptFiles(fullPath);
           } else if (file.endsWith('.md') && file !== 'README.md') {
@@ -1686,22 +1710,22 @@ function checkPromptStructure(): CheckResult[] {
         // Directory doesn't exist or can't be read
       }
     }
-    
+
     findPromptFiles(promptsPath);
-    
+
     const headerViolations: string[] = [];
-    
+
     for (const file of promptFiles) {
       try {
         const content = readFileSync(file, 'utf8');
         const lines = content.split('\n');
-        
+
         // Check for required header format
         const hasIntent = content.includes('**Intent:**');
         const hasInputs = content.includes('**Inputs:**');
         const hasOutput = content.includes('**Expected Output:**');
         const hasRisks = content.includes('**Risks/Guardrails:**');
-        
+
         if (!hasIntent || !hasInputs || !hasOutput || !hasRisks) {
           headerViolations.push(file.replace(promptsPath + '/', ''));
         }
@@ -1709,63 +1733,64 @@ function checkPromptStructure(): CheckResult[] {
         headerViolations.push(file.replace(promptsPath + '/', '') + ' (unreadable)');
       }
     }
-    
+
     if (headerViolations.length > 0) {
       results.push({
         name: 'Prompt Headers',
         status: 'warn',
         message: `${headerViolations.length} prompts missing standard headers`,
-        fix: 'Add Intent, Inputs, Expected Output, and Risks/Guardrails to prompt headers'
+        fix: 'Add Intent, Inputs, Expected Output, and Risks/Guardrails to prompt headers',
       });
     } else if (promptFiles.length > 0) {
       results.push({
         name: 'Prompt Headers',
         status: 'pass',
-        message: `${promptFiles.length} prompts follow header standard`
+        message: `${promptFiles.length} prompts follow header standard`,
       });
     }
-    
+
     if (results.length === 0) {
       results.push({
         name: 'Prompt Structure',
         status: 'pass',
-        message: 'Prompt structure correctly organized'
+        message: 'Prompt structure correctly organized',
       });
     }
-    
   } catch (error) {
     results.push({
       name: 'Prompt Structure',
       status: 'fail',
-      message: `Cannot check prompt structure: ${error}`
+      message: `Cannot check prompt structure: ${error}`,
     });
   }
-  
+
   return results;
 }
 
 function checkDocLinks(): CheckResult[] {
   const results: CheckResult[] = [];
-  
+
   try {
     const docsPath = resolve('docs');
     if (!existsSync(docsPath)) {
-      return [{
-        name: 'Doc Links',
-        status: 'pass',
-        message: 'No docs directory found'
-      }];
+      return [
+        {
+          name: 'Doc Links',
+          status: 'pass',
+          message: 'No docs directory found',
+        },
+      ];
     }
-    
+
     const docFiles: string[] = [];
-    
+
     function findMdFiles(dir: string) {
       try {
         const files = readdirSync(dir);
         for (const file of files) {
           const fullPath = join(dir, file);
           const stat = statSync(fullPath);
-          
+
           if (stat.isDirectory()) {
             if (fullPath.startsWith(resolve('docs/wiki'))) continue;
             findMdFiles(fullPath);
@@ -1777,29 +1802,29 @@ function checkDocLinks(): CheckResult[] {
         // Directory doesn't exist or can't be read
       }
     }
-    
+
     findMdFiles(docsPath);
-    
+
     const brokenLinks: string[] = [];
-    
+
     for (const file of docFiles) {
       try {
         const content = readFileSync(file, 'utf8');
-        
+
         // Simple regex to find relative markdown links like [text](./path.md) or [text](path.md)
         const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
         let match;
-        
+
         while ((match = linkRegex.exec(content)) !== null) {
           const linkPath = match[2];
-          
+
           // Strip anchors and query params for file existence check
           const cleanPath = linkPath.split('#')[0].split('?')[0];
-          
+
           // Only check relative links to .md files
           if (cleanPath.endsWith('.md') && !linkPath.startsWith('http')) {
             let absolutePath;
-            
+
             if (cleanPath.startsWith('./')) {
               absolutePath = resolve(dirname(file), cleanPath.slice(2));
             } else if (cleanPath.startsWith('/docs/')) {
@@ -1810,9 +1835,11 @@ function checkDocLinks(): CheckResult[] {
             } else {
               continue; // Skip absolute paths
             }
-            
+
             if (!existsSync(absolutePath)) {
-              brokenLinks.push(`${relative(process.cwd(), file).split(sep).join('/')}: ${linkPath}`);
+              brokenLinks.push(
+                `${relative(process.cwd(), file).split(sep).join('/')}: ${linkPath}`
+              );
             }
           }
         }
@@ -1820,30 +1847,29 @@ function checkDocLinks(): CheckResult[] {
         // File can't be read
       }
     }
-    
+
     if (brokenLinks.length > 0) {
       results.push({
         name: 'Doc Links',
         status: 'warn',
         message: `${brokenLinks.length} broken relative links found`,
-        fix: 'Fix or remove broken markdown links'
+        fix: 'Fix or remove broken markdown links',
       });
     } else {
       results.push({
         name: 'Doc Links',
         status: 'pass',
-        message: `${docFiles.length} docs checked, all relative links valid`
+        message: `${docFiles.length} docs checked, all relative links valid`,
       });
     }
-    
   } catch (error) {
     results.push({
       name: 'Doc Links',
       status: 'fail',
-      message: `Cannot check doc links: ${error}`
+      message: `Cannot check doc links: ${error}`,
     });
   }
-  
+
   return results;
 }
 
@@ -1851,27 +1877,27 @@ function checkTraceability(): CheckResult {
   try {
     const validator = new TraceabilityValidator();
     const result = validator.validateTraceability();
-    
+
     if (!result.valid) {
       return {
         name: 'Traceability Validation',
         status: 'fail',
         message: `${result.errors.length} traceability errors found`,
-        fix: 'Run: pnpm tsx scripts/validate-traceability.ts to see details'
+        fix: 'Run: pnpm tsx scripts/validate-traceability.ts to see details',
       };
     }
-    
+
     return {
       name: 'Traceability Validation',
       status: 'pass',
-      message: 'All traceability chains are valid'
+      message: 'All traceability chains are valid',
     };
   } catch (error) {
     return {
       name: 'Traceability Validation',
       status: 'warn',
       message: `Could not validate traceability: ${error instanceof Error ? error.message : String(error)}`,
-      fix: 'Check if specs/, plans/, tasks/ directories exist'
+      fix: 'Check if specs/, plans/, tasks/ directories exist',
     };
   }
 }
@@ -1879,7 +1905,7 @@ function checkTraceability(): CheckResult {
 function checkWikiPRDSync(): CheckResult {
   const sourcePRD = resolve('docs/product/PRD.md');
   const wikiPRD = resolve('docs/wiki/WIKI-PRD.md');
-  
+
   if (!existsSync(sourcePRD)) {
     return {
       name: 'WIKI-PRD Sync',
@@ -1887,7 +1913,7 @@ function checkWikiPRDSync(): CheckResult {
       message: 'No source PRD found (docs/product/PRD.md)',
     };
   }
-  
+
   if (!existsSync(wikiPRD)) {
     return {
       name: 'WIKI-PRD Sync',
@@ -1896,23 +1922,26 @@ function checkWikiPRDSync(): CheckResult {
       fix: 'Run: pnpm wiki:generate to sync PRD to WIKI-PRD',
     };
   }
-  
+
   try {
     const sourceContent = readFileSync(sourcePRD, 'utf8');
     const wikiContent = readFileSync(wikiPRD, 'utf8');
-    
+
     // Remove the generation footer before comparing
-    const cleanWikiContent = wikiContent.replace(/\n\n---\n\*Copied from docs\/product\/PRD\.md[\s\S]*$/, '');
-    
+    const cleanWikiContent = wikiContent.replace(
+      /\n\n---\n\*Copied from docs\/product\/PRD\.md[\s\S]*$/,
+      ''
+    );
+
     if (sourceContent.trim() !== cleanWikiContent.trim()) {
       return {
         name: 'WIKI-PRD Sync',
-        status: 'fail', 
+        status: 'fail',
         message: 'WIKI-PRD.md is out of sync with docs/product/PRD.md',
         fix: 'Run: pnpm wiki:generate to sync changes',
       };
     }
-    
+
     return {
       name: 'WIKI-PRD Sync',
       status: 'pass',
@@ -1929,39 +1958,40 @@ function checkWikiPRDSync(): CheckResult {
 }
 
 function checkForOverrideLabel(): boolean {
-  const prNumber = process.env.GITHUB_PR_NUMBER ||
+  const prNumber =
+    process.env.GITHUB_PR_NUMBER ||
     (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
   if (!prNumber) return false;
 
   // Retry with backoff to handle timing issues
   const delays = [0, 1500, 3000, 5000]; // ms - total ~10s
   const env = { ...process.env, GH_TOKEN: process.env.GH_TOKEN || process.env.GITHUB_TOKEN };
-  
+
   for (const delay of delays) {
     try {
       if (delay > 0) {
         // Simple sleep implementation
         execSync(`sleep ${delay / 1000}`, { stdio: 'ignore' });
       }
-      
-      const labelsJson = execSync(`gh pr view ${prNumber} --json labels`, { 
-        encoding: 'utf8', 
-        stdio: 'pipe', 
-        env 
+
+      const labelsJson = execSync(`gh pr view ${prNumber} --json labels`, {
+        encoding: 'utf8',
+        stdio: 'pipe',
+        env,
       });
       const labels = JSON.parse(labelsJson).labels || [];
       const hasOverride = labels.some((label: any) => {
         const labelName = (label.name || '').toLowerCase();
         return labelName === 'override:adr' || labelName === 'security:break-glass';
       });
-      
+
       if (hasOverride) return true;
-      
+
       // If no labels yet and we have more retries, continue
       if (labels.length === 0 && delay < delays[delays.length - 1]) {
         continue;
       }
-      
+
       // Labels exist but no override found, or this is the last attempt
       return false;
     } catch (error) {
@@ -1972,40 +2002,46 @@ function checkForOverrideLabel(): boolean {
       // Otherwise continue to next retry
     }
   }
-  
+
   return false;
 }
 
-function checkForOverrideLabelWithAudit(): { hasOverride: boolean; usedLabel?: string; prAuthor?: string; auditInfo?: any } {
-  const prNumber = process.env.GITHUB_PR_NUMBER ||
+function checkForOverrideLabelWithAudit(): {
+  hasOverride: boolean;
+  usedLabel?: string;
+  prAuthor?: string;
+  auditInfo?: any;
+} {
+  const prNumber =
+    process.env.GITHUB_PR_NUMBER ||
     (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
   if (!prNumber) return { hasOverride: false };
 
   // Retry with backoff to handle timing issues
   const delays = [0, 1500, 3000, 5000]; // ms - total ~10s
   const env = { ...process.env, GH_TOKEN: process.env.GH_TOKEN || process.env.GITHUB_TOKEN };
-  
+
   for (const delay of delays) {
     try {
       if (delay > 0) {
         execSync(`sleep ${delay / 1000}`, { stdio: 'ignore' });
       }
-      
+
       // Get PR info including labels and author
-      const prJson = execSync(`gh pr view ${prNumber} --json labels,author,createdAt,url`, { 
-        encoding: 'utf8', 
-        stdio: 'pipe', 
-        env 
+      const prJson = execSync(`gh pr view ${prNumber} --json labels,author,createdAt,url`, {
+        encoding: 'utf8',
+        stdio: 'pipe',
+        env,
       });
       const prData = JSON.parse(prJson);
       const labels = prData.labels || [];
-      
+
       const overrideLabels = ['override:adr', 'security:break-glass'];
       const foundLabel = labels.find((label: any) => {
         const labelName = (label.name || '').toLowerCase();
         return overrideLabels.includes(labelName);
       });
-      
+
       if (foundLabel) {
         const auditInfo = {
           rule: 'ADR',
@@ -2018,20 +2054,20 @@ function checkForOverrideLabelWithAudit(): { hasOverride: boolean; usedLabel?: s
           prCreatedAt: prData.createdAt,
           reason: `${foundLabel.name} override applied`,
         };
-        
+
         return {
           hasOverride: true,
           usedLabel: foundLabel.name,
           prAuthor: prData.author?.login || 'unknown',
-          auditInfo
+          auditInfo,
         };
       }
-      
+
       // If no labels yet and we have more retries, continue
       if (labels.length === 0 && delay < delays[delays.length - 1]) {
         continue;
       }
-      
+
       // Labels exist but no override found, or this is the last attempt
       return { hasOverride: false };
     } catch (error) {
@@ -2042,7 +2078,7 @@ function checkForOverrideLabelWithAudit(): { hasOverride: boolean; usedLabel?: s
       // Otherwise continue to next retry
     }
   }
-  
+
   return { hasOverride: false };
 }
 
@@ -2052,48 +2088,57 @@ function checkForADRReference(): { hasReference: boolean; adrIds: string[] } {
     const evPath = process.env.GITHUB_EVENT_PATH;
     const eventName = process.env.GITHUB_EVENT_NAME;
     let prBody = '';
-    
+
     // Always use gh CLI for most current PR body (event payload can be stale)
-    if (false && evPath && existsSync(evPath) && (eventName === 'pull_request' || eventName === 'pull_request_target')) {
+    if (
+      false &&
+      evPath &&
+      existsSync(evPath) &&
+      (eventName === 'pull_request' || eventName === 'pull_request_target')
+    ) {
       const eventData = JSON.parse(readFileSync(evPath, 'utf8'));
       prBody = eventData.pull_request?.body || '';
     } else {
       // Fallback to gh CLI if available
-      let prNumber = process.env.GITHUB_PR_NUMBER ||
+      let prNumber =
+        process.env.GITHUB_PR_NUMBER ||
         (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
       if (!prNumber) return { hasReference: false, adrIds: [] };
-      
+
       const env = { ...process.env, GH_TOKEN: process.env.GH_TOKEN || process.env.GITHUB_TOKEN };
-      const prJson = execSync(`gh pr view ${prNumber} --json body`, { 
-        encoding: 'utf8', 
-        stdio: 'pipe', 
-        env 
+      const prJson = execSync(`gh pr view ${prNumber} --json body`, {
+        encoding: 'utf8',
+        stdio: 'pipe',
+        env,
       });
       prBody = JSON.parse(prJson).body || '';
     }
-    
+
     // First, check for structured ADR field in template (multiple formats supported)
-    const adrLine = prBody.split('\n').find(l => 
-      l.trim().toLowerCase().startsWith('adr:') || 
-      l.trim().toLowerCase().startsWith('adr-reference:')
-    );
+    const adrLine = prBody
+      .split('\n')
+      .find(
+        (l) =>
+          l.trim().toLowerCase().startsWith('adr:') ||
+          l.trim().toLowerCase().startsWith('adr-reference:')
+      );
     const adrFromTemplate = adrLine?.replace(/^ADR(-Reference)?:/i, '').trim();
     const isNA = adrFromTemplate?.toUpperCase() === 'N/A';
-    
+
     if (isNA) {
       return { hasReference: false, adrIds: [] };
     }
-    
+
     // If structured field has an ADR reference, use that
     if (adrFromTemplate && /^ADR-\d+(?:-[A-Za-z0-9_-]+)?$/i.test(adrFromTemplate)) {
       return { hasReference: true, adrIds: [adrFromTemplate.toUpperCase()] };
     }
-    
+
     // Fallback: scan entire PR body for ADR references (strict pattern)
     const adrPattern = /\bADR-(\d{2,5})(?:-[A-Za-z0-9_-]+)?\b/gi;
     const matches = prBody.match(adrPattern) || [];
-    const adrIds = [...new Set(matches.map(m => m.toUpperCase()))];
-    
+    const adrIds = [...new Set(matches.map((m) => m.toUpperCase()))];
+
     return { hasReference: adrIds.length > 0, adrIds };
   } catch (error) {
     return { hasReference: false, adrIds: [] };
@@ -2105,7 +2150,7 @@ function checkADRCompliance(): CheckResult {
   const isCI = process.env.CI === 'true' || process.env.GITHUB_ACTIONS === 'true';
   const eventName = process.env.GITHUB_EVENT_NAME;
   const isPR = eventName === 'pull_request' || eventName === 'pull_request_target';
-  
+
   if (!isCI || !isPR) {
     return {
       name: 'ADR Compliance',
@@ -2113,38 +2158,47 @@ function checkADRCompliance(): CheckResult {
       message: 'Check skipped (not a PR in CI)',
     };
   }
-  
+
   try {
     // Check if PR modifies trigger paths that require ADRs
     const triggerPaths = [
       'packages/ai/prompts/**',
-      'scripts/**', 
+      'scripts/**',
       '.github/workflows/**',
-      'docs/wiki/**'
+      'docs/wiki/**',
     ];
-    
+
     // Get list of changed files from git using robust PR base detection
     const baseRef = process.env.GITHUB_BASE_REF || 'origin/main';
     let changedFiles: string[] = [];
-    
+
     try {
       // Find merge-base to diff against
-      const base = execSync(`git merge-base ${baseRef} HEAD`, {stdio:'pipe', encoding:'utf8'}).trim();
+      const base = execSync(`git merge-base ${baseRef} HEAD`, {
+        stdio: 'pipe',
+        encoding: 'utf8',
+      }).trim();
       changedFiles = execSync(`git diff --name-only ${base}...HEAD`, {
         encoding: 'utf8',
-        stdio: 'pipe'
-      }).trim().split('\n').filter(f => f.length > 0);
+        stdio: 'pipe',
+      })
+        .trim()
+        .split('\n')
+        .filter((f) => f.length > 0);
     } catch (error) {
       // Fallback to HEAD~1 if merge-base fails
-      changedFiles = execSync('git diff --name-only HEAD~1', { 
+      changedFiles = execSync('git diff --name-only HEAD~1', {
         encoding: 'utf8',
-        stdio: 'pipe'
-      }).trim().split('\n').filter(f => f.length > 0);
+        stdio: 'pipe',
+      })
+        .trim()
+        .split('\n')
+        .filter((f) => f.length > 0);
     }
-    
+
     // Check if any changed files match trigger patterns
-    const triggeredPaths = changedFiles.filter(file => 
-      triggerPaths.some(pattern => {
+    const triggeredPaths = changedFiles.filter((file) =>
+      triggerPaths.some((pattern) => {
         // Simple glob matching
         if (pattern.endsWith('**')) {
           return file.startsWith(pattern.slice(0, -2));
@@ -2152,7 +2206,7 @@ function checkADRCompliance(): CheckResult {
         return file === pattern;
       })
     );
-    
+
     if (triggeredPaths.length === 0) {
       return {
         name: 'ADR Compliance',
@@ -2160,11 +2214,12 @@ function checkADRCompliance(): CheckResult {
         message: 'No files requiring ADR documentation were changed',
       };
     }
-    
+
     // Add diagnostic logging for troubleshooting
-    const prNumber = process.env.GITHUB_PR_NUMBER ||
+    const prNumber =
+      process.env.GITHUB_PR_NUMBER ||
       (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? 'unknown');
-    
+
     console.log(`🔍 ADR Compliance Diagnostics:`);
     console.log(`   PR Number: ${prNumber}`);
     console.log(`   Changed files requiring ADR: ${triggeredPaths.length}`);
@@ -2172,8 +2227,10 @@ function checkADRCompliance(): CheckResult {
 
     // Check for override label first
     const overrideResult = checkForOverrideLabelWithAudit();
-    console.log(`   Override labels checked: ${overrideResult.hasOverride ? `✅ ${overrideResult.usedLabel}` : '❌ None'}`);
-    
+    console.log(
+      `   Override labels checked: ${overrideResult.hasOverride ? `✅ ${overrideResult.usedLabel}` : '❌ None'}`
+    );
+
     if (overrideResult.hasOverride) {
       console.log(`   Override author: ${overrideResult.prAuthor}`);
       return {
@@ -2187,8 +2244,10 @@ function checkADRCompliance(): CheckResult {
 
     // Check if PR body contains ADR reference and validate file existence
     const adrCheck = checkForADRReference();
-    console.log(`   ADR References found: ${adrCheck.hasReference ? `✅ ${adrCheck.adrIds.join(', ')}` : '❌ None'}`);
-    
+    console.log(
+      `   ADR References found: ${adrCheck.hasReference ? `✅ ${adrCheck.adrIds.join(', ')}` : '❌ None'}`
+    );
+
     if (!adrCheck.hasReference) {
       return {
         name: 'ADR Compliance',
@@ -2203,9 +2262,10 @@ function checkADRCompliance(): CheckResult {
     for (const adrId of adrCheck.adrIds) {
       // Search for ADR file by ID (handle different naming conventions)
       const adrPattern = new RegExp(`^(adr-|ADR-)${adrId.slice(4)}`, 'i'); // Remove ADR- prefix for pattern
-      const adrFiles = readdirSync('docs/decisions/')
-        .filter(file => file.endsWith('.md') && adrPattern.test(file));
-      
+      const adrFiles = readdirSync('docs/decisions/').filter(
+        (file) => file.endsWith('.md') && adrPattern.test(file)
+      );
+
       if (adrFiles.length === 0) {
         missingAdrs.push(adrId);
       }
@@ -2216,7 +2276,7 @@ function checkADRCompliance(): CheckResult {
         name: 'ADR Compliance',
         status: 'fail',
         message: `Referenced ADRs not found: ${missingAdrs.join(', ')}`,
-        fix: `Create missing ADR files: ${missingAdrs.map(id => `docs/decisions/${id.toLowerCase()}.md`).join(', ')}`,
+        fix: `Create missing ADR files: ${missingAdrs.map((id) => `docs/decisions/${id.toLowerCase()}.md`).join(', ')}`,
       };
     }
 
@@ -2225,7 +2285,6 @@ function checkADRCompliance(): CheckResult {
       status: 'pass',
       message: `ADR references found and validated: ${adrCheck.adrIds.join(', ')}`,
     };
-    
   } catch (error) {
     return {
       name: 'ADR Compliance',
@@ -2239,7 +2298,7 @@ function checkADRCompliance(): CheckResult {
 function checkMainBranchUsage(): CheckResult {
   try {
     const currentBranch = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
-    
+
     if (!currentBranch) {
       return {
         name: 'Branch Protection Advisory',
@@ -2257,7 +2316,7 @@ function checkMainBranchUsage(): CheckResult {
         fix: 'Create a feature branch: git checkout -b feature/your-feature-name',
       };
     }
-    
+
     return {
       name: 'Branch Protection Advisory',
       status: 'pass',
@@ -2277,7 +2336,7 @@ function main() {
   const args = process.argv.slice(2);
   const isReportMode = args.includes('--report');
   const reportPath = args[args.indexOf('--report') + 1];
-  
+
   const checks: CheckResult[] = [
     checkDependencies(),
     checkPlaceholders(),
@@ -2315,14 +2374,16 @@ function main() {
     mkdirSync(dirname(reportPath), { recursive: true });
     writeFileSync(reportPath, reportMarkdown, 'utf8');
     console.log(`📄 Report written to: ${reportPath}`);
-    
+
     // Generate command inventory JSON
-    const inventoryPath = reportPath.replace('.md', '.json').replace('doctor-report', 'command-inventory');
+    const inventoryPath = reportPath
+      .replace('.md', '.json')
+      .replace('doctor-report', 'command-inventory');
     const inventory = generateCommandInventory();
     mkdirSync(dirname(inventoryPath), { recursive: true });
     writeFileSync(inventoryPath, JSON.stringify(inventory, null, 2), 'utf8');
     console.log(`📋 Command inventory written to: ${inventoryPath}`);
-    
+
     // Print first 10 failures inline for CI
     const failed = checks.filter((r) => r.status === 'fail');
     if (failed.length > 0) {
@@ -2333,19 +2394,19 @@ function main() {
           console.log(`   💡 ${result.fix}`);
         }
       });
-      
+
       if (failed.length > 10) {
         console.log(`   ... and ${failed.length - 10} more (see full report)`);
       }
-      
+
       process.exit(1);
     }
-    
+
     const warnings = checks.filter((r) => r.status === 'warn');
     if (warnings.length > 0) {
       console.log(`\n⚠️ ${warnings.length} warnings detected (see report for details)`);
     }
-    
+
     console.log('✅ Doctor check completed');
     process.exit(0);
   } else {

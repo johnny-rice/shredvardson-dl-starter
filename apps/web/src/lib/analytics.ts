@@ -14,7 +14,7 @@ function secureRandomString(length = 12): string {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     const array = new Uint8Array(length);
     window.crypto.getRandomValues(array);
-    return Array.from(array, byte => chars[byte % chars.length]).join('');
+    return Array.from(array, (byte) => chars[byte % chars.length]).join('');
   } else if (typeof crypto !== 'undefined' && crypto.randomUUID) {
     // Node.js environment or browsers with randomUUID
     return crypto.randomUUID().replace(/-/g, '').slice(0, length);
@@ -105,7 +105,7 @@ export function trackEvent(
 
   const event = createEvent(type, path, metadata);
   const data = getAnalyticsData();
-  
+
   data.events.push(event);
   saveAnalyticsData(data);
 
@@ -149,19 +149,22 @@ export function endSession(): void {
 export function calculateMetrics(data: AnalyticsData): AnalyticsMetrics {
   const { events } = data;
 
-  const pageViews = events.filter(e => e.type === 'page_view');
-  const clicks = events.filter(e => e.type === 'click');
-  const sessionStarts = events.filter(e => e.type === 'session_start');
-  const sessionEnds = events.filter(e => e.type === 'session_end');
+  const pageViews = events.filter((e) => e.type === 'page_view');
+  const clicks = events.filter((e) => e.type === 'click');
+  const sessionStarts = events.filter((e) => e.type === 'session_start');
+  const sessionEnds = events.filter((e) => e.type === 'session_end');
 
   // Calculate unique pages
-  const uniquePaths = new Set(pageViews.map(e => e.path));
+  const uniquePaths = new Set(pageViews.map((e) => e.path));
 
   // Calculate top pages
-  const pageViewCounts = pageViews.reduce((acc: Record<string, number>, event: AnalyticsEvent) => {
-    acc[event.path] = (acc[event.path] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const pageViewCounts = pageViews.reduce(
+    (acc: Record<string, number>, event: AnalyticsEvent) => {
+      acc[event.path] = (acc[event.path] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   const topPages = Object.entries(pageViewCounts)
     .map(([path, views]) => ({ path, views: views as number }))
@@ -169,11 +172,14 @@ export function calculateMetrics(data: AnalyticsData): AnalyticsMetrics {
     .slice(0, 10);
 
   // Calculate clicks by component
-  const clickCounts = clicks.reduce((acc: Record<string, number>, event: AnalyticsEvent) => {
-    const component = event.metadata?.component as string || 'unknown';
-    acc[component] = (acc[component] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+  const clickCounts = clicks.reduce(
+    (acc: Record<string, number>, event: AnalyticsEvent) => {
+      const component = (event.metadata?.component as string) || 'unknown';
+      acc[component] = (acc[component] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 
   const clicksByComponent = Object.entries(clickCounts)
     .map(([component, clicks]) => ({ component, clicks: clicks as number }))
@@ -183,7 +189,7 @@ export function calculateMetrics(data: AnalyticsData): AnalyticsMetrics {
   // Calculate average session duration
   const completedSessions = Math.min(sessionStarts.length, sessionEnds.length);
   let totalDuration = 0;
-  
+
   for (let i = 0; i < completedSessions; i++) {
     const start = sessionStarts[i];
     const end = sessionEnds[i];
@@ -192,8 +198,7 @@ export function calculateMetrics(data: AnalyticsData): AnalyticsMetrics {
     }
   }
 
-  const averageSessionDuration = completedSessions > 0 ? 
-    totalDuration / completedSessions : 0;
+  const averageSessionDuration = completedSessions > 0 ? totalDuration / completedSessions : 0;
 
   return {
     totalPageViews: pageViews.length,
@@ -210,7 +215,7 @@ export function calculateMetrics(data: AnalyticsData): AnalyticsMetrics {
  */
 export function clearAnalyticsData(): void {
   if (typeof window === 'undefined') return;
-  
+
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
@@ -225,11 +230,7 @@ function sendToTelemetry(event: AnalyticsEvent): void {
   try {
     // Add breadcrumb for navigation events
     if (event.type === 'page_view') {
-      monitoring.addBreadcrumb(
-        `Page view: ${event.path}`,
-        'navigation',
-        'info'
-      );
+      monitoring.addBreadcrumb(`Page view: ${event.path}`, 'navigation', 'info');
     }
 
     // Track significant user interactions
@@ -246,7 +247,7 @@ function sendToTelemetry(event: AnalyticsEvent): void {
       monitoring.captureMessage('User session started', {
         level: 'info',
         tags: { feature: 'analytics', event_type: 'session_start' },
-        extra: { path: event.path, sessionId: event.metadata?.sessionId }
+        extra: { path: event.path, sessionId: event.metadata?.sessionId },
       });
     }
   } catch (error) {
@@ -263,7 +264,7 @@ export function reportMetricsToTelemetry(metrics: AnalyticsMetrics): void {
       level: 'info',
       tags: {
         feature: 'analytics',
-        event_type: 'metrics_report'
+        event_type: 'metrics_report',
       },
       extra: {
         totalPageViews: metrics.totalPageViews,
@@ -271,8 +272,8 @@ export function reportMetricsToTelemetry(metrics: AnalyticsMetrics): void {
         totalClicks: metrics.totalClicks,
         averageSessionDuration: metrics.averageSessionDuration,
         topPages: metrics.topPages.slice(0, 5), // Top 5 pages
-        topComponents: metrics.clicksByComponent.slice(0, 5) // Top 5 components
-      }
+        topComponents: metrics.clicksByComponent.slice(0, 5), // Top 5 components
+      },
     });
   } catch (error) {
     console.warn('Failed to report metrics to telemetry:', error);

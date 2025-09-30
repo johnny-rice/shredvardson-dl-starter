@@ -16,7 +16,7 @@ BEGIN
   IF current_setting('app.environment', true) = 'production' THEN
     RAISE EXCEPTION 'Disabled in production';
   END IF;
-  
+
   EXECUTE sql; -- Any authenticated user can execute arbitrary SQL!
 END;
 $$;
@@ -39,7 +39,7 @@ BEGIN
   IF auth.role() != 'service_role' THEN
     RAISE EXCEPTION 'Restricted to service role only. Current: %', auth.role();
   END IF;
-  
+
   EXECUTE sql;
 END;
 $$;
@@ -60,7 +60,7 @@ BEGIN
   IF auth.role() != 'service_role' THEN
     RAISE EXCEPTION 'Service role required';
   END IF;
-  
+
   -- Now safe to use elevated privileges
   EXECUTE sql;
 END;
@@ -72,14 +72,14 @@ GRANT EXECUTE ON FUNCTION admin_query(text) TO service_role;
 ## Supabase Auth Roles
 
 - **`anon`**: Anonymous users (no authentication)
-- **`authenticated`**: Logged-in users 
+- **`authenticated`**: Logged-in users
 - **`service_role`**: Backend/admin operations (bypasses RLS)
 
 ## Why SECURITY DEFINER is Dangerous
 
 ```sql
 -- Function runs as OWNER, not caller
-SECURITY DEFINER 
+SECURITY DEFINER
 
 -- If owner is superuser/admin:
 -- - Bypasses all RLS policies

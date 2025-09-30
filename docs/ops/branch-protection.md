@@ -5,6 +5,7 @@ This document provides the GitHub admin settings needed to enforce branch protec
 ## Overview
 
 This repository implements multi-layered branch protection:
+
 - **CI Workflow**: Automatically fails direct pushes to `main`
 - **Local Git Hooks**: Blocks pushes to `main` before they reach GitHub
 - **GitHub Branch Protection**: Admin-enforced rules requiring PRs
@@ -22,12 +23,14 @@ This repository implements multi-layered branch protection:
 Configure the following settings for the `main` branch:
 
 #### Basic Protection
+
 - ✅ **Require a pull request before merging**
   - ✅ Require approvals: `1` (minimum)
   - ✅ Dismiss stale PR approvals when new commits are pushed
   - ✅ Require review from code owners (if CODEOWNERS exists)
 
 #### Status Checks
+
 - ✅ **Require status checks to pass before merging**
   - ✅ Require branches to be up to date before merging
   - Select required status checks (if any CI workflows exist):
@@ -36,18 +39,20 @@ Configure the following settings for the `main` branch:
     - `lint` (if you have a lint workflow)
 
 #### Rules applied to everyone including administrators
-- ✅ **Allow force pushes**: `❌ Disabled` *(Leave unchecked for maximum safety)*
-- ✅ **Allow deletions**: `❌ Disabled` *(Leave unchecked for maximum safety)*
+
+- ✅ **Allow force pushes**: `❌ Disabled` _(Leave unchecked for maximum safety)_
+- ✅ **Allow deletions**: `❌ Disabled` _(Leave unchecked for maximum safety)_
 
 #### Critical Settings (Most Important)
-- ✅ **Require a pull request before merging** *(Primary protection)*
-- ✅ **Include administrators** *(Ensures admins follow PR workflow)*
+
+- ✅ **Require a pull request before merging** _(Primary protection)_
+- ✅ **Include administrators** _(Ensures admins follow PR workflow)_
 - ✅ **Require status checks to pass before merging**
 - ✅ **Require branches to be up to date before merging**
 - ⚠️ **Restrict who can push to matching branches**
-  - *Note: On personal repositories, this setting may not be visible*
-  - *This is OK - the "Require PR" setting provides the same protection*
-- ✅ **Require linear history** *(Optional but recommended)*
+  - _Note: On personal repositories, this setting may not be visible_
+  - _This is OK - the "Require PR" setting provides the same protection_
+- ✅ **Require linear history** _(Optional but recommended)_
 
 ### Step 3: Verify Configuration
 
@@ -76,6 +81,7 @@ Expected result: GitHub should reject the push with a protection error.
 ### Bypass Approval (Admin Emergency)
 
 As an admin, you can:
+
 1. Create a PR normally
 2. Approve your own PR (if you're a code owner)
 3. Merge immediately if absolutely necessary
@@ -84,6 +90,7 @@ As an admin, you can:
 ## Testing the Setup
 
 ### 1. Test Local Hook Protection
+
 ```bash
 # Should be blocked by pre-push hook
 git checkout main
@@ -94,11 +101,14 @@ git push origin main
 ```
 
 ### 2. Test CI Protection
+
 If the local hook fails, the CI workflow should also block the push:
+
 - Check **Actions** tab for the "Block Direct Main Pushes" workflow
 - It should fail with an error message
 
 ### 3. Test PR Flow
+
 ```bash
 # Should work normally
 git checkout -b feature/test-protection
@@ -112,22 +122,29 @@ gh pr create --title "test: verify protection works" --body "Testing branch prot
 ## Troubleshooting
 
 ### "Push declined due to repository rule violations"
+
 ✅ **Success!** Protection is working correctly.
 
 ### Direct pushes still work
+
 ❌ Check these settings:
+
 1. Ensure **Restrict who can push to matching branches** is enabled
 2. Verify **Include administrators** is checked
 3. Check the branch name pattern matches exactly (`main`)
 
 ### CI workflow not triggering
+
 Check:
+
 1. Workflow file exists at `.github/workflows/block-direct-main.yml`
 2. Actions are enabled in repository settings
 3. Workflow has proper permissions
 
 ### Local hooks not working
+
 Run:
+
 ```bash
 npm run hooks:install
 ```

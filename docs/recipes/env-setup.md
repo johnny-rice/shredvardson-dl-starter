@@ -11,6 +11,7 @@ Pattern: `@/lib/env` with Zod validation.
 - Validate on boot; fail loudly in CI.
 
 ## Checklist
+
 - [ ] All env vars defined in `@/lib/env` with Zod
 - [ ] Client/server separation enforced
 - [ ] `.env.example` covers all keys

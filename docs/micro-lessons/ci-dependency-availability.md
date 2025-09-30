@@ -5,12 +5,14 @@
 **Context:** CI environments may have different tool availability than local development, requiring graceful fallbacks.
 
 ## Problem
+
 ```bash
 # Brittle - fails if pnpm unavailable
 pnpm tsx scripts/validate-traceability.ts
 ```
 
 ## Solution
+
 ```bash
 # Robust - checks availability and provides fallbacks
 if command -v pnpm >/dev/null 2>&1; then
@@ -24,11 +26,13 @@ fi
 ```
 
 ## Benefits
+
 - **Resilience**: Scripts work across different CI environments
 - **Clarity**: Clear messaging about fallback behavior
 - **Graceful degradation**: Operations continue with warnings rather than hard failures
 
 ## When to Apply
+
 - Any CI script using package managers or CLI tools
 - Scripts that might run in constrained environments
 - Cross-platform compatibility requirements

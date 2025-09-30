@@ -21,7 +21,7 @@ class TraceabilityValidator {
   private graph: TraceabilityGraph = {
     specs: new Map(),
     plans: new Map(),
-    tasks: new Map()
+    tasks: new Map(),
   };
 
   private errors: string[] = [];
@@ -32,7 +32,9 @@ class TraceabilityValidator {
       this.validateGraph();
       return { valid: this.errors.length === 0, errors: this.errors };
     } catch (error) {
-      this.errors.push(`Validation failed: ${error instanceof Error ? error.message : String(error)}`);
+      this.errors.push(
+        `Validation failed: ${error instanceof Error ? error.message : String(error)}`
+      );
       return { valid: false, errors: this.errors };
     }
   }
@@ -45,38 +47,44 @@ class TraceabilityValidator {
 
   private loadDirectory(dirName: string, expectedType: 'spec' | 'plan' | 'task') {
     const dirPath = path.join(process.cwd(), dirName);
-    
+
     if (!fs.existsSync(dirPath)) {
       return; // Directory doesn't exist yet
     }
 
-    const files = fs.readdirSync(dirPath)
-      .filter(f => f.endsWith('.md') && f !== 'README.md');
+    const files = fs.readdirSync(dirPath).filter((f) => f.endsWith('.md') && f !== 'README.md');
 
     for (const file of files) {
       const filePath = path.join(dirPath, file);
       const content = fs.readFileSync(filePath, 'utf-8');
-      
+
       try {
         const { data } = matter(content);
-        
+
         if (!this.validateMetadata(data, file, expectedType)) {
           continue;
         }
 
         const metadata = data as ArtifactMetadata;
-        const key: keyof TraceabilityGraph = expectedType === 'spec' ? 'specs' : expectedType === 'plan' ? 'plans' : 'tasks';
+        const key: keyof TraceabilityGraph =
+          expectedType === 'spec' ? 'specs' : expectedType === 'plan' ? 'plans' : 'tasks';
         this.graph[key].set(metadata.id, metadata);
       } catch (error) {
-        this.errors.push(`Failed to parse ${file}: ${error instanceof Error ? error.message : String(error)}`);
+        this.errors.push(
+          `Failed to parse ${file}: ${error instanceof Error ? error.message : String(error)}`
+        );
       }
     }
   }
 
-  private validateMetadata(data: any, filename: string, expectedType: 'spec' | 'plan' | 'task'): boolean {
+  private validateMetadata(
+    data: any,
+    filename: string,
+    expectedType: 'spec' | 'plan' | 'task'
+  ): boolean {
     const required = ['id', 'type', 'issue'];
-    const missing = required.filter(field => !data[field]);
-    
+    const missing = required.filter((field) => !data[field]);
+
     if (missing.length > 0) {
       this.errors.push(`${filename}: Missing required fields: ${missing.join(', ')}`);
       return false;
@@ -168,7 +176,7 @@ class TraceabilityValidator {
       if (group.specs.length === 0) {
         this.errors.push(`Issue #${issue} has plans/tasks but no spec`);
       }
-      
+
       if (group.specs.length > 1) {
         this.errors.push(`Issue #${issue} has multiple specs: ${group.specs.join(', ')}`);
       }
@@ -180,13 +188,15 @@ class TraceabilityValidator {
     console.log(`📋 Specs: ${this.graph.specs.size}`);
     console.log(`🗺️  Plans: ${this.graph.plans.size}`);
     console.log(`✅ Tasks: ${this.graph.tasks.size}`);
-    console.log(`🔢 Total Issues: ${new Set([...this.graph.specs.values()].map(s => s.issue)).size}\n`);
-    
+    console.log(
+      `🔢 Total Issues: ${new Set([...this.graph.specs.values()].map((s) => s.issue)).size}\n`
+    );
+
     if (this.errors.length === 0) {
       console.log('✅ All traceability chains are valid\n');
     } else {
       console.log('❌ Traceability validation failed:\n');
-      this.errors.forEach(error => console.log(`  - ${error}`));
+      this.errors.forEach((error) => console.log(`  - ${error}`));
       console.log();
     }
   }

@@ -9,7 +9,7 @@ import { env } from '@/lib/env';
 export default function AnalyticsPage() {
   const [metrics, setMetrics] = useState<AnalyticsMetrics | null>(null);
   const [loading, setLoading] = useState(true);
-  
+
   const enabled = env.NEXT_PUBLIC_ENABLE_ANALYTICS;
 
   useEffect(() => {
@@ -58,25 +58,27 @@ export default function AnalyticsPage() {
   const pageViewsChartData: ChartData = {
     title: 'Page Views',
     type: 'bar',
-    data: metrics?.topPages.map((page: { path: string; views: number }) => ({
-      label: page.path,
-      value: page.views,
-    })) || [],
+    data:
+      metrics?.topPages.map((page: { path: string; views: number }) => ({
+        label: page.path,
+        value: page.views,
+      })) || [],
   };
 
   const clicksChartData: ChartData = {
     title: 'Clicks by Component',
-    type: 'bar', 
-    data: metrics?.clicksByComponent.map((item: { component: string; clicks: number }) => ({
-      label: item.component,
-      value: item.clicks,
-    })) || [],
+    type: 'bar',
+    data:
+      metrics?.clicksByComponent.map((item: { component: string; clicks: number }) => ({
+        label: item.component,
+        value: item.clicks,
+      })) || [],
   };
 
   return (
     <div className="min-h-dvh p-8 bg-[hsl(var(--bg))]">
       <h1 className="text-2xl font-semibold text-[hsl(var(--text))] mb-6">Analytics</h1>
-      
+
       <div data-testid="analytics-dashboard">
         {!hasData ? (
           <div className="bg-[hsl(var(--surface))] border border-[hsl(var(--border))] rounded-[var(--radius-lg)] p-8 text-center">
@@ -139,12 +141,8 @@ function MetricCard({ title, value, testId }: MetricCardProps) {
       className="bg-[hsl(var(--surface))] border border-[hsl(var(--border))] rounded-[var(--radius-lg)] p-4"
       data-testid={testId}
     >
-      <h3 className="text-sm font-medium text-[hsl(var(--text-muted))] mb-1">
-        {title}
-      </h3>
-      <p className="text-2xl font-semibold text-[hsl(var(--text))]">
-        {value.toLocaleString()}
-      </p>
+      <h3 className="text-sm font-medium text-[hsl(var(--text-muted))] mb-1">{title}</h3>
+      <p className="text-2xl font-semibold text-[hsl(var(--text))]">{value.toLocaleString()}</p>
     </div>
   );
 }

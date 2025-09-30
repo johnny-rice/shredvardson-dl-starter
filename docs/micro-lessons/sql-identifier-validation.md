@@ -17,7 +17,7 @@ function assertIdent(id: string, label: string): void {
 function generatePolicySQL(tableName: string, columnName: string): string {
   assertIdent(tableName, 'table name');
   assertIdent(columnName, 'column name');
-  
+
   return `CREATE POLICY "policy_name" ON public.${tableName}
     FOR SELECT USING (auth.uid() = ${columnName});`;
 }

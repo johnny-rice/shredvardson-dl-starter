@@ -8,7 +8,7 @@ export function resolveDoc(path) {
   if (path === 'CLAUDE.md') {
     return 'docs/ai/CLAUDE.md';
   }
-  
+
   // Handle relative paths that should be in docs/
   if (path.startsWith('./') && path.endsWith('.md')) {
     const relativePath = path.slice(2);
@@ -16,7 +16,7 @@ export function resolveDoc(path) {
       return 'docs/ai/CLAUDE.md';
     }
   }
-  
+
   // Return path as-is for absolute and other paths
   return path;
 }

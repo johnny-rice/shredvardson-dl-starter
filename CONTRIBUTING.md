@@ -5,13 +5,15 @@ Thank you for your interest in contributing! This document outlines the developm
 ## Before Opening a PR
 
 **Required checks (must pass):**
+
 - [ ] `pnpm doctor` - validates docs, scripts, and workspace integrity
-- [ ] `pnpm lint` - code style and consistency 
+- [ ] `pnpm lint` - code style and consistency
 - [ ] `pnpm typecheck` - TypeScript compilation
 - [ ] `pnpm build` - production build succeeds
 - [ ] `pnpm test` - all tests pass
 
 **Quick verification:**
+
 ```bash
 pnpm doctor && pnpm lint && pnpm typecheck && pnpm build && pnpm test
 ```
@@ -29,7 +31,7 @@ pnpm doctor && pnpm lint && pnpm typecheck && pnpm build && pnpm test
 When you discover a reusable pattern or fix a tricky issue:
 
 1. **Write ≤90s note** using `docs/micro-lessons/template.md`
-2. **Update index:** `pnpm learn:index` 
+2. **Update index:** `pnpm learn:index`
 3. **Tick PR checklist** and reference the lesson in "Used Micro-Lesson" field
 
 **Top-10 Index:** [docs/micro-lessons/INDEX.md](docs/micro-lessons/INDEX.md) - always fresh, auto-rotates by recency.
@@ -38,6 +40,7 @@ When you discover a reusable pattern or fix a tricky issue:
 **Validate**: run `pnpm doctor` before pushing; CI will block only on guardrail failures.
 
 **Micro-retro** (every other Friday, 10 min):
+
 - Review learnings metrics from CI job summaries + `uses-micro-lesson` PRs
 - **Decide**: promote (≥2 repeats or Severity=high), prune (90+ days unused), or keep in rotation
 - Capture one concrete "next guardrail" if new failure patterns emerge
@@ -63,7 +66,8 @@ This keeps agent context lean and prevents repeat issues. The doctor tracks metr
 ### Definition of "Green"
 
 All must be true:
-- [ ] `doctor` passes (no FAIL; WARNs only if allowlisted)  
+
+- [ ] `doctor` passes (no FAIL; WARNs only if allowlisted)
 - [ ] `lint`, `typecheck`, `build`, `test` pass
 - [ ] Branch protection checks pass: `doctor`, `build`, `lint`, `typecheck`
 - [ ] `.env.example` covers all env keys used by code
@@ -73,8 +77,9 @@ All must be true:
 ### CI Requirements
 
 Branch protection requires these checks:
+
 - `doctor` - documentation and workspace validation
-- `build` - production build succeeds  
+- `build` - production build succeeds
 - `lint` - code style standards
 - `typecheck` - TypeScript compilation
 - Tests (unit/e2e) if they exist
@@ -86,6 +91,7 @@ Branch protection requires these checks:
 ### New App from Template
 
 **Monorepo (portfolio)** – new app inside this repo
+
 1. `pnpm i`
 2. `pnpm tsx scripts/new-app.ts`
 3. Fill `docs/product/PRD.md` MVP scope (acceptance + anti-goals)
@@ -93,6 +99,7 @@ Branch protection requires these checks:
 5. `pnpm turbo run dev --filter=<APP_SLUG>`
 
 **Export (new product repo)**
+
 1. `pnpm i`
 2. `pnpm tsx scripts/new-repo-from-template.ts`
 3. `cd ../<APP_SLUG> && pnpm i`
@@ -133,7 +140,7 @@ Branch protection requires these checks:
 If `pnpm doctor` fails:
 
 1. **Script errors:** Add missing scripts to `package.json` or update docs
-2. **Path errors:** Create missing directories/files or update references  
+2. **Path errors:** Create missing directories/files or update references
 3. **Anchor errors:** Add missing headings or fix links
 4. **Intentional exceptions:** Add to `.doctor-allowlist.json` with comment explaining why
 

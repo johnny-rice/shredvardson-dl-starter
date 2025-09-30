@@ -1,6 +1,7 @@
 # CLAUDE.md (Lean)
 
 ## Mission & Guardrails
+
 See [docs/constitution.md](../constitution.md) for complete project mission, guardrails, and AI collaboration rules.
 
 ## Development Workflows
@@ -30,9 +31,10 @@ Plan → Scaffold tests → Implement → Refactor/Secure → Prepare PR → Sel
 Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → Self-critique → Docs & Release
 
 **Use Spec-Driven Workflow ONLY when:**
+
 - ⚠️ **Authentication or authorization systems**
 - ⚠️ **Database schema changes or new models**
-- ⚠️ **Payment or billing integration** 
+- ⚠️ **Payment or billing integration**
 - ⚠️ **External API integrations**
 - ⚠️ **New dependencies** (especially with security implications)
 - ⚠️ **Multi-day features** with multiple components
@@ -46,6 +48,7 @@ Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → 
 ### ❌ When NOT to Use Spec-Driven Workflow
 
 **Don't over-engineer these common tasks:**
+
 - Simple component creation
 - Adding a new route or page
 - Updating copy/text content
@@ -58,9 +61,10 @@ Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → 
 
 ### 🎯 Decision Framework
 
-**Ask yourself:** 
+**Ask yourself:**
+
 1. **Risk**: Could this break authentication, payments, or data?
-2. **Scope**: Will this touch 3+ files or take more than 2 hours?  
+2. **Scope**: Will this touch 3+ files or take more than 2 hours?
 3. **Clarity**: Do I fully understand what needs to be built?
 4. **Dependencies**: Am I adding new packages or external services?
 
@@ -71,11 +75,13 @@ Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → 
 ## Commands Index
 
 ### Spec-Driven Development (Complex Features)
+
 - /specify → ../../.claude/commands/spec/specify.md
 - /plan → ../../.claude/commands/spec/plan.md
 - /tasks → ../../.claude/commands/spec/tasks.md
 
 ### Simple Development (Small Changes)
+
 - /dev:init-new-app → ../../.claude/commands/dev/init-new-app.md
 - /dev:plan-feature → ../../.claude/commands/dev/plan-feature.md
 - /test:scaffold → ../../.claude/commands/test/scaffold.md
@@ -83,12 +89,14 @@ Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → 
 - /dev:refactor-secure → ../../.claude/commands/dev/refactor-secure.md
 
 ### Operational Assistant (Phase 6)
+
 - /adr:draft → ../../.claude/commands/spec/adr-draft.md
 - /pr:assist → ../../.claude/commands/git/pr-assistant.md
 - /ops:wiki-sync → ../../.claude/commands/ops/wiki-sync.md
 - /ops:learning-capture → ../../.claude/commands/ops/learning-capture.md
 
 ### GitHub Integration
+
 - /github:create-issue → ../../.claude/commands/github/create-issue.md
 - /github:github-learning-capture → ../../.claude/commands/github/capture-learning.md
 - /github:update-wiki → ../../.claude/commands/github/update-wiki.md
@@ -104,6 +112,7 @@ Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → 
 - /README → ../../.claude/commands/README.md
 
 ## Learning Loop (Micro-Lessons + PR Checklist)
+
 Minimal learnings capture system to reduce repeat mistakes and keep agent context lean.
 
 **Micro-Lessons** (≤90s notes): Stored in `docs/micro-lessons/` using standardized template. Promote to Recipe when pattern repeats ≥2× or has high blast radius.
@@ -119,7 +128,9 @@ Minimal learnings capture system to reduce repeat mistakes and keep agent contex
 **How to validate**: Run `pnpm doctor` before submitting changes.
 
 ## Pull Request Rules (MUST DO)
+
 When you open a PR:
+
 - Use a **specific, action-oriented title** (e.g., `feat: add user auth with OAuth2`, `fix: resolve memory leak in cache`)
 - Set the PR body from `.github/pull_request_template.md` and **fill sections**:
   - Summary (1–3 sentences), Scope, Verification (paste command results), Breaking changes/Migration
@@ -130,11 +141,14 @@ When you open a PR:
 - Never leave placeholder text in a PR
 
 ## Security & Review Commands
+
 See [docs/workflow-security.md](../workflow-security.md) for complete review commands, operational controls, and security guidelines.
 
 ## References
+
 - [CONTRIBUTING.md](../../CONTRIBUTING.md) · [RELEASING.md](../../RELEASING.md) · [SECURITY.md](../../SECURITY.md)
 - [Auth Recipe](../recipes/auth.md) · [Database Recipe](../recipes/db.md) · [Environment Setup](../recipes/env-setup.md) · [Stripe Recipe](../recipes/stripe.md) · [ShadCN Recipe](../recipes/shadcn.md)
 
 ## Testing Notes
+
 This implementation has been tested with GPT-5's 3-part smoke test sequence for operational validation.

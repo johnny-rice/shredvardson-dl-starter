@@ -3,10 +3,10 @@ import { test, expect } from '@playwright/test';
 test.describe('Analytics Dashboard', () => {
   test('should navigate to analytics dashboard', async ({ page }) => {
     await page.goto('/dashboard');
-    
+
     // Navigate to analytics page using the header link
     await page.click('a[href="/dashboard/analytics"]');
-    
+
     // Should render analytics dashboard
     await expect(page).toHaveURL('/dashboard/analytics');
     await expect(page.getByRole('heading', { name: /analytics/i })).toBeVisible();
@@ -25,7 +25,7 @@ test.describe('Analytics Dashboard', () => {
     await page.addInitScript(() => {
       // Mock environment variable
       Object.defineProperty(window, '__ENV__', {
-        value: { NEXT_PUBLIC_ENABLE_ANALYTICS: true }
+        value: { NEXT_PUBLIC_ENABLE_ANALYTICS: true },
       });
     });
 
@@ -33,7 +33,7 @@ test.describe('Analytics Dashboard', () => {
 
     // Should show analytics content when enabled
     await expect(page.getByTestId('analytics-dashboard')).toBeVisible();
-    
+
     // Should display key metrics (will show zero values initially)
     await expect(page.getByTestId('page-views-metric')).toBeVisible();
     await expect(page.getByTestId('unique-pages-metric')).toBeVisible();
@@ -45,7 +45,7 @@ test.describe('Analytics Dashboard', () => {
     // Enable analytics but with no data
     await page.addInitScript(() => {
       Object.defineProperty(window, '__ENV__', {
-        value: { NEXT_PUBLIC_ENABLE_ANALYTICS: true }
+        value: { NEXT_PUBLIC_ENABLE_ANALYTICS: true },
       });
       localStorage.removeItem('dl-analytics');
     });
@@ -55,7 +55,7 @@ test.describe('Analytics Dashboard', () => {
     // Should show zero state
     await expect(page.getByTestId('analytics-dashboard')).toBeVisible();
     await expect(page.getByText(/no analytics data/i)).toBeVisible();
-    
+
     // Metrics should show zeros
     await expect(page.getByTestId('page-views-metric')).toContainText('0');
     await expect(page.getByTestId('unique-pages-metric')).toContainText('0');
@@ -67,7 +67,7 @@ test.describe('Analytics Tracking', () => {
     // Enable analytics for tracking tests
     await page.addInitScript(() => {
       Object.defineProperty(window, '__ENV__', {
-        value: { NEXT_PUBLIC_ENABLE_ANALYTICS: true }
+        value: { NEXT_PUBLIC_ENABLE_ANALYTICS: true },
       });
       localStorage.removeItem('dl-analytics');
     });
@@ -86,14 +86,16 @@ test.describe('Analytics Tracking', () => {
     });
 
     expect(analyticsData).toBeTruthy();
-    
-    const pageViewEvents = analyticsData.events.filter((e: { type: string }) => e.type === 'page_view');
+
+    const pageViewEvents = analyticsData.events.filter(
+      (e: { type: string }) => e.type === 'page_view'
+    );
     expect(pageViewEvents.length).toBeGreaterThan(0);
   });
 
   test('should track click events on components', async ({ page }) => {
     await page.goto('/dashboard');
-    
+
     // Click on a tracked component
     await page.click('[data-analytics="header-help"]');
 
@@ -116,11 +118,17 @@ test.describe('Analytics Tracking', () => {
         events: [
           { id: '1', type: 'page_view', path: '/dashboard', timestamp: Date.now() },
           { id: '2', type: 'page_view', path: '/dashboard/analytics', timestamp: Date.now() },
-          { id: '3', type: 'click', path: '/dashboard', timestamp: Date.now(), metadata: { component: 'header-help' } }
+          {
+            id: '3',
+            type: 'click',
+            path: '/dashboard',
+            timestamp: Date.now(),
+            metadata: { component: 'header-help' },
+          },
         ],
         sessionId: 'test-session',
         createdAt: Date.now(),
-        lastUpdated: Date.now()
+        lastUpdated: Date.now(),
       };
       localStorage.setItem('dl-analytics', JSON.stringify(mockData));
     });
@@ -130,7 +138,7 @@ test.describe('Analytics Tracking', () => {
     // Should render charts
     await expect(page.getByTestId('page-views-chart')).toBeVisible();
     await expect(page.getByTestId('clicks-chart')).toBeVisible();
-    
+
     // Charts should have data
     const pageViewsChart = page.getByTestId('page-views-chart');
     await expect(pageViewsChart).toContainText('/dashboard');

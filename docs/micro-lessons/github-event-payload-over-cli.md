@@ -5,8 +5,9 @@
 ## Problem
 
 GitHub CLI (`gh`) can fail in CI due to:
+
 - CLI not installed
-- Authentication issues  
+- Authentication issues
 - Network timeouts
 - Rate limiting
 
@@ -27,11 +28,11 @@ function checkForOverrideLabel(): boolean {
       const labels = (eventData.pull_request?.labels ?? []).map((l: any) => (l.name || '').toLowerCase());
       return labels.includes('override:adr');
     }
-    
+
     // Fallback: gh CLI with proper auth
     const prNumber = process.env.GITHUB_PR_NUMBER || /* extract from GITHUB_REF */;
     if (!prNumber) return false;
-    
+
     const env = { ...process.env, GH_TOKEN: process.env.GH_TOKEN || process.env.GITHUB_TOKEN };
     const result = execSync(`gh pr view ${prNumber} --json labels`, { env });
     // ... handle result
@@ -66,4 +67,5 @@ const result = execSync('gh pr view --json labels');
 Applied in ADR enforcement for reading `override:adr` labels without external dependencies.
 
 ---
+
 **Tags:** `github-actions`, `robustness`, `cli-fallback`, `event-payload`, `ci-reliability`, `coderabbit`

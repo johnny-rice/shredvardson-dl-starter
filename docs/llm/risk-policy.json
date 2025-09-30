@@ -4,7 +4,7 @@
   "description": "Machine-readable risk assessment and operational policies for AI-powered development workflows",
   "version": "1.0.0",
   "lastUpdated": "2025-09-18",
-  
+
   "riskFramework": {
     "riskLevels": {
       "LOW": {
@@ -33,7 +33,7 @@
       }
     }
   },
-  
+
   "pathRiskAssessment": {
     "HIGH_RISK_PATHS": [
       ".github/workflows/**",
@@ -69,39 +69,26 @@
       "*.spec.*"
     ]
   },
-  
+
   "operationalPolicies": {
     "branchRestrictions": {
       "allowedBranches": ["bots/claude/*"],
       "prohibitedBranches": ["main", "master", "release/*", "hotfix/*"],
       "description": "AI automation restricted to designated bot branches"
     },
-    
+
     "authorshipRules": {
       "allowedAssociations": ["OWNER", "MEMBER", "COLLABORATOR"],
       "botTriggerPolicy": "HUMAN_ONLY",
       "description": "Only trusted contributors can trigger AI workflows"
     },
-    
+
     "qualityGates": {
-      "requiredChecks": [
-        "starter-doctor",
-        "typescript-check",
-        "lint",
-        "test-unit",
-        "test-e2e"
-      ],
-      "securityChecks": [
-        "security-scan",
-        "dependency-audit",
-        "secrets-scan"
-      ],
-      "performanceChecks": [
-        "bundle-size",
-        "build-time"
-      ]
+      "requiredChecks": ["starter-doctor", "typescript-check", "lint", "test-unit", "test-e2e"],
+      "securityChecks": ["security-scan", "dependency-audit", "secrets-scan"],
+      "performanceChecks": ["bundle-size", "build-time"]
     },
-    
+
     "promotionRequirements": {
       "labelRequired": "promote",
       "maintainerApproval": true,
@@ -109,7 +96,7 @@
       "description": "AI PRs require explicit human promotion"
     }
   },
-  
+
   "securityPolicies": {
     "secretsManagement": {
       "prohibitedInCode": [
@@ -125,14 +112,9 @@
         "prohibitedPrefixes": ["SECRET_", "PRIVATE_", "SENTRY_"]
       }
     },
-    
+
     "inputValidation": {
-      "userInputSources": [
-        "form_data",
-        "url_parameters",
-        "api_requests",
-        "file_uploads"
-      ],
+      "userInputSources": ["form_data", "url_parameters", "api_requests", "file_uploads"],
       "requiredValidation": [
         "input_sanitization",
         "type_checking",
@@ -140,7 +122,7 @@
         "pattern_matching"
       ]
     },
-    
+
     "dependencyManagement": {
       "allowedRegistries": ["npmjs.org", "github.com"],
       "prohibitedPackages": [],
@@ -151,7 +133,7 @@
       }
     }
   },
-  
+
   "monitoringAndTelemetry": {
     "errorTracking": {
       "provider": "sentry",
@@ -159,14 +141,9 @@
       "piiPolicy": "EXCLUDE",
       "retentionDays": 90
     },
-    
+
     "performanceMonitoring": {
-      "metrics": [
-        "response_time",
-        "throughput",
-        "error_rate",
-        "bundle_size"
-      ],
+      "metrics": ["response_time", "throughput", "error_rate", "bundle_size"],
       "alerting": {
         "enabled": true,
         "thresholds": {
@@ -176,7 +153,7 @@
         }
       }
     },
-    
+
     "aiWorkflowTelemetry": {
       "trackEvents": [
         "workflow_triggered",
@@ -184,15 +161,10 @@
         "security_scan_finished",
         "promotion_requested"
       ],
-      "metrics": [
-        "processing_time",
-        "success_rate",
-        "false_positive_rate",
-        "human_override_rate"
-      ]
+      "metrics": ["processing_time", "success_rate", "false_positive_rate", "human_override_rate"]
     }
   },
-  
+
   "complianceFramework": {
     "dataProtection": {
       "gdprCompliance": true,
@@ -200,22 +172,13 @@
       "dataMinimization": true,
       "userConsent": "explicit"
     },
-    
+
     "licenseCompliance": {
       "primaryLicense": "MIT",
-      "allowedLicenses": [
-        "MIT",
-        "Apache-2.0",
-        "BSD-3-Clause",
-        "ISC"
-      ],
-      "prohibitedLicenses": [
-        "GPL-3.0",
-        "AGPL-3.0",
-        "SSPL"
-      ]
+      "allowedLicenses": ["MIT", "Apache-2.0", "BSD-3-Clause", "ISC"],
+      "prohibitedLicenses": ["GPL-3.0", "AGPL-3.0", "SSPL"]
     },
-    
+
     "auditRequirements": {
       "logRetention": "365 days",
       "auditEvents": [
@@ -227,7 +190,7 @@
       "reportingFrequency": "weekly"
     }
   },
-  
+
   "incidentResponse": {
     "escalationMatrix": {
       "LOW": {
@@ -247,28 +210,24 @@
         "assignee": "incident_commander"
       }
     },
-    
+
     "automatedResponse": {
       "rollbackTriggers": [
         "security_vulnerability_detected",
         "performance_degradation",
         "error_rate_spike"
       ],
-      "notificationChannels": [
-        "slack",
-        "email",
-        "pagerduty"
-      ]
+      "notificationChannels": ["slack", "email", "pagerduty"]
     }
   },
-  
+
   "validationRules": {
     "configurationValidation": {
       "required": ["version", "lastUpdated", "riskFramework"],
       "versionFormat": "^\\d+\\.\\d+\\.\\d+$",
       "dateFormat": "YYYY-MM-DD"
     },
-    
+
     "policyEnforcement": {
       "automated": true,
       "fallbackToManual": true,

@@ -13,23 +13,23 @@ jobs:
     if: startsWith(github.event.pull_request.head.ref, 'bots/claude/')
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    
+
     steps:
-    - name: Check Promote Label
-      run: |
-        LABELS=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name')
-        
-        if echo "$LABELS" | grep -q "promote"; then
-          echo "✅ Bot PR has 'promote' label - ready for merge"
-        else
-          echo "❌ Bot PR requires 'promote' label from maintainer before merge"
-          echo ""
-          echo "🤖 This is a bot-generated PR that requires human approval."
-          echo "👤 A maintainer must add the 'promote' label to authorize merge."
-          echo ""
-          echo "This ensures:"
-          echo "- Human oversight of all AI-generated changes"
-          echo "- Explicit approval before any bot PR merges"
-          echo "- Separation of 'looks good' from 'allowed to ship'"
-          exit 1
-        fi
+      - name: Check Promote Label
+        run: |
+          LABELS=$(echo '${{ toJson(github.event.pull_request.labels) }}' | jq -r '.[].name')
+
+          if echo "$LABELS" | grep -q "promote"; then
+            echo "✅ Bot PR has 'promote' label - ready for merge"
+          else
+            echo "❌ Bot PR requires 'promote' label from maintainer before merge"
+            echo ""
+            echo "🤖 This is a bot-generated PR that requires human approval."
+            echo "👤 A maintainer must add the 'promote' label to authorize merge."
+            echo ""
+            echo "This ensures:"
+            echo "- Human oversight of all AI-generated changes"
+            echo "- Explicit approval before any bot PR merges"
+            echo "- Separation of 'looks good' from 'allowed to ship'"
+            exit 1
+          fi

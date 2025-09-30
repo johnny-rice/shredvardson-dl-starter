@@ -1,9 +1,11 @@
 # Make Release Scripts Robust to Empty Commits
 
 ## Problem
+
 Release scripts fail when `changeset:version` creates no changes, causing `git commit` to exit with error code 1 due to empty commit.
 
 ## Solution
+
 Use conditional commit logic that skips commit when no changes are staged:
 
 ```bash
@@ -16,12 +18,14 @@ Use conditional commit logic that skips commit when no changes are staged:
 ```
 
 ## Key Improvements
+
 - `git status --porcelain` detects both staged and untracked files
 - `git diff --cached --quiet` checks if staging area has changes
 - `||` operator skips commit when no changes are staged
 - `;` separator continues to next step regardless of commit result
 
 ## Context
+
 - Essential for automated release workflows
 - Prevents CI failures on no-op version bumps
 - Handles both manual and automated release scenarios

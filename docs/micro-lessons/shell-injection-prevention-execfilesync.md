@@ -10,6 +10,7 @@ Severity: high
 **Rule.** **Use execFileSync with argv arrays instead of execSync with interpolated strings for user-controlled input.**
 
 **Example.**
+
 ```typescript
 // ❌ Shell injection risk with user-controlled title
 const title = userInput; // Could be: `"; rm -rf / #`
@@ -21,6 +22,7 @@ const result = execFileSync('gh', ['pr', 'create', '--title', title], { encoding
 ```
 
 **Guardrails.**
+
 - Use execFileSync/spawn for any command with user-controlled parameters
 - Never interpolate user input into shell command strings
 - Always pass arguments as separate array elements, not embedded in strings

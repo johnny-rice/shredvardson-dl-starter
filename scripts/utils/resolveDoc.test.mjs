@@ -28,11 +28,11 @@ test('resolves relative ./CLAUDE.md to docs/ai/CLAUDE.md', () => {
 test('returns other paths unchanged', () => {
   const result1 = resolveDoc('docs/other.md');
   const result2 = resolveDoc('README.md');
-  
+
   if (result1 !== 'docs/other.md') {
     throw new Error(`Expected docs/other.md, got ${result1}`);
   }
-  
+
   if (result2 !== 'README.md') {
     throw new Error(`Expected README.md, got ${result2}`);
   }
@@ -41,11 +41,11 @@ test('returns other paths unchanged', () => {
 test('docExists returns boolean', () => {
   const result1 = docExists('CLAUDE.md');
   const result2 = docExists('README.md');
-  
+
   if (typeof result1 !== 'boolean') {
     throw new Error(`Expected boolean, got ${typeof result1}`);
   }
-  
+
   if (typeof result2 !== 'boolean') {
     throw new Error(`Expected boolean, got ${typeof result2}`);
   }

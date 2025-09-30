@@ -1,10 +1,10 @@
 /**
  * Auth Adapter Interface
- * 
+ *
  * Defines the contract for swappable auth providers.
  * Enables switching between Supabase, NextAuth, Clerk, etc.
  * without changing application code.
- * 
+ *
  * @see specs/feature-001-auth-v1-supabase.md
  */
 

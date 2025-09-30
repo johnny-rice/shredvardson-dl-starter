@@ -2,10 +2,10 @@
 
 /**
  * Clean Examples Script
- * 
+ *
  * Removes example workflow artifacts when creating a new project from the template.
  * This script is intended to be run by users who want to start with a clean slate.
- * 
+ *
  * Usage: pnpm tsx scripts/clean-examples.mjs
  */
 
@@ -40,23 +40,23 @@ function sanitizeHeaderContent(content) {
 
 async function cleanExamples() {
   console.log('🧹 Cleaning example workflow artifacts...\n');
-  
+
   const itemsToRemove = [
     'examples/',
     'apps/web/src/lib/analytics.ts',
-    'apps/web/src/components/AnalyticsProvider.tsx', 
+    'apps/web/src/components/AnalyticsProvider.tsx',
     'apps/web/src/components/AnalyticsChart.tsx',
     'apps/web/src/types/test-env.d.ts',
     'apps/web/tests/analytics.spec.ts',
-    'packages/types/src/analytics.ts'
+    'packages/types/src/analytics.ts',
   ];
 
   for (const item of itemsToRemove) {
     const fullPath = path.join(projectRoot, item);
-    
+
     try {
       const stats = await fs.stat(fullPath);
-      
+
       if (stats.isDirectory()) {
         await fs.rm(fullPath, { recursive: true, force: true });
         console.log(`✅ Removed directory: ${item}`);
@@ -87,7 +87,7 @@ async function cleanExamples() {
   try {
     const content = await fs.readFile(headerPath, 'utf-8');
     const cleanedContent = sanitizeHeaderContent(content);
-    
+
     await fs.writeFile(headerPath, cleanedContent);
     console.log('✅ Cleaned Header.tsx analytics code');
   } catch (error) {
@@ -113,7 +113,7 @@ async function cleanExamples() {
       .replace(/import { AnalyticsProvider } from '@\/components\/AnalyticsProvider';\n?/g, '')
       .replace(/\s*<AnalyticsProvider>\n?/g, '')
       .replace(/\s*<\/AnalyticsProvider>\n?/g, '');
-    
+
     await fs.writeFile(layoutPath, cleanedContent);
     console.log('✅ Cleaned layout.tsx analytics provider');
   } catch (error) {
@@ -127,7 +127,7 @@ async function cleanExamples() {
     const cleanedContent = content
       .replace(/# Analytics example feature.*\n?/g, '')
       .replace(/NEXT_PUBLIC_ENABLE_ANALYTICS=false\n?/g, '');
-    
+
     await fs.writeFile(envExamplePath, cleanedContent);
     console.log('✅ Cleaned .env.example analytics flag');
   } catch (error) {

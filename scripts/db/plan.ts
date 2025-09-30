@@ -34,14 +34,20 @@ interface PlanResult {
  * @param specification - Natural language description of the desired changes
  * @param options - Planning options (dry-run, etc.)
  */
-async function generateMigration(specification: string, options: { dryRun?: boolean } = {}): Promise<PlanResult> {
+async function generateMigration(
+  specification: string,
+  options: { dryRun?: boolean } = {}
+): Promise<PlanResult> {
   const timestamp = new Date().toISOString().replace(/[-:]/g, '').split('.')[0];
-  const filename = `${timestamp}_${specification.toLowerCase().replace(/[^a-z0-9]/g, '_').slice(0, 50)}.sql`;
-  
+  const filename = `${timestamp}_${specification
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '_')
+    .slice(0, 50)}.sql`;
+
   try {
     console.log(`🔍 Analyzing specification: "${specification}"`);
     console.log('📝 Generating SQL migration...');
-    
+
     // TODO: Replace with actual MCP calls to Supabase
     // For now, providing a structured template that demonstrates patterns
     const plan: MigrationPlan = {
@@ -53,12 +59,12 @@ async function generateMigration(specification: string, options: { dryRun?: bool
         'Enable RLS by default on new tables',
         'Consider user-scoped policies for data access',
         'Review anonymous vs authenticated access patterns',
-        'Validate foreign key constraints for security'
+        'Validate foreign key constraints for security',
       ],
       type_changes: true,
-      success: true
+      success: true,
     };
-    
+
     if (!options.dryRun) {
       const migrationDir = join('supabase', 'migrations');
       if (!existsSync(migrationDir)) mkdirSync(migrationDir, { recursive: true });
@@ -69,15 +75,14 @@ async function generateMigration(specification: string, options: { dryRun?: bool
     } else {
       console.log('🔍 Dry run - no files written');
     }
-    
+
     return { success: true, plan };
-    
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     console.error('❌ Migration generation failed:', errorMessage);
-    return { 
-      success: false, 
-      error: `Failed to generate migration: ${errorMessage}` 
+    return {
+      success: false,
+      error: `Failed to generate migration: ${errorMessage}`,
     };
   }
 }
@@ -128,29 +133,29 @@ COMMIT;
 async function executeCommand(specification: string, options: { dryRun?: boolean }): Promise<void> {
   console.log('🗄️  Database Migration Planner');
   console.log('==============================\n');
-  
+
   const result = await generateMigration(specification, options);
-  
+
   if (!result.success) {
     console.error('\n❌ Migration planning failed');
     console.error(`Error: ${result.error}`);
     process.exit(1);
   }
-  
+
   const { plan } = result;
   if (!plan) {
     console.error('❌ Unexpected error: No plan generated');
     process.exit(1);
   }
-  
+
   console.log('\n✅ Migration plan generated:');
   console.log(`📄 File: ${options.dryRun ? '[dry-run]' : `supabase/migrations/${plan.filename}`}`);
   console.log(`📋 Description: ${plan.description}`);
   console.log(`🛡️  RLS Considerations:`);
-  plan.rls_considerations.forEach(consideration => {
+  plan.rls_considerations.forEach((consideration) => {
     console.log(`   • ${consideration}`);
   });
-  
+
   if (plan.type_changes) {
     console.log('\n📝 Next steps:');
     console.log('   1. Review the generated SQL migration');

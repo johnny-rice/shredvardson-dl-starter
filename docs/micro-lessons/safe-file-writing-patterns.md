@@ -12,7 +12,7 @@ function writeGeneratedFile(dir: string, filename: string, content: string): voi
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true });
   }
-  
+
   // Write file with exclusive creation flag
   const filepath = join(dir, filename);
   writeFileSync(filepath, content, { flag: 'wx' });

@@ -76,7 +76,7 @@ function main() {
   const sortedChecksums = Object.fromEntries(
     Object.entries(checksums).sort(([a], [b]) => a.localeCompare(b))
   );
-  
+
   const checksumContent = {
     generated: new Date().toISOString(),
     version: '0.1.1',

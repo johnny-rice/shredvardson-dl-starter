@@ -22,19 +22,22 @@ Commands that support preview mode should:
 3. **Honor the `--dry-run` flag** to show planned actions without execution
 
 **Example:**
+
 ```yaml
 dryRun: true
 ```
 
 ```markdown
 **Examples:**
+
 - `/command` → executes the action
 - `/command --dry-run` → shows planned action only
 ```
 
 **When to use dry-run:**
+
 - ✅ Commands that create/modify files
-- ✅ Commands that make external API calls  
+- ✅ Commands that make external API calls
 - ✅ Commands with side effects (git operations, deployments)
 - ❌ Read-only commands or simple queries
 

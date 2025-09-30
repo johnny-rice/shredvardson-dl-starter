@@ -23,9 +23,9 @@ async healthCheck(): Promise<{ healthy: boolean; error?: string }> {
       .limit(1);
     return { healthy: !error };
   } catch (err) {
-    return { 
-      healthy: false, 
-      error: err instanceof Error ? err.message : 'Unknown error' 
+    return {
+      healthy: false,
+      error: err instanceof Error ? err.message : 'Unknown error'
     };
   }
 }

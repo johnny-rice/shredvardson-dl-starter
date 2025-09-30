@@ -5,6 +5,7 @@
 **Context:** ES modules need to detect if they're being run directly vs imported, but Windows file paths break simple string comparison.
 
 ## Problem
+
 ```typescript
 // Breaks on Windows - path separators and format differ
 if (import.meta.url === `file://${process.argv[1]}`) {
@@ -16,6 +17,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 ```
 
 ## Solution
+
 ```typescript
 import { pathToFileURL } from 'node:url';
 
@@ -26,19 +28,25 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
 ```
 
 ## Benefits
+
 - **Cross-platform compatibility**: Works on Windows, macOS, and Linux
 - **Robust path handling**: Handles backslashes and drive letters correctly
 - **Proper URL format**: Uses Node.js built-in URL utilities
 
 ## When to Apply
+
 - ESM modules with CLI entry points
 - Scripts that need direct execution detection
 - Any file path to URL conversion in Node.js
 
 ## Alternative Patterns
+
 ```typescript
 // Option 1: URL objects comparison
-if (process.argv[1] && new URL(import.meta.url).pathname === pathToFileURL(process.argv[1]).pathname) {
+if (
+  process.argv[1] &&
+  new URL(import.meta.url).pathname === pathToFileURL(process.argv[1]).pathname
+) {
   main();
 }
 

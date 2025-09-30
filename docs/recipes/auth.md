@@ -7,6 +7,7 @@ Goal: minimal, secure auth wiring with Supabase/Auth.js.
 - Link: Supabase Auth docs; Auth.js Next.js guide.
 
 ## Checklist
+
 - [ ] Login/Logout server actions
 - [ ] Route protection middleware
 - [ ] Session typed with Zod

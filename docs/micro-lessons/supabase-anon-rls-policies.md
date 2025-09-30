@@ -8,11 +8,13 @@
 
 ```typescript
 // This NEVER works for anonymous users
-policies.push(...authenticatedPolicies.map(p => ({
-  ...p,
-  role: 'anon',
-  condition: p.condition // Still contains auth.uid() = user_id
-})));
+policies.push(
+  ...authenticatedPolicies.map((p) => ({
+    ...p,
+    role: 'anon',
+    condition: p.condition, // Still contains auth.uid() = user_id
+  }))
+);
 
 // Generated SQL (BROKEN):
 // CREATE POLICY "users_select_own_anon" ON public.users
@@ -25,13 +27,15 @@ policies.push(...authenticatedPolicies.map(p => ({
 ```typescript
 // Use role-based conditions for anonymous access
 if (allowAnon) {
-  policies.push(...authenticatedPolicies.map(p => ({
-    ...p,
-    role: 'anon' as const,
-    name: `${p.name}_anon`,
-    condition: `auth.role() = 'anon'`, // Works for anonymous users
-    description: `${p.description} (anonymous users - role-based access)`
-  })));
+  policies.push(
+    ...authenticatedPolicies.map((p) => ({
+      ...p,
+      role: 'anon' as const,
+      name: `${p.name}_anon`,
+      condition: `auth.role() = 'anon'`, // Works for anonymous users
+      description: `${p.description} (anonymous users - role-based access)`,
+    }))
+  );
 }
 
 // Generated SQL (WORKS):

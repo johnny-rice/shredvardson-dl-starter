@@ -5,6 +5,7 @@
 **Context:** GitHub Actions provides `$GITHUB_STEP_SUMMARY` for displaying structured information in the Actions UI.
 
 ## Problem
+
 ```bash
 # Information buried in console output
 echo "## 📋 Spec Traceability"
@@ -12,6 +13,7 @@ echo "This PR references: SPEC-20250923-feature"
 ```
 
 ## Solution
+
 ```bash
 # Visible in both console and GitHub UI
 SUMMARY="## 📋 Spec Traceability
@@ -27,11 +29,13 @@ fi
 ```
 
 ## Benefits
+
 - **Visibility**: Key information surfaces in GitHub Actions UI
 - **Developer experience**: No need to dig through console logs
 - **Structured presentation**: Markdown formatting in GitHub interface
 
 ## When to Apply
+
 - CI scripts generating validation summaries
 - Traceability or compliance reporting
 - Any information developers need to see quickly

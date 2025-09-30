@@ -12,7 +12,7 @@ export function formatDate(date: Date | string | null): string {
   if (!date) {
     return new Date().toISOString();
   }
-  
+
   try {
     const parsedDate = typeof date === 'string' ? new Date(date) : date;
     return parsedDate.toISOString();
@@ -47,13 +47,13 @@ export function getRelativeTime(date: Date | string): string {
     if (!Number.isFinite(t)) return 'unknown time';
     const diffMs = Date.now() - t;
     const diffMinutes = Math.floor(diffMs / 60000);
-    
+
     if (diffMs <= 0 || diffMinutes < 1) return 'just now';
     if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes === 1 ? '' : 's'} ago`;
-    
+
     const diffHours = Math.floor(diffMinutes / 60);
     if (diffHours < 24) return `${diffHours} hour${diffHours === 1 ? '' : 's'} ago`;
-    
+
     const diffDays = Math.floor(diffHours / 24);
     return `${diffDays} day${diffDays === 1 ? '' : 's'} ago`;
   } catch {

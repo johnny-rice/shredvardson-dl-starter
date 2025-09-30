@@ -4,10 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - 'apps/**'
-      - 'packages/**'
-      - '!**/*.md'
-      - '!**/*.json'
+      - "apps/**"
+      - "packages/**"
+      - "!**/*.md"
+      - "!**/*.json"
 
 permissions:
   contents: read
@@ -21,147 +21,149 @@ jobs:
     concurrency:
       group: security-review-${{ github.event.pull_request.number }}
       cancel-in-progress: true
-    
+
     steps:
-    - name: Harden Runner
-      uses: step-security/harden-runner@v2
-      with:
-        disable-sudo: true
-        egress-policy: block
-        allowed-endpoints: >
-          api.github.com:443
-          github.com:443
-          api.anthropic.com:443
-          uploads.github.com:443
-          objects.githubusercontent.com:443
-          pipelines.actions.githubusercontent.com:443
-          raw.githubusercontent.com:443
-          codeload.github.com:443
-          nodejs.org:443
-          registry.npmjs.org:443
-          avatars.githubusercontent.com:443
-          github-releases.githubusercontent.com:443
+      - name: Harden Runner
+        uses: step-security/harden-runner@v2
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
+            actions.githubusercontent.com:443
+            tokens.actions.githubusercontent.com:443
+            pipelines.actions.githubusercontent.com:443
+            raw.githubusercontent.com:443
+            codeload.github.com:443
+            objects.githubusercontent.com:443
+            avatars.githubusercontent.com:443
+            github-releases.githubusercontent.com:443
+            media.githubusercontent.com:443
+            api.anthropic.com:443
+            nodejs.org:443
+            registry.npmjs.org:443
+            ghcr.io:443
+            pkg-containers.githubusercontent.com:443
 
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        ref: ${{ github.event.pull_request.head.sha }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
 
-    - name: Simulate AI Security Review (Smoke Test)
-      run: |
-        echo "🛡️ Simulating AI Security Review..."
-        
-        # Check if there are code changes (for docs-only this should be minimal)
-        # Use PR base SHA for proper diff comparison
-        BASE_SHA="${{ github.event.pull_request.base.sha }}"
-        CHANGED_FILES=$(git diff --name-only "$BASE_SHA...HEAD")
-        echo "Changed files: $CHANGED_FILES"
-        
-        # Check for existing AI security review comment to update (sticky comment behavior)
-        EXISTING_SEC_COMMENT_ID=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
-          --jq '.[] | select(.user.login == "github-actions[bot]") | select(.body | contains("<!-- ai-sec-review:v1")) | .id' \
-          | head -1 2>/dev/null || echo "")
-        
-        # Get actual PR head SHA after checkout
-        PR_HEAD_SHA=$(git rev-parse HEAD)
-        echo "PR head SHA: $PR_HEAD_SHA"
-        
-        # Prepare comment body with anti-poisoning headers
-        SEC_COMMENT_BODY="$(cat <<'EOF'
-        <!-- ai-sec-review:v1 run_id=${{ github.run_id }} sha=PR_HEAD_SHA_PLACEHOLDER -->
-        ## 🛡️ AI Security Review (Advisory)
-        
-        > **Note**: This is an advisory security scan. CodeQL and manual review remain authoritative for security decisions.
-        
-        **Security Analysis Results:**
-        
-        📄 **Files Reviewed**: Documentation changes only (CLAUDE.md)
-        🔍 **Security Scope**: No code changes detected
-        ✅ **No Security Concerns**: Documentation updates pose no security risks
-        
-        **Analysis Categories:**
-        - ✅ **Input Validation**: N/A (docs only)
-        - ✅ **Authentication**: N/A (docs only)  
-        - ✅ **Data Protection**: No sensitive data in changes
-        - ✅ **Code Security**: No code changes
-        - ✅ **Infrastructure**: No infrastructure changes
-        
-        **Summary**: Clean documentation update with no security implications.
-        
-        **⚠️ SIMULATION**: This is a smoke test simulation of the actual security review workflow.
-        <!-- /ai-sec-review:v1 -->
-        EOF
-        )"
-        
-        # Replace SHA placeholder with actual value
-        SEC_COMMENT_BODY=$(echo "$SEC_COMMENT_BODY" | sed "s/PR_HEAD_SHA_PLACEHOLDER/$PR_HEAD_SHA/g")
-        
-        # Either update existing comment or create new one (sticky behavior)
-        if [ -n "$EXISTING_SEC_COMMENT_ID" ]; then
-          echo "Updating existing AI security review comment ID: $EXISTING_SEC_COMMENT_ID"
-          gh api repos/${{ github.repository }}/issues/comments/$EXISTING_SEC_COMMENT_ID \
-            -X PATCH \
-            --field body="$SEC_COMMENT_BODY"
-        else
-          echo "Creating new AI security review comment"
-          gh pr comment ${{ github.event.pull_request.number }} --body "$SEC_COMMENT_BODY"
-        fi
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-    - name: Capture Metrics & Append to Doctor Report
-      if: always()
-      run: |
-        mkdir -p artifacts
-        SCAN_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-        
-        # Cost and model telemetry (simulation values for smoke test)
-        MODEL_NAME="claude-3-5-sonnet-20241022"
-        INPUT_TOKENS=1850
-        OUTPUT_TOKENS=420
-        COST_USD="0.0096"
-        
-        cat <<EOF >> artifacts/doctor-report.md
+      - name: Simulate AI Security Review (Smoke Test)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🛡️ Simulating AI Security Review..."
 
-## 🛡️ AI Security Review (Advisory)  
+          # Determine changed files vs base
+          BASE_SHA="${{ github.event.pull_request.base.sha }}"
+          CHANGED_FILES=$(git diff --name-only "$BASE_SHA...HEAD")
+          echo "Changed files: $CHANGED_FILES"
 
-**Generated:** $SCAN_TIME
-**PR:** #${{ github.event.pull_request.number }}
-**Mode:** Advisory (non-blocking)
+          # Sticky comment discovery
+          EXISTING_SEC_COMMENT_ID=$(gh api repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments \
+            --jq '.[] | select(.user.login == "github-actions[bot]") | select(.body | contains("<!-- ai-sec-review:v1")) | .id' \
+            | head -1 2>/dev/null || echo "")
 
-### 📊 Cost & Model Telemetry
-- **Model:** $MODEL_NAME
-- **Input Tokens:** $INPUT_TOKENS
-- **Output Tokens:** $OUTPUT_TOKENS
-- **Estimated Cost:** \$$COST_USD USD
-- **Completed:** $SCAN_TIME
-- **Scope:** Apps and packages (code files only)
-- **Signal Quality:** ⚠️ _Tag security findings as ✅ useful / ⚠️ noisy_
+          # Current head SHA
+          PR_HEAD_SHA=$(git rev-parse HEAD)
+          echo "PR head SHA: $PR_HEAD_SHA"
 
-### Security Analysis Completed
+          # Prepare comment body (heredoc is safe here)
+          SEC_COMMENT_BODY="$(cat <<'EOF'
+          <!-- ai-sec-review:v1 run_id=${{ github.run_id }} sha=PR_HEAD_SHA_PLACEHOLDER -->
+          ## 🛡️ AI Security Review (Advisory)
 
-- ✅ **Input Validation**: Checked for injection vulnerabilities
-- ✅ **Authentication**: Reviewed auth/authz patterns  
-- ✅ **Data Protection**: Analyzed data exposure risks
-- ✅ **Code Security**: Scanned for XSS/CSRF vulnerabilities
-- ✅ **Infrastructure**: Reviewed config and env security
+          > **Note**: This is an advisory security scan. CodeQL and manual review remain authoritative for security decisions.
 
-> **Authority**: CodeQL and human review remain the authoritative security gates.
-> AI review provides additional semantic analysis for vulnerability detection.
-EOF
-        
-    - name: Apply Security Review Label
-      if: success()
-      run: |
-        gh pr edit ${{ github.event.pull_request.number }} --add-label "ai-security:advisory"
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-    - name: Upload Security Artifacts
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: security-review-artifacts
-        path: artifacts/
-        retention-days: 90
+          **Security Analysis Results:**
+
+          📄 **Files Reviewed**: Documentation changes only (CLAUDE.md)
+          🔍 **Security Scope**: No code changes detected
+          ✅ **No Security Concerns**: Documentation updates pose no security risks
+
+          **Analysis Categories:**
+          - ✅ **Input Validation**: N/A (docs only)
+          - ✅ **Authentication**: N/A (docs only)
+          - ✅ **Data Protection**: No sensitive data in changes
+          - ✅ **Code Security**: No code changes
+          - ✅ **Infrastructure**: No infrastructure changes
+
+          **Summary**: Clean documentation update with no security implications.
+
+          **⚠️ SIMULATION**: This is a smoke test simulation of the actual security review workflow.
+          <!-- /ai-sec-review:v1 -->
+          EOF
+          )"
+
+          # Inject actual SHA
+          SEC_COMMENT_BODY=$(echo "$SEC_COMMENT_BODY" | sed "s/PR_HEAD_SHA_PLACEHOLDER/$PR_HEAD_SHA/g")
+
+          # Update existing or create new sticky comment
+          if [ -n "$EXISTING_SEC_COMMENT_ID" ]; then
+            echo "Updating existing AI security review comment ID: $EXISTING_SEC_COMMENT_ID"
+            gh api repos/${{ github.repository }}/issues/comments/$EXISTING_SEC_COMMENT_ID \
+              -X PATCH \
+              --field body="$SEC_COMMENT_BODY"
+          else
+            echo "Creating new AI security review comment"
+            gh pr comment ${{ github.event.pull_request.number }} --body "$SEC_COMMENT_BODY"
+          fi
+
+      - name: Capture Metrics & Append to Doctor Report
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts
+          SCAN_TIME=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          # Simulation telemetry values
+          MODEL_NAME="claude-3-5-sonnet-20241022"
+          INPUT_TOKENS=1850
+          OUTPUT_TOKENS=420
+          COST_USD="0.0096"
+
+          {
+            printf '\n## 🛡️ AI Security Review (Advisory)\n\n'
+            printf '%s\n' "**Generated:** $SCAN_TIME"
+            printf '%s\n' "**PR:** #${{ github.event.pull_request.number }}"
+            printf '%s\n\n' "**Mode:** Advisory (non-blocking)"
+
+            printf '%s\n' "### 📊 Cost & Model Telemetry"
+            printf '%s\n' "- **Model:** $MODEL_NAME"
+            printf '%s\n' "- **Input Tokens:** $INPUT_TOKENS"
+            printf '%s\n' "- **Output Tokens:** $OUTPUT_TOKENS"
+            printf '%s\n' "- **Estimated Cost:** \$$COST_USD USD"
+            printf '%s\n' "- **Completed:** $SCAN_TIME"
+            printf '%s\n' "- **Scope:** Apps and packages (code files only)"
+            printf '%s\n\n' "- **Signal Quality:** ⚠️ _Tag security findings as ✅ useful / ⚠️ noisy_"
+
+            printf '%s\n\n' "### Security Analysis Completed"
+            printf '%s\n' "- ✅ **Input Validation**: Checked for injection vulnerabilities"
+            printf '%s\n' "- ✅ **Authentication**: Reviewed auth/authz patterns"
+            printf '%s\n' "- ✅ **Data Protection**: Analyzed data exposure risks"
+            printf '%s\n' "- ✅ **Code Security**: Scanned for XSS/CSRF vulnerabilities"
+            printf '%s\n\n' "- ✅ **Infrastructure**: Reviewed config and env security"
+
+            printf '%s\n' "> **Authority**: CodeQL and human review remain the authoritative security gates."
+            printf '%s\n' "> AI review provides additional semantic analysis for vulnerability detection."
+          } >> artifacts/doctor-report.md
+
+      - name: Apply Security Review Label
+        if: success()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr edit ${{ github.event.pull_request.number }} --add-label "ai-security:advisory"
+
+      - name: Upload Security Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-review-artifacts
+          path: artifacts/
+          retention-days: 90
