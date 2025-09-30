@@ -24,6 +24,6 @@
     "@shared/config": "workspace:*",
     "@types/node": "^24",
     "typescript": "^5",
-    "supabase": "^1"
+    "supabase": "^2"
   }
 }
