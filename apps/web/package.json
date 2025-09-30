@@ -40,7 +40,7 @@
     "eslint-config-next": "15.5.3",
     "import-in-the-middle": "^1.14.4",
     "jsdom": "^27.0.0",
-    "require-in-the-middle": "^7.5.2",
+    "require-in-the-middle": "^8.0.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite": "7.1.5",
