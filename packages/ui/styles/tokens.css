@@ -7,8 +7,8 @@
 
   /* brand (hue may be overridden per app) */
   --brand-hue: 222;
-  --brand-500: var(--brand-hue) 85% 55%;
-  --brand-600: var(--brand-hue) 75% 48%;
+  --brand-500: 222 85% 55%;
+  --brand-600: 222 75% 48%;
 
   /* shadcn standard semantic tokens */
   --background: var(--gray-50);
