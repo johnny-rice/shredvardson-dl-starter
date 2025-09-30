@@ -2036,7 +2036,45 @@ function checkForOverrideLabelWithAudit(): {
       });
       const prData = JSON.parse(prJson);
       const labels = prData.labels || [];
+      const prAuthor = prData.author?.login || 'unknown';
 
+      // Check if this is a dependabot PR and auto-apply override
+      if (prAuthor === 'dependabot[bot]') {
+        console.log('   🤖 Dependabot PR detected - auto-applying ADR override');
+        
+        // Auto-add override:adr label for dependabot PRs
+        try {
+          execSync(`gh pr edit ${prNumber} --add-label "override:adr"`, {
+            stdio: 'pipe',
+            env,
+          });
+          console.log('   ✅ Added override:adr label to dependabot PR');
+        } catch (labelError) {
+          console.log('   ⚠️ Could not auto-add label, but proceeding with automatic override');
+        }
+
+        const auditInfo = {
+          rule: 'ADR',
+          status: 'OVERRIDDEN',
+          prNumber: parseInt(prNumber),
+          prUrl: prData.url,
+          usedLabel: 'override:adr (auto-applied)',
+          prAuthor: prAuthor,
+          timestamp: new Date().toISOString(),
+          prCreatedAt: prData.createdAt,
+          reason: 'Automatic ADR override for dependabot dependency update',
+          autoApplied: true,
+        };
+
+        return {
+          hasOverride: true,
+          usedLabel: 'override:adr (auto-applied)',
+          prAuthor: prAuthor,
+          auditInfo,
+        };
+      }
+
+      // Check for manual override labels
       const overrideLabels = ['override:adr', 'security:break-glass'];
       const foundLabel = labels.find((label: any) => {
         const labelName = (label.name || '').toLowerCase();
@@ -2050,7 +2088,7 @@ function checkForOverrideLabelWithAudit(): {
           prNumber: parseInt(prNumber),
           prUrl: prData.url,
           usedLabel: foundLabel.name,
-          prAuthor: prData.author?.login || 'unknown',
+          prAuthor: prAuthor,
           timestamp: new Date().toISOString(),
           prCreatedAt: prData.createdAt,
           reason: `${foundLabel.name} override applied`,
@@ -2059,7 +2097,7 @@ function checkForOverrideLabelWithAudit(): {
         return {
           hasOverride: true,
           usedLabel: foundLabel.name,
-          prAuthor: prData.author?.login || 'unknown',
+          prAuthor: prAuthor,
           auditInfo,
         };
       }
