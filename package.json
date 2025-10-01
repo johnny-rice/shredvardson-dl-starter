@@ -71,7 +71,9 @@
     "changeset:publish": "changeset publish",
     "release:preflight": "test -z \"$(git status --porcelain)\" || (echo 'Working tree not clean. Commit, stash, or clean untracked files.' && exit 1)",
     "release": "pnpm release:preflight && pnpm changeset:version && git add -A && git diff --cached --quiet || git commit -m 'chore(release): version bumps'; pnpm changeset:tag && git push --follow-tags",
-    "clean": "rm -rf .turbo coverage test-results playwright-report 2>/dev/null || true; find . -type f -name '*.tsbuildinfo' -print -delete 2>/dev/null || true"
+    "clean": "rm -rf .turbo coverage test-results playwright-report 2>/dev/null || true; find . -type f -name '*.tsbuildinfo' -print -delete 2>/dev/null || true",
+    "clean:cache": "rm -rf \"$(git rev-parse --show-toplevel)/apps/web/.next\" \"$(git rev-parse --show-toplevel)/.turbo\" \"$(git rev-parse --show-toplevel)/node_modules/.cache\" && echo '✅ Build caches cleared (Next.js, Turbo, pnpm)'",
+    "clean:install": "pnpm -w clean:cache && pnpm install && echo '✅ Fresh install complete'"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.6",
