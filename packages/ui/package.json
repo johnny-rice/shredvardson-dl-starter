@@ -5,6 +5,7 @@
   "main": "./index.ts",
   "types": "./index.ts",
   "exports": {
+    "./styles/tokens.css": "./styles/tokens.css",
     ".": {
       "types": "./index.ts",
       "default": "./index.ts"
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@shared/config": "workspace:*",
     "@types/react": "^19",
+    "tailwindcss": "^4.0.0",
     "typescript": "^5"
   },
   "peerDependencies": {

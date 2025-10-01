@@ -16,12 +16,10 @@ Severity: high
 # ❌ BAD: Assuming configuration is wrong because dev server shows broken styles
 # Leads to: Hours spent tweaking tailwind.config.ts, content paths, etc.
 
-# ✅ GOOD: Use clean:cache script to clear all build caches
-pnpm -w clean:cache  # Clears .next, .turbo, node_modules/.cache (use -w from subdirs)
+# ✅ GOOD: Clear all build caches first
+rm -rf apps/web/.next .turbo node_modules/.cache
+pnpm install  # Reinstall if dependencies changed
 pnpm dev
-
-# Or combine with fresh install if dependencies changed
-pnpm -w clean:install  # Clears caches + reinstalls dependencies
 
 # Then verify with production build
 pnpm build

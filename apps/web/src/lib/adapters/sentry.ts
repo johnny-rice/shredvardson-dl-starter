@@ -1,6 +1,5 @@
 // src/lib/adapters/sentry.ts
 import * as Sentry from '@sentry/nextjs';
-import { env } from '@/lib/env';
 
 export interface ErrorContext {
   user?: { id: string; email?: string };
@@ -74,4 +73,4 @@ class NoOpAdapter implements MonitoringAdapter {
 }
 
 export const monitoring: MonitoringAdapter =
-  env.SENTRY_DSN || env.NEXT_PUBLIC_SENTRY_DSN ? new SentryAdapter() : new NoOpAdapter();
+  process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN ? new SentryAdapter() : new NoOpAdapter();

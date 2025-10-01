@@ -1,48 +1,52 @@
-/**
- * Tailwind CSS configuration for the DLStarter web application.
- *
- * This configuration uses the shared @dl-starter/tailwind-config preset
- * with app-specific content paths and font configuration.
- *
- * @see @dl-starter/tailwind-config - Shared design system preset
- * @see packages/ui/styles/tokens.css - Design token definitions
- */
 import type { Config } from 'tailwindcss';
-import defaultTheme from 'tailwindcss/defaultTheme';
-import { dlStarterPreset } from '@dl-starter/tailwind-config';
 
-/**
- * Tailwind CSS configuration object extending the shared preset.
- *
- * Inherits from dlStarterPreset:
- * - Dark mode via 'class' strategy
- * - CSS variable-based design tokens
- * - shadcn/ui compatible color system
- * - Systematic spacing and typography scales
- *
- * App-specific additions:
- * - Geist font family integration
- * - Content paths for this app and shared packages
- */
 const config: Config = {
-  presets: [dlStarterPreset],
-
-  /** Content paths for Tailwind to scan for class usage */
-  content: ['./src/**/*.{js,ts,jsx,tsx,mdx}', '../../packages/ui/**/*.{js,ts,jsx,tsx,mdx}'],
-
+  darkMode: ['class'],
+  content: [
+    './src/**/*.{ts,tsx,mdx}',
+    '../../packages/ui/src/**/*.{ts,tsx,mdx}',
+  ],
   theme: {
     extend: {
-      /**
-       * Font family configuration using Geist fonts.
-       *
-       * - sans: Geist Sans for body text and UI
-       * - mono: Geist Mono for code blocks and technical content
-       *
-       * Falls back to system defaults if fonts fail to load.
-       */
-      fontFamily: {
-        sans: ['var(--font-geist-sans)', ...defaultTheme.fontFamily.sans],
-        mono: ['var(--font-geist-mono)', ...defaultTheme.fontFamily.mono],
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
       },
     },
   },

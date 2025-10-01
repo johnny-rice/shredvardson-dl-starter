@@ -1,5 +1,4 @@
 import { AnalyticsEvent, AnalyticsData, AnalyticsMetrics } from '@shared/types';
-import { env } from './env';
 import { monitoring } from '@/lib/adapters/sentry';
 
 const STORAGE_KEY = 'dl-analytics';
@@ -53,7 +52,7 @@ export function createEvent(
  * Get current analytics data from storage
  */
 export function getAnalyticsData(): AnalyticsData {
-  if (typeof window === 'undefined' || !env.NEXT_PUBLIC_ENABLE_ANALYTICS) {
+  if (typeof window === 'undefined' || process.env.NEXT_PUBLIC_ENABLE_ANALYTICS !== 'true') {
     return createEmptyAnalyticsData();
   }
 
@@ -74,7 +73,7 @@ export function getAnalyticsData(): AnalyticsData {
  * Save analytics data to storage
  */
 export function saveAnalyticsData(data: AnalyticsData): void {
-  if (typeof window === 'undefined' || !env.NEXT_PUBLIC_ENABLE_ANALYTICS) {
+  if (typeof window === 'undefined' || process.env.NEXT_PUBLIC_ENABLE_ANALYTICS !== 'true') {
     return;
   }
 
@@ -99,7 +98,7 @@ export function trackEvent(
   path: string,
   metadata?: Record<string, string | number>
 ): void {
-  if (!env.NEXT_PUBLIC_ENABLE_ANALYTICS) {
+  if (process.env.NEXT_PUBLIC_ENABLE_ANALYTICS !== 'true') {
     return;
   }
 

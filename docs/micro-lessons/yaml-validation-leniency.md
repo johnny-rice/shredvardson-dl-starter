@@ -48,4 +48,4 @@ if (typeof data.issue !== 'number') {
 - Essential for user-friendly validation of front-matter
 - Prevents failures on technically valid but different formats
 
-**Tags:** `yaml,validation,type-coercion,front-matter,leniency,normalization,coderabbit`
+**Tags:** yaml,validation,type-coercion,front-matter,leniency,normalization,coderabbit

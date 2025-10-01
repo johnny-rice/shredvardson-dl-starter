@@ -3,7 +3,6 @@
 import React, { createContext, useContext, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { trackPageView, startSession, endSession } from '@/lib/analytics';
-import { env } from '@/lib/env';
 
 interface AnalyticsContextType {
   trackClick: (component: string) => void;
@@ -27,7 +26,7 @@ export function AnalyticsProvider({ children }: AnalyticsProviderProps) {
   const pathname = usePathname();
   const sessionStarted = useRef(false);
 
-  const enabled = env.NEXT_PUBLIC_ENABLE_ANALYTICS;
+  const enabled = process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === 'true';
 
   // Start session on mount
   useEffect(() => {
