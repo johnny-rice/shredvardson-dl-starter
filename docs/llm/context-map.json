@@ -9,25 +9,11 @@
       "tags": ["routes", "marketing"]
     },
     {
-      "path": "apps/web/src/app/(app)",
-      "purpose": "Signed-in area (public for now)",
-      "allowed": ["feature:create", "refactor:extract"],
-      "avoid": ["direct vendor SDKs"],
-      "tags": ["routes", "app"]
-    },
-    {
       "path": "packages/ui",
       "purpose": "Shared UI components",
       "allowed": ["feature:create (small)", "refactor:extract"],
       "avoid": ["color hex literals"],
       "tags": ["ui", "tokens"]
-    },
-    {
-      "path": "apps/web/src/styles",
-      "purpose": "Design tokens & themes",
-      "allowed": ["feature:create (tokens only)", "docs:update"],
-      "avoid": ["framework resets"],
-      "tags": ["tokens", "theme"]
     },
     {
       "path": "apps/web/src/lib/adapters",

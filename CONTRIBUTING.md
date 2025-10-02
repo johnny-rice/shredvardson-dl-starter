@@ -168,10 +168,13 @@ Branch protection requires these checks:
 
 If `pnpm doctor` fails:
 
-1. **Script errors:** Add missing scripts to `package.json` or update docs
-2. **Path errors:** Create missing directories/files or update references
-3. **Anchor errors:** Add missing headings or fix links
-4. **Intentional exceptions:** Add to `.doctor-allowlist.json` with comment explaining why
+1. **Constitution checksum stale:** The checksum is automatically updated when you run `pnpm doctor`. Commit the updated `docs/llm/CONSTITUTION.CHECKSUM` file.
+   - This happens when you modify binding source files like `docs/ai/CLAUDE.md`, `docs/constitution.md`, etc.
+   - The checksum ensures governance docs remain in sync
+2. **Script errors:** Add missing scripts to `package.json` or update docs
+3. **Path errors:** Create missing directories/files or update references
+4. **Anchor errors:** Add missing headings or fix links
+5. **Intentional exceptions:** Add to `.doctor-allowlist.json` with comment explaining why
 
 ### Common Issues
 

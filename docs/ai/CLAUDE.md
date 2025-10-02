@@ -101,6 +101,7 @@ Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → 
 - /github:github-learning-capture → ../../.claude/commands/github/capture-learning.md
 - /github:update-wiki → ../../.claude/commands/github/update-wiki.md
 - /quality:run-linter → ../../.claude/commands/quality/run-linter.md
+- /git:branch → ../../.claude/commands/git/branch.md
 - /git:commit → ../../.claude/commands/git/commit.md
 - /git:workflow → ../../.claude/commands/git/workflow.md
 - /git:prepare-pr → ../../.claude/commands/git/prepare-pr.md
