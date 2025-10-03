@@ -27,6 +27,10 @@ permissions:
   pull-requests: read
   actions: read
 
+concurrency:
+  group: telemetry-report-weekly
+  cancel-in-progress: false  # Let first run complete, prevent duplicate runs
+
 jobs:
   generate-telemetry-report:
     name: Generate Telemetry Report
@@ -426,16 +430,36 @@ jobs:
               return 1 + Math.round(((d - week1) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
             }
 
-            // Create issue
-            await github.rest.issues.create({
+            const reportTitle = `📊 Weekly Telemetry Report - Week ${weekNumber} ${year}`;
+
+            // Check for existing report (idempotency)
+            console.log(`Checking for existing report: "${reportTitle}"`);
+            const existingIssues = await github.rest.issues.listForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              title: `📊 Weekly Telemetry Report - Week ${weekNumber} ${year}`,
+              labels: 'weekly-report',
+              state: 'all',
+              per_page: 100
+            });
+
+            const existingReport = existingIssues.data.find(issue => issue.title === reportTitle);
+
+            if (existingReport) {
+              console.log(`✅ Report already exists: #${existingReport.number}`);
+              console.log('Skipping duplicate creation');
+              return;
+            }
+
+            // Create issue only if it doesn't exist
+            const newIssue = await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: reportTitle,
               body: reportContent,
               labels: ['telemetry', 'weekly-report', 'automation']
             });
 
-            console.log('Telemetry issue created successfully');
+            console.log(`✅ Telemetry issue created successfully: #${newIssue.data.number}`);
 
       - name: Upload telemetry report
         uses: actions/upload-artifact@v4
