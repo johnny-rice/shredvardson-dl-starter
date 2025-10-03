@@ -17,6 +17,7 @@ source: https://github.com/Shredvardson/dl-starter/issues/108
 **Branch**: `feature/108-testing-infrastructure`
 **Created**: 2025-10-03
 
+---
 ## Implementation Strategy
 
 Following constitutional TDD order:

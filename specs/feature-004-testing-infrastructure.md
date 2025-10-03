@@ -13,6 +13,7 @@ source: https://github.com/Shredvardson/dl-starter/issues/108
 **Updated**: 2025-10-03
 **Lane**: spec (requirements only - no technical implementation)
 
+---
 ## User Need
 
 ### Primary Users
