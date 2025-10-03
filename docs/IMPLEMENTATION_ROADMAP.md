@@ -18,15 +18,15 @@
 The design system package (`@dl-starter/ds`) generates design tokens via Style Dictionary, but these tokens are not consumed by Tailwind CSS or shadcn/ui components. This creates design drift and makes the DS infrastructure worthless.
 
 #### Success Criteria
-- [ ] Tailwind config imports and uses DS tokens for colors, spacing, typography
-- [ ] All shadcn/ui components use semantic tokens instead of hardcoded values
-- [ ] Token changes in DS package automatically rebuild Tailwind config (<3 seconds via Turborepo watch)
-- [ ] Documentation explains how to add/modify tokens (inline JSDoc + README)
-- [ ] Visual regression test setup to catch token changes (critical paths only)
-- [ ] **Fluid typography system** using CSS `clamp()` for responsive text scaling
-- [ ] **Systematic spacing scale** (4pt/8pt grid) defined in Tailwind config
-- [ ] **Motion design system** with Framer Motion and `prefers-reduced-motion` support
-- [ ] **Component update workflow** documented (diff-and-merge for shadcn updates)
+- [x] Tailwind config imports and uses DS tokens for colors, spacing, typography
+- [x] All shadcn/ui components use semantic tokens instead of hardcoded values
+- [x] Token changes in DS package automatically rebuild Tailwind config (<3 seconds via Turborepo watch)
+- [x] Documentation explains how to add/modify tokens (inline JSDoc + README)
+- [x] Visual regression test setup to catch token changes (critical paths only)
+- [x] **Fluid typography system** using CSS `clamp()` for responsive text scaling
+- [x] **Systematic spacing scale** (4pt/8pt grid) defined in Tailwind config
+- [x] **Motion design system** with Framer Motion and `prefers-reduced-motion` support
+- [x] **Component update workflow** documented (diff-and-merge for shadcn updates)
 
 #### Implementation Steps
 1. **Wire DS tokens into Tailwind (shadcn conventions)**
