@@ -76,6 +76,7 @@
     "clean:install": "pnpm -w clean:cache && pnpm install && echo '✅ Fresh install complete'"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
     "@changesets/cli": "^2.29.6",
     "@eslint/eslintrc": "^3.1.0",
     "@playwright/test": "^1.55.1",

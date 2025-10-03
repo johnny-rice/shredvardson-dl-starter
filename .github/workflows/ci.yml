@@ -280,6 +280,19 @@ jobs:
         if: env.IS_INFRA_CHANGE != 'true'
         run: pnpm --filter=web run test:unit
 
+      - name: Generate coverage report
+        if: env.IS_INFRA_CHANGE != 'true'
+        run: pnpm --filter=web run test:coverage
+        continue-on-error: true
+
+      - name: Upload coverage reports
+        if: env.IS_INFRA_CHANGE != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: apps/web/coverage/
+          if-no-files-found: warn
+
       - name: Infra-only build complete
         if: env.IS_INFRA_CHANGE == 'true'
         run: |

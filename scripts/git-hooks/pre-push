@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Pre-push hook to block direct pushes to main branch
-# This script prevents accidental direct pushes to the main branch
+# Pre-push hook to block direct pushes to main branch and run tests
+# This script prevents accidental direct pushes to main and ensures code quality
 
 protected_branch='refs/heads/main'
 current_branch=$(git symbolic-ref HEAD 2>/dev/null)
@@ -27,5 +27,35 @@ do
         exit 1
     fi
 done
+
+# Run unit tests (target: <20s for optimal DX)
+echo "🧪 Running unit tests..."
+START_TIME=$(date +%s)
+
+# Run tests with Turbo's affected files detection for speed
+if ! pnpm --silent test:unit; then
+    echo ""
+    echo "❌ Unit tests failed! Fix the tests before pushing."
+    echo ""
+    echo "💡 To bypass this check (not recommended):"
+    echo "   git push --no-verify"
+    echo ""
+    exit 1
+fi
+
+END_TIME=$(date +%s)
+DURATION=$((END_TIME - START_TIME))
+
+# Provide feedback on execution time
+if [ $DURATION -lt 5 ]; then
+    echo "✅ All tests passed! (${DURATION}s - cached)"
+elif [ $DURATION -lt 15 ]; then
+    echo "✅ All tests passed! (${DURATION}s)"
+elif [ $DURATION -lt 30 ]; then
+    echo "✅ All tests passed! (${DURATION}s - acceptable)"
+else
+    echo "⚠️  Tests passed but took ${DURATION}s (target: <20s)"
+    echo "💡 Consider running fewer tests in pre-push or relying on CI for full suite"
+fi
 
 exit 0

@@ -26,7 +26,7 @@ try {
 const config = [
   ...nextConfigs,
   {
-    ignores: ['.next/**', 'node_modules/**', 'dist/**', 'next-env.d.ts'],
+    ignores: ['.next/**', 'node_modules/**', 'dist/**', 'next-env.d.ts', 'coverage/**'],
   },
 ];
 

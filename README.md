@@ -62,9 +62,26 @@ Lightweight, LLM-friendly Next.js starter template with Turborepo.
 - **Database**: See `docs/recipes/db.md`
 - **Payments**: See `docs/recipes/stripe.md`
 
+## Testing
+
+Comprehensive test infrastructure with unit, RLS, and E2E tests:
+
+```bash
+pnpm test           # Run all tests
+pnpm test:unit      # Run unit tests only
+pnpm test:e2e       # Run E2E tests only
+pnpm test:coverage  # Generate coverage report
+```
+
+**Coverage Target**: 70% minimum (see [Testing Guide](docs/testing/TESTING_GUIDE.md))
+
+**Test Stack**: Vitest 3.2.4 + Playwright 1.55.1 + React Testing Library 16.3.0
+
+See [docs/testing/TESTING_GUIDE.md](docs/testing/TESTING_GUIDE.md) for complete documentation.
+
 ## Scripts
 
-`pnpm turbo run dev --filter=web` / `pnpm turbo run build` / `pnpm turbo run typecheck` / `pnpm turbo run test`
+`pnpm turbo run dev --filter=web` / `pnpm turbo run build` / `pnpm turbo run typecheck`
 
 ## CI Overview
 
