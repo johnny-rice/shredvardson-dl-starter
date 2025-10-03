@@ -2,6 +2,52 @@ import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '../../lib/utils';
 
+/**
+ * Dialog component for modal interactions
+ *
+ * A modal dialog built on Radix UI that overlays page content and requires
+ * user interaction before dismissal. Uses semantic design tokens and includes
+ * accessible keyboard navigation and focus management.
+ *
+ * @usageGuidelines
+ * - Use for critical information that requires immediate user attention
+ * - Use for confirmations before destructive actions (delete, cancel)
+ * - Use for forms that should complete before returning to main content
+ * - Avoid for non-critical notifications (use toast instead)
+ * - Avoid for content users might want to reference while interacting with page
+ * - Keep dialog content concise and focused on a single task
+ * - Always provide clear dismiss options (X button, Cancel button, or Esc key)
+ *
+ * @accessibilityConsiderations
+ * - Traps focus within dialog while open (cannot tab outside)
+ * - Returns focus to trigger element when closed
+ * - Supports Esc key to dismiss
+ * - Uses aria-labelledby pointing to DialogTitle
+ * - Uses aria-describedby pointing to DialogDescription
+ * - Overlay dims background content to indicate modal state
+ * - Close button includes sr-only "Close" text for screen readers
+ *
+ * @example
+ * ```tsx
+ * <Dialog>
+ *   <DialogTrigger asChild>
+ *     <Button variant="outline">Open Dialog</Button>
+ *   </DialogTrigger>
+ *   <DialogContent>
+ *     <DialogHeader>
+ *       <DialogTitle>Are you sure?</DialogTitle>
+ *       <DialogDescription>
+ *         This action cannot be undone.
+ *       </DialogDescription>
+ *     </DialogHeader>
+ *     <DialogFooter>
+ *       <Button variant="outline">Cancel</Button>
+ *       <Button variant="destructive">Delete</Button>
+ *     </DialogFooter>
+ *   </DialogContent>
+ * </Dialog>
+ * ```
+ */
 const Dialog = DialogPrimitive.Root;
 
 const DialogTrigger = DialogPrimitive.Trigger;

@@ -40,3 +40,16 @@ export { Link } from './src/components/ui/Link';
 
 // Utilities
 export { cn } from './src/lib/utils';
+
+// Animations
+export {
+  fadeIn,
+  slideUp,
+  scale,
+  slideInRight,
+  getReducedMotionVariants,
+  type AnimationCustomProps,
+} from './src/lib/animations';
+
+// Hooks
+export { useReducedMotion } from './src/lib/use-reduced-motion';

@@ -5,9 +5,15 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**"]
     },
+    "build:tokens": {
+      "dependsOn": ["^build:tokens"],
+      "outputs": ["styles/**/*.css"],
+      "interruptible": true
+    },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["^build:tokens"]
     },
     "start": {
       "dependsOn": ["build"],

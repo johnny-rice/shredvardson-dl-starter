@@ -1,6 +1,41 @@
 import * as React from 'react';
 import { cn } from '../../lib/utils';
 
+/**
+ * Card component for grouping related content
+ *
+ * A container component that creates visual boundaries around related information.
+ * Uses semantic design tokens for consistent styling across themes.
+ *
+ * @usageGuidelines
+ * - Use for grouping related information with clear visual boundaries
+ * - Avoid nesting cards more than 2 levels deep to prevent visual clutter
+ * - Use Card + CardHeader + CardContent + CardFooter for standard layout structure
+ * - Prefer consistent padding across cards in a grid or list for visual harmony
+ * - Keep card content concise and focused on a single topic or action
+ *
+ * @accessibilityConsiderations
+ * - Uses semantic HTML (div) with proper heading hierarchy in CardTitle
+ * - Ensures sufficient contrast between card background and page background
+ * - Keep interactive elements inside cards keyboard accessible with proper tab order
+ * - CardDescription uses muted text with WCAG AA compliant contrast
+ *
+ * @example
+ * ```tsx
+ * <Card>
+ *   <CardHeader>
+ *     <CardTitle>User Settings</CardTitle>
+ *     <CardDescription>Manage your account preferences</CardDescription>
+ *   </CardHeader>
+ *   <CardContent>
+ *     <p>Card content goes here</p>
+ *   </CardContent>
+ *   <CardFooter>
+ *     <Button>Save Changes</Button>
+ *   </CardFooter>
+ * </Card>
+ * ```
+ */
 const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div

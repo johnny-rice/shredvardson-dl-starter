@@ -37,3 +37,16 @@ export {
 
 // Utilities
 export { cn } from './lib/utils';
+
+// Animations
+export {
+  fadeIn,
+  slideUp,
+  scale,
+  slideInRight,
+  getReducedMotionVariants,
+  type AnimationCustomProps,
+} from './lib/animations';
+
+// Hooks
+export { useReducedMotion } from './lib/use-reduced-motion';

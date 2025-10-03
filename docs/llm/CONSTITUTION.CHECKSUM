@@ -1,5 +1,5 @@
 {
-  "generated": "2025-10-02T09:10:32.790Z",
+  "generated": "2025-10-03T05:40:01.798Z",
   "version": "0.1.1",
   "algorithm": "sha256-trunc16",
   "checksums": {
@@ -15,6 +15,6 @@
     "docs/llm/STARTER_MANIFEST.json": "6316b778a8dac713",
     "packages/config/eslint.config.mjs": "0e00fd4ad1caeff6",
     "packages/config/prettier.config.js": "397ba438d0c59e1a",
-    "packages/ui/styles/tokens.css": "ae280a1d154b720c"
+    "packages/ui/styles/tokens.css": "220b65000bc3d147"
   }
 }
