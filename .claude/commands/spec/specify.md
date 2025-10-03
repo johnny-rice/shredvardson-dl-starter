@@ -71,9 +71,27 @@ Define pure requirements - what and why only, no technical details.
    - Reference existing features and user workflows
    - Focus on user value and business requirements
 4. Format output with User Need, Functional Requirements, User Experience, Success Criteria, and Clarifications Needed.
-5. Auto-number the feature sequentially and save to `/specs/` folder.
-6. Create GitHub issue linking to this specification.
-7. Emit **Result**: specification created, issue URL, ready for `/plan` command.
+5. **IMPORTANT**: Start the specification file with YAML frontmatter:
+   ```yaml
+   ---
+   id: SPEC-{YYYYMMDD}-{kebab-case-name}
+   type: spec
+   issue: {github-issue-number}
+   source: {github-issue-url}
+   ---
+   ```
+   Example:
+   ```yaml
+   ---
+   id: SPEC-20251003-testing-infrastructure
+   type: spec
+   issue: 108
+   source: https://github.com/Shredvardson/dl-starter/issues/108
+   ---
+   ```
+6. Auto-number the feature sequentially and save to `/specs/` folder.
+7. Create GitHub issue linking to this specification.
+8. Emit **Result**: specification created, issue URL, ready for `/plan` command.
 
 **Examples:**
 

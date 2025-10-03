@@ -73,8 +73,30 @@ Create technical implementation plan within constitutional constraints.
    - Dependencies and justification
    - Risks & Mitigation
 4. Must reference existing specification from `/specify` command.
-5. Save plan to `/plans/` folder and update GitHub issue.
-6. Emit **Result**: plan created, technical context added, ready for `/tasks` command.
+5. **IMPORTANT**: Start the plan file with YAML frontmatter:
+   ```yaml
+   ---
+   id: PLAN-{YYYYMMDD}-{kebab-case-name}
+   type: plan
+   parentId: SPEC-{YYYYMMDD}-{kebab-case-name}
+   issue: {github-issue-number}
+   spec: SPEC-{YYYYMMDD}-{kebab-case-name}
+   source: {github-issue-url}
+   ---
+   ```
+   Example:
+   ```yaml
+   ---
+   id: PLAN-20251003-testing-infrastructure
+   type: plan
+   parentId: SPEC-20251003-testing-infrastructure
+   issue: 108
+   spec: SPEC-20251003-testing-infrastructure
+   source: https://github.com/Shredvardson/dl-starter/issues/108
+   ---
+   ```
+6. Save plan to `/plans/` folder and update GitHub issue.
+7. Emit **Result**: plan created, technical context added, ready for `/tasks` command.
 
 **Examples:**
 

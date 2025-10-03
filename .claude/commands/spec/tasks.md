@@ -75,10 +75,36 @@ Break down technical plan into actionable implementation tasks with TDD focus.
    - Phase 4: Integration & Polish
    - Phase 5: Documentation & Release
 4. Reference existing plan from `/plan` command in `/plans/` folder.
-5. Include implementation commands, branch strategy, and next steps.
-6. Save breakdown to `/tasks/` folder and update GitHub issue with checklist.
-7. Create feature branch ready for implementation.
-8. Emit **Result**: tasks created, branch ready, implementation can begin.
+5. **IMPORTANT**: Start the task file with YAML frontmatter:
+   ```yaml
+   ---
+   id: TASK-{YYYYMMDD}-{kebab-case-name}
+   type: task
+   parentId: PLAN-{YYYYMMDD}-{kebab-case-name}
+   issue: {github-issue-number}
+   plan: PLAN-{YYYYMMDD}-{kebab-case-name}
+   spec: SPEC-{YYYYMMDD}-{kebab-case-name}
+   branch: feature/{number}-{name}
+   source: {github-issue-url}
+   ---
+   ```
+   Example:
+   ```yaml
+   ---
+   id: TASK-20251003-testing-infrastructure
+   type: task
+   parentId: PLAN-20251003-testing-infrastructure
+   issue: 108
+   plan: PLAN-20251003-testing-infrastructure
+   spec: SPEC-20251003-testing-infrastructure
+   branch: feature/108-testing-infrastructure
+   source: https://github.com/Shredvardson/dl-starter/issues/108
+   ---
+   ```
+6. Include implementation commands, branch strategy, and next steps.
+7. Save breakdown to `/tasks/` folder and update GitHub issue with checklist.
+8. Create feature branch ready for implementation.
+9. Emit **Result**: tasks created, branch ready, implementation can begin.
 
 **Examples:**
 
