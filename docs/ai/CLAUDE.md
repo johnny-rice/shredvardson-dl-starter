@@ -72,6 +72,20 @@ Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → 
 
 **Reference**: All workflows must follow `docs/constitution.md` architectural decisions.
 
+### 🔥 Discovered Bug Protocol (Legitimate Bypass)
+
+**When:** Bug discovered DURING implementation that blocks current work
+
+**Quick flow:** Fix immediately → Create PR → Create issue retroactively → Link them
+
+**Commands:** `/git:branch` → `/git:prepare-pr` → `/github:create-issue`
+
+**Why acceptable:** Bugs should be fixed immediately. Retroactive docs maintain audit trail.
+
+**NOT for:** New features, architecture changes, breaking changes, security issues.
+
+**Full protocol:** [docs/workflows/discovered-bug-protocol.md](../workflows/discovered-bug-protocol.md)
+
 ## Commands Index
 
 ### Spec-Driven Development (Complex Features)
@@ -161,7 +175,3 @@ See [Testing Guide](../testing/TESTING_GUIDE.md) for comprehensive testing patte
 - [Auth Recipe](../recipes/auth.md) · [Database Recipe](../recipes/db.md) · [Environment Setup](../recipes/env-setup.md) · [Stripe Recipe](../recipes/stripe.md) · [ShadCN Recipe](../recipes/shadcn.md)
 - [Evaluations](../evaluations/INDEX.md) - Tool and workflow assessments
 - [Decisions (ADRs)](../decisions/README.md) - Architectural decision records
-
-## Testing Notes
-
-This implementation has been tested with GPT-5's 3-part smoke test sequence for operational validation.
