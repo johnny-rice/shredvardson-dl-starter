@@ -213,7 +213,7 @@ export function calculateMetrics(data: AnalyticsData): AnalyticsMetrics {
  * Clear all analytics data
  */
 export function clearAnalyticsData(): void {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined') {return;}
 
   try {
     localStorage.removeItem(STORAGE_KEY);

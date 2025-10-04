@@ -19,10 +19,10 @@ export interface MonitoringAdapter {
 class SentryAdapter implements MonitoringAdapter {
   captureException(error: Error | string, context?: ErrorContext) {
     Sentry.withScope((scope) => {
-      if (context?.user) scope.setUser(context.user);
-      if (context?.tags) scope.setTags(context.tags);
-      if (context?.level) scope.setLevel(context.level);
-      if (context?.extra) scope.setExtras(context.extra);
+      if (context?.user) {scope.setUser(context.user);}
+      if (context?.tags) {scope.setTags(context.tags);}
+      if (context?.level) {scope.setLevel(context.level);}
+      if (context?.extra) {scope.setExtras(context.extra);}
 
       if (typeof error === 'string') {
         Sentry.captureException(new Error(error));
@@ -34,10 +34,10 @@ class SentryAdapter implements MonitoringAdapter {
 
   captureMessage(message: string, context?: ErrorContext) {
     Sentry.withScope((scope) => {
-      if (context?.user) scope.setUser(context.user);
-      if (context?.tags) scope.setTags(context.tags);
-      if (context?.level) scope.setLevel(context.level);
-      if (context?.extra) scope.setExtras(context.extra);
+      if (context?.user) {scope.setUser(context.user);}
+      if (context?.tags) {scope.setTags(context.tags);}
+      if (context?.level) {scope.setLevel(context.level);}
+      if (context?.extra) {scope.setExtras(context.extra);}
 
       Sentry.captureMessage(message, context?.level || 'info');
     });

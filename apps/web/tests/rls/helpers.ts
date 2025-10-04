@@ -65,7 +65,7 @@ export async function createTestData<T extends Record<string, unknown>>(
     .select()
     .single();
 
-  if (error) throw error;
+  if (error) {throw error;}
   return result as T & { user_id: string };
 }
 
@@ -79,5 +79,5 @@ export async function cleanupTestData(
 ) {
   const { error } = await adminClient.from(tableName).delete().eq('user_id', userId);
 
-  if (error) throw error;
+  if (error) {throw error;}
 }

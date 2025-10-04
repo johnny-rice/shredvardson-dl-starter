@@ -28,6 +28,18 @@ const config = [
   {
     ignores: ['.next/**', 'node_modules/**', 'dist/**', 'next-env.d.ts', 'coverage/**'],
   },
+  {
+    rules: {
+      // TypeScript semantic rules (from CodeRabbit CLI evaluation - Issue #118)
+      '@typescript-eslint/no-explicit-any': 'error',
+
+      // Code quality rules
+      'prefer-const': 'error',
+      'no-var': 'error',
+      eqeqeq: ['error', 'always'],
+      curly: ['error', 'all'],
+    },
+  },
 ];
 
 export default config;
