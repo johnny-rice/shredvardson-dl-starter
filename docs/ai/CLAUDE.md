@@ -145,10 +145,22 @@ When you open a PR:
 
 See [docs/workflow-security.md](../workflow-security.md) for complete review commands, operational controls, and security guidelines.
 
+## Testing
+
+See [Testing Guide](../testing/TESTING_GUIDE.md) for comprehensive testing patterns, coverage requirements, and best practices.
+
+**Quick Commands:**
+- `/test:scaffold` - Generate test scaffolding for new features
+- `pnpm test` - Run unit tests
+- `pnpm test:e2e` - Run end-to-end tests
+- `pnpm test:coverage` - Generate coverage report
+
 ## References
 
 - [CONTRIBUTING.md](../../CONTRIBUTING.md) · [RELEASING.md](../../RELEASING.md) · [SECURITY.md](../../SECURITY.md)
 - [Auth Recipe](../recipes/auth.md) · [Database Recipe](../recipes/db.md) · [Environment Setup](../recipes/env-setup.md) · [Stripe Recipe](../recipes/stripe.md) · [ShadCN Recipe](../recipes/shadcn.md)
+- [Evaluations](../evaluations/INDEX.md) - Tool and workflow assessments
+- [Decisions (ADRs)](../decisions/README.md) - Architectural decision records
 
 ## Testing Notes
 

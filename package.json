@@ -20,6 +20,7 @@
     "test:unit": "npm run pretest && turbo run test:unit",
     "test:e2e": "npm run pretest && turbo run test:e2e --filter=web",
     "test:e2e:ci": "tsx scripts/pretest-env-check.ts && playwright test --config playwright.config.ts",
+    "test:coverage": "npm run pretest && turbo run test:coverage --filter=web",
     "typecheck": "turbo run typecheck",
     "debug": "tsx scripts/debug.ts",
     "debug:sentry": "tsx scripts/debug.ts sentry:check",
