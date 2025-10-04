@@ -1,5 +1,34 @@
 import * as React from 'react';
+import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
+
+/**
+ * Card component variants using CVA (Class Variance Authority)
+ * Provides consistent styling with semantic design tokens
+ */
+const cardVariants = cva(
+  'rounded-lg border bg-card text-card-foreground transition-all',
+  {
+    variants: {
+      variant: {
+        default: 'shadow-sm',
+        elevated: 'shadow-md hover:shadow-lg',
+        outlined: 'shadow-none border-2',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  }
+);
+
+/**
+ * Card component props extending standard HTML div attributes
+ * with design system variants
+ */
+export interface CardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof cardVariants> {}
 
 /**
  * Card component for grouping related content
@@ -9,6 +38,9 @@ import { cn } from '../../lib/utils';
  *
  * @usageGuidelines
  * - Use for grouping related information with clear visual boundaries
+ * - Use 'default' variant for standard content containers
+ * - Use 'elevated' variant to emphasize important cards or interactive cards
+ * - Use 'outlined' variant for lower hierarchy cards or nested content
  * - Avoid nesting cards more than 2 levels deep to prevent visual clutter
  * - Use Card + CardHeader + CardContent + CardFooter for standard layout structure
  * - Prefer consistent padding across cards in a grid or list for visual harmony
@@ -19,10 +51,12 @@ import { cn } from '../../lib/utils';
  * - Ensures sufficient contrast between card background and page background
  * - Keep interactive elements inside cards keyboard accessible with proper tab order
  * - CardDescription uses muted text with WCAG AA compliant contrast
+ * - Shadow/border changes maintain accessibility (don't convey meaning solely through visual style)
  *
  * @example
  * ```tsx
- * <Card>
+ * // Standard card
+ * <Card variant="default">
  *   <CardHeader>
  *     <CardTitle>User Settings</CardTitle>
  *     <CardDescription>Manage your account preferences</CardDescription>
@@ -34,15 +68,21 @@ import { cn } from '../../lib/utils';
  *     <Button>Save Changes</Button>
  *   </CardFooter>
  * </Card>
+ *
+ * // Elevated card for emphasis
+ * <Card variant="elevated">
+ *   <CardHeader>
+ *     <CardTitle>Premium Feature</CardTitle>
+ *   </CardHeader>
+ *   <CardContent>
+ *     <p>Unlock advanced capabilities</p>
+ *   </CardContent>
+ * </Card>
  * ```
  */
-const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, ...props }, ref) => (
-    <div
-      ref={ref}
-      className={cn('rounded-lg border bg-card text-card-foreground shadow-sm', className)}
-      {...props}
-    />
+const Card = React.forwardRef<HTMLDivElement, CardProps>(
+  ({ className, variant, ...props }, ref) => (
+    <div ref={ref} className={cn(cardVariants({ variant, className }))} {...props} />
   )
 );
 Card.displayName = 'Card';
@@ -87,4 +127,4 @@ const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 );
 CardFooter.displayName = 'CardFooter';
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent, cardVariants };

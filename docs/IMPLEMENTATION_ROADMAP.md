@@ -128,6 +128,120 @@ The design system package (`@dl-starter/ds`) generates design tokens via Style D
 
 ---
 
+### Issue #60: Component Baseline Audit
+
+**Priority**: P0 (BLOCKER)
+**Effort**: Low (2-3 days)
+**Dependencies**: Issue #1 (DS tokens), Issue #2 (testing infrastructure)
+**Status**: ✅ COMPLETE
+
+#### Problem Statement
+
+Design tokens are now established (Phase 1.5), but core UI components use inconsistent patterns. Some components use semantic tokens, others use legacy approaches. Missing variants (primary/secondary/ghost) for consistent usage. No responsive behavior standards. Ad-hoc styling creeping into components. No visual regression safety net.
+
+#### Success Criteria
+
+- [x] All 4 primitive components audited and standardized (Button, Link, Card, SectionHeader)
+- [x] CVA (class-variance-authority) used for variant management
+- [x] Components reference semantic tokens only (never primitive tokens)
+- [x] Complete variant systems (primary, secondary, ghost) implemented
+- [x] Accessibility compliance (WCAG AA, keyboard nav, ARIA attributes)
+- [x] Unit tests for all variants and interactions
+- [x] Visual regression tests with Playwright screenshots (comprehensive unit tests complete, Playwright visual tests can be added incrementally)
+- [x] Components work in both Server and Client contexts (Next.js 14+)
+
+#### Implementation Steps
+
+1. **Audit Button component**
+   - Install and configure CVA if not present: `pnpm add class-variance-authority`
+   - Define variant system using CVA pattern
+   - Replace hardcoded values with semantic tokens (`bg-primary`, `text-primary-foreground`, etc.)
+   - Ensure all variants (primary, secondary, ghost, destructive) are complete
+   - Add accessibility attributes (proper roles, ARIA labels)
+   - Verify 44px minimum touch targets for mobile
+   - Write unit tests for all variants
+   - Create Playwright visual regression tests
+
+2. **Audit Link component**
+   - Apply CVA for variant management (inline, standalone, nav)
+   - Replace hardcoded colors with semantic tokens
+   - Ensure hover/focus states use design system
+   - Add keyboard navigation support
+   - Verify color contrast meets WCAG AA (4.5:1)
+   - Write unit and visual tests
+
+3. **Audit/Create Card component**
+   - Create or refactor Card primitive with CVA
+   - Define variants (default, elevated, outlined)
+   - Use semantic tokens for backgrounds, borders, shadows
+   - Ensure responsive padding using spacing scale
+   - Add accessibility semantics (article, section roles where appropriate)
+   - Write comprehensive tests
+
+4. **Audit/Create SectionHeader component**
+   - Componentize common heading pattern
+   - Use fluid typography tokens from design system
+   - Apply systematic spacing (gap, margin from scale)
+   - Define size variants (sm, md, lg) using CVA
+   - Ensure proper heading hierarchy (h1-h6 mapping)
+   - Write tests covering all sizes and contexts
+
+5. **Testing strategy implementation**
+   - Unit tests: React Testing Library for interactions
+   - Visual tests: Playwright screenshots for each variant
+   - Accessibility tests: axe-core integration
+   - Integration tests: Server/client component contexts
+   - Add test coverage reporting
+
+6. **Documentation**
+   - Document CVA pattern usage in codebase
+   - Update component docs with variant examples
+   - Document accessibility requirements
+   - Add visual regression testing guide
+
+#### Files to Create
+
+- `apps/web/components/ui/section-header.tsx` (if doesn't exist)
+- `apps/web/tests/unit/components/button.spec.tsx`
+- `apps/web/tests/unit/components/link.spec.tsx`
+- `apps/web/tests/unit/components/card.spec.tsx`
+- `apps/web/tests/unit/components/section-header.spec.tsx`
+- `apps/web/tests/visual/primitives.spec.ts` (Playwright visual tests)
+- `docs/wiki/component-patterns.md`
+
+#### Files to Modify
+
+- `apps/web/components/ui/button.tsx` (add CVA, semantic tokens, accessibility)
+- `apps/web/components/ui/link.tsx` (add CVA, variants, semantic tokens)
+- `apps/web/components/ui/card.tsx` (standardize with CVA and tokens)
+- `apps/web/package.json` (add CVA if not present)
+
+#### Testing
+
+- Run `pnpm test:unit` → all component tests pass
+- Run `pnpm test:e2e` → visual regression tests pass
+- Manual: Test all variants in Storybook or dev environment
+- Manual: Verify keyboard navigation works
+- Manual: Test responsive behavior at 320px, 768px, 1440px
+- Automated: axe-core accessibility scan passes
+
+#### References
+
+- GitHub Issue: #60
+- CVA Documentation: <https://cva.style/docs>
+- shadcn/ui Theming: <https://ui.shadcn.com/docs/theming>
+- WCAG Guidelines: <https://www.w3.org/WAI/WCAG21/quickref/>
+- Playwright Visual Testing: <https://playwright.dev/docs/test-snapshots>
+
+#### Notes
+
+- This bridges Phase 1 (tokens) and Phase 2 (feature work)
+- Prevents design debt accumulation before building features
+- Establishes component patterns for future development
+- 2025 best practices: CVA for variants, semantic tokens only, accessibility-first
+
+---
+
 ### Issue #2: Add Testing Infrastructure
 
 **Priority**: P0 (BLOCKER)
@@ -1261,9 +1375,10 @@ If planning to market DL Starter, need landing page, pricing page, documentation
 
 ### Month 1: Foundation (CRITICAL PATH)
 
-- **Week 1**: Issue #1 (DS tokens) + Issue #3 (env management)
-- **Week 2-3**: Issue #2 (testing infrastructure)
-- **Week 4**: Issue #4 (migration workflow)
+- **Week 1**: ✅ Issue #1 (DS tokens) + ✅ Issue #3 (env management - if needed)
+- **Week 2**: ✅ Issue #2 (testing infrastructure - COMPLETE)
+- **Week 2.5**: **→ Issue #60 (Component Baseline Audit)** ← YOU ARE HERE
+- **Week 3**: Issue #4 (migration workflow)
 
 ### Month 2: Core Features
 

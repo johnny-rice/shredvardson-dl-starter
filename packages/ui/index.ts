@@ -21,6 +21,8 @@ export {
   CardFooter,
   CardHeader,
   CardTitle,
+  cardVariants,
+  type CardProps,
 } from './src/components/ui/card';
 export {
   Dialog,
@@ -35,8 +37,16 @@ export {
   DialogTrigger,
 } from './src/components/ui/dialog';
 
-// Legacy components
-export { Link } from './src/components/ui/Link';
+// Link component
+export { Link, linkVariants, type LinkProps } from './src/components/ui/Link';
+
+// Section Header component
+export {
+  SectionHeader,
+  sectionHeaderVariants,
+  sectionDescriptionVariants,
+  type SectionHeaderProps,
+} from './src/components/ui/section-header';
 
 // Utilities
 export { cn } from './src/lib/utils';
