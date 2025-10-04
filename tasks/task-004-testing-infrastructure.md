@@ -18,9 +18,11 @@ source: https://github.com/Shredvardson/dl-starter/issues/108
 **Created**: 2025-10-03
 
 ---
+
 ## Implementation Strategy
 
 Following constitutional TDD order:
+
 1. **Contracts & Interfaces** → Define what should work
 2. **Test Foundation** → Integration → E2E → Unit tests
 3. **Implementation** → Make tests pass
@@ -34,21 +36,25 @@ Following constitutional TDD order:
 ## Phase 1: Contracts & Interfaces (Day 1 - Morning)
 
 ### Task 1.1: Define Test Coverage Contract
+
 **Effort**: 30 min | **Priority**: P0
 
 Define what "70% coverage" means for this codebase.
 
 **Acceptance Criteria**:
+
 - [ ] Coverage thresholds documented (lines: 70%, functions: 70%, branches: 65%, statements: 70%)
 - [ ] Excluded files list defined (generated, config, test files)
 - [ ] Critical paths identified (auth, data access, RLS)
 - [ ] Risk-based testing strategy documented
 
 **Files**:
+
 - `apps/web/vitest.config.ts` (prepare structure)
 - `docs/testing/coverage-contract.md` (create documentation)
 
 **Command**:
+
 ```bash
 # Document coverage contract
 mkdir -p docs/testing
@@ -77,20 +83,24 @@ DOC
 ---
 
 ### Task 1.2: Define RLS Policy Contracts
+
 **Effort**: 1 hour | **Priority**: P0
 
 Define security boundaries that RLS policies must enforce.
 
 **Acceptance Criteria**:
+
 - [ ] User isolation rules documented (users can only access own data)
 - [ ] Role permission rules documented (owner/admin/member capabilities)
 - [ ] Anonymous access rules documented (no data access)
 - [ ] Test scenarios outlined
 
 **Files**:
+
 - `apps/web/tests/rls/contracts.md` (create)
 
 **Command**:
+
 ```bash
 mkdir -p apps/web/tests/rls
 cat > apps/web/tests/rls/contracts.md << 'DOC'
@@ -116,20 +126,24 @@ DOC
 ---
 
 ### Task 1.3: Define E2E Test Contracts
+
 **Effort**: 1 hour | **Priority**: P0
 
 Define critical user flows that must work end-to-end.
 
 **Acceptance Criteria**:
+
 - [ ] Auth flows documented (signup, login, logout)
 - [ ] Protected route flows documented
 - [ ] CRUD operation flows documented
 - [ ] Error handling flows documented
 
 **Files**:
+
 - `apps/web/tests/e2e/contracts.md` (create)
 
 **Command**:
+
 ```bash
 mkdir -p apps/web/tests/e2e
 cat > apps/web/tests/e2e/contracts.md << 'DOC'
@@ -157,20 +171,24 @@ DOC
 ## Phase 2: Test Foundation (Day 1 Afternoon - Day 2)
 
 ### Task 2.1: Setup Vitest Configuration
+
 **Effort**: 1 hour | **Priority**: P0
 
 Configure Vitest with coverage thresholds and test environment.
 
 **Acceptance Criteria**:
+
 - [ ] Vitest config updated with jsdom environment
 - [ ] Coverage thresholds configured (70% minimum)
 - [ ] Path aliases configured
 - [ ] Setup file configured
 
 **Files**:
+
 - `apps/web/vitest.config.ts` (modify)
 
 **Implementation**:
+
 ```typescript
 // apps/web/vitest.config.ts
 import { defineConfig } from 'vitest/config';
@@ -183,16 +201,8 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./tests/setup.ts'],
-    include: [
-      'src/**/*.test.{ts,tsx}',
-      'tests/unit/**/*.test.{ts,tsx}',
-    ],
-    exclude: [
-      'e2e/**',
-      'tests/e2e/**',
-      'node_modules/**',
-      '.next/**',
-    ],
+    include: ['src/**/*.test.{ts,tsx}', 'tests/unit/**/*.test.{ts,tsx}'],
+    exclude: ['e2e/**', 'tests/e2e/**', 'node_modules/**', '.next/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html', 'lcov'],
@@ -202,12 +212,7 @@ export default defineConfig({
         branches: 65,
         statements: 70,
       },
-      exclude: [
-        '**/*.test.{ts,tsx}',
-        '**/*.config.{ts,js}',
-        '**/tests/**',
-        '**/.next/**',
-      ],
+      exclude: ['**/*.test.{ts,tsx}', '**/*.config.{ts,js}', '**/tests/**', '**/.next/**'],
     },
   },
   resolve: {
@@ -221,17 +226,20 @@ export default defineConfig({
 ---
 
 ### Task 2.2: Create Test Setup & Utilities
+
 **Effort**: 1.5 hours | **Priority**: P0
 
 Create test setup file and reusable test utilities.
 
 **Acceptance Criteria**:
+
 - [ ] Vitest setup file created with Jest DOM
 - [ ] Next.js router mocked
 - [ ] Test utils with provider wrapper created
 - [ ] Supabase client mock created
 
 **Files**:
+
 - `apps/web/tests/setup.ts` (create)
 - `apps/web/tests/helpers/test-utils.tsx` (create)
 - `apps/web/tests/helpers/mock-supabase.ts` (create)
@@ -241,17 +249,20 @@ Create test setup file and reusable test utilities.
 ---
 
 ### Task 2.3: Setup Playwright E2E Configuration
+
 **Effort**: 1 hour | **Priority**: P0
 
 Enhance Playwright config for E2E testing.
 
 **Acceptance Criteria**:
+
 - [ ] Playwright config updated with parallel execution
 - [ ] Retries configured for CI
 - [ ] Trace/screenshot on failure configured
 - [ ] Mobile Chrome project added
 
 **Files**:
+
 - `playwright.config.ts` (modify)
 
 **Implementation**: See plan section 2.1
@@ -259,17 +270,20 @@ Enhance Playwright config for E2E testing.
 ---
 
 ### Task 2.4: Create E2E Test Fixtures
+
 **Effort**: 2 hours | **Priority**: P0
 
 Create reusable E2E test fixtures for auth and database.
 
 **Acceptance Criteria**:
+
 - [ ] Auth fixture created (authenticated page)
 - [ ] Test user fixture created
 - [ ] Database reset helper created
 - [ ] Seed data helper created
 
 **Files**:
+
 - `apps/web/tests/e2e/fixtures/auth.ts` (create)
 - `apps/web/tests/e2e/fixtures/database.ts` (create)
 
@@ -278,16 +292,19 @@ Create reusable E2E test fixtures for auth and database.
 ---
 
 ### Task 2.5: Create RLS Test Helpers
+
 **Effort**: 1.5 hours | **Priority**: P0
 
 Create helpers for testing RLS policies.
 
 **Acceptance Criteria**:
+
 - [ ] Test user impersonation helper created
 - [ ] Admin client helper created
 - [ ] Test data creation helper created
 
 **Files**:
+
 - `apps/web/tests/rls/helpers.ts` (create)
 
 **Implementation**: See plan section 3.1
@@ -297,17 +314,20 @@ Create helpers for testing RLS policies.
 ## Phase 3: Implementation - Write Tests (Day 3-4)
 
 ### Task 3.1: Write RLS Policy Tests (TDD: Contracts First)
+
 **Effort**: 3 hours | **Priority**: P0
 
 Write tests for RLS policy enforcement (security critical).
 
 **Acceptance Criteria**:
+
 - [ ] User isolation tests written and failing
 - [ ] Role permission tests written and failing
 - [ ] Anonymous access tests written and failing
 - [ ] Tests document expected behavior
 
 **Files**:
+
 - `apps/web/tests/rls/user-isolation.test.ts` (create)
 - `apps/web/tests/rls/role-permissions.test.ts` (create)
 
@@ -318,11 +338,13 @@ Write tests for RLS policy enforcement (security critical).
 ---
 
 ### Task 3.2: Write Auth Flow E2E Tests
+
 **Effort**: 3 hours | **Priority**: P0
 
 Write E2E tests for authentication flows.
 
 **Acceptance Criteria**:
+
 - [ ] Signup flow test written
 - [ ] Login flow test written
 - [ ] Logout flow test written
@@ -330,6 +352,7 @@ Write E2E tests for authentication flows.
 - [ ] Tests run against local app
 
 **Files**:
+
 - `apps/web/tests/e2e/auth-flows.spec.ts` (create)
 
 **Implementation**: See plan section 2.3
@@ -337,32 +360,38 @@ Write E2E tests for authentication flows.
 ---
 
 ### Task 3.3: Write Protected Route E2E Tests
+
 **Effort**: 2 hours | **Priority**: P1
 
 Write E2E tests for route protection.
 
 **Acceptance Criteria**:
+
 - [ ] Unauthenticated redirect test written
 - [ ] Authenticated access test written
 - [ ] Session persistence test written
 
 **Files**:
+
 - `apps/web/tests/e2e/protected-routes.spec.ts` (create)
 
 ---
 
 ### Task 3.4: Write Component Unit Tests (Examples)
+
 **Effort**: 2 hours | **Priority**: P1
 
 Write example unit tests for components.
 
 **Acceptance Criteria**:
+
 - [ ] Button component tests written
 - [ ] Input component tests written
 - [ ] Card component tests written
 - [ ] Tests use testing-library best practices
 
 **Files**:
+
 - `apps/web/tests/unit/components/button.test.tsx` (create)
 - `apps/web/tests/unit/components/input.test.tsx` (create)
 - `apps/web/tests/unit/components/card.test.tsx` (create)
@@ -372,16 +401,19 @@ Write example unit tests for components.
 ---
 
 ### Task 3.5: Write Utility Function Tests
+
 **Effort**: 1.5 hours | **Priority**: P2
 
 Write tests for utility functions.
 
 **Acceptance Criteria**:
+
 - [ ] Form validation tests written
 - [ ] Date formatting tests written
 - [ ] String manipulation tests written
 
 **Files**:
+
 - `apps/web/tests/unit/lib/utils.test.ts` (create)
 
 ---
@@ -389,17 +421,20 @@ Write tests for utility functions.
 ## Phase 4: Integration & Polish (Day 5-6)
 
 ### Task 4.1: Install and Configure Husky
+
 **Effort**: 30 min | **Priority**: P0
 
 Setup pre-push hooks with Husky.
 
 **Acceptance Criteria**:
+
 - [ ] Husky installed
 - [ ] Pre-push hook created
 - [ ] Hook runs unit tests (<30s)
 - [ ] Bypass with --no-verify works
 
 **Commands**:
+
 ```bash
 pnpm add -D husky
 pnpm husky install
@@ -422,26 +457,31 @@ chmod +x .husky/pre-push
 ```
 
 **Files**:
+
 - `.husky/pre-push` (create)
 - `package.json` (add "prepare": "husky install")
 
 ---
 
 ### Task 4.2: Setup Chrome DevTools MCP
+
 **Effort**: 1 hour | **Priority**: P2
 
 Configure Chrome DevTools MCP for AI visual validation.
 
 **Acceptance Criteria**:
+
 - [ ] MCP server config created
 - [ ] Chrome DevTools MCP documented
 - [ ] Example usage provided
 - [ ] Test AI can control browser
 
 **Files**:
+
 - `.claude/mcp-servers.json` (create or modify)
 
 **Implementation**:
+
 ```json
 {
   "mcpServers": {
@@ -456,11 +496,13 @@ Configure Chrome DevTools MCP for AI visual validation.
 ---
 
 ### Task 4.3: Update CI/CD Workflow
+
 **Effort**: 2 hours | **Priority**: P0
 
 Update GitHub Actions to run tests and upload coverage.
 
 **Acceptance Criteria**:
+
 - [ ] Unit tests run in CI job
 - [ ] E2E tests run in separate job
 - [ ] Coverage uploaded to Codecov
@@ -468,6 +510,7 @@ Update GitHub Actions to run tests and upload coverage.
 - [ ] Total CI time < 3 minutes
 
 **Files**:
+
 - `.github/workflows/ci.yml` (modify)
 
 **Implementation**: Add after existing unit test step:
@@ -488,19 +531,23 @@ Update GitHub Actions to run tests and upload coverage.
 ---
 
 ### Task 4.4: Update Turbo Configuration
+
 **Effort**: 15 min | **Priority**: P1
 
 Update Turbo to handle test task caching.
 
 **Acceptance Criteria**:
+
 - [ ] Test tasks have `cache: false`
 - [ ] E2E outputs configured
 - [ ] Dependencies configured
 
 **Files**:
+
 - `turbo.json` (modify)
 
 **Implementation**:
+
 ```json
 {
   "tasks": {
@@ -526,17 +573,20 @@ Update Turbo to handle test task caching.
 ---
 
 ### Task 4.5: Add Test Scripts to Package.json
+
 **Effort**: 15 min | **Priority**: P1
 
 Ensure all test scripts are properly configured.
 
 **Acceptance Criteria**:
+
 - [ ] `test:unit` script exists
 - [ ] `test:e2e` script exists
 - [ ] `test:coverage` script exists
 - [ ] `test:watch` script exists
 
 **Files**:
+
 - `apps/web/package.json` (verify/update)
 
 ---
@@ -544,11 +594,13 @@ Ensure all test scripts are properly configured.
 ## Phase 5: Documentation & Release (Day 7)
 
 ### Task 5.1: Create Comprehensive Testing Guide
+
 **Effort**: 3 hours | **Priority**: P0
 
 Write complete testing documentation.
 
 **Acceptance Criteria**:
+
 - [ ] Testing guide covers all test types
 - [ ] Quick start commands documented
 - [ ] Writing tests examples provided
@@ -557,6 +609,7 @@ Write complete testing documentation.
 - [ ] Common patterns documented
 
 **Files**:
+
 - `apps/web/tests/README.md` (create)
 
 **Implementation**: See plan section 6.1
@@ -564,11 +617,13 @@ Write complete testing documentation.
 ---
 
 ### Task 5.2: Create Test Examples & Templates
+
 **Effort**: 2 hours | **Priority**: P1
 
 Provide copy-paste examples for common scenarios.
 
 **Acceptance Criteria**:
+
 - [ ] Component test template
 - [ ] E2E test template
 - [ ] RLS test template
@@ -576,32 +631,38 @@ Provide copy-paste examples for common scenarios.
 - [ ] API test example
 
 **Files**:
+
 - `apps/web/tests/examples/` (create directory with templates)
 
 ---
 
 ### Task 5.3: Update Main README
+
 **Effort**: 30 min | **Priority**: P1
 
 Update project README with testing info.
 
 **Acceptance Criteria**:
+
 - [ ] Testing section added
 - [ ] Test commands documented
 - [ ] Coverage badge added (if using Codecov)
 - [ ] Link to testing guide
 
 **Files**:
+
 - `README.md` (modify)
 
 ---
 
 ### Task 5.4: Run Full Test Suite & Validate
+
 **Effort**: 1 hour | **Priority**: P0
 
 Validate entire testing infrastructure works.
 
 **Acceptance Criteria**:
+
 - [ ] All unit tests pass
 - [ ] All E2E tests pass
 - [ ] RLS tests pass
@@ -610,6 +671,7 @@ Validate entire testing infrastructure works.
 - [ ] CI passes (<3min)
 
 **Commands**:
+
 ```bash
 # Run all tests locally
 pnpm test:unit --coverage
@@ -627,11 +689,13 @@ git push  # Should trigger hook
 ---
 
 ### Task 5.5: Create Pull Request
+
 **Effort**: 30 min | **Priority**: P0
 
 Create PR with comprehensive description.
 
 **Acceptance Criteria**:
+
 - [ ] PR created with testing infrastructure changes
 - [ ] Description includes test coverage stats
 - [ ] Description includes implementation summary
@@ -639,6 +703,7 @@ Create PR with comprehensive description.
 - [ ] Screenshots/demo of test runs included
 
 **Commands**:
+
 ```bash
 gh pr create --title "feat: implement comprehensive testing infrastructure" \
   --body "$(cat <<'PR_BODY'
@@ -692,13 +757,13 @@ PR_BODY
 
 ### By Phase
 
-| Phase | Tasks | Effort | Priority |
-|-------|-------|--------|----------|
-| Phase 1: Contracts | 3 tasks | 2.5 hours | P0 |
-| Phase 2: Test Foundation | 5 tasks | 7 hours | P0 |
-| Phase 3: Implementation | 5 tasks | 11.5 hours | P0-P2 |
-| Phase 4: Integration | 5 tasks | 4 hours | P0-P2 |
-| Phase 5: Documentation | 5 tasks | 7 hours | P0-P1 |
+| Phase                    | Tasks   | Effort     | Priority |
+| ------------------------ | ------- | ---------- | -------- |
+| Phase 1: Contracts       | 3 tasks | 2.5 hours  | P0       |
+| Phase 2: Test Foundation | 5 tasks | 7 hours    | P0       |
+| Phase 3: Implementation  | 5 tasks | 11.5 hours | P0-P2    |
+| Phase 4: Integration     | 5 tasks | 4 hours    | P0-P2    |
+| Phase 5: Documentation   | 5 tasks | 7 hours    | P0-P1    |
 
 **Total**: 23 tasks, ~32 hours (~5-7 days with testing/debugging)
 
@@ -722,6 +787,7 @@ PR_BODY
 ## Implementation Commands
 
 ### Quick Start
+
 ```bash
 # Ensure on feature branch
 git checkout feature/108-testing-infrastructure
@@ -739,6 +805,7 @@ pnpm --filter=web test -- --watch
 ### Validation Checkpoints
 
 **After Phase 2** (Test Foundation):
+
 ```bash
 # Should run without errors (no tests yet)
 pnpm --filter=web test:unit
@@ -746,6 +813,7 @@ pnpm test:e2e
 ```
 
 **After Phase 3** (Implementation):
+
 ```bash
 # Should have passing tests
 pnpm --filter=web test:unit --coverage
@@ -753,6 +821,7 @@ pnpm --filter=web test:unit --coverage
 ```
 
 **After Phase 4** (Integration):
+
 ```bash
 # Pre-push hook should work
 git push  # Tests run automatically
@@ -768,12 +837,14 @@ gh pr checks
 **Current Branch**: `feature/108-testing-infrastructure`
 
 **Workflow**:
+
 1. Implement tasks in order (Phase 1 → Phase 5)
 2. Commit after each phase completion
 3. Push regularly to trigger CI
 4. Create PR when Phase 5 complete
 
 **Commit Convention**:
+
 ```bash
 # Phase commits
 git commit -m "test: add coverage contracts and RLS test helpers"
@@ -795,6 +866,7 @@ git commit -m "feat: complete testing infrastructure implementation"
 4. ➡️ Follow tasks sequentially for TDD approach
 
 **Recommended Command**:
+
 ```bash
 # Start implementing Phase 1
 /dev:implement

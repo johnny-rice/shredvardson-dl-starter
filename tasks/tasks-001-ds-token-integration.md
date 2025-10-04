@@ -54,6 +54,7 @@ git checkout -b feature/ds-token-integration/phase-4-visual-tests
 ### Task 1.1: Install Dependencies
 
 **Commands**:
+
 ```bash
 # Install Framer Motion
 cd packages/ui
@@ -70,11 +71,13 @@ pnpm build
 ```
 
 **Acceptance**:
+
 - [ ] Framer Motion installed without errors
 - [ ] TypeScript compiles successfully
 - [ ] Baseline bundle size recorded
 
 **Files Modified**:
+
 - `packages/ui/package.json`
 
 **Estimated Time**: 30 minutes
@@ -84,12 +87,14 @@ pnpm build
 ### Task 1.2: Configure Turborepo Build Pipeline
 
 **Commands**:
+
 ```bash
 # Edit turbo.json
 code turbo.json
 ```
 
 **Changes**:
+
 ```json
 {
   "tasks": {
@@ -113,6 +118,7 @@ code turbo.json
 ```
 
 **Test**:
+
 ```bash
 # Test watch mode
 turbo watch --experimental-write-cache dev
@@ -125,12 +131,14 @@ touch packages/ui/styles/tokens.css
 ```
 
 **Acceptance**:
+
 - [ ] `build:tokens` task added with `interruptible: true`
 - [ ] `dev` depends on `^build:tokens`
 - [ ] Watch mode triggers rebuild on token changes
 - [ ] Rebuild completes in <3 seconds
 
 **Files Modified**:
+
 - `turbo.json`
 
 **Estimated Time**: 1 hour
@@ -140,20 +148,19 @@ touch packages/ui/styles/tokens.css
 ### Task 1.3: Define Fluid Typography Scale
 
 **Commands**:
+
 ```bash
 code apps/web/tailwind.config.ts
 ```
 
 **Changes**:
+
 ```typescript
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
   darkMode: ['class'],
-  content: [
-    './src/**/*.{ts,tsx,mdx}',
-    '../../packages/ui/src/**/*.{ts,tsx,mdx}',
-  ],
+  content: ['./src/**/*.{ts,tsx,mdx}', '../../packages/ui/src/**/*.{ts,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
@@ -218,6 +225,7 @@ export default config;
 ```
 
 **Test**:
+
 ```bash
 # Verify TypeScript compiles
 pnpm typecheck
@@ -230,12 +238,14 @@ pnpm dev
 ```
 
 **Acceptance**:
+
 - [ ] Fluid typography utilities defined
 - [ ] TypeScript compiles without errors
 - [ ] Dev server starts successfully
 - [ ] Text scales smoothly when resizing browser
 
 **Files Modified**:
+
 - `apps/web/tailwind.config.ts`
 
 **Estimated Time**: 1 hour
@@ -245,12 +255,14 @@ pnpm dev
 ### Task 1.4: Create Animation Type Definitions
 
 **Commands**:
+
 ```bash
 # Create animations utility file
 code packages/ui/src/lib/animations.ts
 ```
 
 **Content**:
+
 ```typescript
 import { Variants } from 'framer-motion';
 
@@ -358,6 +370,7 @@ export const slideInRight: Variants = {
 ```
 
 **Test**:
+
 ```bash
 # Verify types compile
 cd packages/ui
@@ -368,12 +381,14 @@ pnpm typecheck
 ```
 
 **Acceptance**:
+
 - [ ] Animation variants typed correctly
 - [ ] JSDoc documentation complete
 - [ ] TypeScript compiles without errors
 - [ ] Framer Motion types imported successfully
 
 **Files Created**:
+
 - `packages/ui/src/lib/animations.ts`
 
 **Estimated Time**: 1 hour
@@ -383,11 +398,13 @@ pnpm typecheck
 ### Task 1.5: Export Animations from UI Package
 
 **Commands**:
+
 ```bash
 code packages/ui/src/index.ts
 ```
 
 **Changes**:
+
 ```typescript
 // Export components
 export * from './components/ui/button';
@@ -406,6 +423,7 @@ export * from './lib/utils';
 ```
 
 **Test**:
+
 ```bash
 # Verify exports work
 cd ../../apps/web
@@ -416,11 +434,13 @@ echo "import { fadeIn } from '@ui/components';" | npx tsc --noEmit --stdin
 ```
 
 **Acceptance**:
+
 - [ ] Animations exported from package index
 - [ ] TypeScript recognizes exports
 - [ ] No circular dependency warnings
 
 **Files Modified**:
+
 - `packages/ui/src/index.ts`
 
 **Estimated Time**: 15 minutes
@@ -428,6 +448,7 @@ echo "import { fadeIn } from '@ui/components';" | npx tsc --noEmit --stdin
 ---
 
 **Phase 1 Summary**:
+
 - ✅ Dependencies installed
 - ✅ Build pipeline configured (<3s rebuilds)
 - ✅ Fluid typography defined
@@ -445,12 +466,14 @@ echo "import { fadeIn } from '@ui/components';" | npx tsc --noEmit --stdin
 ### Task 2.1: Unit Tests for Animation Variants
 
 **Commands**:
+
 ```bash
 # Create test file
 code packages/ui/src/lib/__tests__/animations.test.ts
 ```
 
 **Content**:
+
 ```typescript
 import { describe, it, expect } from 'vitest';
 import { fadeIn, slideUp, scale, slideInRight } from '../animations';
@@ -542,6 +565,7 @@ describe('Animation Variants', () => {
 ```
 
 **Test**:
+
 ```bash
 # Run tests
 cd packages/ui
@@ -552,11 +576,13 @@ pnpm test
 ```
 
 **Acceptance**:
+
 - [ ] All animation variant tests pass
 - [ ] Reduced motion behavior tested
 - [ ] Test coverage >80% for animations.ts
 
 **Files Created**:
+
 - `packages/ui/src/lib/__tests__/animations.test.ts`
 
 **Estimated Time**: 1.5 hours
@@ -566,12 +592,14 @@ pnpm test
 ### Task 2.2: Integration Tests for Token Usage
 
 **Commands**:
+
 ```bash
 # Create integration test for button component
 code packages/ui/src/components/ui/__tests__/button.test.tsx
 ```
 
 **Content**:
+
 ```typescript
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
@@ -625,6 +653,7 @@ describe('Button Component Token Integration', () => {
 **Note**: JSDoc test will fail initially (expected). It passes in Phase 3 after adding documentation.
 
 **Test**:
+
 ```bash
 # Run tests (JSDoc test will fail, that's expected)
 pnpm test
@@ -637,11 +666,13 @@ pnpm test
 ```
 
 **Acceptance**:
+
 - [ ] Token usage tests pass (3/4 tests)
 - [ ] JSDoc test fails initially (expected)
 - [ ] Tests verify no hardcoded colors
 
 **Files Created**:
+
 - `packages/ui/src/components/ui/__tests__/button.test.tsx`
 
 **Estimated Time**: 1 hour
@@ -651,12 +682,14 @@ pnpm test
 ### Task 2.3: Create Design System Showcase Page
 
 **Commands**:
+
 ```bash
 # Create showcase page
 code apps/web/src/app/showcase/page.tsx
 ```
 
 **Content**:
+
 ```typescript
 import { Button, Card, Input, Label, Select } from '@ui/components';
 
@@ -824,6 +857,7 @@ export default function ShowcasePage() {
 ```
 
 **Test**:
+
 ```bash
 # Start dev server
 cd apps/web
@@ -835,6 +869,7 @@ pnpm dev
 ```
 
 **Acceptance**:
+
 - [ ] Showcase page renders without errors
 - [ ] All components visible
 - [ ] Fluid typography scales smoothly
@@ -842,6 +877,7 @@ pnpm dev
 - [ ] Ready for visual regression testing
 
 **Files Created**:
+
 - `apps/web/src/app/showcase/page.tsx`
 
 **Estimated Time**: 2 hours
@@ -851,12 +887,14 @@ pnpm dev
 ### Task 2.4: Write Playwright Visual Regression Tests
 
 **Commands**:
+
 ```bash
 # Create Playwright test
 code apps/web/tests/visual/design-system.spec.ts
 ```
 
 **Content**:
+
 ```typescript
 import { test, expect } from '@playwright/test';
 
@@ -942,6 +980,7 @@ test.describe('Design System Visual Regression', () => {
 ```
 
 **Test (Generate Baselines)**:
+
 ```bash
 # Install Playwright if not already installed
 pnpm playwright install --with-deps chromium
@@ -954,6 +993,7 @@ pnpm test:visual
 ```
 
 **Acceptance**:
+
 - [ ] All visual tests generate baseline screenshots
 - [ ] Light theme snapshot captured
 - [ ] Dark theme snapshot captured
@@ -961,6 +1001,7 @@ pnpm test:visual
 - [ ] Mobile/desktop typography snapshots captured
 
 **Files Created**:
+
 - `apps/web/tests/visual/design-system.spec.ts`
 
 **Estimated Time**: 2 hours
@@ -968,6 +1009,7 @@ pnpm test:visual
 ---
 
 **Phase 2 Summary**:
+
 - ✅ Animation unit tests written
 - ✅ Token integration tests written
 - ✅ Showcase page created
@@ -985,6 +1027,7 @@ pnpm test:visual
 ### Task 3.1: Add JSDoc Design Rationale to Button Component
 
 **Commands**:
+
 ```bash
 code packages/ui/src/components/ui/button.tsx
 ```
@@ -992,7 +1035,7 @@ code packages/ui/src/components/ui/button.tsx
 **Changes**:
 Add comprehensive JSDoc before component definition:
 
-```typescript
+````typescript
 /**
  * Button component with design system variants
  *
@@ -1045,9 +1088,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   }
 );
 Button.displayName = 'Button';
-```
+````
 
 **Test**:
+
 ```bash
 # Run integration test (should now pass JSDoc test)
 pnpm test -- button.test
@@ -1056,12 +1100,14 @@ pnpm test -- button.test
 ```
 
 **Acceptance**:
+
 - [ ] JSDoc includes @usageGuidelines section
 - [ ] JSDoc includes @accessibilityConsiderations section
 - [ ] JSDoc includes @example section
 - [ ] Integration test passes (4/4 tests)
 
 **Files Modified**:
+
 - `packages/ui/src/components/ui/button.tsx`
 
 **Estimated Time**: 45 minutes
@@ -1071,6 +1117,7 @@ pnpm test -- button.test
 ### Task 3.2: Add JSDoc to Remaining Components
 
 **Commands**:
+
 ```bash
 # Card component
 code packages/ui/src/components/ui/card.tsx
@@ -1089,7 +1136,8 @@ code packages/ui/src/components/ui/select.tsx
 ```
 
 **Template** (adapt for each component):
-```typescript
+
+````typescript
 /**
  * [Component Name] component with design system tokens
  *
@@ -1114,12 +1162,13 @@ code packages/ui/src/components/ui/select.tsx
  * </ComponentName>
  * ```
  */
-```
+````
 
 **Examples**:
 
 **Card**:
-```typescript
+
+````typescript
 /**
  * Card component for grouping related content
  *
@@ -1146,10 +1195,11 @@ code packages/ui/src/components/ui/select.tsx
  * </Card>
  * ```
  */
-```
+````
 
 **Input**:
-```typescript
+
+````typescript
 /**
  * Input component for text entry
  *
@@ -1173,9 +1223,10 @@ code packages/ui/src/components/ui/select.tsx
  * </div>
  * ```
  */
-```
+````
 
 **Test**:
+
 ```bash
 # Verify all components have JSDoc
 grep -r "@usageGuidelines" packages/ui/src/components/ui/*.tsx
@@ -1184,12 +1235,14 @@ grep -r "@usageGuidelines" packages/ui/src/components/ui/*.tsx
 ```
 
 **Acceptance**:
+
 - [ ] All 7 components have JSDoc design rationale
 - [ ] Each JSDoc includes usage guidelines
 - [ ] Each JSDoc includes accessibility considerations
 - [ ] Each JSDoc includes examples
 
 **Files Modified**:
+
 - `packages/ui/src/components/ui/card.tsx`
 - `packages/ui/src/components/ui/dialog.tsx`
 - `packages/ui/src/components/ui/input.tsx`
@@ -1204,6 +1257,7 @@ grep -r "@usageGuidelines" packages/ui/src/components/ui/*.tsx
 ### Task 3.3: Audit Components for Hardcoded Values
 
 **Commands**:
+
 ```bash
 # Search for potential hardcoded colors
 cd packages/ui
@@ -1217,11 +1271,13 @@ grep -r "#[0-9a-fA-F]\{6\}" src/components/ui/*.tsx  # Hex colors
 **Expected Result**: No matches (components already use semantic tokens)
 
 **If matches found**:
+
 1. Review each instance
 2. Replace with semantic token equivalent
 3. Example: `bg-slate-900` → `bg-background`
 
 **Test**:
+
 ```bash
 # Run token integration tests
 pnpm test -- button.test
@@ -1230,6 +1286,7 @@ pnpm test -- button.test
 ```
 
 **Acceptance**:
+
 - [ ] No hardcoded color classes found
 - [ ] No hex color values found
 - [ ] All components use semantic tokens
@@ -1242,11 +1299,13 @@ pnpm test -- button.test
 ### Task 3.4: Enhance Dialog with Motion
 
 **Commands**:
+
 ```bash
 code packages/ui/src/components/ui/dialog.tsx
 ```
 
 **Changes**:
+
 ```typescript
 import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
@@ -1334,6 +1393,7 @@ DialogContent.displayName = DialogPrimitive.Content.displayName;
 ```
 
 **Test**:
+
 ```bash
 # Start dev server
 pnpm dev
@@ -1346,12 +1406,14 @@ pnpm dev
 ```
 
 **Acceptance**:
+
 - [ ] Dialog scales in/out smoothly
 - [ ] Animation respects prefers-reduced-motion
 - [ ] No console errors
 - [ ] Dialog functionality unchanged
 
 **Files Modified**:
+
 - `packages/ui/src/components/ui/dialog.tsx`
 
 **Estimated Time**: 1.5 hours
@@ -1359,6 +1421,7 @@ pnpm dev
 ---
 
 **Phase 3 Summary**:
+
 - ✅ JSDoc design rationale added to all components
 - ✅ Components audited (no hardcoded values found)
 - ✅ Dialog enhanced with motion
@@ -1375,6 +1438,7 @@ pnpm dev
 ### Task 4.1: Create UI Package README
 
 **Commands**:
+
 ```bash
 code packages/ui/README.md
 ```
@@ -1382,6 +1446,7 @@ code packages/ui/README.md
 **Content**: (See plan for full README template - ~500 lines)
 
 Key sections:
+
 - Quick Start
 - Design Tokens (color conventions)
 - Typography Scale (fluid examples)
@@ -1392,6 +1457,7 @@ Key sections:
 - Testing
 
 **Test**:
+
 ```bash
 # Verify markdown renders correctly
 # Check all code examples have correct syntax
@@ -1402,6 +1468,7 @@ pnpm dlx markdownlint packages/ui/README.md
 ```
 
 **Acceptance**:
+
 - [ ] README covers all tokens
 - [ ] Typography scale documented with examples
 - [ ] Spacing guidelines clear
@@ -1410,6 +1477,7 @@ pnpm dlx markdownlint packages/ui/README.md
 - [ ] Examples are copy-pastable
 
 **Files Created**:
+
 - `packages/ui/README.md`
 
 **Estimated Time**: 3 hours
@@ -1419,6 +1487,7 @@ pnpm dlx markdownlint packages/ui/README.md
 ### Task 4.2: Add Inline Token Documentation (Optional)
 
 **Commands**:
+
 ```bash
 code packages/ui/styles/tokens.css
 ```
@@ -1445,10 +1514,12 @@ Add CSS comments explaining tokens:
 **Note**: This is optional enhancement. Token naming is already clear.
 
 **Acceptance**:
+
 - [ ] (Optional) Key tokens have inline comments
 - [ ] Comments explain usage and contrast ratios
 
 **Files Modified**:
+
 - `packages/ui/styles/tokens.css` (optional)
 
 **Estimated Time**: 1 hour (optional)
@@ -1458,6 +1529,7 @@ Add CSS comments explaining tokens:
 ### Task 4.3: Update Root README
 
 **Commands**:
+
 ```bash
 code README.md
 ```
@@ -1484,22 +1556,25 @@ import { Button, Card } from '@ui/components';
 import '@ui/styles/tokens.css';
 
 function MyComponent() {
-  return (
-    <Card className="p-6">
-      <h1 className="text-fluid-2xl mb-4">Welcome</h1>
-      <Button variant="default">Get Started</Button>
-    </Card>
-  );
+return (
+<Card className="p-6">
+
+<h1 className="text-fluid-2xl mb-4">Welcome</h1>
+<Button variant="default">Get Started</Button>
+</Card>
+);
 }
 \`\`\`
 ```
 
 **Acceptance**:
+
 - [ ] Root README mentions design system
 - [ ] Link to UI package README included
 - [ ] Quick example provided
 
 **Files Modified**:
+
 - `README.md`
 
 **Estimated Time**: 30 minutes
@@ -1507,6 +1582,7 @@ function MyComponent() {
 ---
 
 **Phase 4 Summary**:
+
 - ✅ Comprehensive UI README created
 - ✅ Optional token documentation added
 - ✅ Root README updated
@@ -1522,6 +1598,7 @@ function MyComponent() {
 ### Task 5.1: Run Full Visual Regression Suite
 
 **Commands**:
+
 ```bash
 # Generate/update baselines
 cd apps/web
@@ -1537,6 +1614,7 @@ git commit -m "test: add visual regression baselines"
 ```
 
 **Acceptance**:
+
 - [ ] All visual tests pass
 - [ ] Baselines generated for light theme
 - [ ] Baselines generated for dark theme
@@ -1550,6 +1628,7 @@ git commit -m "test: add visual regression baselines"
 ### Task 5.2: Test Token Change Detection
 
 **Commands**:
+
 ```bash
 # Make a token change
 code packages/ui/styles/tokens.css
@@ -1570,6 +1649,7 @@ git checkout packages/ui/styles/tokens.css
 ```
 
 **Acceptance**:
+
 - [ ] Token change triggers rebuild in <3s
 - [ ] Visual regression detects changes
 - [ ] Diff images show changed elements
@@ -1582,11 +1662,13 @@ git checkout packages/ui/styles/tokens.css
 ### Task 5.3: Add Visual Tests to CI
 
 **Commands**:
+
 ```bash
 code .github/workflows/ci.yml
 ```
 
 **Changes**:
+
 ```yaml
 # Add to existing CI workflow
 
@@ -1630,6 +1712,7 @@ jobs:
 ```
 
 **Test**:
+
 ```bash
 # Commit and push to trigger CI
 git add .github/workflows/ci.yml
@@ -1641,12 +1724,14 @@ git push origin feature/ds-token-integration
 ```
 
 **Acceptance**:
+
 - [ ] CI job added for visual regression
 - [ ] Tests run in GitHub Actions
 - [ ] Diff artifacts uploaded on failure
 - [ ] CI passes with current baselines
 
 **Files Modified**:
+
 - `.github/workflows/ci.yml`
 
 **Estimated Time**: 1 hour
@@ -1656,6 +1741,7 @@ git push origin feature/ds-token-integration
 ### Task 5.4: Verify Bundle Size Impact
 
 **Commands**:
+
 ```bash
 cd apps/web
 
@@ -1675,6 +1761,7 @@ pnpm add -D @next/bundle-analyzer
 ```
 
 **Acceptance**:
+
 - [ ] Bundle size increase <100KB
 - [ ] Framer Motion properly tree-shaken
 - [ ] No unexpected bundle bloat
@@ -1687,6 +1774,7 @@ pnpm add -D @next/bundle-analyzer
 ### Task 5.5: Smoke Test Full Flow
 
 **Commands**:
+
 ```bash
 # Fresh install
 rm -rf node_modules .next
@@ -1718,6 +1806,7 @@ pnpm start
 ```
 
 **Acceptance**:
+
 - [ ] All tests pass
 - [ ] TypeScript compiles without errors
 - [ ] Linting passes
@@ -1734,6 +1823,7 @@ pnpm start
 ### Task 5.6: Create Pull Request
 
 **Commands**:
+
 ```bash
 # Ensure all changes committed
 git status
@@ -1840,6 +1930,7 @@ EOF
 ```
 
 **Acceptance**:
+
 - [ ] PR created with comprehensive description
 - [ ] All checklist items completed
 - [ ] CI checks pass
@@ -1850,6 +1941,7 @@ EOF
 ---
 
 **Phase 5 Summary**:
+
 - ✅ Visual regression suite complete
 - ✅ Token change detection verified
 - ✅ CI integration added
@@ -1864,6 +1956,7 @@ EOF
 ## Implementation Commands Summary
 
 ### Quick Start
+
 ```bash
 # Create feature branch
 git checkout -b feature/ds-token-integration
@@ -1883,6 +1976,7 @@ pnpm test:visual
 ```
 
 ### Daily Workflow
+
 ```bash
 # Morning: Pull latest, verify tests
 git pull origin feature/ds-token-integration
@@ -1901,6 +1995,7 @@ git commit -m "feat: [description]"
 ```
 
 ### Testing Commands
+
 ```bash
 # Unit tests
 pnpm test
@@ -1929,6 +2024,7 @@ pnpm typecheck && pnpm lint && pnpm test && pnpm test:visual
 ## Task Checklist for GitHub Issue
 
 ### Phase 1: Foundation (Days 1-2)
+
 - [ ] Task 1.1: Install Framer Motion dependency
 - [ ] Task 1.2: Configure Turborepo build pipeline (<3s rebuilds)
 - [ ] Task 1.3: Define fluid typography scale in Tailwind config
@@ -1936,23 +2032,27 @@ pnpm typecheck && pnpm lint && pnpm test && pnpm test:visual
 - [ ] Task 1.5: Export animations from UI package
 
 ### Phase 2: Test Foundation (Days 2-3)
+
 - [ ] Task 2.1: Write unit tests for animation variants
 - [ ] Task 2.2: Write integration tests for token usage
 - [ ] Task 2.3: Create design system showcase page
 - [ ] Task 2.4: Write Playwright visual regression tests
 
 ### Phase 3: Implementation (Days 3-5)
+
 - [ ] Task 3.1: Add JSDoc design rationale to Button
 - [ ] Task 3.2: Add JSDoc to remaining 6 components
 - [ ] Task 3.3: Audit components for hardcoded values
 - [ ] Task 3.4: Enhance Dialog with motion animation
 
 ### Phase 4: Documentation (Days 6-7)
+
 - [ ] Task 4.1: Create comprehensive UI package README
 - [ ] Task 4.2: Add inline token documentation (optional)
 - [ ] Task 4.3: Update root README with design system section
 
 ### Phase 5: Integration & Polish (Days 8-10)
+
 - [ ] Task 5.1: Run full visual regression suite
 - [ ] Task 5.2: Test token change detection (<3s rebuild)
 - [ ] Task 5.3: Add visual tests to CI pipeline
@@ -1965,6 +2065,7 @@ pnpm typecheck && pnpm lint && pnpm test && pnpm test:visual
 ## Success Criteria (Final Verification)
 
 ### Functional Requirements
+
 - [x] Tailwind config uses CSS variables for all semantic tokens
 - [x] Fluid typography scales smoothly 320px → 2560px (no jumps)
 - [x] All shadcn components use semantic tokens (0 hardcoded values)
@@ -1974,6 +2075,7 @@ pnpm typecheck && pnpm lint && pnpm test && pnpm test:visual
 - [x] Dialog has smooth scale animation
 
 ### Quality Requirements
+
 - [x] JSDoc design rationale on all 7 components
 - [x] @usageGuidelines section in each component
 - [x] @accessibilityConsiderations section in each component
@@ -1985,12 +2087,14 @@ pnpm typecheck && pnpm lint && pnpm test && pnpm test:visual
 - [x] All tests pass (`pnpm test` passes)
 
 ### Performance Requirements
+
 - [x] Bundle size increase <100KB (Framer Motion ~80KB)
 - [x] Token rebuild time <3s (Turborepo watch)
 - [x] Visual regression tests run in <5 minutes
 - [x] No Core Web Vitals degradation
 
 ### Documentation Requirements
+
 - [x] Token naming conventions documented (shadcn standard)
 - [x] Fluid typography scale documented with examples
 - [x] Spacing scale documented (8pt grid guidelines)
@@ -2004,6 +2108,7 @@ pnpm typecheck && pnpm lint && pnpm test && pnpm test:visual
 ## Risk Mitigation Checklist
 
 ### Technical Risks
+
 - [ ] Turborepo watch mode verified to work with Node 18+
 - [ ] Framer Motion bundle impact measured and acceptable
 - [ ] Visual regression tests stable (not flaky) in CI
@@ -2011,11 +2116,13 @@ pnpm typecheck && pnpm lint && pnpm test && pnpm test:visual
 - [ ] JSDoc format verified to be LLM-parsable
 
 ### Schedule Risks
+
 - [ ] Visual regression setup time tracked (adjust if needed)
 - [ ] Component audit completed (minimal changes needed)
 - [ ] Documentation time buffer included (can extend if needed)
 
 ### User-Facing Risks
+
 - [ ] `prefers-reduced-motion` tested thoroughly in browser DevTools
 - [ ] Fluid typography tested at 320px and 2560px extremes
 - [ ] Dark mode contrast verified with automated tools (axe-core)

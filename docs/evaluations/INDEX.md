@@ -9,6 +9,7 @@ This directory contains structured assessments of potential tools, workflows, an
 ## When to Use
 
 Create an evaluation when:
+
 - Considering a new tool or service integration
 - Assessing alternative approaches to existing workflows
 - Testing beta/experimental features from current tools

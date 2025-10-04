@@ -4,10 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - "apps/**"
-      - "packages/**"
-      - "!**/*.md"
-      - "!**/*.json"
+      - 'apps/**'
+      - 'packages/**'
+      - '!**/*.md'
+      - '!**/*.json'
 
 permissions:
   contents: read

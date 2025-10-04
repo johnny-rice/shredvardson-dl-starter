@@ -26,7 +26,7 @@ jobs:
     name: Validate Spec Structure
     runs-on: ubuntu-latest
     env:
-      NODE_OPTIONS: "--no-deprecation"
+      NODE_OPTIONS: '--no-deprecation'
 
     steps:
       - name: Checkout repository

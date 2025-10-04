@@ -17,8 +17,8 @@ Severity: high
 export function createTestUser(userId: string) {
   return createClient(url, anonKey, {
     global: {
-      headers: { 'X-Test-User-Id': userId } // Ignored by RLS!
-    }
+      headers: { 'X-Test-User-Id': userId }, // Ignored by RLS!
+    },
   });
 }
 
@@ -30,20 +30,20 @@ export async function createTestUserClient(userId: string) {
   const { data, error } = await adminClient.auth.admin.generateLink({
     type: 'magiclink',
     email: `test-${userId}@example.com`,
-    options: { data: { user_id: userId } }
+    options: { data: { user_id: userId } },
   });
 
   if (error) throw error;
 
   // Create client and set session
   const testClient = createClient(url, anonKey, {
-    auth: { persistSession: false }
+    auth: { persistSession: false },
   });
 
   if (data.properties?.access_token) {
     await testClient.auth.setSession({
       access_token: data.properties.access_token,
-      refresh_token: data.properties.refresh_token || ''
+      refresh_token: data.properties.refresh_token || '',
     });
   }
 
@@ -52,6 +52,7 @@ export async function createTestUserClient(userId: string) {
 ```
 
 **Guardrails.**
+
 - Always use `auth.admin.generateLink()` + `setSession()` for RLS test clients
 - Verify RLS policies by checking actual database results, not just request success
 - Use `persistSession: false` in test clients to avoid session leakage between tests

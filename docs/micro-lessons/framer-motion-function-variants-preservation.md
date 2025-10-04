@@ -10,6 +10,7 @@ Severity: high
 **Rule.** **When transforming Framer Motion variants, check for both object AND function types - function variants must be wrapped to preserve behavior while applying transformations.**
 
 **Example.**
+
 ```typescript
 // ❌ BAD: Only handles objects, drops function variants
 function getReducedMotionVariants(variants: Variants): Variants {
@@ -55,8 +56,8 @@ const variants = {
   hidden: { opacity: 0 },
   visible: (custom: { delay: number }) => ({
     opacity: 1,
-    transition: { duration: 0.5, delay: custom.delay }
-  })
+    transition: { duration: 0.5, delay: custom.delay },
+  }),
 };
 
 const reduced = getReducedMotionVariants(variants);
@@ -64,6 +65,7 @@ const reduced = getReducedMotionVariants(variants);
 ```
 
 **Guardrails.**
+
 - Check typeof === 'function' BEFORE typeof === 'object' (functions are objects in JS)
 - Wrap function variants to preserve signature and apply transformations to resolved values
 - Test with both static and dynamic variants

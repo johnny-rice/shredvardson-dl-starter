@@ -17,7 +17,9 @@ export function ThemeToggle() {
 
   return (
     <div className="flex items-center space-x-2">
-      <label htmlFor="theme-select" className="text-sm font-medium">Theme:</label>
+      <label htmlFor="theme-select" className="text-sm font-medium">
+        Theme:
+      </label>
       <select
         id="theme-select"
         value={theme ?? 'system'}

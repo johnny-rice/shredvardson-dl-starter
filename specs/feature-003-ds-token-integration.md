@@ -39,6 +39,7 @@ Enable developers to write component styles using semantic token names that auto
 **Why**: Reduces cognitive load, prevents hardcoded values, ensures brand consistency by default.
 
 **Acceptance Criteria**:
+
 - Token names are available as utility classes (e.g., `bg-primary`, `text-foreground`)
 - Token names work in both light and dark themes without code changes
 - All shadcn/ui components automatically inherit token-based styles
@@ -51,6 +52,7 @@ Enable developers to write component styles using semantic token names that auto
 **Why**: Enables rapid design iteration, prevents stale styles, reduces maintenance burden.
 
 **Acceptance Criteria**:
+
 - Changing token value in source triggers automatic rebuild of affected components
 - No manual find-replace or component updates required
 - All instances of token usage update consistently
@@ -63,6 +65,7 @@ Enable developers to write component styles using semantic token names that auto
 **Why**: Prevents accidental breaking of layouts, catches unintended design regressions, provides confidence for refactoring.
 
 **Acceptance Criteria**:
+
 - Visual snapshots captured for key UI states
 - Token changes trigger visual comparison against baseline
 - Clear reporting of visual differences (what changed, where)
@@ -75,6 +78,7 @@ Enable developers to write component styles using semantic token names that auto
 **Why**: Reduces onboarding friction, prevents token misuse, encourages correct usage patterns.
 
 **Acceptance Criteria**:
+
 - Single documentation source listing all available tokens
 - Each token includes: semantic name, usage context, example usage
 - Documentation explains how to add new tokens
@@ -88,6 +92,7 @@ Enable developers to write component styles using semantic token names that auto
 **Why**: shadcn/ui components are copied into the codebase ("own your code"), so standard npm update doesn't work. Without a process, critical bug fixes and accessibility improvements are missed.
 
 **Acceptance Criteria**:
+
 - Documented workflow for checking upstream updates
 - Process for comparing upstream changes with customized components (diff-and-merge)
 - Clear guidelines on when to merge upstream vs. keep custom behavior
@@ -100,6 +105,7 @@ Enable developers to write component styles using semantic token names that auto
 **Why**: Modern responsive design requires fluid scaling for professional appearance on all devices, from mobile to ultra-wide displays.
 
 **Acceptance Criteria**:
+
 - Typography scales using CSS `clamp()` function
 - Fluid scale defined for all type sizes (sm, base, lg, xl, 2xl, etc.)
 - Text remains readable at minimum and maximum viewport widths
@@ -112,6 +118,7 @@ Enable developers to write component styles using semantic token names that auto
 **Why**: Consistent spacing creates professional, harmonious layouts and simplifies design decisions.
 
 **Acceptance Criteria**:
+
 - 4pt or 8pt grid system enforced
 - All spacing values are multiples of base unit (4px or 8px)
 - Scale defined in shared Tailwind config
@@ -124,6 +131,7 @@ Enable developers to write component styles using semantic token names that auto
 **Why**: Modern products require motion design for user delight, state feedback, and perceived performance. Well-executed micro-interactions significantly improve quality perception.
 
 **Acceptance Criteria**:
+
 - Animation library integrated (Framer Motion recommended)
 - Reusable animation variants defined for common patterns
 - `prefers-reduced-motion` accessibility support
@@ -137,12 +145,14 @@ Enable developers to write component styles using semantic token names that auto
 **Scenario**: Developer adds a new shadcn/ui component to the project
 
 **Expected Experience**:
+
 1. Developer installs component via shadcn CLI
 2. Component automatically uses semantic tokens (no manual configuration)
 3. Component renders correctly in both light/dark themes immediately
 4. Developer can customize component by changing token values, not hardcoded colors
 
 **Success Criteria**:
+
 - Zero-config token usage after component installation
 - No need to manually wire up theme providers or token imports per component
 
@@ -151,6 +161,7 @@ Enable developers to write component styles using semantic token names that auto
 **Scenario**: Designer wants to experiment with different primary color values
 
 **Expected Experience**:
+
 1. Designer updates primary color token in single source file
 2. Dev server automatically rebuilds (hot reload if possible)
 3. All components using primary color update immediately in browser
@@ -158,6 +169,7 @@ Enable developers to write component styles using semantic token names that auto
 5. Designer can compare before/after screenshots to confirm changes
 
 **Success Criteria**:
+
 - Single source of truth for token values (one file to edit)
 - Fast feedback loop (<10 seconds from edit to visual update)
 - Clear visual diff for review before committing
@@ -167,12 +179,14 @@ Enable developers to write component styles using semantic token names that auto
 **Scenario**: Developer reviewing PR that changes design token values
 
 **Expected Experience**:
+
 1. PR shows token value changes in code diff
 2. PR includes visual regression report showing affected components
 3. Reviewer can see before/after screenshots inline in PR
 4. Reviewer can approve token changes with confidence
 
 **Success Criteria**:
+
 - Automated visual regression report attached to PR
 - Clear labeling of intentional vs. accidental visual changes
 
@@ -255,19 +269,19 @@ Enable developers to write component styles using semantic token names that auto
 ### Open Questions
 
 1. **Token Naming Convention**: Should we keep Style Dictionary output names or align with Tailwind/shadcn conventions?
-   - *Impact*: Affects developer ergonomics and documentation clarity
+   - _Impact_: Affects developer ergonomics and documentation clarity
 
 2. **Hot Reload Scope**: Should token changes trigger full rebuild or incremental update?
-   - *Impact*: Affects development workflow speed
+   - _Impact_: Affects development workflow speed
 
 3. **Visual Regression Tool**: Playwright + Chromatic, Percy, or open-source alternative?
-   - *Impact*: Affects CI/CD cost and integration complexity
+   - _Impact_: Affects CI/CD cost and integration complexity
 
 4. **Token Validation**: Should we validate token usage at build time (lint rule) or runtime?
-   - *Impact*: Affects developer feedback loop and enforcement strictness
+   - _Impact_: Affects developer feedback loop and enforcement strictness
 
 5. **Backward Compatibility**: How do we handle existing pages/components that don't use tokens yet?
-   - *Impact*: Affects migration strategy and rollout timeline
+   - _Impact_: Affects migration strategy and rollout timeline
 
 ## Clarifications Needed
 
@@ -290,12 +304,14 @@ Based on research of 2025 best practices for solopreneur, LLM-friendly, scalable
 **Recommendation**: Target <3 seconds for incremental rebuilds using Turborepo 2.4+ watch mode with caching.
 
 **Rationale**:
+
 - Turborepo 2.4 introduced experimental caching in watch mode (`--experimental-write-cache`)
 - Watch mode is dependency-aware and follows task graph order
 - For token changes affecting multiple packages, use `interruptible: true` in turbo.json to restart tasks on changes
 - <3 seconds keeps developer flow state intact (research shows >5s causes context switching)
 
 **Implementation**:
+
 - Use `turbo watch --experimental-write-cache` for dev workflow
 - Configure turbo.json with proper dependencies: `@dl-starter/ds` → Tailwind build → component hot reload
 - Mark token build tasks as interruptible for instant restarts
@@ -307,12 +323,14 @@ Based on research of 2025 best practices for solopreneur, LLM-friendly, scalable
 **Recommendation**: Start with thin E2E layer covering critical paths (auth, key CRUD flows, design system showcase page).
 
 **Rationale**:
+
 - Industry consensus for solopreneurs: "critical path testing with risk-based prioritization"
 - Partial regression testing focuses on high-risk areas based on user/business criticality, traffic, and revenue impact
 - Comprehensive testing is prohibitively resource-intensive for solo developers
 - Use timebox approach: run critical tests first, then "next best" if time remains
 
 **Initial Coverage Targets**:
+
 - ✅ Design system showcase page (all primitives in light/dark themes)
 - ✅ Authentication flow (login, signup pages)
 - ✅ Dashboard/landing pages (primary user entry points)
@@ -327,6 +345,7 @@ Based on research of 2025 best practices for solopreneur, LLM-friendly, scalable
 **Recommendation**: Hybrid approach with inline token documentation + comprehensive `packages/ds/README.md`.
 
 **Rationale**:
+
 - Single source of truth requirement from 2025 best practices
 - Inline comments help LLMs understand token usage in context
 - README serves as onboarding tool and quick reference
@@ -334,6 +353,7 @@ Based on research of 2025 best practices for solopreneur, LLM-friendly, scalable
 - No need for Storybook/interactive tools until Phase 2+ (reduces maintenance burden)
 
 **Structure**:
+
 ```
 packages/ds/README.md
   - Token naming conventions (shadcn standard)
@@ -362,6 +382,7 @@ Inline JSDoc comments with machine-readable design rationale:
 **Recommendation**: Gradual/trickle migration starting with critical components, not big-bang.
 
 **Rationale**:
+
 - Lower risk with smaller, manageable changes
 - Allows continuous testing and adjustments based on real-time feedback
 - Old and new approaches can coexist during transition (graceful migration)
@@ -369,6 +390,7 @@ Inline JSDoc comments with machine-readable design rationale:
 - Solo developer can iterate without fear of breaking entire system
 
 **Phased Approach**:
+
 1. **Phase 1**: Design system showcase page + core shadcn primitives (Button, Card, Input)
 2. **Phase 2**: Auth pages (high visibility, medium complexity)
 3. **Phase 3**: Dashboard/landing pages
@@ -383,6 +405,7 @@ Inline JSDoc comments with machine-readable design rationale:
 **Recommendation**: Adopt shadcn/ui's background/foreground convention with Tailwind v4 OKLCH colors.
 
 **Rationale**:
+
 - shadcn uses semantic naming: `--primary`, `--primary-foreground`, `--background`, `--muted`, etc.
 - Tailwind v4 (2025) converts HSL → OKLCH for better color accuracy
 - Aligns with existing ecosystem (80% of React community uses shadcn/Tailwind)
@@ -390,6 +413,7 @@ Inline JSDoc comments with machine-readable design rationale:
 - Avoids custom naming that requires documentation overhead
 
 **Token Structure** (following shadcn):
+
 ```css
 @theme {
   --background: oklch(98% 0 0);
@@ -401,6 +425,7 @@ Inline JSDoc comments with machine-readable design rationale:
 ```
 
 **Component Usage**:
+
 ```tsx
 // LLM understands this immediately
 <Button className="bg-primary text-primary-foreground" />
@@ -410,16 +435,17 @@ Inline JSDoc comments with machine-readable design rationale:
 
 ## Impact Summary
 
-| Decision | Solopreneur Benefit | LLM-Friendly | Scalability |
-|----------|-------------------|--------------|-------------|
-| <3s rebuilds | ✅ Fast iteration | ✅ Quick feedback | ✅ Scales to 10+ packages |
-| Critical path testing | ✅ Low maintenance | ⚠️ Manual test writing | ✅ Expand incrementally |
-| Inline + README docs | ✅ Easy to maintain | ✅ Context for AI | ✅ No external deps |
-| Gradual migration | ✅ Low risk | ✅ Iterative prompting | ✅ No big bang failure |
-| shadcn naming | ✅ Zero learning curve | ✅ Pre-trained patterns | ✅ Ecosystem compatibility |
+| Decision              | Solopreneur Benefit    | LLM-Friendly            | Scalability                |
+| --------------------- | ---------------------- | ----------------------- | -------------------------- |
+| <3s rebuilds          | ✅ Fast iteration      | ✅ Quick feedback       | ✅ Scales to 10+ packages  |
+| Critical path testing | ✅ Low maintenance     | ⚠️ Manual test writing  | ✅ Expand incrementally    |
+| Inline + README docs  | ✅ Easy to maintain    | ✅ Context for AI       | ✅ No external deps        |
+| Gradual migration     | ✅ Low risk            | ✅ Iterative prompting  | ✅ No big bang failure     |
+| shadcn naming         | ✅ Zero learning curve | ✅ Pre-trained patterns | ✅ Ecosystem compatibility |
 
 ---
 
 **Next Steps**:
+
 - ✅ Clarifications resolved with research-backed recommendations
 - Proceed to `/plan` to create technical implementation plan

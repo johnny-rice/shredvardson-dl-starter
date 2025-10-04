@@ -1,6 +1,17 @@
 'use client';
 
-import { Button, Card, Input, Label, fadeIn, slideUp, scale, slideInRight, useReducedMotion, getReducedMotionVariants } from '@ui/components';
+import {
+  Button,
+  Card,
+  Input,
+  Label,
+  fadeIn,
+  slideUp,
+  scale,
+  slideInRight,
+  useReducedMotion,
+  getReducedMotionVariants,
+} from '@ui/components';
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
@@ -110,7 +121,9 @@ export default function ShowcasePage() {
           <Button size="sm">Small</Button>
           <Button size="default">Default</Button>
           <Button size="lg">Large</Button>
-          <Button size="icon" aria-label="Search">🔍</Button>
+          <Button size="icon" aria-label="Search">
+            🔍
+          </Button>
         </div>
 
         <h3 className="text-fluid-lg font-semibold mt-8 mb-4">Button States</h3>
@@ -188,7 +201,8 @@ export default function ShowcasePage() {
 
         {prefersReducedMotion && (
           <p className="text-sm text-muted-foreground mb-4 p-3 bg-muted rounded-md">
-            ℹ️ You have &quot;Reduce Motion&quot; enabled. Animations are minimized for accessibility.
+            ℹ️ You have &quot;Reduce Motion&quot; enabled. Animations are minimized for
+            accessibility.
           </p>
         )}
 
@@ -205,9 +219,7 @@ export default function ShowcasePage() {
                   <p className="text-sm text-muted-foreground mb-3">
                     Smooth opacity transition for content appearance
                   </p>
-                  <code className="text-xs bg-muted p-2 rounded block">
-                    variants={'{fadeIn}'}
-                  </code>
+                  <code className="text-xs bg-muted p-2 rounded block">variants={'{fadeIn}'}</code>
                 </Card>
               </motion.div>
 
@@ -221,9 +233,7 @@ export default function ShowcasePage() {
                   <p className="text-sm text-muted-foreground mb-3">
                     Content enters from bottom with vertical motion
                   </p>
-                  <code className="text-xs bg-muted p-2 rounded block">
-                    variants={'{slideUp}'}
-                  </code>
+                  <code className="text-xs bg-muted p-2 rounded block">variants={'{slideUp}'}</code>
                 </Card>
               </motion.div>
 
@@ -237,14 +247,14 @@ export default function ShowcasePage() {
                   <p className="text-sm text-muted-foreground mb-3">
                     Zoom effect for modals and emphasized content
                   </p>
-                  <code className="text-xs bg-muted p-2 rounded block">
-                    variants={'{scale}'}
-                  </code>
+                  <code className="text-xs bg-muted p-2 rounded block">variants={'{scale}'}</code>
                 </Card>
               </motion.div>
 
               <motion.div
-                variants={prefersReducedMotion ? getReducedMotionVariants(slideInRight) : slideInRight}
+                variants={
+                  prefersReducedMotion ? getReducedMotionVariants(slideInRight) : slideInRight
+                }
                 initial="hidden"
                 animate="visible"
               >
@@ -265,8 +275,18 @@ export default function ShowcasePage() {
         <div className="mt-6 p-4 bg-muted/50 rounded-lg">
           <h3 className="font-semibold text-sm mb-2">Accessibility Features</h3>
           <ul className="text-sm text-muted-foreground space-y-1">
-            <li>✅ Respects <code className="text-xs bg-background px-1 py-0.5 rounded">prefers-reduced-motion</code> system setting</li>
-            <li>✅ Uses <code className="text-xs bg-background px-1 py-0.5 rounded">useReducedMotion</code> hook for dynamic detection</li>
+            <li>
+              ✅ Respects{' '}
+              <code className="text-xs bg-background px-1 py-0.5 rounded">
+                prefers-reduced-motion
+              </code>{' '}
+              system setting
+            </li>
+            <li>
+              ✅ Uses{' '}
+              <code className="text-xs bg-background px-1 py-0.5 rounded">useReducedMotion</code>{' '}
+              hook for dynamic detection
+            </li>
             <li>✅ WCAG 2.1 Level AAA compliant (Success Criterion 2.3.3)</li>
           </ul>
         </div>

@@ -19,8 +19,9 @@ _What changed and why in 1–3 sentences._
 ADR: ADR-### | N/A
 
 _**⚠️ REQUIRED for changes to:**_
+
 - _`prompts/**` (AI behavior/prompt engineering)_
-- _`scripts/**` (build/deploy scripts)_ 
+- _`scripts/**` (build/deploy scripts)_
 - _`.github/workflows/**` (CI/CD workflows)_
 - _`docs/wiki/**` (public docs)_
 

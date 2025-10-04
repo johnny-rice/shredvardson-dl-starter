@@ -73,4 +73,6 @@ class NoOpAdapter implements MonitoringAdapter {
 }
 
 export const monitoring: MonitoringAdapter =
-  process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN ? new SentryAdapter() : new NoOpAdapter();
+  process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN
+    ? new SentryAdapter()
+    : new NoOpAdapter();

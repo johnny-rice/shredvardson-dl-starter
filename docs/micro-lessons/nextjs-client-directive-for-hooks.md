@@ -10,6 +10,7 @@ Severity: high
 **Rule.** **Any module using React hooks (useState, useEffect, etc.) must have 'use client' directive at the top when used in Next.js App Router.**
 
 **Example.**
+
 ```typescript
 // ❌ BAD: Missing 'use client' directive
 import { useEffect, useState } from 'react';
@@ -31,6 +32,7 @@ export function useReducedMotion() {
 ```
 
 **Guardrails.**
+
 - Add 'use client' at the very top of files using React hooks
 - Test with `pnpm build` not just `pnpm dev` (dev mode is more permissive)
 - Server Components can import Client Components, but not vice versa

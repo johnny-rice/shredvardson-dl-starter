@@ -4,7 +4,7 @@
 
 ### Documentation
 
-#### docs:generate
+#### '/docs:generate'
 
 **Purpose**: Update documentation from code and tests when docs are outdated.
 
@@ -12,7 +12,7 @@
 
 **Example**: Standard development workflow
 
-**Risk Level**: LOW
+**Risk Level**: 'LOW'
 
 **Tags**: documentation, automation
 
@@ -36,7 +36,21 @@
 
 ### Git Workflow
 
-#### git:commit
+#### '/git:branch'
+
+**Purpose**: Create a new git branch following standardized naming conventions.
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: 'LOW'
+
+**Tags**: git, branch-management, workflow
+
+---
+
+#### '/git:commit'
 
 **Purpose**: Generate a Conventional Commit message for staged changes.
 
@@ -44,9 +58,65 @@
 
 **Example**: Create conventional commit for completed feature
 
-**Risk Level**: MEDIUM (Requires Human Approval)
+**Risk Level**: 'MEDIUM' (Requires Human Approval)
 
 **Tags**: git, conventional-commits
+
+---
+
+#### '/git:prepare-pr'
+
+**Purpose**: Create conventional commit and PR body when ready to submit changes.
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: 'MEDIUM' (Requires Human Approval)
+
+**Tags**: git, pr, workflow
+
+---
+
+#### '/git:tag-release'
+
+**Purpose**: Create semantic version from conventional commits when ready to release.
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: 'HIGH' (Requires Human Approval)
+
+**Tags**: git, release, semver
+
+---
+
+#### '/git:workflow'
+
+**Purpose**: Manage git branch lifecycle using consolidated workflow operations.
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: 'MEDIUM' (Requires Human Approval)
+
+**Tags**: git, workflow, branch-management
+
+---
+
+#### '/pr:assist'
+
+**Purpose**: Auto-fill PR template with traceability IDs and metadata before opening PR.
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: 'LOW'
+
+**Tags**: pr, traceability, automation
 
 ---
 
@@ -64,65 +134,9 @@
 
 ---
 
-#### git:prepare-pr
-
-**Purpose**: Create conventional commit and PR body when ready to submit changes.
-
-**When to use**: General development tasks
-
-**Example**: Standard development workflow
-
-**Risk Level**: MEDIUM (Requires Human Approval)
-
-**Tags**: git, pr, workflow
-
----
-
-#### git:tag-release
-
-**Purpose**: Create semantic version from conventional commits when ready to release.
-
-**When to use**: General development tasks
-
-**Example**: Standard development workflow
-
-**Risk Level**: HIGH (Requires Human Approval)
-
-**Tags**: git, release, semver
-
----
-
-#### git:workflow
-
-**Purpose**: Manage git branch lifecycle using consolidated workflow operations.
-
-**When to use**: General development tasks
-
-**Example**: Standard development workflow
-
-**Risk Level**: MEDIUM (Requires Human Approval)
-
-**Tags**: git, workflow, branch-management
-
----
-
-#### pr:assist
-
-**Purpose**: Auto-fill PR template with traceability IDs and metadata before opening PR.
-
-**When to use**: General development tasks
-
-**Example**: Standard development workflow
-
-**Risk Level**: LOW
-
-**Tags**: pr, traceability, automation
-
----
-
 ### GitHub Integration
 
-#### github:create-issue
+#### '/github:create-issue'
 
 **Purpose**: Create a GitHub issue from current planning discussion with proper template.
 
@@ -130,13 +144,13 @@
 
 **Example**: Create GitHub issue with proper templates
 
-**Risk Level**: LOW
+**Risk Level**: 'LOW'
 
 **Tags**: github, issues, planning
 
 ---
 
-#### github:github-learning-capture
+#### '/github:github-learning-capture'
 
 **Purpose**: Update an existing issue with implementation outcomes and learnings.
 
@@ -144,13 +158,13 @@
 
 **Example**: Create GitHub issue with proper templates
 
-**Risk Level**: LOW
+**Risk Level**: 'LOW'
 
 **Tags**: github, learning, documentation
 
 ---
 
-#### github:update-wiki
+#### '/github:update-wiki'
 
 **Purpose**: Sync current project state to wiki pages for GPT-5 context.
 
@@ -158,7 +172,7 @@
 
 **Example**: Create GitHub issue with proper templates
 
-**Risk Level**: LOW (Requires Human Approval)
+**Risk Level**: 'LOW' (Requires Human Approval)
 
 **Tags**: github, wiki, documentation
 
@@ -166,7 +180,7 @@
 
 ### Operations
 
-#### ops:learning-capture
+#### '/ops:learning-capture'
 
 **Purpose**: Convert CodeRabbit feedback into micro-lessons or ADRs for pattern capture.
 
@@ -174,13 +188,13 @@
 
 **Example**: Standard development workflow
 
-**Risk Level**: LOW
+**Risk Level**: 'LOW'
 
 **Tags**: learning, coderabbit, micro-lessons
 
 ---
 
-#### ops:wiki-sync
+#### '/ops:wiki-sync'
 
 **Purpose**: Verify docs/PRD.md and docs/wiki/WIKI-PRD.md are in sync, auto-fix if needed.
 
@@ -188,7 +202,7 @@
 
 **Example**: Standard development workflow
 
-**Risk Level**: LOW
+**Risk Level**: 'LOW'
 
 **Tags**: wiki, sync, maintenance
 
@@ -196,7 +210,7 @@
 
 ### Quality Assurance
 
-#### quality:run-linter
+#### '/quality:run-linter'
 
 **Purpose**: Execute linting and fix all quality issues before commits.
 
@@ -204,7 +218,7 @@
 
 **Example**: Standard development workflow
 
-**Risk Level**: LOW
+**Risk Level**: 'LOW'
 
 **Tags**: quality, linting, formatting
 
@@ -212,7 +226,7 @@
 
 ### Review & Quality
 
-#### review:self-critique
+#### '/review:self-critique'
 
 **Purpose**: Start fresh session and skeptically review recent changes for quality.
 
@@ -220,7 +234,7 @@
 
 **Example**: Standard development workflow
 
-**Risk Level**: LOW
+**Risk Level**: 'LOW'
 
 **Tags**: review, quality, validation
 
@@ -228,7 +242,7 @@
 
 ### Simple Development
 
-#### dev:implement
+#### '/dev:implement'
 
 **Purpose**: Write minimal code to make failing tests pass during TDD implementation.
 
@@ -236,13 +250,13 @@
 
 **Example**: Build feature following established plan
 
-**Risk Level**: HIGH (Requires Human Approval)
+**Risk Level**: 'HIGH' (Requires Human Approval)
 
 **Tags**: implementation, development, tdd
 
 ---
 
-#### dev:init-new-app
+#### '/dev:init-new-app'
 
 **Purpose**: Initialize a new app from this starter with customized configuration.
 
@@ -250,13 +264,13 @@
 
 **Example**: Standard development workflow
 
-**Risk Level**: HIGH (Requires Human Approval)
+**Risk Level**: 'HIGH' (Requires Human Approval)
 
 **Tags**: initialization, starter, scaffolding
 
 ---
 
-#### dev:plan-feature
+#### '/dev:plan-feature'
 
 **Purpose**: Plan a small, safe feature with clear acceptance criteria.
 
@@ -264,13 +278,13 @@
 
 **Example**: Create technical plan for auth implementation
 
-**Risk Level**: LOW
+**Risk Level**: 'LOW'
 
 **Tags**: planning, features
 
 ---
 
-#### dev:refactor-secure
+#### '/dev:refactor-secure'
 
 **Purpose**: Improve code clarity and performance while checking OWASP Top 10 security risks.
 
@@ -278,7 +292,7 @@
 
 **Example**: Add security improvements to API endpoints
 
-**Risk Level**: HIGH (Requires Human Approval)
+**Risk Level**: 'HIGH' (Requires Human Approval)
 
 **Tags**: security, refactoring, owasp
 
@@ -286,7 +300,7 @@
 
 ### Spec-Driven Development
 
-#### adr:draft
+#### '/adr:draft'
 
 **Purpose**: Draft ADR when governance triggers occur (prompts, workflows, security, compliance changes).
 
@@ -294,13 +308,13 @@
 
 **Example**: Standard development workflow
 
-**Risk Level**: LOW (Requires Human Approval)
+**Risk Level**: 'LOW' (Requires Human Approval)
 
 **Tags**: adr, governance, documentation
 
 ---
 
-#### plan
+#### '/plan'
 
 **Purpose**: Create technical implementation plan within constitutional constraints.
 
@@ -308,13 +322,13 @@
 
 **Example**: Create technical plan for auth implementation
 
-**Risk Level**: MEDIUM (Requires Human Approval)
+**Risk Level**: 'MEDIUM' (Requires Human Approval)
 
 **Tags**: spec-kit, planning, architecture
 
 ---
 
-#### specify
+#### '/specify'
 
 **Purpose**: Define pure requirements - what and why only, no technical details.
 
@@ -322,13 +336,13 @@
 
 **Example**: Define requirements for user authentication system
 
-**Risk Level**: LOW
+**Risk Level**: 'LOW'
 
 **Tags**: spec-kit, requirements, planning
 
 ---
 
-#### tasks
+#### '/tasks'
 
 **Purpose**: Break down technical plan into actionable implementation tasks with TDD focus.
 
@@ -336,7 +350,7 @@
 
 **Example**: Break down auth feature into TDD tasks
 
-**Risk Level**: MEDIUM (Requires Human Approval)
+**Risk Level**: 'MEDIUM' (Requires Human Approval)
 
 **Tags**: spec-kit, tasks, implementation
 
@@ -344,7 +358,7 @@
 
 ### Testing
 
-#### test:scaffold
+#### '/test:scaffold'
 
 **Purpose**: Write failing tests from approved plan before implementation.
 
@@ -352,7 +366,7 @@
 
 **Example**: Standard development workflow
 
-**Risk Level**: LOW
+**Risk Level**: 'LOW'
 
 **Tags**: testing, tdd, scaffolding
 

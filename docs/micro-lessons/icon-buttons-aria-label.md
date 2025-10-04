@@ -10,6 +10,7 @@ Severity: high
 **Rule.** **Always add aria-label to buttons that contain only icons, emojis, or symbols - screen readers cannot announce visual-only content meaningfully.**
 
 **Example.**
+
 ```tsx
 // ❌ BAD: Icon button with no accessible name
 <Button size="icon">🔍</Button>
@@ -26,6 +27,7 @@ Severity: high
 ```
 
 **Guardrails.**
+
 - Add aria-label to ALL icon-only buttons (emoji, SVG, icon fonts)
 - Label should describe the action, not the icon ("Search" not "Magnifying glass")
 - Test with screen reader (VoiceOver on Mac: Cmd+F5, NVDA on Windows)

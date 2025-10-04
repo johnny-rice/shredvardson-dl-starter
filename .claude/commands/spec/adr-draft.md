@@ -77,6 +77,7 @@ Draft ADR when governance triggers occur (prompts, workflows, security, complian
 5. Emit **Result**: ADR ID for PR template reference.
 
 **Quick Manual Creation:**
+
 ```bash
 pnpm adr:create "Your Decision Title"
 ```

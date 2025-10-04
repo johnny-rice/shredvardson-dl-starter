@@ -76,8 +76,8 @@ Define pure requirements - what and why only, no technical details.
    ---
    id: SPEC-{YYYYMMDD}-{kebab-case-name}
    type: spec
-   issue: {github-issue-number}
-   source: {github-issue-url}
+   issue: { github-issue-number }
+   source: { github-issue-url }
    ---
    ```
    Example:

@@ -10,6 +10,7 @@ Severity: normal
 **Rule.** **Match event handler parameter types exactly to what the API passes - avoid unions that accept more types than actually possible.**
 
 **Example.**
+
 ```typescript
 // ❌ BAD: Overly permissive union type
 const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -32,6 +33,7 @@ mediaQuery.addEventListener('change', handleChange);
 ```
 
 **Guardrails.**
+
 - Check browser API documentation for exact event types
 - Use TypeScript's IntelliSense to see what addEventListener expects
 - Avoid union types unless multiple valid types can actually be passed

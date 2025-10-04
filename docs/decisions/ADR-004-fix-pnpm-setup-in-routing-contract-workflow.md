@@ -8,6 +8,7 @@
 The `routing-contract.yml` workflow was failing in CI with "pnpm: command not found" errors. Investigation revealed that while the workflow called `pnpm/action-setup@v4`, it did not specify the `version` and `run_install` parameters, unlike all other workflows in the repository.
 
 The workflow uses `pnpm` commands for:
+
 - Generating command index (`node scripts/generate-command-index.js`)
 - Checking documentation structure (`pnpm tsx scripts/docs-check.ts`)
 - Running wiki generation (`node scripts/generate-wiki.js`)
@@ -21,6 +22,7 @@ Without a specified version, pnpm setup was inconsistent across CI runs and fail
 3. Add `cache: 'pnpm'` to the Node.js setup step
 
 This matches the configuration used in all other workflows (ci.yml, doctor-recheck.yml, etc.) and ensures:
+
 1. Consistent pnpm version across all workflows (9.12.0)
 2. Explicit control over when dependencies are installed
 3. Proper step ordering (pnpm must exist before Node tries to cache it)

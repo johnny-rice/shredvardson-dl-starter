@@ -17,9 +17,9 @@ on:
         default: true
         type: boolean
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
-      - ".github/workflows/telemetry-weekly.yml"
+      - '.github/workflows/telemetry-weekly.yml'
 
 permissions:
   contents: read
@@ -29,14 +29,14 @@ permissions:
 
 concurrency:
   group: telemetry-report-weekly
-  cancel-in-progress: false  # Let first run complete, prevent duplicate runs
+  cancel-in-progress: false # Let first run complete, prevent duplicate runs
 
 jobs:
   generate-telemetry-report:
     name: Generate Telemetry Report
     runs-on: ubuntu-latest
     env:
-      NODE_OPTIONS: "--no-deprecation"
+      NODE_OPTIONS: '--no-deprecation'
 
     steps:
       - name: Checkout repository

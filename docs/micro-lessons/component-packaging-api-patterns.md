@@ -25,6 +25,7 @@ Component libraries often have critical packaging and API issues that break cons
 ## Solution Patterns
 
 ### 1. Package Entrypoint Configuration
+
 ```json
 // ❌ Poor - points to non-existent files
 {
@@ -46,18 +47,20 @@ Component libraries often have critical packaging and API issues that break cons
 ```
 
 ### 2. TypeScript Build Configuration
+
 ```json
 // tsconfig.json
 {
   "compilerOptions": {
     "outDir": "dist",
-    "declaration": true,         // Generate .d.ts files
-    "composite": true           // Enable project references
+    "declaration": true, // Generate .d.ts files
+    "composite": true // Enable project references
   }
 }
 ```
 
 ### 3. Proper Ref Forwarding
+
 ```tsx
 // ❌ Poor - no ref forwarding breaks Next.js Link integration
 export function Link({ ...props }: Props) {
@@ -65,15 +68,14 @@ export function Link({ ...props }: Props) {
 }
 
 // ✅ Good - forwards refs to underlying DOM element
-export const Link = React.forwardRef<HTMLAnchorElement, Props>(
-  ({ ...props }, ref) => {
-    return <a ref={ref} {...props} />;
-  }
-);
+export const Link = React.forwardRef<HTMLAnchorElement, Props>(({ ...props }, ref) => {
+  return <a ref={ref} {...props} />;
+});
 Link.displayName = 'Link';
 ```
 
 ### 4. Radix Slot Integration (asChild Pattern)
+
 ```tsx
 // ❌ Poor - asChild prop ignored, breaks composition
 const Button = ({ asChild, ...props }) => {
@@ -90,32 +92,36 @@ const Button = React.forwardRef(({ asChild = false, ...props }, ref) => {
 ```
 
 ### 5. Correct TypeScript Element Typing
+
 ```tsx
 // ❌ Poor - ref type doesn't match rendered element
 const CardTitle = React.forwardRef<HTMLParagraphElement, Props>(
-  (props, ref) => <h3 ref={ref} {...props} />  // h3 ≠ p type
+  (props, ref) => <h3 ref={ref} {...props} /> // h3 ≠ p type
 );
 
 // ✅ Good - ref type matches rendered element
-const CardTitle = React.forwardRef<HTMLHeadingElement, Props>(
-  (props, ref) => <h3 ref={ref} {...props} />
-);
+const CardTitle = React.forwardRef<HTMLHeadingElement, Props>((props, ref) => (
+  <h3 ref={ref} {...props} />
+));
 ```
 
 ## When to Apply
 
 ### Package Setup
+
 - **Always** set up proper build pipeline with TypeScript compilation
 - **Always** configure package.json entrypoints to point to dist/
 - **Always** use `prepare` script for automatic building
 
 ### Component APIs
+
 - **Always** use forwardRef for components that render DOM elements
 - **Always** implement asChild when using Radix patterns
 - **Always** match TypeScript ref types with rendered elements
 - **Always** set displayName for debugging
 
 ### Development Workflow
+
 - **Before publishing**: Verify package builds and exports work
 - **During development**: Test ref forwarding with Next.js/React Router
 - **Code review**: Check for missing forwardRef and type mismatches

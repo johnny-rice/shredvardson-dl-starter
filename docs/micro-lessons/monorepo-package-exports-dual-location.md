@@ -10,6 +10,7 @@ Severity: normal
 **Rule.** **In monorepo packages with nested src/ directories, export from both packages/[name]/src/index.ts AND packages/[name]/index.ts to ensure consumers can resolve imports.**
 
 **Example.**
+
 ```typescript
 // ❌ BAD: Only exporting from src/index.ts
 // packages/ui/src/index.ts
@@ -33,6 +34,7 @@ import { fadeIn } from '@ui/components'; // ✅ Works
 ```
 
 **Guardrails.**
+
 - Check package.json "main" and "exports" fields to understand resolution paths
 - When adding new exports, update both index files in the same commit
 - Run `pnpm typecheck` across all consuming packages after export changes

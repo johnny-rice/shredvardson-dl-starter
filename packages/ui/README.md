@@ -27,23 +27,24 @@ This package uses semantic design tokens following shadcn/ui conventions. All to
 
 ### Color Tokens
 
-| Token | Purpose | Example Usage |
-|-------|---------|---------------|
-| `--primary` | Primary brand color | Main CTAs, links, active states |
-| `--primary-foreground` | Text on primary | Button text on primary background |
-| `--secondary` | Secondary actions | Less prominent buttons |
-| `--destructive` | Destructive actions | Delete, remove, cancel buttons |
-| `--muted` | Muted backgrounds | Disabled states, subtle backgrounds |
-| `--accent` | Accent highlights | Hover states, highlights |
-| `--card` | Card backgrounds | Card components |
-| `--popover` | Popover backgrounds | Dropdown menus, tooltips |
-| `--border` | Border colors | Input borders, dividers |
-| `--input` | Input borders | Form input borders |
-| `--ring` | Focus rings | Keyboard focus indicators |
+| Token                  | Purpose             | Example Usage                       |
+| ---------------------- | ------------------- | ----------------------------------- |
+| `--primary`            | Primary brand color | Main CTAs, links, active states     |
+| `--primary-foreground` | Text on primary     | Button text on primary background   |
+| `--secondary`          | Secondary actions   | Less prominent buttons              |
+| `--destructive`        | Destructive actions | Delete, remove, cancel buttons      |
+| `--muted`              | Muted backgrounds   | Disabled states, subtle backgrounds |
+| `--accent`             | Accent highlights   | Hover states, highlights            |
+| `--card`               | Card backgrounds    | Card components                     |
+| `--popover`            | Popover backgrounds | Dropdown menus, tooltips            |
+| `--border`             | Border colors       | Input borders, dividers             |
+| `--input`              | Input borders       | Form input borders                  |
+| `--ring`               | Focus rings         | Keyboard focus indicators           |
 
 ### Using Tokens
 
 **Tailwind Classes:**
+
 ```tsx
 <div className="bg-primary text-primary-foreground">
   Primary colored element
@@ -55,6 +56,7 @@ This package uses semantic design tokens following shadcn/ui conventions. All to
 ```
 
 **CSS Variables:**
+
 ```css
 .custom-element {
   background: hsl(var(--primary));
@@ -68,15 +70,15 @@ Fluid typography scales smoothly from mobile (320px) to ultra-wide displays (256
 
 ### Available Scales
 
-| Class | Min Size | Max Size | Use Case |
-|-------|----------|----------|----------|
-| `text-fluid-xs` | 12px | 14px | Captions, footnotes |
-| `text-fluid-sm` | 14px | 16px | Small body text |
-| `text-fluid-base` | 16px | 20px | Body text (default) |
-| `text-fluid-lg` | 18px | 24px | Large body text |
-| `text-fluid-xl` | 20px | 30px | Section headings |
-| `text-fluid-2xl` | 24px | 36px | Page headings |
-| `text-fluid-3xl` | 30px | 48px | Hero headings |
+| Class             | Min Size | Max Size | Use Case            |
+| ----------------- | -------- | -------- | ------------------- |
+| `text-fluid-xs`   | 12px     | 14px     | Captions, footnotes |
+| `text-fluid-sm`   | 14px     | 16px     | Small body text     |
+| `text-fluid-base` | 16px     | 20px     | Body text (default) |
+| `text-fluid-lg`   | 18px     | 24px     | Large body text     |
+| `text-fluid-xl`   | 20px     | 30px     | Section headings    |
+| `text-fluid-2xl`  | 24px     | 36px     | Page headings       |
+| `text-fluid-3xl`  | 30px     | 48px     | Hero headings       |
 
 ### Example Usage
 
@@ -107,14 +109,14 @@ This design system follows an 8pt grid system for consistent spacing. All spacin
 
 ### Recommended Values
 
-| Class | Size | Use Case |
-|-------|------|----------|
-| `p-2` | 8px | Tight padding (buttons, badges) |
-| `p-4` | 16px | Default padding (cards, inputs) |
-| `p-6` | 24px | Comfortable padding (card headers) |
-| `p-8` | 32px | Generous padding (page sections) |
-| `gap-4` | 16px | Default gap between flex/grid items |
-| `space-y-4` | 16px | Default vertical spacing |
+| Class       | Size | Use Case                            |
+| ----------- | ---- | ----------------------------------- |
+| `p-2`       | 8px  | Tight padding (buttons, badges)     |
+| `p-4`       | 16px | Default padding (cards, inputs)     |
+| `p-6`       | 24px | Comfortable padding (card headers)  |
+| `p-8`       | 32px | Generous padding (page sections)    |
+| `gap-4`     | 16px | Default gap between flex/grid items |
+| `space-y-4` | 16px | Default vertical spacing            |
 
 ### Example Layout
 
@@ -198,6 +200,7 @@ function AnimatedComponent() {
 ## Component Documentation
 
 All components include comprehensive JSDoc with:
+
 - `@usageGuidelines` - When and how to use the component
 - `@accessibilityConsiderations` - WCAG compliance details
 - `@example` - Copy-pastable examples
@@ -226,30 +229,35 @@ All components include comprehensive JSDoc with:
 When updating shadcn/ui components, use the diff-and-merge strategy to preserve customizations:
 
 ### Step 1: Check Current Version
+
 ```bash
 # Note current component code
 cat packages/ui/src/components/ui/button.tsx
 ```
 
 ### Step 2: Download Updated Component
+
 ```bash
 # Use shadcn CLI to preview changes
 pnpm dlx shadcn@latest add button --overwrite=false
 ```
 
 ### Step 3: Manual Diff & Merge
+
 ```bash
 # Use git diff or VS Code diff
 git diff packages/ui/src/components/ui/button.tsx
 ```
 
 ### Step 4: Preserve Customizations
+
 - Keep JSDoc comments with `@usageGuidelines` and `@accessibilityConsiderations`
 - Keep semantic token usage (e.g., `bg-primary` not `bg-blue-600`)
 - Keep animation integrations if added
 - Merge new props or variants from upstream
 
 ### Step 5: Test After Update
+
 ```bash
 pnpm test                    # Unit tests
 pnpm test:e2e               # Visual regression tests
@@ -277,11 +285,13 @@ pnpm typecheck              # TypeScript compilation
 ## Testing
 
 ### Unit Tests
+
 ```bash
 pnpm --filter @ui/components test
 ```
 
 ### Visual Regression Tests
+
 ```bash
 # Generate baselines
 pnpm test:e2e --update-snapshots
@@ -291,6 +301,7 @@ pnpm test:e2e
 ```
 
 ### TypeScript
+
 ```bash
 pnpm --filter @ui/components typecheck
 ```

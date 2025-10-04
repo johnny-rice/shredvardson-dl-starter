@@ -10,6 +10,7 @@ Severity: normal
 **Rule.** **Always check for null before typeof === 'object' checks because typeof null === 'object' in JavaScript (legacy language quirk).**
 
 **Example.**
+
 ```typescript
 // ❌ BAD: typeof null === 'object' is true
 function processVariants(variants: Variants): Variants {
@@ -38,6 +39,7 @@ function processVariants(variants: Variants): Variants {
 ```
 
 **Guardrails.**
+
 - Use `variant && typeof variant === 'object'` pattern for null-safe object checks
 - Consider TypeScript strict null checks to catch these at compile time
 - Arrays also return 'object' from typeof - use Array.isArray() for array checks

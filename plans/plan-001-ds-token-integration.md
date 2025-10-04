@@ -17,6 +17,7 @@ This plan outlines the technical implementation for integrating the existing des
 **Specification Reference**: [specs/feature-003-ds-token-integration.md](../specs/feature-003-ds-token-integration.md)
 
 **Key Deliverables**:
+
 1. Tailwind config enhanced with fluid typography + spacing scale
 2. All shadcn components using semantic tokens (no hardcoded values)
 3. Turborepo watch mode with <3s rebuilds
@@ -33,12 +34,14 @@ This plan outlines the technical implementation for integrating the existing des
 **Decision**: Use existing `packages/ui/styles/tokens.css` as single source of truth
 
 **Rationale**:
+
 - ✅ Already follows shadcn conventions (`--primary`, `--background`, etc.)
 - ✅ Supports light/dark themes via `.dark` class
 - ✅ HSL color format (Tailwind v4 ready)
 - ✅ No need for new dependencies (Style Dictionary exists but not blocking)
 
 **Architecture**:
+
 ```
 packages/ui/styles/tokens.css  ← Single source of truth (CSS variables)
          ↓ (imported by)
@@ -50,6 +53,7 @@ packages/ui/src/components/**  ← shadcn components
 ```
 
 **Constitutional Alignment**:
+
 - ✅ Security First: No runtime token manipulation, build-time only
 - ✅ Dependency Management: Leverages existing packages (no new deps for tokens)
 - ✅ Test-Driven: Token changes trigger visual regression tests
@@ -61,11 +65,13 @@ packages/ui/src/components/**  ← shadcn components
 **Decision**: Define fluid scale in `apps/web/tailwind.config.ts` using CSS `clamp()`
 
 **Rationale**:
+
 - ✅ Modern best practice (eliminates breakpoint-based jumps)
 - ✅ No external dependencies
 - ✅ Easy to customize per-app (web app controls its typography)
 
 **Implementation**:
+
 ```typescript
 // apps/web/tailwind.config.ts
 theme: {
@@ -92,11 +98,13 @@ theme: {
 **Decision**: 8pt grid system in `apps/web/tailwind.config.ts`
 
 **Rationale**:
+
 - ✅ Industry standard (Material Design, Apple HIG)
 - ✅ Creates vertical/horizontal rhythm
 - ✅ Simplifies design decisions (multiples of 8)
 
 **Implementation**:
+
 ```typescript
 // apps/web/tailwind.config.ts
 theme: {
@@ -112,6 +120,7 @@ theme: {
 ```
 
 **Guidelines** (documented in README):
+
 - Prefer `gap-*` over margins in flex/grid
 - Use `space-x-*`/`space-y-*` for sibling spacing
 - All custom spacing must be multiples of 4px (ideally 8px)
@@ -123,12 +132,14 @@ theme: {
 **Decision**: Framer Motion as animation library with centralized variants
 
 **Rationale**:
+
 - ✅ Industry standard for React animations
 - ✅ Built-in `prefers-reduced-motion` support
 - ✅ Declarative API (LLM-friendly)
 - ✅ Physics-based animations (natural feel)
 
 **New Dependency** (requires justification per Constitution):
+
 - **Package**: `framer-motion` (~80KB gzipped)
 - **Justification**: Essential for modern UX (user delight, state feedback, micro-interactions)
 - **Alternatives Rejected**:
@@ -137,6 +148,7 @@ theme: {
   - GSAP: Commercial licensing issues
 
 **Architecture**:
+
 ```
 packages/ui/src/lib/animations.ts  ← Reusable variants
          ↓ (imported by)
@@ -144,16 +156,17 @@ packages/ui/src/components/**      ← Components use variants
 ```
 
 **Example Variants**:
+
 ```typescript
 // packages/ui/src/lib/animations.ts
 export const fadeIn = {
   hidden: { opacity: 0 },
-  visible: { opacity: 1 }
+  visible: { opacity: 1 },
 };
 
 export const slideUp = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 }
+  visible: { opacity: 1, y: 0 },
 };
 ```
 
@@ -164,11 +177,13 @@ export const slideUp = {
 **Decision**: Turborepo watch mode with `interruptible: true` for token tasks
 
 **Rationale**:
+
 - ✅ Turborepo 2.4+ supports `--experimental-write-cache`
 - ✅ `interruptible: true` restarts tasks on dependency changes
 - ✅ Achieves <3s rebuild target
 
 **Implementation**:
+
 ```json
 // turbo.json
 {
@@ -181,7 +196,7 @@ export const slideUp = {
     "build:tokens": {
       "dependsOn": ["^build:tokens"],
       "outputs": ["styles/**/*.css"],
-      "interruptible": true  // ← NEW: Restart on token changes
+      "interruptible": true // ← NEW: Restart on token changes
     },
     "dev": {
       "cache": false,
@@ -192,6 +207,7 @@ export const slideUp = {
 ```
 
 **Usage**:
+
 ```bash
 # Development workflow
 turbo watch --experimental-write-cache
@@ -206,7 +222,9 @@ turbo watch --experimental-write-cache
 ### 2.1 Configuration Files
 
 #### `turbo.json` (root)
+
 **Changes**:
+
 - Add `build:tokens` task with `interruptible: true`
 - Update `dev` task to depend on `^build:tokens`
 
@@ -215,12 +233,15 @@ turbo watch --experimental-write-cache
 ---
 
 #### `apps/web/tailwind.config.ts`
+
 **Changes**:
+
 - Add fluid typography scale (`fontSize.fluid-*`)
 - Document spacing scale guidelines (8pt grid)
 - Verify token references (already correct)
 
 **Before**:
+
 ```typescript
 theme: {
   extend: {
@@ -231,6 +252,7 @@ theme: {
 ```
 
 **After**:
+
 ```typescript
 theme: {
   extend: {
@@ -262,27 +284,31 @@ plugins: [
 ---
 
 #### `packages/ui/package.json`
+
 **Changes**:
+
 - Add `framer-motion` dependency
 - Verify `tailwindcss-animate` is installed (may already exist)
 
 **Before**:
+
 ```json
 {
   "dependencies": {
-    "@radix-ui/react-dialog": "^1.1.4",
+    "@radix-ui/react-dialog": "^1.1.4"
     // ...existing
   }
 }
 ```
 
 **After**:
+
 ```json
 {
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.4",
     // ...existing
-    "framer-motion": "^11.0.0"  // NEW
+    "framer-motion": "^11.0.0" // NEW
   }
 }
 ```
@@ -294,9 +320,11 @@ plugins: [
 ### 2.2 Token Files (No Changes Required!)
 
 #### `packages/ui/styles/tokens.css`
+
 **Analysis**: ✅ **Already correct!**
 
 Current state:
+
 - Uses shadcn naming conventions (`--primary`, `--background`, etc.)
 - Supports light/dark themes
 - HSL color format
@@ -305,6 +333,7 @@ Current state:
 **Changes**: None required (file already follows best practices)
 
 **Enhancement** (optional, low priority):
+
 - Could add JSDoc-style comments for token documentation
 - Example:
   ```css
@@ -327,16 +356,19 @@ Current state:
 **Audit Required**: Check for hardcoded values
 
 **Current Status** (from `button.tsx` example):
+
 - ✅ Uses semantic tokens (`bg-primary`, `text-primary-foreground`)
 - ✅ No hardcoded colors detected
 - ❌ Missing JSDoc design rationale
 
 **Changes Needed**:
+
 1. **Add JSDoc design rationale** to all components
 2. **Audit all components** for hardcoded values
 3. **Replace any hardcoded values** with tokens
 
 **Example Enhancement** (`button.tsx`):
+
 ```typescript
 /**
  * Button component with design system variants
@@ -352,12 +384,12 @@ Current state:
  * - Disabled state uses opacity (pointer-events-none prevents clicks)
  * - Supports keyboard navigation (Space/Enter to activate)
  */
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  // ...implementation
-);
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>();
+// ...implementation
 ```
 
 **Components to Update**:
+
 - `packages/ui/src/components/ui/button.tsx`
 - `packages/ui/src/components/ui/card.tsx`
 - `packages/ui/src/components/ui/dialog.tsx`
@@ -373,6 +405,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 ### 2.4 New Files
 
 #### `packages/ui/src/lib/animations.ts` (NEW)
+
 **Purpose**: Centralized Framer Motion animation variants
 
 ```typescript
@@ -389,9 +422,9 @@ export const fadeIn: Variants = {
     opacity: 1,
     transition: {
       duration: custom?.shouldReduceMotion ? 0 : 0.3,
-      ease: 'easeOut'
-    }
-  })
+      ease: 'easeOut',
+    },
+  }),
 };
 
 /**
@@ -401,16 +434,16 @@ export const fadeIn: Variants = {
 export const slideUp: Variants = {
   hidden: (custom) => ({
     opacity: 0,
-    y: custom?.shouldReduceMotion ? 0 : 20
+    y: custom?.shouldReduceMotion ? 0 : 20,
   }),
   visible: (custom) => ({
     opacity: 1,
     y: 0,
     transition: {
       duration: custom?.shouldReduceMotion ? 0 : 0.4,
-      ease: [0.4, 0, 0.2, 1]  // Ease-out curve
-    }
-  })
+      ease: [0.4, 0, 0.2, 1], // Ease-out curve
+    },
+  }),
 };
 
 /**
@@ -424,9 +457,9 @@ export const scale: Variants = {
     scale: 1,
     transition: {
       duration: custom?.shouldReduceMotion ? 0 : 0.2,
-      ease: [0.4, 0, 0.2, 1]
-    }
-  })
+      ease: [0.4, 0, 0.2, 1],
+    },
+  }),
 };
 
 /**
@@ -444,6 +477,7 @@ export function useAnimationCustom() {
 ---
 
 #### `packages/ui/src/lib/hooks/useReducedMotion.ts` (NEW)
+
 **Purpose**: Accessibility hook for motion preferences
 
 ```typescript
@@ -482,10 +516,12 @@ export function useReducedMotion(): boolean {
 ---
 
 #### `packages/ui/README.md` (NEW - Enhanced)
+
 **Purpose**: Comprehensive design system documentation
 
 **Structure**:
-```markdown
+
+````markdown
 # @ui/components - Design System
 
 Shared UI components and design tokens for DL Starter.
@@ -495,12 +531,13 @@ Shared UI components and design tokens for DL Starter.
 ```bash
 pnpm add @ui/components
 ```
+````
 
 ```tsx
 import { Button, Card } from '@ui/components';
-import '@ui/styles/tokens.css';  // Import tokens
+import '@ui/styles/tokens.css'; // Import tokens
 
-<Button variant="default">Click me</Button>
+<Button variant="default">Click me</Button>;
 ```
 
 ## Design Tokens
@@ -517,11 +554,10 @@ All color tokens follow shadcn/ui semantic naming:
 - `--destructive`: Error states, delete actions
 
 **Usage**:
+
 ```tsx
 // Tailwind utilities automatically map to tokens
-<div className="bg-primary text-primary-foreground">
-  Primary colored box
-</div>
+<div className="bg-primary text-primary-foreground">Primary colored box</div>
 ```
 
 ### Typography Scale
@@ -536,6 +572,7 @@ Use `text-fluid-*` utilities for responsive text:
 ```
 
 **Scale**:
+
 - `text-fluid-xs`: 12px → 14px
 - `text-fluid-sm`: 14px → 16px
 - `text-fluid-base`: 16px → 20px
@@ -551,11 +588,13 @@ Scales smoothly from 320px (mobile) to 2560px (ultra-wide).
 **Principle**: All spacing should be multiples of 8px for visual rhythm.
 
 **Tailwind defaults** (4pt based) are acceptable, but prefer 8px multiples:
+
 - `p-2` = 8px ✅
 - `p-4` = 16px ✅
 - `p-6` = 24px ✅
 
 **Best Practices**:
+
 - Use `gap-*` over margins in flex/grid layouts
 - Use `space-x-*`/`space-y-*` for sibling spacing
 - Avoid arbitrary values like `p-[13px]`
@@ -570,16 +609,13 @@ Reusable animation patterns:
 import { motion } from 'framer-motion';
 import { fadeIn, slideUp } from '@ui/lib/animations';
 
-<motion.div
-  variants={fadeIn}
-  initial="hidden"
-  animate="visible"
->
+<motion.div variants={fadeIn} initial="hidden" animate="visible">
   Fades in on mount
-</motion.div>
+</motion.div>;
 ```
 
 **Available Variants**:
+
 - `fadeIn`: Simple opacity fade
 - `slideUp`: Slide up + fade (common for cards, modals)
 - `scale`: Scale + fade (good for emphasis)
@@ -591,16 +627,19 @@ import { fadeIn, slideUp } from '@ui/lib/animations';
 shadcn/ui components are copied into this package (not installed). To update:
 
 1. **Check for upstream updates**:
+
    ```bash
    pnpm dlx shadcn-ui@latest diff button
    ```
 
 2. **Run add command to temp file**:
+
    ```bash
    pnpm dlx shadcn-ui@latest add button --output ./tmp/button.new.tsx
    ```
 
 3. **Visual diff and merge**:
+
    ```bash
    code --diff src/components/ui/button.tsx tmp/button.new.tsx
    ```
@@ -631,11 +670,13 @@ shadcn/ui components are copied into this package (not installed). To update:
 ### Adding New Components
 
 1. Generate with shadcn CLI:
+
    ```bash
    pnpm dlx shadcn-ui@latest add <component>
    ```
 
 2. Add JSDoc design rationale:
+
    ```tsx
    /**
     * @usageGuidelines When to use this component
@@ -657,6 +698,7 @@ pnpm test:visual:update  # Update baselines
 ```
 
 **Coverage**:
+
 - Design system showcase page (all primitives)
 - Light + dark themes
 - All component variants
@@ -678,11 +720,13 @@ pnpm test:visual:update  # Update baselines
 ### Phase 1: Foundation (Days 1-2)
 
 **Goals**:
+
 - Set up enhanced Tailwind config
 - Add Framer Motion dependency
 - Create animation utilities
 
 **Tasks**:
+
 1. Update `turbo.json` with `build:tokens` task
 2. Install `framer-motion` in `packages/ui`
 3. Add fluid typography to `apps/web/tailwind.config.ts`
@@ -690,15 +734,18 @@ pnpm test:visual:update  # Update baselines
 5. Test rebuild performance with `turbo watch`
 
 **Acceptance**:
+
 - ✅ `turbo watch` achieves <3s rebuilds on token changes
 - ✅ Fluid typography utilities available (`text-fluid-base`, etc.)
 - ✅ Framer Motion imported successfully
 
 **Risks**:
+
 - ⚠️ Turborepo watch mode may require Node 18+ (check version)
 - ⚠️ Framer Motion bundle size impact (~80KB)
 
 **Mitigation**:
+
 - Test bundle size before/after
 - Tree-shaking should remove unused variants
 
@@ -707,17 +754,20 @@ pnpm test:visual:update  # Update baselines
 ### Phase 2: Component Enhancement (Days 3-5)
 
 **Goals**:
+
 - Audit all shadcn components
 - Add JSDoc design rationale
 - Replace any hardcoded values
 
 **Tasks**:
+
 1. Audit each component for hardcoded colors/spacing
 2. Add JSDoc `@usageGuidelines` and `@accessibilityConsiderations`
 3. Test components in light/dark themes
 4. Add Framer Motion to dialog component (example)
 
 **Component Checklist**:
+
 - [ ] button.tsx - Add JSDoc rationale
 - [ ] card.tsx - Add JSDoc rationale
 - [ ] dialog.tsx - Add JSDoc rationale + motion
@@ -727,6 +777,7 @@ pnpm test:visual:update  # Update baselines
 - [ ] Link.tsx - Add JSDoc rationale
 
 **Example Motion Enhancement** (dialog.tsx):
+
 ```tsx
 import { motion, AnimatePresence } from 'framer-motion';
 import { scale } from '../../lib/animations';
@@ -753,6 +804,7 @@ const DialogContent = React.forwardRef<...>(({ children, ... }, ref) => (
 ```
 
 **Acceptance**:
+
 - ✅ All components have JSDoc design rationale
 - ✅ Zero hardcoded color/spacing values found
 - ✅ Dialog has smooth scale animation
@@ -763,17 +815,20 @@ const DialogContent = React.forwardRef<...>(({ children, ... }, ref) => (
 ### Phase 3: Documentation (Days 6-7)
 
 **Goals**:
+
 - Create comprehensive README
 - Document token conventions
 - Document component update workflow
 
 **Tasks**:
+
 1. Write `packages/ui/README.md` (see template above)
 2. Add inline token documentation (optional CSS comments)
 3. Create component update workflow doc
 4. Test documentation with fresh clone
 
 **Acceptance**:
+
 - ✅ README covers all tokens, typography, spacing, motion
 - ✅ Component update workflow is clear and tested
 - ✅ New developer can onboard from README alone
@@ -783,11 +838,13 @@ const DialogContent = React.forwardRef<...>(({ children, ... }, ref) => (
 ### Phase 4: Visual Regression Testing (Days 8-10)
 
 **Goals**:
+
 - Set up Playwright visual snapshots
 - Cover critical UI paths
 - Integrate with CI
 
 **Tasks**:
+
 1. Create design system showcase page in `apps/web`
 2. Write Playwright tests for visual snapshots
 3. Capture baselines in light + dark themes
@@ -795,6 +852,7 @@ const DialogContent = React.forwardRef<...>(({ children, ... }, ref) => (
 5. Test token change detection
 
 **Showcase Page** (`apps/web/src/app/showcase/page.tsx`):
+
 ```tsx
 import { Button, Card, Dialog, Input, Label, Select } from '@ui/components';
 
@@ -833,6 +891,7 @@ export default function ShowcasePage() {
 ```
 
 **Playwright Test** (`apps/web/tests/visual/design-system.spec.ts`):
+
 ```typescript
 import { test, expect } from '@playwright/test';
 
@@ -868,6 +927,7 @@ test.describe('Design System Visual Regression', () => {
 ```
 
 **CI Integration** (`.github/workflows/ci.yml`):
+
 ```yaml
 jobs:
   visual-tests:
@@ -895,6 +955,7 @@ jobs:
 ```
 
 **Acceptance**:
+
 - ✅ Visual snapshots captured for showcase page
 - ✅ Light + dark themes covered
 - ✅ CI fails on visual regressions
@@ -930,6 +991,7 @@ Following Constitution Article I.2 (Test-Driven Development):
 ### 4.2 Test Files
 
 #### **Unit Tests** (`packages/ui/src/lib/__tests__/animations.test.ts`)
+
 ```typescript
 import { describe, it, expect } from 'vitest';
 import { fadeIn, slideUp, scale } from '../animations';
@@ -943,7 +1005,7 @@ describe('Animation Variants', () => {
   it('slideUp variant respects reduced motion', () => {
     const custom = { shouldReduceMotion: true };
     const hidden = slideUp.hidden(custom);
-    expect(hidden.y).toBe(0);  // No Y translation when reduced motion
+    expect(hidden.y).toBe(0); // No Y translation when reduced motion
   });
 
   it('scale variant has proper easing', () => {
@@ -955,6 +1017,7 @@ describe('Animation Variants', () => {
 ```
 
 #### **Integration Tests** (`packages/ui/src/components/ui/__tests__/button.test.tsx`)
+
 ```typescript
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
@@ -988,6 +1051,7 @@ describe('Button Component', () => {
 ### 5.1 Dependency Security (Constitution Article I.3)
 
 **New Dependency Analysis**:
+
 - **framer-motion v11.0.0**
   - License: MIT ✅
   - Bundle size: ~80KB gzipped ⚠️ (acceptable for UX value)
@@ -996,6 +1060,7 @@ describe('Button Component', () => {
   - Vulnerability scanning: Dependabot enabled ✅
 
 **Mitigation**:
+
 - Pin major version: `"framer-motion": "^11.0.0"` (allow minor/patch)
 - Monitor bundle size in CI
 - Tree-shaking enabled (Vite/Next.js default)
@@ -1003,17 +1068,20 @@ describe('Button Component', () => {
 ### 5.2 XSS Prevention
 
 **Token Values**:
+
 - CSS variables are build-time only ✅
 - No runtime token manipulation ✅
 - No user input in token generation ✅
 
 **JSDoc Comments**:
+
 - Static documentation (no dynamic eval) ✅
 - No security risk ✅
 
 ### 5.3 Accessibility Security
 
 **Motion Sensitivity**:
+
 - All animations respect `prefers-reduced-motion` ✅
 - No vestibular issues from excessive motion ✅
 - Documented in component JSDoc ✅
@@ -1024,10 +1092,10 @@ describe('Button Component', () => {
 
 ### 6.1 New Dependencies
 
-| Package | Version | Size | Justification | Alternative Considered |
-|---------|---------|------|---------------|------------------------|
-| framer-motion | ^11.0.0 | ~80KB | Modern UX requires motion design. Industry standard for React. Built-in accessibility. | CSS transitions (too limited), React Spring (complex API) |
-| tailwindcss-animate | ^1.0.7 | ~2KB | Utility classes for common animations (optional) | Write custom @keyframes (more verbose) |
+| Package             | Version | Size  | Justification                                                                          | Alternative Considered                                    |
+| ------------------- | ------- | ----- | -------------------------------------------------------------------------------------- | --------------------------------------------------------- |
+| framer-motion       | ^11.0.0 | ~80KB | Modern UX requires motion design. Industry standard for React. Built-in accessibility. | CSS transitions (too limited), React Spring (complex API) |
+| tailwindcss-animate | ^1.0.7  | ~2KB  | Utility classes for common animations (optional)                                       | Write custom @keyframes (more verbose)                    |
 
 ### 6.2 Existing Dependencies (No Changes)
 
@@ -1042,29 +1110,29 @@ describe('Button Component', () => {
 
 ### 7.1 Technical Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Turborepo watch mode doesn't achieve <3s | Medium | High | Fallback: Manual rebuild, optimize task dependencies |
-| Framer Motion bundle size too large | Low | Medium | Tree-shaking, code splitting, lazy load animations |
-| Visual regression tests flaky in CI | Medium | Medium | Use `maxDiffPixels` threshold, retry failed tests |
-| Token changes break existing pages | Low | High | Comprehensive visual regression coverage |
-| JSDoc format not LLM-parsable | Low | Low | Iterate on format based on AI feedback |
+| Risk                                     | Probability | Impact | Mitigation                                           |
+| ---------------------------------------- | ----------- | ------ | ---------------------------------------------------- |
+| Turborepo watch mode doesn't achieve <3s | Medium      | High   | Fallback: Manual rebuild, optimize task dependencies |
+| Framer Motion bundle size too large      | Low         | Medium | Tree-shaking, code splitting, lazy load animations   |
+| Visual regression tests flaky in CI      | Medium      | Medium | Use `maxDiffPixels` threshold, retry failed tests    |
+| Token changes break existing pages       | Low         | High   | Comprehensive visual regression coverage             |
+| JSDoc format not LLM-parsable            | Low         | Low    | Iterate on format based on AI feedback               |
 
 ### 7.2 Schedule Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Visual regression setup takes longer | High | Medium | Start early, use Playwright docs extensively |
-| Component audit finds many hardcoded values | Medium | Medium | Gradual fix, prioritize critical components |
-| Documentation incomplete by deadline | Medium | Low | Documentation is last phase, can extend if needed |
+| Risk                                        | Probability | Impact | Mitigation                                        |
+| ------------------------------------------- | ----------- | ------ | ------------------------------------------------- |
+| Visual regression setup takes longer        | High        | Medium | Start early, use Playwright docs extensively      |
+| Component audit finds many hardcoded values | Medium      | Medium | Gradual fix, prioritize critical components       |
+| Documentation incomplete by deadline        | Medium      | Low    | Documentation is last phase, can extend if needed |
 
 ### 7.3 User-Facing Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Animations cause motion sickness | Low | High | **Critical**: Test `prefers-reduced-motion` thoroughly |
-| Fluid typography unreadable at extremes | Low | Medium | Test at 320px and 2560px viewports |
-| Dark mode colors have poor contrast | Low | High | Run automated contrast checks (axe-core) |
+| Risk                                    | Probability | Impact | Mitigation                                             |
+| --------------------------------------- | ----------- | ------ | ------------------------------------------------------ |
+| Animations cause motion sickness        | Low         | High   | **Critical**: Test `prefers-reduced-motion` thoroughly |
+| Fluid typography unreadable at extremes | Low         | Medium | Test at 320px and 2560px viewports                     |
+| Dark mode colors have poor contrast     | Low         | High   | Run automated contrast checks (axe-core)               |
 
 ---
 
@@ -1082,12 +1150,14 @@ describe('Button Component', () => {
 ### 8.3 Monitoring
 
 **Metrics to Track**:
+
 1. **Build Performance**: Token change → rebuild time (<3s target)
 2. **Bundle Size**: Before/after Framer Motion addition
 3. **Visual Regression**: CI job success rate
 4. **Accessibility**: `prefers-reduced-motion` compliance
 
 **Dashboards**:
+
 - Vercel Analytics (bundle size)
 - GitHub Actions (CI duration)
 - Manual testing checklist (accessibility)
@@ -1162,6 +1232,7 @@ turbo watch  # Start dev server
 - **Constitution**: [docs/constitution.md](../docs/constitution.md)
 
 **External References**:
+
 - Turborepo Watch Mode: https://turborepo.com/docs/reference/watch
 - Framer Motion: https://www.framer.com/motion/
 - shadcn/ui Theming: https://ui.shadcn.com/docs/theming

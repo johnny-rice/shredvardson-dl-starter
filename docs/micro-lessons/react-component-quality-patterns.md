@@ -27,6 +27,7 @@ Component APIs and implementations often miss small quality improvements that en
 Apply these quality patterns systematically:
 
 ### 1. Accessibility First
+
 ```tsx
 // ❌ Poor - no association
 <label>Theme:</label>
@@ -38,6 +39,7 @@ Apply these quality patterns systematically:
 ```
 
 ### 2. TypeScript Precision
+
 ```tsx
 // ❌ Poor - no compile-time validation
 export const config = { ... };
@@ -47,6 +49,7 @@ export const config = { ... } satisfies Config;
 ```
 
 ### 3. API Spread Patterns
+
 ```tsx
 // ❌ Poor - creates extra array wrapper
 export function cn(...inputs: ClassValue[]) {
@@ -60,22 +63,26 @@ export function cn(...inputs: ClassValue[]) {
 ```
 
 ### 4. Sensible Defaults
+
 ```tsx
 // ❌ Poor - relies on HTML defaults implicitly
-const Input = ({ type, ...props }) => <input type={type} {...props} />
+const Input = ({ type, ...props }) => <input type={type} {...props} />;
 
-// ✅ Good - explicit defaults prevent surprises  
-const Input = ({ type = 'text', ...props }) => <input type={type} {...props} />
+// ✅ Good - explicit defaults prevent surprises
+const Input = ({ type = 'text', ...props }) => <input type={type} {...props} />;
 ```
 
 ### 5. Documentation Clarity
+
 ```markdown
 <!-- ❌ Poor - no language tag triggers markdownlint MD040 -->
 ```
+
 directory/
-  structure/
+structure/
 
 <!-- ✅ Good - tagged for proper rendering -->
+
 ```text
 directory/
   structure/

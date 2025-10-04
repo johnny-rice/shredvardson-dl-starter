@@ -15,9 +15,11 @@
 **Dependencies**: None
 
 #### Problem Statement
+
 The design system package (`@dl-starter/ds`) generates design tokens via Style Dictionary, but these tokens are not consumed by Tailwind CSS or shadcn/ui components. This creates design drift and makes the DS infrastructure worthless.
 
 #### Success Criteria
+
 - [x] Tailwind config imports and uses DS tokens for colors, spacing, typography
 - [x] All shadcn/ui components use semantic tokens instead of hardcoded values
 - [x] Token changes in DS package automatically rebuild Tailwind config (<3 seconds via Turborepo watch)
@@ -29,6 +31,7 @@ The design system package (`@dl-starter/ds`) generates design tokens via Style D
 - [x] **Component update workflow** documented (diff-and-merge for shadcn updates)
 
 #### Implementation Steps
+
 1. **Wire DS tokens into Tailwind (shadcn conventions)**
    - Modify `apps/web/tailwind.config.ts` to import generated tokens from `@dl-starter/ds`
    - Map semantic tokens using shadcn naming: `--primary`, `--primary-foreground`, `--background`, `--muted`
@@ -89,6 +92,7 @@ The design system package (`@dl-starter/ds`) generates design tokens via Style D
    - Add CI job to run on token changes
 
 #### Files to Modify
+
 - `apps/web/tailwind.config.ts` (fluid typography, spacing scale, token mapping)
 - `packages/ds/src/tokens/**/*.json` (shadcn naming conventions)
 - `apps/web/components/ui/**/*.tsx` (all shadcn components + JSDoc rationale)
@@ -98,6 +102,7 @@ The design system package (`@dl-starter/ds`) generates design tokens via Style D
 - `package.json` (add Framer Motion dependency)
 
 #### Testing
+
 - Manual: Change token value → verify <3s rebuild and Tailwind classes update
 - Manual: Test fluid typography across viewport sizes (320px - 2560px)
 - Manual: Test animations respect `prefers-reduced-motion`
@@ -105,6 +110,7 @@ The design system package (`@dl-starter/ds`) generates design tokens via Style D
 - Smoke test: Build web app with new tokens, typography, and animations
 
 #### References
+
 - GitHub Issue: #105 (this implementation)
 - Feature Spec: `specs/feature-003-ds-token-integration.md`
 - Gemini Deep Research: `tasks/Design System for Next.js Starter.md` (analyzed and integrated)
@@ -115,6 +121,7 @@ The design system package (`@dl-starter/ds`) generates design tokens via Style D
 - shadcn/ui conventions: https://ui.shadcn.com/docs/theming
 
 #### Notes from Gemini Deep Research Analysis
+
 - ✅ **Accepted**: Fluid typography (clamp), spacing scale (4pt/8pt), component update workflow, JSDoc rationale
 - ❌ **Rejected**: Verbose token naming (`--color-interactive-brand-...`), Storybook in Phase 1, design-to-code automation
 - 📝 **Deferred**: Storybook (Phase 4+), Figma sync automation (future consideration)
@@ -128,9 +135,11 @@ The design system package (`@dl-starter/ds`) generates design tokens via Style D
 **Dependencies**: None
 
 #### Problem Statement
+
 Zero test infrastructure exists despite emphasis on quality. No unit tests, no E2E tests, no RLS validation. This creates false confidence and risk of shipping broken code (especially with AI assistance).
 
 #### Success Criteria
+
 - [ ] Vitest configured for unit/integration tests with >70% coverage target
 - [ ] Playwright configured for E2E tests
 - [ ] Example tests for auth flows (signup, login, logout)
@@ -141,6 +150,7 @@ Zero test infrastructure exists despite emphasis on quality. No unit tests, no E
 #### Implementation Steps
 
 ##### Part A: Unit/Integration Testing (Vitest)
+
 1. **Install and configure Vitest**
    - Add `vitest`, `@vitest/ui`, `@testing-library/react` to web app
    - Create `vitest.config.ts` with path aliases, coverage settings
@@ -162,6 +172,7 @@ Zero test infrastructure exists despite emphasis on quality. No unit tests, no E
    - Document exceptions for generated code
 
 ##### Part B: E2E Testing (Playwright)
+
 1. **Install and configure Playwright**
    - Add `@playwright/test` to web app
    - Create `playwright.config.ts` with local/CI environments
@@ -178,6 +189,7 @@ Zero test infrastructure exists despite emphasis on quality. No unit tests, no E
    - User factory for creating test accounts
 
 ##### Part C: RLS Testing Helpers
+
 1. **Create Supabase test utilities**
    - Helper to create test users with different roles
    - Helper to execute queries as specific user
@@ -194,6 +206,7 @@ Zero test infrastructure exists despite emphasis on quality. No unit tests, no E
    - Debugging failed RLS policies
 
 ##### Part D: CI Integration
+
 1. **Update GitHub Actions**
    - Add test job that runs before deploy
    - Run unit tests + E2E tests on every PR
@@ -205,6 +218,7 @@ Zero test infrastructure exists despite emphasis on quality. No unit tests, no E
    - Skip with flag if needed (emergency)
 
 #### Files to Create
+
 - `apps/web/vitest.config.ts`
 - `apps/web/playwright.config.ts`
 - `apps/web/tests/setup.ts`
@@ -215,23 +229,27 @@ Zero test infrastructure exists despite emphasis on quality. No unit tests, no E
 - `apps/web/scripts/seed-test-db.ts`
 
 #### Files to Modify
+
 - `apps/web/package.json` (add test scripts)
 - `.github/workflows/ci.yml` (add test jobs)
 - `.husky/pre-push` (add test hook)
 - `turbo.json` (add test task)
 
 #### Testing
+
 - Run `pnpm test` → all tests pass
 - Run `pnpm test:e2e` → Playwright tests pass
 - Break a component → test fails
 - Push broken code → CI blocks merge
 
 #### Documentation Needed
+
 - `docs/wiki/testing-guide.md`
 - `apps/web/tests/README.md`
 - Update main README with test commands
 
 #### References
+
 - Vitest: https://vitest.dev
 - Playwright: https://playwright.dev
 - Supabase RLS testing: https://supabase.com/docs/guides/auth/row-level-security#testing-policies
@@ -245,9 +263,11 @@ Zero test infrastructure exists despite emphasis on quality. No unit tests, no E
 **Dependencies**: None
 
 #### Problem Statement
+
 No documented strategy for managing environments (dev/staging/prod) or secrets. Risky for solo developer who might accidentally use prod credentials in development.
 
 #### Success Criteria
+
 - [ ] `.env.example` with all required variables documented
 - [ ] `.env.local` template for development
 - [ ] Documentation for setting up local/preview/production environments
@@ -255,6 +275,7 @@ No documented strategy for managing environments (dev/staging/prod) or secrets. 
 - [ ] Validation script that checks required env vars on startup
 
 #### Implementation Steps
+
 1. **Create `.env.example`**
    - List all required environment variables
    - Add descriptions and example values
@@ -277,15 +298,18 @@ No documented strategy for managing environments (dev/staging/prod) or secrets. 
    - `pnpm setup:local` - copy `.env.example` to `.env.local`
 
 #### Files to Create
+
 - `apps/web/.env.example`
 - `apps/web/lib/env.ts`
 - `docs/wiki/environment-setup.md`
 
 #### Files to Modify
+
 - `apps/web/package.json` (add env scripts)
 - `README.md` (reference env setup)
 
 #### Testing
+
 - Delete `.env.local` → build fails with helpful error
 - Set invalid env var → validation catches it
 - Follow docs → successfully set up all environments
@@ -299,9 +323,11 @@ No documented strategy for managing environments (dev/staging/prod) or secrets. 
 **Dependencies**: Issue #3 (needs env setup)
 
 #### Problem Statement
+
 Supabase migrations exist but no documented workflow for creating, testing, and deploying schema changes safely. AI tools can apply migrations directly which is dangerous.
 
 #### Success Criteria
+
 - [ ] Clear workflow for creating migrations (local → test → prod)
 - [ ] Migration safety checks (dry run, rollback plan)
 - [ ] Seed data for local development
@@ -309,6 +335,7 @@ Supabase migrations exist but no documented workflow for creating, testing, and 
 - [ ] AI commands require human approval for migrations
 
 #### Implementation Steps
+
 1. **Document migration workflow**
    - How to generate migration from Supabase Studio
    - How to write migrations manually
@@ -338,6 +365,7 @@ Supabase migrations exist but no documented workflow for creating, testing, and 
    - Altering columns safely
 
 #### Files to Create
+
 - `supabase/seed.sql`
 - `supabase/seed-dev.sql`
 - `scripts/validate-migration.ts`
@@ -345,10 +373,12 @@ Supabase migrations exist but no documented workflow for creating, testing, and 
 - `docs/wiki/rls-patterns.md`
 
 #### Files to Modify
+
 - `.claude/commands/db-*.md` (add safety checks)
 - `README.md` (link to migration docs)
 
 #### Testing
+
 - Create test migration → apply locally → verify schema
 - Run seed script → verify data loads
 - Test rollback → schema reverts correctly
@@ -364,9 +394,11 @@ Supabase migrations exist but no documented workflow for creating, testing, and 
 **Dependencies**: Issue #1 (DS tokens), Issue #2 (tests)
 
 #### Problem Statement
+
 No user management UI exists. Every SaaS needs profile editing, settings, account deletion at minimum.
 
 #### Success Criteria
+
 - [ ] User profile page with avatar, name, email
 - [ ] Settings page with preferences
 - [ ] Account deletion flow with confirmation
@@ -375,6 +407,7 @@ No user management UI exists. Every SaaS needs profile editing, settings, accoun
 - [ ] All actions have E2E tests
 
 #### Implementation Steps
+
 1. **Create user profile page**
    - Route: `/profile`
    - Display user info from Supabase Auth
@@ -404,6 +437,7 @@ No user management UI exists. Every SaaS needs profile editing, settings, accoun
    - Unit: Form validation works correctly
 
 #### Files to Create
+
 - `apps/web/app/(authenticated)/profile/page.tsx`
 - `apps/web/app/(authenticated)/settings/page.tsx`
 - `apps/web/components/profile/ProfileForm.tsx`
@@ -413,16 +447,19 @@ No user management UI exists. Every SaaS needs profile editing, settings, accoun
 - `apps/web/tests/e2e/profile.spec.ts`
 
 #### Files to Modify
+
 - Navigation to include profile link
 - Supabase schema if adding user metadata table
 
 #### Testing
+
 - E2E: Full profile update flow
 - E2E: Account deletion flow
 - Manual: Avatar upload works
 - Manual: All forms have validation
 
 #### Design Notes
+
 - Use shadcn Card, Form, Input components
 - Follow DS token guidelines
 - Mobile-responsive layouts
@@ -436,9 +473,11 @@ No user management UI exists. Every SaaS needs profile editing, settings, accoun
 **Dependencies**: Issue #4 (migration workflow), Issue #5 (user UI)
 
 #### Problem Statement
+
 No multi-tenancy structure. Most B2B SaaS needs team/organization workspaces with role-based access control.
 
 #### Success Criteria
+
 - [ ] Database schema for organizations, memberships, roles
 - [ ] RLS policies for tenant isolation
 - [ ] UI for creating/managing organizations
@@ -450,7 +489,9 @@ No multi-tenancy structure. Most B2B SaaS needs team/organization workspaces wit
 #### Implementation Steps
 
 ##### Part A: Database Schema
+
 1. **Create tables**
+
    ```sql
    - organizations (id, name, slug, created_by, created_at)
    - organization_members (org_id, user_id, role, invited_at, joined_at)
@@ -469,6 +510,7 @@ No multi-tenancy structure. Most B2B SaaS needs team/organization workspaces wit
    - Add seed data for testing
 
 ##### Part B: Backend Logic
+
 1. **Create organization actions**
    - `createOrganization(name, slug)` - auto-add creator as owner
    - `updateOrganization(id, data)` - only owner/admin
@@ -487,6 +529,7 @@ No multi-tenancy structure. Most B2B SaaS needs team/organization workspaces wit
    - `requireRole(role)` - middleware for protected actions
 
 ##### Part C: Frontend UI
+
 1. **Organization settings page**
    - Route: `/org/[slug]/settings`
    - Tabs: General, Members, Billing (placeholder)
@@ -509,6 +552,7 @@ No multi-tenancy structure. Most B2B SaaS needs team/organization workspaces wit
    - Create account if new user, or just join if existing
 
 ##### Part D: Testing
+
 1. **RLS tests**
    - User can only access own org data
    - Admin can invite but not delete org
@@ -522,6 +566,7 @@ No multi-tenancy structure. Most B2B SaaS needs team/organization workspaces wit
    - Remove member → verify access revoked
 
 #### Files to Create
+
 - `supabase/migrations/[timestamp]_create_organizations.sql`
 - `apps/web/lib/actions/organizations.ts`
 - `apps/web/lib/actions/memberships.ts`
@@ -535,17 +580,20 @@ No multi-tenancy structure. Most B2B SaaS needs team/organization workspaces wit
 - `apps/web/tests/e2e/organizations.spec.ts`
 
 #### Files to Modify
+
 - `apps/web/lib/supabase/middleware.ts` (add org context)
 - Navigation components (add org switcher)
 - All existing queries (add org_id filter)
 
 #### Testing
+
 - RLS tests for all policies
 - E2E tests for full org lifecycle
 - Manual: Invite flow via email
 - Load test: 100+ members in org
 
 #### Documentation Needed
+
 - `docs/wiki/multi-tenancy.md`
 - `docs/wiki/rls-patterns.md` (update with examples)
 
@@ -558,9 +606,11 @@ No multi-tenancy structure. Most B2B SaaS needs team/organization workspaces wit
 **Dependencies**: Issue #6 (organizations)
 
 #### Problem Statement
+
 No billing system. B2B SaaS needs subscription management, payment collection, usage tracking.
 
 #### Success Criteria
+
 - [ ] Stripe customer created when org created
 - [ ] Subscription plans (Free, Pro, Enterprise)
 - [ ] Checkout flow for upgrading plan
@@ -572,12 +622,14 @@ No billing system. B2B SaaS needs subscription management, payment collection, u
 #### Implementation Steps
 
 ##### Part A: Stripe Setup
+
 1. **Configure Stripe**
    - Add Stripe API keys to env vars
    - Create products and prices in Stripe Dashboard
    - Set up webhook endpoint
 
 2. **Database schema**
+
    ```sql
    - Add to organizations: stripe_customer_id, subscription_status, plan_id
    - Create subscriptions table (optional, or rely on Stripe as source of truth)
@@ -589,6 +641,7 @@ No billing system. B2B SaaS needs subscription management, payment collection, u
    - Add type definitions for webhooks
 
 ##### Part B: Checkout Flow
+
 1. **Create subscription plans component**
    - Display Free, Pro, Enterprise cards
    - Show features per plan
@@ -606,6 +659,7 @@ No billing system. B2B SaaS needs subscription management, payment collection, u
    - Update org subscription status
 
 ##### Part C: Webhook Handler
+
 1. **Create webhook endpoint**
    - Route: `/api/webhooks/stripe`
    - Verify Stripe signature
@@ -621,6 +675,7 @@ No billing system. B2B SaaS needs subscription management, payment collection, u
    - Handle grace periods
 
 ##### Part D: Customer Portal
+
 1. **Add portal link**
    - Server action: `createPortalSession(orgId)`
    - Redirect to Stripe Customer Portal
@@ -633,6 +688,7 @@ No billing system. B2B SaaS needs subscription management, payment collection, u
    - Show usage metrics (if applicable)
 
 ##### Part E: Usage Limits
+
 1. **Define plan limits**
    - Free: 10 projects, 1 member
    - Pro: unlimited projects, 10 members
@@ -644,6 +700,7 @@ No billing system. B2B SaaS needs subscription management, payment collection, u
    - Add soft limits with warnings
 
 ##### Part F: Testing
+
 1. **Use Stripe test mode**
    - Test card numbers for success/failure
    - Trigger webhooks via Stripe CLI
@@ -654,6 +711,7 @@ No billing system. B2B SaaS needs subscription management, payment collection, u
    - Limits enforcement
 
 #### Files to Create
+
 - `apps/web/lib/stripe/client.ts`
 - `apps/web/lib/stripe/webhooks.ts`
 - `apps/web/lib/actions/billing.ts`
@@ -666,21 +724,25 @@ No billing system. B2B SaaS needs subscription management, payment collection, u
 - `apps/web/tests/e2e/billing.spec.ts`
 
 #### Files to Modify
+
 - `.env.example` (add Stripe keys)
 - `apps/web/lib/actions/organizations.ts` (check limits)
 - Org settings navigation (add billing tab)
 
 #### Testing
+
 - E2E: Full checkout flow with test card
 - Webhook: Trigger all events via Stripe CLI
 - Limits: Try exceeding plan limits
 - Portal: Update payment method
 
 #### Documentation Needed
+
 - `docs/wiki/billing-integration.md`
 - `docs/wiki/stripe-setup.md`
 
 #### References
+
 - Stripe Next.js docs: https://stripe.com/docs/payments/checkout/how-checkout-works
 - Webhook testing: https://stripe.com/docs/webhooks/test
 
@@ -693,9 +755,11 @@ No billing system. B2B SaaS needs subscription management, payment collection, u
 **Dependencies**: Issue #6 (invitations need emails)
 
 #### Problem Statement
+
 No email sending system. Need transactional emails for invitations, password resets, notifications, receipts.
 
 #### Success Criteria
+
 - [ ] Email service configured (Resend or SendGrid)
 - [ ] Email templates for common actions
 - [ ] Type-safe email sending helpers
@@ -703,6 +767,7 @@ No email sending system. Need transactional emails for invitations, password res
 - [ ] Email sending tests (mock in test env)
 
 #### Implementation Steps
+
 1. **Choose and configure email service**
    - Recommend: Resend (great DX, generous free tier)
    - Add API key to env vars
@@ -732,25 +797,30 @@ No email sending system. Need transactional emails for invitations, password res
    - Add email preferences (user can opt out)
 
 #### Files to Create
+
 - `apps/web/lib/email/client.ts`
 - `apps/web/lib/email/templates/` (React Email components)
 - `apps/web/lib/email/send.ts` (helpers)
 - `apps/web/tests/unit/email.spec.ts`
 
 #### Files to Modify
+
 - `.env.example` (add email API key)
 - `apps/web/lib/actions/memberships.ts` (send invite email)
 - User signup flow (send welcome email)
 
 #### Testing
+
 - Send test emails to real address
 - Preview all templates
 - Mock email sending in tests
 
 #### Documentation
+
 - `docs/wiki/email-setup.md`
 
 #### References
+
 - Resend: https://resend.com/docs/send-with-nextjs
 - React Email: https://react.email
 
@@ -765,9 +835,11 @@ No email sending system. Need transactional emails for invitations, password res
 **Dependencies**: Issue #4 (migration workflow)
 
 #### Problem Statement
+
 Current slash commands cover git workflows but missing database, API, deployment commands that would accelerate AI-assisted development.
 
 #### Success Criteria
+
 - [ ] `/db:design-schema` - AI helps design database tables
 - [ ] `/db:generate-migration` - Create migration from description
 - [ ] `/db:seed` - Generate seed data for entity
@@ -777,6 +849,7 @@ Current slash commands cover git workflows but missing database, API, deployment
 - [ ] All commands log actions for audit
 
 #### Implementation Steps
+
 1. **Database commands**
    - `/db:design-schema [entity]` - prompts for fields, relationships, generates migration
    - `/db:generate-migration [description]` - creates migration file with boilerplate
@@ -801,6 +874,7 @@ Current slash commands cover git workflows but missing database, API, deployment
    - Document when to use which command
 
 #### Files to Create
+
 - `.claude/commands/db-design-schema.md`
 - `.claude/commands/db-generate-migration.md`
 - `.claude/commands/db-seed.md`
@@ -809,10 +883,12 @@ Current slash commands cover git workflows but missing database, API, deployment
 - `.claude/commands/deploy-production.md`
 
 #### Files to Modify
+
 - `.claude/commands/README.md` (add new commands)
 - `docs/wiki/ai-workflows.md` (document usage)
 
 #### Testing
+
 - Run each command with sample input
 - Verify output matches expectations
 - Test dry-run mode
@@ -827,9 +903,11 @@ Current slash commands cover git workflows but missing database, API, deployment
 **Dependencies**: Issues #5, #6, #7 (need features to demo)
 
 #### Problem Statement
+
 Starter lacks onboarding guide and reference implementation. New users (or future you) need clear path from clone to deployed app.
 
 #### Success Criteria
+
 - [ ] Quick Start guide (0 → deployed app in 30 min)
 - [ ] Example app built with starter showcasing all features
 - [ ] Video walkthrough (5-10 min) of key workflows
@@ -838,6 +916,7 @@ Starter lacks onboarding guide and reference implementation. New users (or futur
 #### Implementation Steps
 
 ##### Part A: Quick Start Guide
+
 1. **Write step-by-step guide**
    - Prerequisites (Node, pnpm, Supabase account)
    - Clone and install dependencies
@@ -856,6 +935,7 @@ Starter lacks onboarding guide and reference implementation. New users (or futur
      - Opens browser to localhost
 
 ##### Part B: Example App
+
 1. **Choose example domain**
    - Recommend: "Team Task Manager"
    - Shows: Auth, organizations, CRUD, roles, billing
@@ -873,6 +953,7 @@ Starter lacks onboarding guide and reference implementation. New users (or futur
    - Link from main README
 
 ##### Part C: Video Walkthrough
+
 1. **Record screen capture**
    - Overview of starter features
    - Walk through example app code
@@ -885,6 +966,7 @@ Starter lacks onboarding guide and reference implementation. New users (or futur
    - Add to docs wiki
 
 ##### Part D: Troubleshooting FAQ
+
 1. **Common errors**
    - Environment variables not set
    - Supabase connection issues
@@ -897,6 +979,7 @@ Starter lacks onboarding guide and reference implementation. New users (or futur
    - How to reset local database
 
 #### Files to Create
+
 - `docs/QUICK_START.md`
 - `scripts/setup.ts`
 - `examples/task-manager/` (full example app)
@@ -904,10 +987,12 @@ Starter lacks onboarding guide and reference implementation. New users (or futur
 - `docs/FAQ.md`
 
 #### Files to Modify
+
 - `README.md` (link to quick start, video)
 - `package.json` (add setup script)
 
 #### Testing
+
 - Follow guide from scratch on fresh machine
 - Run setup script
 - Build and run example app
@@ -923,9 +1008,11 @@ Starter lacks onboarding guide and reference implementation. New users (or futur
 **Dependencies**: None
 
 #### Problem Statement
+
 Basic security best practices not implemented. Need defense-in-depth before production launch.
 
 #### Success Criteria
+
 - [ ] Content Security Policy headers
 - [ ] CSRF protection for mutations
 - [ ] Rate limiting on API routes
@@ -934,6 +1021,7 @@ Basic security best practices not implemented. Need defense-in-depth before prod
 - [ ] Security.txt file
 
 #### Implementation Steps
+
 1. **Add security headers**
    - Configure Next.js headers in `next.config.js`
    - CSP, HSTS, X-Frame-Options, X-Content-Type-Options
@@ -957,21 +1045,25 @@ Basic security best practices not implemented. Need defense-in-depth before prod
    - Add contact info for reporting vulnerabilities
 
 #### Files to Create
+
 - `apps/web/middleware.ts` (rate limiting)
 - `apps/web/lib/csrf.ts`
 - `public/.well-known/security.txt`
 
 #### Files to Modify
+
 - `next.config.js` (security headers)
 - `.github/dependabot.yml`
 - `.github/workflows/ci.yml` (add audit job)
 
 #### Testing
+
 - Test rate limits with curl
 - Verify CSP doesn't break functionality
 - Run `pnpm audit`
 
 #### Documentation
+
 - `docs/wiki/security.md`
 
 ---
@@ -983,9 +1075,11 @@ Basic security best practices not implemented. Need defense-in-depth before prod
 **Dependencies**: Issue #1 (DS integration for proper chunking)
 
 #### Problem Statement
+
 No performance monitoring or optimization strategy. Need to ensure fast load times and good Core Web Vitals.
 
 #### Success Criteria
+
 - [ ] Bundle analysis in CI
 - [ ] Performance budgets enforced
 - [ ] Route-based code splitting configured
@@ -993,6 +1087,7 @@ No performance monitoring or optimization strategy. Need to ensure fast load tim
 - [ ] Lighthouse CI running on PRs
 
 #### Implementation Steps
+
 1. **Bundle analysis**
    - Add `@next/bundle-analyzer`
    - Add `analyze` script to package.json
@@ -1018,15 +1113,18 @@ No performance monitoring or optimization strategy. Need to ensure fast load tim
    - Add responsive image examples
 
 #### Files to Create
+
 - `.lighthouserc.json`
 - `docs/wiki/performance.md`
 
 #### Files to Modify
+
 - `next.config.js` (enable bundle analyzer)
 - `.github/workflows/ci.yml` (add Lighthouse job)
 - `package.json` (add analyze script)
 
 #### Testing
+
 - Run bundle analyzer
 - Run Lighthouse locally
 - Verify budgets catch bloated bundle
@@ -1040,9 +1138,11 @@ No performance monitoring or optimization strategy. Need to ensure fast load tim
 **Dependencies**: None
 
 #### Problem Statement
+
 Only have Sentry for error tracking. Need structured logging, performance monitoring, business metrics for production operations.
 
 #### Success Criteria
+
 - [ ] Structured logging framework (Winston or Pino)
 - [ ] Log levels (debug, info, warn, error)
 - [ ] Performance monitoring (Vercel Analytics or Highlight)
@@ -1050,6 +1150,7 @@ Only have Sentry for error tracking. Need structured logging, performance monito
 - [ ] Logging best practices documentation
 
 #### Implementation Steps
+
 1. **Add structured logging**
    - Install Pino (fast, JSON logging)
    - Create logger singleton
@@ -1075,14 +1176,17 @@ Only have Sentry for error tracking. Need structured logging, performance monito
    - Accessing logs (Vercel logs, log drains)
 
 #### Files to Create
+
 - `apps/web/lib/logger.ts`
 - `apps/web/lib/analytics.ts`
 - `docs/wiki/observability.md`
 
 #### Files to Modify
+
 - Replace `console.log` with `logger` throughout codebase
 
 #### Testing
+
 - Generate logs at different levels
 - Verify logs appear in Vercel dashboard
 - Test analytics events fire
@@ -1098,9 +1202,11 @@ Only have Sentry for error tracking. Need structured logging, performance monito
 **Dependencies**: All features complete
 
 #### Problem Statement
+
 If planning to market DL Starter, need landing page, pricing page, documentation site.
 
 #### Success Criteria
+
 - [ ] Landing page with feature highlights
 - [ ] Pricing page (if selling licenses)
 - [ ] Public documentation site
@@ -1108,6 +1214,7 @@ If planning to market DL Starter, need landing page, pricing page, documentation
 - [ ] GitHub README optimized for discovery
 
 #### Implementation Steps
+
 1. **Create marketing site**
    - New app or route in existing app
    - Landing page with hero, features, CTA
@@ -1138,10 +1245,12 @@ If planning to market DL Starter, need landing page, pricing page, documentation
    - Sitemap
 
 #### Files to Create
+
 - `apps/marketing/` (new Next.js app) or `apps/web/app/(marketing)/`
 - Documentation site (separate repo or subdomain)
 
 #### Testing
+
 - Test all links
 - Verify mobile responsive
 - Check SEO with Lighthouse
@@ -1151,22 +1260,26 @@ If planning to market DL Starter, need landing page, pricing page, documentation
 ## Implementation Order & Timeline
 
 ### Month 1: Foundation (CRITICAL PATH)
+
 - **Week 1**: Issue #1 (DS tokens) + Issue #3 (env management)
 - **Week 2-3**: Issue #2 (testing infrastructure)
 - **Week 4**: Issue #4 (migration workflow)
 
 ### Month 2: Core Features
+
 - **Week 1**: Issue #5 (user profile)
 - **Week 2-3**: Issue #6 (organizations)
 - **Week 4**: Issue #7 (billing) - Part A & B
 
 ### Month 3: Complete & Polish
+
 - **Week 1**: Issue #7 (billing) - Part C, D, E
 - **Week 2**: Issue #8 (email) + Issue #11 (security)
 - **Week 3**: Issue #9 (AI commands) + Issue #10 (quick start)
 - **Week 4**: Issue #12 (performance) + Issue #13 (observability)
 
 ### Month 4+: Market Prep (if selling)
+
 - Issue #14 (marketing site)
 - Community building
 - Content creation
@@ -1176,6 +1289,7 @@ If planning to market DL Starter, need landing page, pricing page, documentation
 ## How to Use This Roadmap
 
 ### For Each Issue:
+
 1. **Copy the issue content** → Create GitHub issue with provided details
 2. **Tell Claude**: "Implement Issue #X from IMPLEMENTATION_ROADMAP.md"
 3. **Claude will**:
@@ -1185,12 +1299,14 @@ If planning to market DL Starter, need landing page, pricing page, documentation
    - Create PR
 
 ### Priority Guidance:
+
 - **P0**: Must complete before any production use
 - **P1**: Critical for SaaS functionality
 - **P2**: Important but not blocking launch
 - **P3**: Nice to have, quality of life
 
 ### Solo Founder Tips:
+
 - Start with Month 1 issues in order (they're dependencies for everything else)
 - Don't skip testing (Issue #2) - it pays off immediately
 - Organizations (Issue #6) can be skipped if building single-user app
@@ -1202,6 +1318,7 @@ If planning to market DL Starter, need landing page, pricing page, documentation
 ## Confidence Statement
 
 I am **95% confident** in this roadmap because:
+
 - All tasks are standard SaaS patterns with proven implementations
 - No bleeding-edge tech or experimental approaches
 - Clear dependencies and testing strategies
@@ -1209,6 +1326,7 @@ I am **95% confident** in this roadmap because:
 - Based on your existing architecture (Next.js, Supabase, Turborepo)
 
 The **5% uncertainty** is:
+
 - Specific Stripe webhook edge cases (need testing with real events)
 - RLS policy complexity might require iteration
 - Design system token mapping might need custom transform functions

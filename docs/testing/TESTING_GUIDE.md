@@ -28,13 +28,13 @@ The DL Starter uses a comprehensive testing strategy with three types of tests:
 
 ## Test Stack
 
-| Tool | Purpose | Version |
-|------|---------|---------|
-| Vitest | Unit & integration testing | 3.2.4 |
-| Playwright | E2E browser testing | 1.55.1 |
-| React Testing Library | Component testing | 16.3.0 |
-| @vitest/coverage-v8 | Coverage reporting | 3.2.4 |
-| @axe-core/playwright | Accessibility testing | 4.10.2 |
+| Tool                  | Purpose                    | Version |
+| --------------------- | -------------------------- | ------- |
+| Vitest                | Unit & integration testing | 3.2.4   |
+| Playwright            | E2E browser testing        | 1.55.1  |
+| React Testing Library | Component testing          | 16.3.0  |
+| @vitest/coverage-v8   | Coverage reporting         | 3.2.4   |
+| @axe-core/playwright  | Accessibility testing      | 4.10.2  |
 
 ## Running Tests
 
@@ -214,12 +214,12 @@ test('authenticated user can access dashboard', async ({ authenticatedPage }) =>
 
 ### Coverage Thresholds
 
-| Metric | Threshold |
-|--------|-----------|
-| Lines | 70% |
-| Functions | 70% |
-| Branches | 65% |
-| Statements | 70% |
+| Metric     | Threshold |
+| ---------- | --------- |
+| Lines      | 70%       |
+| Functions  | 70%       |
+| Branches   | 65%       |
+| Statements | 70%       |
 
 ### View Coverage Report
 
@@ -232,6 +232,7 @@ open apps/web/coverage/index.html
 ### Coverage Contract
 
 See [coverage-contract.md](./coverage-contract.md) for:
+
 - Excluded files and patterns
 - Critical paths requiring higher coverage
 - Coverage enforcement in CI
@@ -332,6 +333,7 @@ test('homepage should not have accessibility violations', async ({ page }) => {
 ```
 
 **Best Practices:**
+
 - Run axe-core scans on all major pages
 - Test keyboard navigation manually
 - Verify screen reader compatibility for critical flows
@@ -410,6 +412,7 @@ Unit tests run automatically before every push:
   - `>30s` - Warning (consider optimizing)
 
 **Bypass hook** (not recommended):
+
 ```bash
 git push --no-verify
 ```

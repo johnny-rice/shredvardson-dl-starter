@@ -2,10 +2,7 @@ import type { Config } from 'tailwindcss';
 
 const config: Config = {
   darkMode: ['class'],
-  content: [
-    './src/**/*.{ts,tsx,mdx}',
-    '../../packages/ui/src/**/*.{ts,tsx,mdx}',
-  ],
+  content: ['./src/**/*.{ts,tsx,mdx}', '../../packages/ui/src/**/*.{ts,tsx,mdx}'],
   theme: {
     extend: {
       colors: {
@@ -65,13 +62,13 @@ const config: Config = {
       },
       // Fluid typography scale (320px → 2560px)
       fontSize: {
-        'fluid-xs': 'clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)',    // 12px → 14px
-        'fluid-sm': 'clamp(0.875rem, 0.8rem + 0.375vw, 1rem)',      // 14px → 16px
-        'fluid-base': 'clamp(1rem, 0.9rem + 0.5vw, 1.25rem)',       // 16px → 20px
-        'fluid-lg': 'clamp(1.125rem, 1rem + 0.625vw, 1.5rem)',      // 18px → 24px
-        'fluid-xl': 'clamp(1.25rem, 1.1rem + 0.75vw, 1.875rem)',    // 20px → 30px
-        'fluid-2xl': 'clamp(1.5rem, 1.3rem + 1vw, 2.25rem)',        // 24px → 36px
-        'fluid-3xl': 'clamp(1.875rem, 1.6rem + 1.375vw, 3rem)',     // 30px → 48px
+        'fluid-xs': 'clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem)', // 12px → 14px
+        'fluid-sm': 'clamp(0.875rem, 0.8rem + 0.375vw, 1rem)', // 14px → 16px
+        'fluid-base': 'clamp(1rem, 0.9rem + 0.5vw, 1.25rem)', // 16px → 20px
+        'fluid-lg': 'clamp(1.125rem, 1rem + 0.625vw, 1.5rem)', // 18px → 24px
+        'fluid-xl': 'clamp(1.25rem, 1.1rem + 0.75vw, 1.875rem)', // 20px → 30px
+        'fluid-2xl': 'clamp(1.5rem, 1.3rem + 1vw, 2.25rem)', // 24px → 36px
+        'fluid-3xl': 'clamp(1.875rem, 1.6rem + 1.375vw, 3rem)', // 30px → 48px
       },
     },
   },

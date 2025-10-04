@@ -79,9 +79,9 @@ Create technical implementation plan within constitutional constraints.
    id: PLAN-{YYYYMMDD}-{kebab-case-name}
    type: plan
    parentId: SPEC-{YYYYMMDD}-{kebab-case-name}
-   issue: {github-issue-number}
+   issue: { github-issue-number }
    spec: SPEC-{YYYYMMDD}-{kebab-case-name}
-   source: {github-issue-url}
+   source: { github-issue-url }
    ---
    ```
    Example:

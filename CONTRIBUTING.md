@@ -66,18 +66,21 @@ This keeps agent context lean and prevents repeat issues. The doctor tracks metr
 ### ADR (Architecture Decision Record) Requirements
 
 **ADR documentation is REQUIRED** for changes to:
+
 - `prompts/**` - AI behavior and prompt engineering
-- `scripts/**` - Build, deployment, and utility scripts  
+- `scripts/**` - Build, deployment, and utility scripts
 - `.github/workflows/**` - CI/CD and automation workflows
 - `docs/wiki/**` - Public documentation and processes
 
 **Process:**
+
 1. Create ADR file: `docs/decisions/ADR-XXX-descriptive-name.md`
 2. Use template: `docs/decisions/0001-template.md`
 3. Add ADR reference to PR description: `ADR: ADR-XXX`
 4. **Emergency bypass:** Use `override:adr` label (document ADR within 24h post-merge)
 
 **Quick ADR Creation:**
+
 ```bash
 # Use the helper script (recommended)
 pnpm adr:create "Your Decision Title"
@@ -86,7 +89,7 @@ pnpm adr:create "Your Decision Title"
 
 # Manual approach
 cp docs/decisions/0001-template.md docs/decisions/ADR-004-your-change.md
-# Edit: fill Status, Date, Context, Decision, Consequences  
+# Edit: fill Status, Date, Context, Decision, Consequences
 # Reference in PR: "ADR: ADR-004"
 ```
 

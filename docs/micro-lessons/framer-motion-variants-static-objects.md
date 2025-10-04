@@ -10,7 +10,8 @@ Severity: high
 **Rule.** **When creating animation variant objects, explicitly document that they are static and require useReducedMotion hook or adaptation utilities - variants cannot auto-adapt to user preferences.**
 
 **Example.**
-```typescript
+
+````typescript
 // ❌ BAD: Misleading documentation suggests automatic adaptation
 /**
  * Fade in animation variant.
@@ -45,9 +46,10 @@ const prefersReducedMotion = useReducedMotion();
 <motion.div variants={prefersReducedMotion ? getReducedMotionVariants(fadeIn) : fadeIn}>
   Content
 </motion.div>
-```
+````
 
 **Guardrails.**
+
 - Include code examples showing correct usage with adaptation utilities
 - Use "IMPORTANT:" or "NOTE:" to highlight non-obvious requirements
 - Provide companion utilities (useReducedMotion, getReducedMotionVariants)

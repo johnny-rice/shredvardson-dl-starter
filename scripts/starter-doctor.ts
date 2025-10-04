@@ -2041,7 +2041,7 @@ function checkForOverrideLabelWithAudit(): {
       // Check if this is a dependabot PR and auto-apply override
       if (prAuthor === 'dependabot[bot]') {
         console.log('   🤖 Dependabot PR detected - auto-applying ADR override');
-        
+
         // Auto-add override:adr label for dependabot PRs
         try {
           execSync(`gh pr edit ${prNumber} --add-label "override:adr"`, {
@@ -2200,12 +2200,7 @@ function checkADRCompliance(): CheckResult {
 
   try {
     // Check if PR modifies trigger paths that require ADRs
-    const triggerPaths = [
-      'prompts/**',
-      'scripts/**',
-      '.github/workflows/**',
-      'docs/wiki/**',
-    ];
+    const triggerPaths = ['prompts/**', 'scripts/**', '.github/workflows/**', 'docs/wiki/**'];
 
     // Get list of changed files from git using robust PR base detection
     const baseRef = process.env.GITHUB_BASE_REF || 'origin/main';

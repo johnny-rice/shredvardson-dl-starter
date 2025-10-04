@@ -4,30 +4,32 @@ import { resolve } from 'path';
 
 function getNextADRNumber(): string {
   const decisionsDir = resolve('docs/decisions');
-  
+
   if (!existsSync(decisionsDir)) {
     console.error('❌ Directory docs/decisions does not exist');
     process.exit(1);
   }
-  
+
   const files = readdirSync(decisionsDir);
-  
+
   // Find all ADR files with pattern ADR-NNN-*
   const adrNumbers = files
-    .filter(file => file.match(/^ADR-\d{3,}-.*\.md$/))
-    .map(file => {
+    .filter((file) => file.match(/^ADR-\d{3,}-.*\.md$/))
+    .map((file) => {
       const match = file.match(/^ADR-(\d{3,})-/);
       return match ? parseInt(match[1]) : 0;
     })
-    .filter(num => num > 0);
-  
+    .filter((num) => num > 0);
+
   const maxNumber = adrNumbers.length > 0 ? Math.max(...adrNumbers) : 0;
   const nextNumber = maxNumber + 1;
-  
+
   // Add current timestamp to reduce collision risk
   const timestamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '');
-  console.log(`📝 Suggested number: ADR-${nextNumber.toString().padStart(3, '0')} (if collision occurs, manually increment)`);
-  
+  console.log(
+    `📝 Suggested number: ADR-${nextNumber.toString().padStart(3, '0')} (if collision occurs, manually increment)`
+  );
+
   return nextNumber.toString().padStart(3, '0');
 }
 
@@ -41,7 +43,7 @@ function slugify(text: string): string {
 
 function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
     console.log(`
 Usage: pnpm adr:create "Title of the Decision"
@@ -72,19 +74,19 @@ adjust the number to avoid conflicts. The script will warn about this.
 
   const adrNumber = getNextADRNumber();
   const slug = slugify(title);
-  
+
   if (!slug) {
     console.error('❌ Title must contain at least one alphanumeric character');
     process.exit(1);
   }
-  
+
   const filename = `ADR-${adrNumber}-${slug}.md`;
   const filepath = resolve('docs/decisions', filename);
 
   // Read template
   const templatePath = resolve('docs/decisions/0001-template.md');
   let template: string;
-  
+
   try {
     template = readFileSync(templatePath, 'utf8');
   } catch (error) {
@@ -111,7 +113,10 @@ adjust the number to avoid conflicts. The script will warn about this.
       '- **Benefits:** Clear decision history, LLM-friendly structure, consistent formatting\n- **Tradeoffs:** Additional documentation overhead for architectural changes\n- **Monitoring:** Ensure all significant architectural changes have corresponding ADRs',
       '- **Benefits:** [Positive outcomes expected from this decision]\n- **Tradeoffs:** [Negative aspects or limitations]\n- **Monitoring:** [How to track the impact of this decision]'
     )
-    .replace('- Issue: N/A (template establishment)', '- Issue: [Link to GitHub issue if applicable]')
+    .replace(
+      '- Issue: N/A (template establishment)',
+      '- Issue: [Link to GitHub issue if applicable]'
+    )
     .replace('- PR: TBD', '- PR: [Link to implementing PR]');
 
   // Write file

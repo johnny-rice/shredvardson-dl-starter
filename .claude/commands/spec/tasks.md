@@ -81,11 +81,11 @@ Break down technical plan into actionable implementation tasks with TDD focus.
    id: TASK-{YYYYMMDD}-{kebab-case-name}
    type: task
    parentId: PLAN-{YYYYMMDD}-{kebab-case-name}
-   issue: {github-issue-number}
+   issue: { github-issue-number }
    plan: PLAN-{YYYYMMDD}-{kebab-case-name}
    spec: SPEC-{YYYYMMDD}-{kebab-case-name}
    branch: feature/{number}-{name}
-   source: {github-issue-url}
+   source: { github-issue-url }
    ---
    ```
    Example:
