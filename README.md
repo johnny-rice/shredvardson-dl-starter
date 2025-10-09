@@ -58,9 +58,9 @@ Lightweight, LLM-friendly Next.js starter template with Turborepo.
 ## Optional Integrations
 
 - **Sentry**: Set `SENTRY_DSN` to enable error tracking (silent if not set)
-- **Auth**: See `docs/recipes/auth.md`
-- **Database**: See `docs/recipes/db.md`
-- **Payments**: See `docs/recipes/stripe.md`
+- **Auth**: See [docs/recipes/auth.md](docs/recipes/auth.md)
+- **Database**: See [docs/recipes/db.md](docs/recipes/db.md) - includes migration validation & seeding
+- **Payments**: See [docs/recipes/stripe.md](docs/recipes/stripe.md)
 
 ## Testing
 
@@ -81,7 +81,25 @@ See [docs/testing/TESTING_GUIDE.md](docs/testing/TESTING_GUIDE.md) for complete 
 
 ## Scripts
 
-`pnpm turbo run dev --filter=web` / `pnpm turbo run build` / `pnpm turbo run typecheck`
+### Development
+```bash
+pnpm dev              # Start Next.js dev server
+pnpm build            # Build all packages
+pnpm typecheck        # Type check all packages
+pnpm lint             # Lint all packages
+```
+
+### Database
+```bash
+pnpm db:start         # Start local Supabase
+pnpm db:stop          # Stop local Supabase
+pnpm db:reset         # Reset database with migrations
+pnpm db:validate      # Validate migrations for safety
+pnpm db:seed:dev      # Seed development data
+pnpm db:seed:test     # Seed deterministic test data
+```
+
+See [docs/recipes/db.md](docs/recipes/db.md) for complete database workflow.
 
 ## CI Overview
 
