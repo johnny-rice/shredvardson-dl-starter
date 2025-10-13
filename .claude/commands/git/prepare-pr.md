@@ -26,6 +26,7 @@ allowed-tools:
   - 'Bash(git add:*)'
   - 'Bash(git commit:*)'
   - 'Bash(gh pr create:*)'
+  - 'Bash(pnpm tsx scripts/check-docs-sync.ts:*)'
   - 'Read(.github/pull_request_template.md)'
 
 preconditions:
@@ -71,7 +72,10 @@ Create conventional commit and PR body when ready to submit changes.
 
 1. Confirm lane (**lightweight/spec**) against `CLAUDE.md` decision rules.
 2. If `requiresHITL` true, ask for human confirmation citing `riskPolicyRef`.
-3. Create conventional commit and PR body:
+3. Check for documentation gaps: `pnpm tsx scripts/check-docs-sync.ts`
+   - Review suggestions (non-blocking)
+   - Ask user if they want to update docs before proceeding
+4. Create conventional commit and PR body:
    - Stage changes: `git add .`
    - Commit with format: `type(scope): description`
    - Generate PR body using `.github/pull_request_template.md` format with:
@@ -84,10 +88,10 @@ Create conventional commit and PR body when ready to submit changes.
      - Learning Loop
      - LLM Guardrails
      - Breaking changes/Migration
-4. Run verification commands (`pnpm doctor`, `pnpm typecheck`, `pnpm lint`, `pnpm build`)
-5. Reference files in `src/app/` that were modified.
-6. Produce PR **artifacts** and **link** results in related Issue/PR.
-7. Emit **Result**: commit created, PR URL, and next suggested command.
+5. Run verification commands (`pnpm doctor`, `pnpm typecheck`, `pnpm lint`, `pnpm build`)
+6. Reference files in `src/app/` that were modified.
+7. Produce PR **artifacts** and **link** results in related Issue/PR.
+8. Emit **Result**: commit created, PR URL, and next suggested command.
 
 **Examples:**
 

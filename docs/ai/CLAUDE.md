@@ -146,13 +146,16 @@ Minimal learnings capture system to reduce repeat mistakes and keep agent contex
 
 When you open a PR:
 
+- **Documentation check runs automatically** via `/git:prepare-pr` — advisory/non-blocking, runs before commit (checks for gaps in slash commands, package.json scripts, env vars, API routes). Applies to both workflows.
 - Use a **specific, action-oriented title** (e.g., `feat: add user auth with OAuth2`, `fix: resolve memory leak in cache`)
 - Set the PR body from `.github/pull_request_template.md` and **fill sections**:
   - Summary (1–3 sentences), Scope, Verification (paste command results), Breaking changes/Migration
 - If you only push commits (no PR), **create** the PR via CLI:
+
   ```bash
   gh pr create --title "feat: descriptive title" --body-file .github/pull_request_template.md
   ```
+
 - Never leave placeholder text in a PR
 
 ## Security & Review Commands
@@ -163,11 +166,7 @@ See [docs/workflow-security.md](../workflow-security.md) for complete review com
 
 See [Testing Guide](../testing/TESTING_GUIDE.md) for comprehensive testing patterns, coverage requirements, and best practices.
 
-**Quick Commands:**
-- `/test:scaffold` - Generate test scaffolding for new features
-- `pnpm test` - Run unit tests
-- `pnpm test:e2e` - Run end-to-end tests
-- `pnpm test:coverage` - Generate coverage report
+**Quick:** `/test:scaffold` · `pnpm test` · `pnpm test:e2e` · `pnpm test:coverage`
 
 ## References
 
