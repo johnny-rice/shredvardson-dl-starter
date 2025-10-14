@@ -67,7 +67,7 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 
 ### Linting (`pnpm lint`)
 
-**Purpose**: Code style, best practices, and consistency  
+**Purpose**: Code style, best practices, and consistency
 **Checks**:
 
 - ESLint rule compliance
@@ -77,6 +77,32 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 - Security-related patterns
 
 **Green Light**: No linting errors, consistent code style
+
+#### ESLint Semantic Rules
+
+The project enforces semantic coding standards through ESLint:
+
+**Naming Conventions** (`@typescript-eslint/naming-convention`):
+
+- Classes: `PascalCase`
+- Functions/variables: `camelCase`
+- Constants: `UPPER_SNAKE_CASE`
+- Type parameters: `T`, `K`, `V` (single uppercase letter)
+
+**Code Quality Rules**:
+
+- `@typescript-eslint/no-unused-vars` - Prevents dead code
+- `@typescript-eslint/no-explicit-any` - Enforces type safety
+- `prefer-const` - Immutability by default
+
+**Why Semantic Rules Matter**:
+
+- Improve code readability and maintainability
+- Catch bugs before runtime (unused variables, unsafe `any` types)
+- Enforce team conventions automatically
+- Reduce cognitive load during code review
+
+See [eslint-semantic-rules.md](../micro-lessons/eslint-semantic-rules.md) for implementation details.
 
 ### Unit Tests (`pnpm test:unit`)
 

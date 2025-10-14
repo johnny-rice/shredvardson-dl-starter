@@ -30,7 +30,7 @@
 
 ## Repository Structure
 
-```
+```text
 ├── apps/
 │   └── web/                 # Next.js application
 │       ├── src/
@@ -84,10 +84,100 @@
 ### Styling Rules
 
 - **Tailwind CSS Only**: No custom CSS files
-- **Design Tokens**: Use CSS custom properties for theming
-- **No Hardcoded Colors**: Use semantic color tokens like `hsl(var(--primary))`
-- **Responsive Design**: Mobile-first approach
-- **Dark Mode**: Support via CSS custom properties
+- **Design Tokens**: Use semantic CSS custom properties for theming
+- **No Hardcoded Colors**: Use semantic tokens (e.g., `bg-primary`, not `bg-blue-600`)
+- **Fluid Typography**: Use `text-fluid-*` classes for responsive text scaling
+- **8pt Grid System**: All spacing multiples of 4px (`p-2`, `p-4`, `p-6`, `p-8`)
+- **Responsive Design**: Mobile-first approach with fluid design
+- **Dark Mode**: Automatic theme support via CSS custom properties
+
+### Design System
+
+The project uses a comprehensive design system built with **shadcn/ui conventions** and semantic tokens.
+
+**Core Principles:**
+
+- **Semantic tokens** - Abstract design decisions (e.g., `--primary` not `--blue-500`)
+- **Fluid typography** - Responsive text scaling using CSS `clamp()` (320px-2560px viewports)
+- **Motion design** - Framer Motion animations with `prefers-reduced-motion` support
+- **Accessibility-first** - WCAG AA compliance, keyboard nav, ARIA labels
+
+**Key Features:**
+
+- Color tokens: `--primary`, `--secondary`, `--destructive`, `--muted`, `--accent`
+- Typography: `text-fluid-xs` through `text-fluid-3xl` (7 scales)
+- Spacing: 8pt grid (`gap-4`, `space-y-6`, `p-8`)
+- Motion: `fadeIn`, `slideUp`, `scale`, `slideInRight` variants
+
+**Documentation:** See [packages/ui/README.md](../../packages/ui/README.md) for complete token reference, usage examples, and component update workflow.
+
+### Component Development Standards
+
+All components must follow these standards:
+
+#### 1. Use Class Variance Authority (CVA)
+
+```tsx
+import { cva } from 'class-variance-authority';
+
+const buttonVariants = cva('base-classes', {
+  variants: {
+    variant: {
+      default: 'bg-primary text-primary-foreground',
+      secondary: 'bg-secondary text-secondary-foreground',
+      ghost: 'bg-transparent hover:bg-accent',
+    },
+    size: {
+      sm: 'px-3 py-2 text-sm',
+      md: 'px-4 py-2',
+      lg: 'px-6 py-3 text-lg',
+    },
+  },
+});
+```
+
+#### 2. Semantic Tokens Only
+
+```tsx
+// ✅ Correct - semantic tokens
+<Button className="bg-primary text-primary-foreground">Primary</Button>
+
+// ❌ Wrong - hardcoded colors
+<Button className="bg-blue-600 text-white">Primary</Button>
+```
+
+#### 3. JSDoc Documentation
+
+```tsx
+/**
+ * @usageGuidelines
+ * - Only one primary button visible per screen
+ * - Use destructive variant for irreversible actions
+ *
+ * @accessibilityConsiderations
+ * - 4.5:1 contrast ratio (WCAG AA)
+ * - Focus ring with 2px outline
+ * - Keyboard navigation (Space/Enter)
+ */
+export function Button({ variant, children }: ButtonProps) {
+  // ...
+}
+```
+
+#### 4. Accessibility Requirements
+
+- WCAG AA contrast ratios (4.5:1 minimum)
+- Keyboard navigation support
+- ARIA labels for icon-only buttons
+- Focus indicators (2px outline + 2px offset)
+- 44px minimum touch targets on mobile
+
+#### 5. Testing Requirements
+
+- Unit tests for all variants
+- Interaction tests (clicks, hovers, keyboard)
+- Accessibility tests with axe-core (E2E)
+- Visual regression tests for UI changes
 
 ### Example Component Structure
 
@@ -113,7 +203,7 @@ export function CustomButton() {
 
 ### Next.js App Router Structure
 
-```
+```text
 apps/web/src/app/
 ├── (marketing)/           # Public marketing pages
 │   └── page.tsx          # Landing page
@@ -128,7 +218,7 @@ apps/web/src/app/
 
 ### Component Organization
 
-```
+```text
 apps/web/src/components/
 ├── AnalyticsProvider.tsx  # Context providers
 ├── AnalyticsChart.tsx     # Feature-specific components
@@ -137,7 +227,7 @@ apps/web/src/components/
 
 ### Utilities and Configuration
 
-```
+```text
 apps/web/src/lib/
 ├── analytics.ts          # Feature logic
 ├── env.ts               # Environment validation
@@ -167,4 +257,4 @@ apps/web/src/lib/
 
 ---
 
-_Architecture balances rapid development velocity with security, quality, and maintainability_
+**Note:** Architecture balances rapid development velocity with security, quality, and maintainability.

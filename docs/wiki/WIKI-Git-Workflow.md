@@ -45,6 +45,30 @@
 - `pnpm git:cleanup` - Clean up merged branches (dry run first)
 - `pnpm git:finish` - Switch to main, pull latest, clean up current branch
 
+### Squash-Merge Detection
+
+The `git:finish` workflow intelligently handles squash-merged PRs:
+
+**Problem:** When PRs are squash-merged on GitHub, the local feature branch has multiple commits but the remote branch has one squashed commit. Traditional `git branch --merged` fails to detect these as merged.
+
+**Solution:** Uses `git log` comparison to detect squash-merged branches:
+
+```bash
+# Detects branches whose commits are all present in main
+git log --oneline main..branch-name
+
+# Empty output = branch is fully merged (safe to delete)
+```
+
+**Workflow:**
+
+1. Lists branches that appear unmerged locally
+2. Checks each against main using commit analysis
+3. Identifies squash-merged branches safely
+4. Prompts for confirmation before deletion
+
+See [micro-lesson](../micro-lessons/git-squash-merge-detection.md) for implementation details.
+
 ## Definition of Done
 
 - All Quality Gates pass (see [Quality Gates](./WIKI-Quality-Gates.md))

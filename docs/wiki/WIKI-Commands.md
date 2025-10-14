@@ -96,11 +96,21 @@ Commands work with [Planning Templates](./WIKI-Planning-Templates.md) to ensure 
 
 ### `/git:prepare-pr`
 
-**Purpose**: Full PR preparation workflow with quality gates  
-**When to use**: When ready to create pull request  
-**Risk Level**: MEDIUM  
-**Inputs Required**: Completed feature implementation, tests passing  
+**Purpose**: Full PR preparation workflow with quality gates
+**When to use**: When ready to create pull request
+**Risk Level**: MEDIUM
+**Inputs Required**: Completed feature implementation, tests passing
 **Artifacts Produced**: PR with filled template, passing [Quality Gates](./WIKI-Quality-Gates.md)
+
+### `/git:finish`
+
+**Purpose**: Complete feature workflow - switch to main, pull latest, clean up current branch
+**When to use**: After PR is merged, to clean up and prepare for next feature
+**Risk Level**: MEDIUM
+**Inputs Required**: Merged PR, local feature branch
+**Artifacts Produced**: Updated main branch, deleted feature branch (local and remote)
+
+**Key Feature**: Intelligent squash-merge detection - automatically identifies branches that were squash-merged on GitHub (even though they appear "unmerged" locally) and safely prompts for deletion. See [Git Workflow](./WIKI-Git-Workflow.md#squash-merge-detection) for details.
 
 ## Quality & Security Commands
 
@@ -203,4 +213,4 @@ For branch and commit conventions, see [Git Workflow](./WIKI-Git-Workflow.md).
 
 ---
 
-_Commands provide structured workflows while maintaining human oversight and quality standards_
+**Note:** Commands provide structured workflows while maintaining human oversight and quality standards.

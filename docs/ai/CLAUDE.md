@@ -166,7 +166,7 @@ See [docs/workflow-security.md](../workflow-security.md) for complete review com
 
 See [Testing Guide](../testing/TESTING_GUIDE.md) for comprehensive testing patterns, coverage requirements, and best practices.
 
-**Quick:** `/test:scaffold` · `pnpm test` · `pnpm test:e2e` · `pnpm test:coverage`
+**Quick:** `/test:scaffold` · `pnpm test` · `pnpm test:e2e` · `pnpm test:coverage` · **Scratch:** `docs/scratch/` ([README](../scratch/README.md))
 
 ## References
 
