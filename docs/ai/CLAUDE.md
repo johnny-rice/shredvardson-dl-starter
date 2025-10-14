@@ -11,7 +11,7 @@ See [docs/constitution.md](../constitution.md) for complete project mission, gua
 
 ### 🚀 Simple Workflow (Default - Start Here)
 
-Plan → Scaffold tests → Implement → Refactor/Secure → Prepare PR → Self-critique → Docs & Release
+Plan → Scaffold tests → Implement → Refactor/Secure → Prepare PR → Fix PR (if CI fails) → Self-critique → Docs & Release
 
 **Use Simple Workflow for:**
 
@@ -28,7 +28,7 @@ Plan → Scaffold tests → Implement → Refactor/Secure → Prepare PR → Sel
 
 ### 🏗️ Spec-Driven Workflow (Complex/Risky Only)
 
-Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → Self-critique → Docs & Release
+Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → Fix PR (if CI fails) → Self-critique → Docs & Release
 
 **Use Spec-Driven Workflow ONLY when:**
 
@@ -119,6 +119,7 @@ Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → 
 - /git:commit → ../../.claude/commands/git/commit.md
 - /git:workflow → ../../.claude/commands/git/workflow.md
 - /git:prepare-pr → ../../.claude/commands/git/prepare-pr.md
+- /git:fix-pr → ../../.claude/commands/git/fix-pr.md
 - /review:self-critique → ../../.claude/commands/review/self-critique.md
 - /review:ai-powered → AI-powered PR review via GitHub Action (mention-only)
 - /security:scan → Advisory security review for vulnerabilities

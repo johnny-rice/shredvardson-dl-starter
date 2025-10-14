@@ -83,8 +83,8 @@ Thumbs.db
 *.tmp
 *.temp
 .cache/
-# Scratch directory for analysis files (tracked but should be cleaned up)
-# docs/scratch/ - intentionally tracked for collaborative work
+# Scratch directory for temporary planning, research, and analysis
+docs/scratch/
 
 # Runtime data
 pids

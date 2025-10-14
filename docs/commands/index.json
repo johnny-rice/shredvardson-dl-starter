@@ -1,12 +1,16 @@
 {
   "version": 1,
-  "generated": "2025-10-02T09:08:51.591Z",
+  "generated": "2025-10-14T07:35:57.355Z",
   "commands": [
     {
       "name": "'/adr:draft'",
       "path": ".claude/commands/spec/adr-draft.md",
       "category": "Spec-Driven Development",
-      "tags": ["adr", "governance", "documentation"],
+      "tags": [
+        "adr",
+        "governance",
+        "documentation"
+      ],
       "when": "Complex features requiring structured approach",
       "purpose": "Draft ADR when governance triggers occur (prompts, workflows, security, compliance changes).",
       "example": "Standard development workflow",
@@ -17,7 +21,11 @@
       "name": "'/dev:implement'",
       "path": ".claude/commands/dev/implement.md",
       "category": "Simple Development",
-      "tags": ["implementation", "development", "tdd"],
+      "tags": [
+        "implementation",
+        "development",
+        "tdd"
+      ],
       "when": "Small changes and quick tasks",
       "purpose": "Write minimal code to make failing tests pass during TDD implementation.",
       "example": "Build feature following established plan",
@@ -28,7 +36,11 @@
       "name": "'/dev:init-new-app'",
       "path": ".claude/commands/dev/init-new-app.md",
       "category": "Simple Development",
-      "tags": ["initialization", "starter", "scaffolding"],
+      "tags": [
+        "initialization",
+        "starter",
+        "scaffolding"
+      ],
       "when": "Small changes and quick tasks",
       "purpose": "Initialize a new app from this starter with customized configuration.",
       "example": "Standard development workflow",
@@ -39,7 +51,10 @@
       "name": "'/dev:plan-feature'",
       "path": ".claude/commands/dev/plan-feature.md",
       "category": "Simple Development",
-      "tags": ["planning", "features"],
+      "tags": [
+        "planning",
+        "features"
+      ],
       "when": "Small changes and quick tasks",
       "purpose": "Plan a small, safe feature with clear acceptance criteria.",
       "example": "Create technical plan for auth implementation",
@@ -50,7 +65,11 @@
       "name": "'/dev:refactor-secure'",
       "path": ".claude/commands/dev/refactor-secure.md",
       "category": "Simple Development",
-      "tags": ["security", "refactoring", "owasp"],
+      "tags": [
+        "security",
+        "refactoring",
+        "owasp"
+      ],
       "when": "Small changes and quick tasks",
       "purpose": "Improve code clarity and performance while checking OWASP Top 10 security risks.",
       "example": "Add security improvements to API endpoints",
@@ -61,7 +80,10 @@
       "name": "'/docs:generate'",
       "path": ".claude/commands/docs/generate.md",
       "category": "Documentation",
-      "tags": ["documentation", "automation"],
+      "tags": [
+        "documentation",
+        "automation"
+      ],
       "when": "General development tasks",
       "purpose": "Update documentation from code and tests when docs are outdated.",
       "example": "Standard development workflow",
@@ -72,7 +94,11 @@
       "name": "'/git:branch'",
       "path": ".claude/commands/git/branch.md",
       "category": "Git Workflow",
-      "tags": ["git", "branch-management", "workflow"],
+      "tags": [
+        "git",
+        "branch-management",
+        "workflow"
+      ],
       "when": "General development tasks",
       "purpose": "Create a new git branch following standardized naming conventions.",
       "example": "Standard development workflow",
@@ -83,7 +109,10 @@
       "name": "'/git:commit'",
       "path": ".claude/commands/git/commit.md",
       "category": "Git Workflow",
-      "tags": ["git", "conventional-commits"],
+      "tags": [
+        "git",
+        "conventional-commits"
+      ],
       "when": "General development tasks",
       "purpose": "Generate a Conventional Commit message for staged changes.",
       "example": "Create conventional commit for completed feature",
@@ -91,10 +120,31 @@
       "requiresHITL": true
     },
     {
+      "name": "'/git:fix-pr'",
+      "path": ".claude/commands/git/fix-pr.md",
+      "category": "Git Workflow",
+      "tags": [
+        "git",
+        "pr",
+        "ci",
+        "automation",
+        "feedback"
+      ],
+      "when": "General development tasks",
+      "purpose": "Automatically address PR feedback from CI checks, CodeRabbit, and doctor failures.",
+      "example": "Standard development workflow",
+      "riskLevel": "'MEDIUM'",
+      "requiresHITL": true
+    },
+    {
       "name": "'/git:prepare-pr'",
       "path": ".claude/commands/git/prepare-pr.md",
       "category": "Git Workflow",
-      "tags": ["git", "pr", "workflow"],
+      "tags": [
+        "git",
+        "pr",
+        "workflow"
+      ],
       "when": "General development tasks",
       "purpose": "Create conventional commit and PR body when ready to submit changes.",
       "example": "Standard development workflow",
@@ -105,7 +155,11 @@
       "name": "'/git:tag-release'",
       "path": ".claude/commands/git/tag-release.md",
       "category": "Git Workflow",
-      "tags": ["git", "release", "semver"],
+      "tags": [
+        "git",
+        "release",
+        "semver"
+      ],
       "when": "General development tasks",
       "purpose": "Create semantic version from conventional commits when ready to release.",
       "example": "Standard development workflow",
@@ -116,7 +170,11 @@
       "name": "'/git:workflow'",
       "path": ".claude/commands/git/workflow.md",
       "category": "Git Workflow",
-      "tags": ["git", "workflow", "branch-management"],
+      "tags": [
+        "git",
+        "workflow",
+        "branch-management"
+      ],
       "when": "General development tasks",
       "purpose": "Manage git branch lifecycle using consolidated workflow operations.",
       "example": "Standard development workflow",
@@ -127,7 +185,11 @@
       "name": "'/github:create-issue'",
       "path": ".claude/commands/github/create-issue.md",
       "category": "GitHub Integration",
-      "tags": ["github", "issues", "planning"],
+      "tags": [
+        "github",
+        "issues",
+        "planning"
+      ],
       "when": "GitHub workflow and project management",
       "purpose": "Create a GitHub issue from current planning discussion with proper template.",
       "example": "Create GitHub issue with proper templates",
@@ -138,7 +200,11 @@
       "name": "'/github:github-learning-capture'",
       "path": ".claude/commands/github/capture-learning.md",
       "category": "GitHub Integration",
-      "tags": ["github", "learning", "documentation"],
+      "tags": [
+        "github",
+        "learning",
+        "documentation"
+      ],
       "when": "GitHub workflow and project management",
       "purpose": "Update an existing issue with implementation outcomes and learnings.",
       "example": "Create GitHub issue with proper templates",
@@ -149,7 +215,11 @@
       "name": "'/github:update-wiki'",
       "path": ".claude/commands/github/update-wiki.md",
       "category": "GitHub Integration",
-      "tags": ["github", "wiki", "documentation"],
+      "tags": [
+        "github",
+        "wiki",
+        "documentation"
+      ],
       "when": "GitHub workflow and project management",
       "purpose": "Sync current project state to wiki pages for GPT-5 context.",
       "example": "Create GitHub issue with proper templates",
@@ -160,7 +230,11 @@
       "name": "'/ops:learning-capture'",
       "path": ".claude/commands/ops/learning-capture.md",
       "category": "Operations",
-      "tags": ["learning", "coderabbit", "micro-lessons"],
+      "tags": [
+        "learning",
+        "coderabbit",
+        "micro-lessons"
+      ],
       "when": "General development tasks",
       "purpose": "Convert CodeRabbit feedback into micro-lessons or ADRs for pattern capture.",
       "example": "Standard development workflow",
@@ -171,7 +245,11 @@
       "name": "'/ops:wiki-sync'",
       "path": ".claude/commands/ops/wiki-sync.md",
       "category": "Operations",
-      "tags": ["wiki", "sync", "maintenance"],
+      "tags": [
+        "wiki",
+        "sync",
+        "maintenance"
+      ],
       "when": "General development tasks",
       "purpose": "Verify docs/PRD.md and docs/wiki/WIKI-PRD.md are in sync, auto-fix if needed.",
       "example": "Standard development workflow",
@@ -182,7 +260,11 @@
       "name": "'/plan'",
       "path": ".claude/commands/spec/plan.md",
       "category": "Spec-Driven Development",
-      "tags": ["spec-kit", "planning", "architecture"],
+      "tags": [
+        "spec-kit",
+        "planning",
+        "architecture"
+      ],
       "when": "Complex features requiring structured approach",
       "purpose": "Create technical implementation plan within constitutional constraints.",
       "example": "Create technical plan for auth implementation",
@@ -193,7 +275,11 @@
       "name": "'/pr:assist'",
       "path": ".claude/commands/git/pr-assistant.md",
       "category": "Git Workflow",
-      "tags": ["pr", "traceability", "automation"],
+      "tags": [
+        "pr",
+        "traceability",
+        "automation"
+      ],
       "when": "General development tasks",
       "purpose": "Auto-fill PR template with traceability IDs and metadata before opening PR.",
       "example": "Standard development workflow",
@@ -204,7 +290,11 @@
       "name": "'/quality:run-linter'",
       "path": ".claude/commands/quality/run-linter.md",
       "category": "Quality Assurance",
-      "tags": ["quality", "linting", "formatting"],
+      "tags": [
+        "quality",
+        "linting",
+        "formatting"
+      ],
       "when": "General development tasks",
       "purpose": "Execute linting and fix all quality issues before commits.",
       "example": "Standard development workflow",
@@ -215,7 +305,11 @@
       "name": "'/review:self-critique'",
       "path": ".claude/commands/review/self-critique.md",
       "category": "Review & Quality",
-      "tags": ["review", "quality", "validation"],
+      "tags": [
+        "review",
+        "quality",
+        "validation"
+      ],
       "when": "General development tasks",
       "purpose": "Start fresh session and skeptically review recent changes for quality.",
       "example": "Standard development workflow",
@@ -226,7 +320,11 @@
       "name": "'/specify'",
       "path": ".claude/commands/spec/specify.md",
       "category": "Spec-Driven Development",
-      "tags": ["spec-kit", "requirements", "planning"],
+      "tags": [
+        "spec-kit",
+        "requirements",
+        "planning"
+      ],
       "when": "Complex features requiring structured approach",
       "purpose": "Define pure requirements - what and why only, no technical details.",
       "example": "Define requirements for user authentication system",
@@ -237,7 +335,11 @@
       "name": "'/tasks'",
       "path": ".claude/commands/spec/tasks.md",
       "category": "Spec-Driven Development",
-      "tags": ["spec-kit", "tasks", "implementation"],
+      "tags": [
+        "spec-kit",
+        "tasks",
+        "implementation"
+      ],
       "when": "Complex features requiring structured approach",
       "purpose": "Break down technical plan into actionable implementation tasks with TDD focus.",
       "example": "Break down auth feature into TDD tasks",
@@ -248,7 +350,11 @@
       "name": "'/test:scaffold'",
       "path": ".claude/commands/test/scaffold.md",
       "category": "Testing",
-      "tags": ["testing", "tdd", "scaffolding"],
+      "tags": [
+        "testing",
+        "tdd",
+        "scaffolding"
+      ],
       "when": "Setting up tests and TDD workflows",
       "purpose": "Write failing tests from approved plan before implementation.",
       "example": "Standard development workflow",
@@ -256,21 +362,16 @@
       "requiresHITL": false
     },
     {
-      "name": "git:ensure-branch",
-      "path": ".claude/commands/git/ensure-branch.md",
-      "category": "Git Workflow",
-      "tags": ["git", "implementation"],
-      "when": "General development tasks",
-      "purpose": "No description available",
-      "example": "Standard development workflow",
-      "riskLevel": "LOW",
-      "requiresHITL": false
-    },
-    {
       "name": "README",
       "path": ".claude/commands/README.md",
       "category": "General",
-      "tags": ["testing", "planning", "implementation", "requirements", "quality"],
+      "tags": [
+        "testing",
+        "planning",
+        "implementation",
+        "requirements",
+        "quality"
+      ],
       "when": "Setting up tests and TDD workflows",
       "purpose": "No description available",
       "example": "Standard development workflow",
@@ -279,10 +380,32 @@
     }
   ],
   "routing_rules": {
-    "complex_features": ["authentication", "database", "payments", "api", "infra"],
-    "simple_tasks": ["styling", "copy", "props", "refactor", "docs"],
-    "security_sensitive": ["auth", "payments", "user-data", "api-keys", "validation"],
-    "multi_component": ["cross-cutting", "breaking-changes", "new-dependencies"]
+    "complex_features": [
+      "authentication",
+      "database",
+      "payments",
+      "api",
+      "infra"
+    ],
+    "simple_tasks": [
+      "styling",
+      "copy",
+      "props",
+      "refactor",
+      "docs"
+    ],
+    "security_sensitive": [
+      "auth",
+      "payments",
+      "user-data",
+      "api-keys",
+      "validation"
+    ],
+    "multi_component": [
+      "cross-cutting",
+      "breaking-changes",
+      "new-dependencies"
+    ]
   },
   "decision_framework": {
     "spec_driven_triggers": [

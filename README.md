@@ -1,6 +1,8 @@
-# dl-starter (Monorepo)
+# dl-starter
 
-Lightweight, LLM-friendly Next.js starter template with Turborepo.
+**Ship faster with AI.** Production-ready Next.js starter with built-in LLM collaboration tools, automated quality gates, and self-learning documentation that prevents repeat mistakes.
+
+**Not just a template—a development methodology.** Two-lane workflow (simple vs. spec-driven), slash commands for common tasks, and a micro-lesson system that gets smarter with every PR.
 
 ## New App from Template (choose mode):
 
@@ -29,6 +31,117 @@ Lightweight, LLM-friendly Next.js starter template with Turborepo.
 - `packages/types/` - Shared TypeScript types
 - `packages/ai/` - AI utilities and prompts
 - `packages/config/` - Shared ESLint/Prettier/TypeScript configs
+
+## Why This Starter?
+
+### 🤖 Built for Human-AI Collaboration
+
+Most templates assume you're coding alone. This one assumes **you're pair programming with Claude/GPT-5**.
+
+- **26 Slash Commands**: `/git:prepare-pr`, `/git:fix-pr`, `/test:scaffold` - complex workflows in one command
+- **LLM-Optimized Docs**: `CLAUDE.md`, context maps, and structured prompts that AI agents understand
+- **Self-Learning System**: 60+ micro-lessons auto-ranked by usefulness, preventing repeat mistakes
+
+**Real example:** Hit a bug? Create a 90-second micro-lesson. Next time you (or your AI agent) work on similar code, the lesson appears in the Top-10 index. Knowledge compounds automatically.
+
+### ⚡ Automated Quality Gates (That Actually Help)
+
+No more "oops, forgot to run tests" commits.
+
+- **Pre-commit**: Auto-runs tests (<30s) before every commit
+- **Pre-push**: Validates before pushing to remote
+- **CI Pipeline**: Lint (zero warnings), typecheck, build, test, doctor checks
+- **CodeRabbit**: Free AI code review on every PR
+
+**The `/git:fix-pr` Command** - fetches all PR feedback (CI, CodeRabbit, doctor), categorizes issues (auto-fixable vs. manual), fixes them iteratively, and captures learnings. Turn CI failures into one-command fixes.
+
+### 🧪 Testing That Doesn't Suck
+
+Coverage-driven TDD with escape hatches for pragmatism.
+
+- **70% coverage target** (configurable) with clear contracts
+- **Vitest + Playwright + React Testing Library** - modern, fast, reliable
+- **Test isolation helpers** - no more flaky tests from shared state
+- **RLS test templates** - validate security policies, not just code
+
+See [Testing Guide](docs/testing/TESTING_GUIDE.md) for the full philosophy.
+
+### 📚 Self-Organizing Knowledge
+
+Documentation that **evolves with your codebase**, not against it.
+
+- **Micro-Lessons**: 90-second notes on "gotchas" you encountered
+- **Heat Ranking**: Most useful lessons rise to Top-10 automatically
+- **ADR System**: Architectural decisions with full traceability
+- **Wiki Auto-Sync**: GitHub Wiki stays in sync with your codebase
+
+**Unlike static docs**, the micro-lesson system prevents knowledge rot:
+- Old lessons fade (recency decay)
+- Useful lessons get boosted (usage tracking)
+- No single lesson monopolizes the top (capped contribution)
+
+### 🏗️ Two-Lane Development Model
+
+**80% of work = Simple workflow** (Plan → Test → Code → PR)
+**20% of work = Spec-driven workflow** (Specify → Plan → Tasks → Code → PR)
+
+Don't over-engineer simple features. Don't under-engineer risky ones.
+
+Decision framework built in:
+- ✅ Bug fix? → Simple lane
+- ⚠️ Auth system? → Spec lane
+- ✅ CSS tweak? → Simple lane
+- ⚠️ Payment integration? → Spec lane
+
+See [CLAUDE.md](docs/ai/CLAUDE.md) for full decision rules.
+
+### 🔒 Security & Best Practices Baked In
+
+From day one, not bolted on later.
+
+- **Supabase RLS** with test templates
+- **Sentry error tracking** (opt-in via env var)
+- **Type-safe environment variables** with validation
+- **Security scanning** via doctor checks
+- **No hardcoded secrets** (validated in CI)
+
+**Doctor checks** validate 23 different rules on every commit - from CLAUDE.md line limits to RLS policy coverage.
+
+### 🎯 Database Migration Workflow That Works
+
+Stop breaking prod with bad migrations.
+
+- **Migration validation** catches destructive operations before they ship
+- **Seed data scripts** for dev and test environments
+- **RLS policy enforcement** with automated testing
+- **Rollback strategies** documented per migration
+
+See [Database Recipe](docs/recipes/db.md) for the complete workflow.
+
+### When NOT to Use This Starter
+
+**Use this if:** You're building a production SaaS, want to ship fast with AI assistance, and value automated quality over cowboy coding.
+
+**Don't use this if:**
+- You want a minimal starter (try create-next-app instead)
+- You're building a static site (this is overkill)
+- You hate documentation and structure (this won't work for you)
+- You're prototyping and plan to throw it away (too much infrastructure)
+
+**This starter has opinions.** If you agree with them, you'll ship 3x faster. If you don't, you'll fight the system.
+
+### What Makes This Different?
+
+| Feature | create-next-app | vercel/commerce | **This Starter** |
+|---------|----------------|-----------------|------------------|
+| AI Collaboration Tools | ❌ | ❌ | ✅ 26 slash commands |
+| Self-Learning Docs | ❌ | ❌ | ✅ Micro-lessons + heat ranking |
+| Automated PR Fixes | ❌ | ❌ | ✅ `/git:fix-pr` |
+| Testing Infrastructure | ⚠️ Basic | ⚠️ Partial | ✅ Full (70% coverage) |
+| Database Migrations | ❌ | ⚠️ Basic | ✅ Validated + seeded |
+| Quality Gates | ❌ | ⚠️ Lint only | ✅ 23 doctor checks |
+| Two-Lane Workflow | ❌ | ❌ | ✅ Simple + Spec-driven |
+| Production Ready | ⚠️ Starter | ✅ | ✅ Battle-tested |
 
 ## 📘 Project Wiki
 
