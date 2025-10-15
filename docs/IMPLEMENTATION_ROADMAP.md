@@ -13,6 +13,7 @@
 **Priority**: P0 (BLOCKER)
 **Effort**: Medium (3-5 days)
 **Dependencies**: None
+**Status**: ✅ COMPLETE (PR #106)
 
 #### Problem Statement
 
@@ -247,6 +248,7 @@ Design tokens are now established (Phase 1.5), but core UI components use incons
 **Priority**: P0 (BLOCKER)
 **Effort**: High (5-7 days)
 **Dependencies**: None
+**Status**: ✅ COMPLETE (PR #109)
 
 #### Problem Statement
 
@@ -254,12 +256,12 @@ Zero test infrastructure exists despite emphasis on quality. No unit tests, no E
 
 #### Success Criteria
 
-- [ ] Vitest configured for unit/integration tests with >70% coverage target
-- [ ] Playwright configured for E2E tests
-- [ ] Example tests for auth flows (signup, login, logout)
-- [ ] RLS testing helpers for Supabase policies
-- [ ] CI blocks merges if tests fail
-- [ ] Documentation for writing/running tests
+- [x] Vitest configured for unit/integration tests with >70% coverage target
+- [x] Playwright configured for E2E tests
+- [x] Example tests for auth flows (signup, login, logout)
+- [x] RLS testing helpers for Supabase policies
+- [x] CI blocks merges if tests fail
+- [x] Documentation for writing/running tests
 
 #### Implementation Steps
 
@@ -1374,12 +1376,12 @@ If planning to market DL Starter, need landing page, pricing page, documentation
 
 ## Implementation Order & Timeline
 
-### Month 1: Foundation (CRITICAL PATH)
+### Month 1: Foundation (CRITICAL PATH) - ✅ COMPLETE
 
-- **Week 1**: ✅ Issue #1 (DS tokens) + ✅ Issue #3 (env management - if needed)
-- **Week 2**: ✅ Issue #2 (testing infrastructure - COMPLETE)
-- **Week 2.5**: **→ Issue #60 (Component Baseline Audit)** ← YOU ARE HERE
-- **Week 3**: Issue #4 (migration workflow)
+- **Week 1**: ✅ Issue #1 (DS tokens - PR #106) + Issue #3 (env management - deferred)
+- **Week 2**: ✅ Issue #2 (testing infrastructure - PR #109)
+- **Week 2.5**: ✅ Issue #60 (Component Baseline Audit - PR #121)
+- **Week 3**: ✅ Issue #4 (migration workflow - PR #129)
 
 ### Month 2: Core Features
 

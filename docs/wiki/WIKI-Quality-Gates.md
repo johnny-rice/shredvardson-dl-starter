@@ -31,6 +31,7 @@ Our quality pipeline ensures code reliability, security, and maintainability thr
 - **doctor** – Repository health validation
 - **spec-gate** – Specification and governance checks
 - **e2e** – End-to-end test pipeline (if applicable)
+- **docs-check** – Documentation sync validation (advisory, non-blocking)
 
 ## Individual Gates
 
@@ -131,7 +132,7 @@ Note: Infra/docs-only PRs may mark this gate N/A.
 
 ### Build Verification (`pnpm build`)
 
-**Purpose**: Production build success and optimization  
+**Purpose**: Production build success and optimization
 **Checks**:
 
 - Clean production build
@@ -141,6 +142,39 @@ Note: Infra/docs-only PRs may mark this gate N/A.
 - Runtime error prevention
 
 **Green Light**: Successful production build, optimized assets
+
+### Documentation Sync Check (Advisory)
+
+**Purpose**: Ensure documentation stays in sync with code changes
+**Mode**: Advisory only - does not block PRs
+**Checks**:
+
+- Slash commands in `.claude/commands/` are documented
+- Package.json scripts are documented
+- Environment variables are documented in `.env.example`
+- API routes are documented
+
+**Advisory Warnings** (non-blocking):
+
+- New slash commands without descriptions
+- New package.json scripts without documentation
+- New environment variables not in `.env.example`
+- New API routes without corresponding docs
+
+**How it works**:
+
+1. Runs automatically on PR creation/update
+2. Scans code for documentation opportunities
+3. Provides helpful suggestions in PR comments
+4. Never blocks merge - for awareness only
+
+**When to address warnings**:
+
+- ✅ Before merge: Best practice, keeps docs current
+- ⏭️ In follow-up: Acceptable for urgent fixes
+- 📝 In batch: Okay for experimental features
+
+**Green Light**: Documentation gaps identified and acknowledged (or none found)
 
 ## What "Green Lights" Mean
 

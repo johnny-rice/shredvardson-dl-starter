@@ -216,11 +216,13 @@ See [docs/recipes/db.md](docs/recipes/db.md) for complete database workflow.
 
 ## CI Overview
 
-The GitHub Actions workflow (`.github/workflows/ci.yml`) runs three parallel jobs on every push, PR, and manual trigger:
+The GitHub Actions workflow (`.github/workflows/ci.yml`) runs parallel jobs on every push, PR, and manual trigger:
 
 - **ci**: Main build pipeline (lint with zero warnings, typecheck, build, tests, artifact upload)
 - **doctor**: Runs `starter-doctor.ts` to validate template integrity and configuration
 - **spec-gate**: Runs specification gate checks on pull requests
+- **e2e**: End-to-end test pipeline (if applicable to changes)
+- **docs-check**: Documentation sync validation (advisory, non-blocking)
 
 **Manual runs**: Use GitHub's "Run workflow" button or `gh workflow run "CI" --ref your-branch`
 

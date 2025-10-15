@@ -324,14 +324,18 @@ jobs:
           fetch-depth: 0
 
       - name: Check Spec Development Lane
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          HEAD_REF: ${{ github.head_ref }}
         run: |
           echo "Checking spec development lane compliance..."
 
           # Determine if this is an AI-generated PR
           is_ai_branch=false
-          if [[ "${{ github.head_ref }}" =~ ^bots/claude/ ]]; then
+          if [[ "$HEAD_REF" =~ ^bots/claude/ ]]; then
             is_ai_branch=true
-            echo "AI-generated branch detected: ${{ github.head_ref }}"
+            echo "AI-generated branch detected: $HEAD_REF"
           fi
 
           # Check for spec changes
@@ -340,18 +344,18 @@ jobs:
           if [ -n "$spec_changes" ]; then
             echo "Spec changes detected:"
             echo "$spec_changes"
-            
+
             if [ "$is_ai_branch" = true ]; then
               # AI branch creating/modifying specs - validate lane compliance
               echo "Validating AI lane compliance for spec changes..."
-              
+
               # Check if proper issue is linked
-              if [ -z "${{ github.event.pull_request.body }}" ] || ! echo "${{ github.event.pull_request.body }}" | grep -i "closes\|fixes\|resolves"; then
+              if [ -z "$PR_BODY" ] || ! echo "$PR_BODY" | grep -Ei "closes|fixes|resolves"; then
                 echo "⚠️ Warning: AI spec changes should reference an issue"
               fi
               
               # Check for human oversight indicators
-              if ! echo "${{ github.event.pull_request.title }}" | grep -q "\[AI\]"; then
+              if ! echo "$PR_TITLE" | grep -q "\[AI\]"; then
                 echo "⚠️ Warning: AI spec changes should be clearly labeled"
               fi
               

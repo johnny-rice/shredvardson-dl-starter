@@ -6,6 +6,7 @@
 - [Spec-Driven Workflow Commands](#spec-driven-workflow-commands)
 - [Simple Workflow Commands](#simple-workflow-commands)
 - [GitHub Integration Commands](#github-integration-commands)
+- [Operations & Maintenance Commands](#operations--maintenance-commands)
 - [Quality & Security Commands](#quality--security-commands)
 - [Risk Levels](#risk-levels)
 - [Usage Examples](#usage-examples)
@@ -36,20 +37,36 @@ Commands work with [Planning Templates](./WIKI-Planning-Templates.md) to ensure 
 
 ### `/tasks`
 
-**Purpose**: Break implementation plan into discrete development tasks  
-**When to use**: After `/plan` - create actionable task breakdown  
-**Risk Level**: LOW  
-**Inputs Required**: Completed implementation plan  
+**Purpose**: Break implementation plan into discrete development tasks
+**When to use**: After `/plan` - create actionable task breakdown
+**Risk Level**: LOW
+**Inputs Required**: Completed implementation plan
 **Artifacts Produced**: Task list in `tasks/` directory with priority and dependencies
+
+### `/spec:adr-draft`
+
+**Purpose**: Draft Architecture Decision Record (ADR) when governance triggers occur
+**When to use**: Prompt changes, workflow updates, security guardrails, compliance requirements
+**Risk Level**: LOW (requires HITL)
+**Inputs Required**: Governance trigger type (prompt-change, workflow-update, security-guardrail, compliance-requirement, repo-structure)
+**Artifacts Produced**: ADR document in `docs/decisions/ADR-YYYYMMDD-[slug].md`
 
 ## Simple Workflow Commands
 
+### `/dev:init-new-app`
+
+**Purpose**: Initialize a new application within the monorepo or export as standalone repo
+**When to use**: Creating new app from template with PRD-driven configuration
+**Risk Level**: MEDIUM
+**Inputs Required**: App slug, PRD scope, feature toggles
+**Artifacts Produced**: Configured app structure with [docs/product/PRD.md](../../README.md#new-app-from-template-choose-mode)
+
 ### `/dev:plan-feature`
 
-**Purpose**: Plan and scaffold small features or bug fixes in one step  
-**When to use**: Single-component changes, small improvements, bug fixes  
-**Risk Level**: MEDIUM  
-**Inputs Required**: Clear issue description, relevant code paths, constraints  
+**Purpose**: Plan and scaffold small features or bug fixes in one step
+**When to use**: Single-component changes, small improvements, bug fixes
+**Risk Level**: MEDIUM
+**Inputs Required**: Clear issue description, relevant code paths, constraints
 **Artifacts Produced**: Branch creation, basic scaffolding, checklist implementation plan
 
 ### `/test:scaffold`
@@ -80,11 +97,35 @@ Commands work with [Planning Templates](./WIKI-Planning-Templates.md) to ensure 
 
 ### `/github:create-issue`
 
-**Purpose**: Create structured GitHub issue with proper labeling  
-**When to use**: Documenting bugs, feature requests, or tasks  
-**Risk Level**: LOW  
-**Inputs Required**: Issue description, labels, priority  
+**Purpose**: Create structured GitHub issue with proper labeling
+**When to use**: Documenting bugs, feature requests, or tasks
+**Risk Level**: LOW
+**Inputs Required**: Issue description, labels, priority
 **Artifacts Produced**: GitHub issue with project templates and proper categorization
+
+### `/github:update-wiki`
+
+**Purpose**: Push updated Wiki documentation to GitHub Wiki
+**When to use**: After updating docs/wiki/ files, to sync with GitHub Wiki
+**Risk Level**: LOW
+**Inputs Required**: Updated wiki markdown files in docs/wiki/
+**Artifacts Produced**: Synced GitHub Wiki pages
+
+### `/github:capture-learning`
+
+**Purpose**: Capture learning from PR or issue into micro-lesson
+**When to use**: After resolving issue with useful patterns or gotchas
+**Risk Level**: LOW
+**Inputs Required**: Issue/PR number, learning context, pattern description
+**Artifacts Produced**: Micro-lesson in docs/micro-lessons/ with heat ranking
+
+### `/git:branch`
+
+**Purpose**: Create new git branch following standardized naming conventions
+**When to use**: Starting new feature, fix, chore, or documentation work
+**Risk Level**: LOW
+**Inputs Required**: Branch type (feature/fix/chore/docs), issue number, slug
+**Artifacts Produced**: New branch with standardized name `<type>/<issue#>-<slug>`
 
 ### `/git:commit`
 
@@ -102,6 +143,29 @@ Commands work with [Planning Templates](./WIKI-Planning-Templates.md) to ensure 
 **Inputs Required**: Completed feature implementation, tests passing
 **Artifacts Produced**: PR with filled template, passing [Quality Gates](./WIKI-Quality-Gates.md)
 
+### `/git:fix-pr`
+
+**Purpose**: Automatically address PR feedback from CI checks, CodeRabbit, and doctor failures
+**When to use**: When PR has failing checks or review feedback to address
+**Risk Level**: MEDIUM
+**Inputs Required**: PR number (optional, defaults to current branch), CI feedback, CodeRabbit comments
+**Artifacts Produced**: Commits with fixes, micro-lessons for reusable patterns, fix report
+
+**Key Features**:
+
+- Categorizes issues as auto-fixable, pre-existing, or manual
+- Fixes issues iteratively with separate commits
+- Captures micro-lessons for reusable patterns
+- Waits for CI checks to complete (up to 5 minutes)
+
+### `/git:pr-assistant`
+
+**Purpose**: Complete PR template with traceability and governance compliance
+**When to use**: Creating comprehensive PR with full context and cross-references
+**Risk Level**: LOW (requires HITL)
+**Inputs Required**: Completed feature, specification/plan references, test results
+**Artifacts Produced**: PR with filled template including ADR references and traceability
+
 ### `/git:finish`
 
 **Purpose**: Complete feature workflow - switch to main, pull latest, clean up current branch
@@ -112,14 +176,64 @@ Commands work with [Planning Templates](./WIKI-Planning-Templates.md) to ensure 
 
 **Key Feature**: Intelligent squash-merge detection - automatically identifies branches that were squash-merged on GitHub (even though they appear "unmerged" locally) and safely prompts for deletion. See [Git Workflow](./WIKI-Git-Workflow.md#squash-merge-detection) for details.
 
+### `/git:tag-release`
+
+**Purpose**: Create semantic version tag for release management
+**When to use**: After merging to main, before deployment
+**Risk Level**: MEDIUM
+**Inputs Required**: Version bump type (major/minor/patch), changelog updates
+**Artifacts Produced**: Git tag with version, updated changelog
+
+### `/git:workflow`
+
+**Purpose**: Display git workflow guidance and current project state
+**When to use**: Need reminder of git workflow conventions or branch status
+**Risk Level**: LOW
+**Inputs Required**: None
+**Artifacts Produced**: Workflow guide display and current branch context
+
+## Operations & Maintenance Commands
+
+### `/ops:learning-capture`
+
+**Purpose**: Convert CodeRabbit feedback or recurring patterns into micro-lessons or ADRs
+**When to use**: Pattern identified from code review feedback, process improvements needed
+**Risk Level**: LOW
+**Inputs Required**: Feedback type (pattern for micro-lesson, process for ADR), CodeRabbit comment
+**Artifacts Produced**: Micro-lesson in docs/micro-lessons/ or ADR in docs/decisions/
+
+### `/ops:wiki-sync`
+
+**Purpose**: Verify and sync docs/PRD.md with docs/wiki/WIKI-PRD.md
+**When to use**: After updating PRD, to ensure wiki is in sync
+**Risk Level**: LOW
+**Inputs Required**: Updated PRD file
+**Artifacts Produced**: Synced wiki files, sync status report
+
+### `/docs:generate`
+
+**Purpose**: Generate or update project documentation from code and templates
+**When to use**: After adding new components, API routes, or configuration
+**Risk Level**: LOW
+**Inputs Required**: Source code, documentation templates
+**Artifacts Produced**: Generated/updated documentation files
+
 ## Quality & Security Commands
+
+### `/review:self-critique`
+
+**Purpose**: Perform self-review of code changes before creating PR
+**When to use**: After implementation, before `/git:prepare-pr`
+**Risk Level**: LOW
+**Inputs Required**: Staged or committed changes on feature branch
+**Artifacts Produced**: Self-review report with suggestions and potential issues
 
 ### `/review:ai-powered` (GitHub Action - Mention Only)
 
-**Purpose**: AI-powered code review with inline feedback  
-**When to use**: Mention `@claude /review` in PR comments  
-**Risk Level**: ADVISORY  
-**Inputs Required**: Open PR with code changes  
+**Purpose**: AI-powered code review with inline feedback
+**When to use**: Mention `@claude /review` in PR comments
+**Risk Level**: ADVISORY
+**Inputs Required**: Open PR with code changes
 **Artifacts Produced**: Inline PR comments with suggestions and improvement recommendations
 
 ### `/security:scan` (GitHub Action - Automatic)
