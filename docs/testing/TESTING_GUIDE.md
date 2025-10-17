@@ -13,11 +13,12 @@ Comprehensive guide for writing and running tests in the DL Starter monorepo.
 
 ## Overview
 
-The DL Starter uses a comprehensive testing strategy with three types of tests:
+The DL Starter uses a comprehensive testing strategy with four types of tests:
 
 1. **Unit Tests** - Test individual components and functions in isolation
 2. **RLS Tests** - Test Row Level Security policies in Supabase
 3. **E2E Tests** - Test complete user flows in a real browser
+4. **CI Script Tests** - Integration tests for CI validation scripts
 
 ### Testing Philosophy
 
@@ -61,11 +62,37 @@ pnpm test:e2e
 pnpm test:e2e:ci
 ```
 
+### CI Script Tests
+
+```bash
+# Run CI script integration tests
+pnpm test:ci-scripts
+
+# Run specific test
+bash tests/ci/validate-specs.test.sh
+```
+
+**Purpose**: Validate that CI validation scripts (spec validation, lane detection, etc.) work correctly before pushing.
+
+**Location**: `tests/ci/*.test.sh`
+
+**Coverage**: Integration tests for all scripts in `scripts/ci/`
+
+**Workflow Integration**:
+
+- Runs automatically in pre-push hook (~2s execution time)
+- Included in `/git:prepare-pr` slash command verification
+- Blocks pushes and PRs if scripts are broken
+- Ensures token optimization governance scripts work correctly
+
 ### All Tests
 
 ```bash
 # Run all tests (unit + E2E)
 pnpm test
+
+# Run all tests including CI scripts
+pnpm test && pnpm test:ci-scripts
 ```
 
 ## Writing Tests

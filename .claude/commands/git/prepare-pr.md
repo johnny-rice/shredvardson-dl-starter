@@ -88,7 +88,7 @@ Create conventional commit and PR body when ready to submit changes.
      - Learning Loop
      - LLM Guardrails
      - Breaking changes/Migration
-5. Run verification commands (`pnpm doctor`, `pnpm typecheck`, `pnpm lint`, `pnpm build`)
+5. Run verification commands (`pnpm test:ci-scripts`, `pnpm doctor`, `pnpm typecheck`, `pnpm lint`, `pnpm build`)
 6. Reference files in `src/app/` that were modified.
 7. Produce PR **artifacts** and **link** results in related Issue/PR.
 8. Emit **Result**: commit created, PR URL, and next suggested command.

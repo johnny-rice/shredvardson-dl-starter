@@ -1,0 +1,271 @@
+name: Token Optimization Guard
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/**'
+      - 'scripts/ci/**'
+      - 'docs/**'
+      - '.claude/commands/**'
+      - '.claudeignore'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate-token-optimization:
+    name: Validate Token Optimization Patterns
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Check workflow file sizes
+        continue-on-error: true  # Advisory only - don't block merges during Phase 1.1 implementation
+        run: |
+          echo "Checking workflow file sizes..."
+          threshold=200
+          failed=0
+
+          for workflow in .github/workflows/*.yml; do
+            if [ -f "$workflow" ]; then
+              lines=$(wc -l < "$workflow")
+              echo "  $workflow: $lines lines"
+
+              if [ "$lines" -gt "$threshold" ]; then
+                echo "::error file=$workflow::Workflow exceeds $threshold lines ($lines lines). Consider extracting inline scripts."
+                failed=1
+              fi
+            fi
+          done
+
+          if [ $failed -eq 1 ]; then
+            echo "⚠️ One or more workflows exceed line threshold. See docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md"
+          else
+            echo "✅ All workflows within size limits"
+          fi
+
+      - name: Check for long inline scripts
+        run: |
+          echo "Checking for long inline scripts..."
+          threshold=20
+          warned=0
+
+          for workflow in .github/workflows/*.yml; do
+            if [ -f "$workflow" ]; then
+              # Find inline scripts (lines after "run: |")
+              in_script=false
+              script_line_count=0
+              script_start=0
+
+              while IFS= read -r line; do
+                if echo "$line" | grep -q "run: |"; then
+                  in_script=true
+                  script_line_count=0
+                  script_start=$((script_start + 1))
+                elif [ "$in_script" = true ]; then
+                  if echo "$line" | grep -q "^      " || echo "$line" | grep -q "^        "; then
+                    script_line_count=$((script_line_count + 1))
+                  else
+                    if [ $script_line_count -gt $threshold ]; then
+                      echo "::warning file=$workflow,line=$script_start::Inline script has $script_line_count lines (threshold: $threshold). Consider extracting to scripts/ci/"
+                      warned=1
+                    fi
+                    in_script=false
+                    script_line_count=0
+                  fi
+                fi
+              done < "$workflow"
+            fi
+          done
+
+          if [ $warned -eq 1 ]; then
+            echo "⚠️  Long inline scripts detected. See docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md#1-extract-dont-embed"
+          else
+            echo "✅ No long inline scripts detected"
+          fi
+
+      - name: Check for setup duplication
+        run: |
+          echo "Checking for duplicated setup steps..."
+          warned=0
+
+          # Check if workflows use composite action
+          for workflow in .github/workflows/*.yml; do
+            if [ -f "$workflow" ] && ! echo "$workflow" | grep -q "token-optimization-guard"; then
+              if grep -q "uses: actions/checkout" "$workflow" && \
+                 grep -q "uses: pnpm/action-setup" "$workflow" && \
+                 ! grep -q "uses: ./.github/actions/setup" "$workflow"; then
+                echo "::warning file=$workflow::Workflow contains manual setup steps. Consider using composite action: uses: ./.github/actions/setup"
+                warned=1
+              fi
+            fi
+          done
+
+          if [ $warned -eq 1 ]; then
+            echo "⚠️  Setup duplication detected. See docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md#5-consolidate-workflows"
+          else
+            echo "✅ No setup duplication detected"
+          fi
+
+      - name: Check error messages for debugging references
+        continue-on-error: true  # Advisory only - don't block merges during Phase 1.1 implementation
+        run: |
+          echo "Checking error messages reference debugging guide..."
+          failed=0
+
+          for workflow in .github/workflows/*.yml; do
+            if [ -f "$workflow" ]; then
+              # Find error annotations without debugging references
+              if grep -n "::error::" "$workflow" | grep -v "DEBUGGING.md"; then
+                echo "::warning file=$workflow::Error message found without debugging guide reference. All errors should reference .github/DEBUGGING.md"
+                failed=1
+              fi
+            fi
+          done
+
+          if [ $failed -eq 1 ]; then
+            echo "⚠️ Error messages missing debugging references. See docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md#6-error-messages-with-context"
+          else
+            echo "✅ All error messages reference debugging guide"
+          fi
+
+      - name: Check local script availability
+        run: |
+          echo "Checking CI steps have local alternatives..."
+          warned=0
+
+          # Extract all "run:" commands from workflows (excluding this one)
+          for workflow in .github/workflows/*.yml; do
+            if [ -f "$workflow" ] && ! echo "$workflow" | grep -q "token-optimization-guard"; then
+              # Look for "run:" that call scripts but aren't available via package.json
+              while IFS= read -r line; do
+                if echo "$line" | grep -q "run: \./scripts/ci/"; then
+                  script=$(echo "$line" | sed 's/.*run: \.\///' | awk '{print $1}')
+                  script_name=$(basename "$script" .sh)
+
+                  # Check if package.json has corresponding command
+                  if ! grep -q "\".*$script_name.*\":" package.json; then
+                    echo "::warning file=$workflow::Script $script used in CI but no package.json command found. Add a local test command."
+                    warned=1
+                  fi
+                fi
+              done < "$workflow"
+            fi
+          done
+
+          if [ $warned -eq 1 ]; then
+            echo "⚠️  CI scripts missing local alternatives. See docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md#7-local-first-testing"
+          else
+            echo "✅ All CI scripts have local alternatives"
+          fi
+
+      - name: Check documentation file sizes
+        run: |
+          echo "Checking documentation file sizes..."
+          threshold=500
+          warned=0
+
+          for doc in $(find docs/ -name "*.md" -type f); do
+            lines=$(wc -l < "$doc")
+
+            if [ "$lines" -gt "$threshold" ]; then
+              echo "::warning file=$doc::Documentation file exceeds $threshold lines ($lines lines). Consider splitting or moving to docs/archive/"
+              warned=1
+            fi
+          done
+
+          if [ $warned -eq 1 ]; then
+            echo "⚠️  Large documentation files detected. See docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md#2-reference-dont-duplicate"
+          else
+            echo "✅ All documentation files within size limits"
+          fi
+
+      - name: Check .claudeignore patterns
+        continue-on-error: true  # Advisory only - don't block merges during Phase 1.1 implementation
+        run: |
+          echo "Checking .claudeignore has required patterns..."
+          failed=0
+
+          required_patterns=(
+            "docs/wiki/"
+            "docs/micro-lessons/"
+            "docs/archive/"
+          )
+
+          if [ ! -f ".claudeignore" ]; then
+            echo "::warning::.claudeignore file not found"
+            failed=1
+          fi
+
+          for pattern in "${required_patterns[@]}"; do
+            if ! grep -q "$pattern" .claudeignore; then
+              echo "::warning file=.claudeignore::Missing required exclusion pattern: $pattern"
+              failed=1
+            fi
+          done
+
+          if [ $failed -eq 1 ]; then
+            echo "⚠️ .claudeignore missing required patterns. See docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md#3-exclude-external-docs"
+          else
+            echo "✅ .claudeignore has all required patterns"
+          fi
+
+      - name: Check for command file overlap
+        run: |
+          echo "Checking slash command overlap..."
+
+          # This is a simplified check - actual implementation would use more sophisticated similarity detection
+          if [ -d ".claude/commands/git" ]; then
+            echo "ℹ️  Slash command overlap check is informational only"
+            echo "   Manual quarterly review recommended per TOKEN_OPTIMIZATION_GUIDELINES.md#8-command-consolidation"
+          fi
+
+      - name: Generate optimization report
+        if: always()
+        run: |
+          echo "## Token Optimization Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Validated against [TOKEN_OPTIMIZATION_GUIDELINES.md](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Workflow metrics
+          echo "### Workflow Metrics" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Lines | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|-------|--------|" >> $GITHUB_STEP_SUMMARY
+
+          for workflow in .github/workflows/*.yml; do
+            if [ -f "$workflow" ]; then
+              lines=$(wc -l < "$workflow")
+              status="✅"
+              if [ "$lines" -gt 200 ]; then
+                status="❌"
+              elif [ "$lines" -gt 150 ]; then
+                status="⚠️"
+              fi
+              echo "| $(basename $workflow) | $lines | $status |" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Target:** <200 lines per workflow" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Documentation metrics
+          echo "### Documentation Metrics" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          total_size=$(du -sh docs/ | awk '{print $1}')
+          echo "**Total documentation size:** $total_size" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Recommendations
+          echo "### Recommendations" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Review [TOKEN_OPTIMIZATION_GUIDELINES.md](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md) for best practices" >> $GITHUB_STEP_SUMMARY
+          echo "- Run \`pnpm run token:audit\` locally for detailed analysis" >> $GITHUB_STEP_SUMMARY
+          echo "- See [.github/DEBUGGING.md](https://github.com/${{ github.repository }}/blob/${{ github.sha }}/.github/DEBUGGING.md) for CI debugging help" >> $GITHUB_STEP_SUMMARY

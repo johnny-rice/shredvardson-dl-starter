@@ -177,18 +177,21 @@ See [Database Recipe](docs/recipes/db.md) for the complete workflow.
 
 ## Testing
 
-Comprehensive test infrastructure with unit, RLS, and E2E tests:
+Comprehensive test infrastructure with unit, RLS, E2E, and CI script tests:
 
 ```bash
-pnpm test           # Run all tests
-pnpm test:unit      # Run unit tests only
-pnpm test:e2e       # Run E2E tests only
-pnpm test:coverage  # Generate coverage report
+pnpm test            # Run all tests
+pnpm test:unit       # Run unit tests only
+pnpm test:e2e        # Run E2E tests only
+pnpm test:coverage   # Generate coverage report
+pnpm test:ci-scripts # Run CI script integration tests
 ```
 
 **Coverage Target**: 70% minimum (see [Testing Guide](docs/testing/TESTING_GUIDE.md))
 
 **Test Stack**: Vitest 3.2.4 + Playwright 1.55.1 + React Testing Library 16.3.0
+
+**CI Script Tests**: Integration tests for CI validation scripts (spec validation, lane detection, etc.)
 
 See [docs/testing/TESTING_GUIDE.md](docs/testing/TESTING_GUIDE.md) for complete documentation.
 

@@ -146,10 +146,39 @@ This constitution establishes the architectural decisions, governance patterns, 
 - **Education**: Focus on education over punishment for policy violations
 - **Continuous Improvement**: Regular review and improvement of enforcement mechanisms
 
+## Article IX: Token Efficiency
+
+### Section 9.1: Context Minimization
+
+- **Extract Don't Embed**: Inline scripts in workflows must be extracted to standalone files in `scripts/ci/`
+- **Reference Don't Duplicate**: Documentation must be written once and referenced elsewhere
+- **Exclude External Docs**: Documentation for external consumption must be excluded from AI context via `.claudeignore`
+- **Archive Stale Content**: Documentation older than 90 days with no references must be archived to `docs/archive/`
+
+### Section 9.2: Workflow Efficiency
+
+- **Consolidate Workflows**: GitHub Actions jobs must use composite actions for shared setup steps
+- **Error Messages with Context**: CI error messages must reference `.github/DEBUGGING.md` sections
+- **Local-First Testing**: All CI checks must be runnable locally via package.json scripts
+
+### Section 9.3: Command Optimization
+
+- **Command Consolidation**: Slash commands with >50% overlap must extract shared patterns to reusable modules
+- **Command Documentation**: All commands must have clear purpose and usage documentation
+- **Command Size Limits**: Individual command files should not exceed 300 lines
+
+### Section 9.4: Enforcement
+
+- **Automated Guards**: Token optimization guard workflow validates compliance on all PRs
+- **Quarterly Audits**: Maintainers conduct quarterly token optimization audits
+- **Metrics Tracking**: Monthly tracking of workflow size, inline scripts, doc duplication, and command overlap
+- **Guidelines Reference**: All token optimization patterns documented in `docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md`
+
 ---
 
-**Ratified**: 2025-09-18  
-**Version**: 1.0.0  
+**Ratified**: 2025-09-18
+**Last Amended**: 2025-10-15 (Article IX: Token Efficiency)
+**Version**: 1.1.0
 **Next Review**: 2025-12-18
 
 This constitution serves as the foundational governance document for all development activities within the Dissonance Labs Starter project. All contributors, human and AI, are bound by these principles.
