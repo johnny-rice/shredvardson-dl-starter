@@ -95,6 +95,19 @@ Decision framework built in:
 
 See [CLAUDE.md](docs/ai/CLAUDE.md) for full decision rules.
 
+### 📋 Epic System for Organizing Work
+
+Track large initiatives with **minimal overhead**.
+
+- **Epics** (`epic` label): Multi-issue work (>3 days OR multiple PRs)
+- **Lane Labels**: `spec-lane` (complex) or `simple-lane` (straightforward)
+- **Native GitHub**: No custom tooling, just labels + issues
+- **Clear Hierarchy**: Epics link to sub-issues via checklist
+
+**Example:** [Epic #151 - Complete Design System](https://github.com/Shredvardson/dl-starter/issues/151) organizes 5 issues across 3 phases.
+
+See [Epic System Guide](docs/EPIC_SYSTEM.md) for details.
+
 ### 🔒 Security & Best Practices Baked In
 
 From day one, not bolted on later.
