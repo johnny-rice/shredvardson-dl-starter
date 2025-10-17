@@ -88,63 +88,8 @@ jobs:
         if: always() && github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Scrape structured AI review comments and append to doctor report
-          PR_NUMBER=${{ github.event.pull_request.number }}
-          echo "Scraping AI review comments from PR #$PR_NUMBER..."
-
-          # Get PR head SHA for validation
-          PR_HEAD_SHA=${{ github.event.pull_request.head.sha }}
-          echo "PR head SHA: $PR_HEAD_SHA"
-
-          # Get AI review comment content with anti-poisoning validation
-          AI_REVIEW_CONTENT=$(gh api repos/${{ github.repository }}/issues/$PR_NUMBER/comments 2>/dev/null \
-            | jq -r --arg sha "$PR_HEAD_SHA" '.[]
-              | select(.user.login=="github-actions[bot]")
-              | select(.body|contains("<!-- ai-review:v1") and contains($sha))
-              | .body' || true)
-
-          # Get AI security review comment content with anti-poisoning validation
-          AI_SEC_CONTENT=$(gh api repos/${{ github.repository }}/issues/$PR_NUMBER/comments 2>/dev/null \
-            | jq -r --arg sha "$PR_HEAD_SHA" '.[]
-              | select(.user.login=="github-actions[bot]")
-              | select(.body|contains("<!-- ai-sec-review:v1") and contains($sha))
-              | .body' || true)
-
-          # Extract and append AI review content
-          if [ -n "$AI_REVIEW_CONTENT" ]; then
-            echo "Found AI review comment, extracting content..."
-            echo "$AI_REVIEW_CONTENT" | sed -n '/<!-- ai-review:v1.*-->/,/<!-- \/ai-review:v1 -->/p' | \
-              sed '1d;$d' >> artifacts/doctor-report.md
-            echo "" >> artifacts/doctor-report.md
-          fi
-
-          # Extract and append AI security review content
-          if [ -n "$AI_SEC_CONTENT" ]; then
-            echo "Found AI security review comment, extracting content..."
-            echo "$AI_SEC_CONTENT" | sed -n '/<!-- ai-sec-review:v1.*-->/,/<!-- \/ai-sec-review:v1 -->/p' | \
-              sed '1d;$d' >> artifacts/doctor-report.md
-            echo "" >> artifacts/doctor-report.md
-          fi
-
-          # Add separator if any AI content was found; otherwise append a literal fallback block
-          if [ -n "$AI_REVIEW_CONTENT" ] || [ -n "$AI_SEC_CONTENT" ]; then
-            {
-              echo "---"
-              echo "*AI reviews aggregated by comment-scrape pipeline*"
-              echo ""
-            } >> artifacts/doctor-report.md
-          else
-            # Graceful fallback - AI review not available but don't block CI
-            {
-              echo "## ℹ️ AI Review Status"
-              echo ""
-              echo "AI review not available for this PR (no matching comments found for the current head SHA)."
-              echo ""
-              echo "> Advisory AI reviews are optional and don't affect CI status. Trigger with \`@claude /review\` in a PR comment."
-              echo ""
-            } >> artifacts/doctor-report.md
-          fi
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: ./scripts/ci/scrape-ai-reviews.sh ${{ github.event.pull_request.number }} ${{ github.event.pull_request.head.sha }} artifacts/doctor-report.md
 
       - uses: actions/upload-artifact@v4
         if: always()

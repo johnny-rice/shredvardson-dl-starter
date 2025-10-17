@@ -1,10 +1,7 @@
 name: Weekly Telemetry Report
 
 on:
-  schedule:
-    # Run every Monday at 9:00 AM UTC
-    - cron: '0 9 * * 1'
-  workflow_dispatch:
+  workflow_dispatch:  # Manual trigger only - reduces token overhead
     inputs:
       date_range:
         description: 'Date range for report (days)'
@@ -16,10 +13,9 @@ on:
         required: false
         default: true
         type: boolean
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/telemetry-weekly.yml'
+  schedule:
+    # Optional weekly run - can be disabled via repository settings if desired
+    - cron: '0 9 * * 1'
 
 permissions:
   contents: read

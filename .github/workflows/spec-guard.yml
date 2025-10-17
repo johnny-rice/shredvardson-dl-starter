@@ -50,266 +50,22 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Validate Spec Directory Structure
+        run: ./scripts/ci/validate-specs.sh
+
+      - name: Surface Spec Validation Failure
+        if: failure()
         run: |
-          echo "Validating spec directory structure..."
-
-          # Check if specs directory exists
-          if [ ! -d "specs" ]; then
-            echo "✅ No specs directory found - skipping validation"
-            exit 0
-          fi
-
-          # Validate each spec directory
-          for spec_dir in specs/*/; do
-            if [ -d "$spec_dir" ]; then
-              spec_name=$(basename "$spec_dir")
-              echo "Validating spec: $spec_name"
-              
-              # Check naming convention (should start with number)
-              if ! echo "$spec_name" | grep -q "^[0-9]\{3\}-"; then
-                echo "❌ Spec directory $spec_name does not follow naming convention (###-name)"
-                exit 1
-              fi
-              
-              # Check for required files
-              required_files=("README.md" "DESIGN.md")
-              for file in "${required_files[@]}"; do
-                if [ ! -f "$spec_dir$file" ]; then
-                  echo "❌ Missing required file: $spec_dir$file"
-                  exit 1
-                fi
-              done
-              
-              # Validate README.md structure
-              if ! grep -q "^# Spec" "$spec_dir/README.md"; then
-                echo "❌ Spec README.md missing proper header: $spec_dir/README.md"
-                exit 1
-              fi
-              
-              # Check for status metadata
-              if ! grep -q "Status:" "$spec_dir/README.md"; then
-                echo "❌ Spec README.md missing status field: $spec_dir/README.md"
-                exit 1
-              fi
-              
-              echo "✅ Spec $spec_name structure validated"
-            fi
-          done
-
-      - name: Validate Spec Content
-        run: |
-          echo "Validating spec content quality..."
-
-          if [ ! -d "specs" ]; then
-            echo "✅ No specs directory found - skipping content validation"
-            exit 0
-          fi
-
-          for spec_dir in specs/*/; do
-            if [ -d "$spec_dir" ]; then
-              spec_name=$(basename "$spec_dir")
-              echo "Validating content for spec: $spec_name"
-              
-              # Check README.md word count (should be substantial)
-              readme_words=$(wc -w < "$spec_dir/README.md")
-              if [ "$readme_words" -lt 100 ]; then
-                echo "⚠️ Warning: Spec README.md is quite short ($readme_words words): $spec_dir/README.md"
-              fi
-              
-              # Check for required sections in README.md
-              required_sections=("Status:" "Overview" "Requirements" "Implementation")
-              for section in "${required_sections[@]}"; do
-                if ! grep -qi "$section" "$spec_dir/README.md"; then
-                  echo "⚠️ Warning: Missing recommended section '$section' in $spec_dir/README.md"
-                fi
-              done
-              
-              # Validate DESIGN.md if it exists and has content
-              if [ -f "$spec_dir/DESIGN.md" ] && [ -s "$spec_dir/DESIGN.md" ]; then
-                design_words=$(wc -w < "$spec_dir/DESIGN.md")
-                if [ "$design_words" -lt 50 ]; then
-                  echo "⚠️ Warning: DESIGN.md is quite short ($design_words words): $spec_dir/DESIGN.md"
-                fi
-              fi
-              
-              echo "✅ Spec $spec_name content validated"
-            fi
-          done
-
-      - name: Check Spec Status Consistency
-        run: |
-          echo "Checking spec status consistency..."
-
-          if [ ! -d "specs" ]; then
-            echo "✅ No specs directory found - skipping status check"
-            exit 0
-          fi
-
-          declare -A status_counts
-
-          for spec_dir in specs/*/; do
-            if [ -d "$spec_dir" ]; then
-              spec_name=$(basename "$spec_dir")
-              
-              # Extract status from README.md
-              status=$(grep -i "^Status:" "$spec_dir/README.md" | head -1 | sed 's/^Status:\s*//' | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')
-              
-              if [ -z "$status" ]; then
-                echo "❌ No status found for spec: $spec_name"
-                exit 1
-              fi
-              
-              # Validate status values
-              valid_statuses=("draft" "review" "approved" "implemented" "deprecated")
-              if [[ ! " ${valid_statuses[@]} " =~ " ${status} " ]]; then
-                echo "❌ Invalid status '$status' for spec: $spec_name"
-                echo "Valid statuses: ${valid_statuses[*]}"
-                exit 1
-              fi
-              
-              # Count status occurrences
-              ((status_counts["$status"]++))
-              
-              echo "Spec $spec_name: status=$status"
-            fi
-          done
-
-          # Report status summary
-          echo ""
-          echo "Status Summary:"
-          for status in "${!status_counts[@]}"; do
-            echo "  $status: ${status_counts[$status]}"
-          done
-
-      - name: Validate Spec Dependencies
-        run: |
-          echo "Validating spec dependencies..."
-
-          if [ ! -d "specs" ]; then
-            echo "✅ No specs directory found - skipping dependency validation"
-            exit 0
-          fi
-
-          # Check for circular dependencies or broken references
-          for spec_dir in specs/*/; do
-            if [ -d "$spec_dir" ]; then
-              spec_name=$(basename "$spec_dir")
-              
-              # Look for references to other specs
-              if grep -r "specs/[0-9]" "$spec_dir" > /dev/null 2>&1; then
-                echo "Found spec references in $spec_name:"
-                grep -r "specs/[0-9]" "$spec_dir" | while read -r line; do
-                  echo "  $line"
-                  
-                  # Extract referenced spec and check if it exists
-                  ref_spec=$(echo "$line" | grep -o "specs/[0-9][0-9][0-9]-[a-zA-Z0-9-]*" | head -1)
-                  if [ -n "$ref_spec" ] && [ ! -d "$ref_spec" ]; then
-                    echo "❌ Broken spec reference: $ref_spec in $spec_name"
-                    exit 1
-                  fi
-                done
-              fi
-            fi
-          done
-
-          echo "✅ Spec dependencies validated"
-
-      - name: Check Constitutional Compliance
-        run: |
-          echo "Checking constitutional compliance for specs..."
-
-          if [ ! -d "specs" ]; then
-            echo "✅ No specs directory found - skipping constitutional compliance"
-            exit 0
-          fi
-
-          # Check that specs follow TDD principles
-          for spec_dir in specs/*/; do
-            if [ -d "$spec_dir" ]; then
-              spec_name=$(basename "$spec_dir")
-              
-              # Look for test-related content
-              if ! grep -ri "test\|tdd\|testing" "$spec_dir" > /dev/null 2>&1; then
-                echo "⚠️ Warning: Spec $spec_name may not address testing requirements"
-              fi
-              
-              # Check for security considerations
-              if ! grep -ri "security\|auth\|permission\|validation" "$spec_dir" > /dev/null 2>&1; then
-                echo "⚠️ Warning: Spec $spec_name may not address security considerations"
-              fi
-              
-              echo "Constitutional compliance checked for spec: $spec_name"
-            fi
-          done
-
-      - name: Generate Spec Report
-        run: |
-          echo "Generating spec validation report..."
-
-          if [ ! -d "specs" ]; then
-            echo "# Spec Guard Report" > spec-report.md
-            echo "" >> spec-report.md
-            echo "**No specs directory found** - skipping detailed validation" >> spec-report.md
-            echo "" >> spec-report.md
-            echo "**Validation Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> spec-report.md
-            echo "**Commit**: ${{ github.sha }}" >> spec-report.md
-            cat spec-report.md
-            exit 0
-          fi
-
-          echo "# Spec Guard Report" > spec-report.md
-          echo "" >> spec-report.md
-          echo "**Validation Date**: $(date -u +"%Y-%m-%d %H:%M:%S UTC")" >> spec-report.md
-          echo "**Commit**: ${{ github.sha }}" >> spec-report.md
-          echo "**PR**: ${{ github.event.number }}" >> spec-report.md
-          echo "" >> spec-report.md
-
-          echo "## Validated Specs" >> spec-report.md
-          echo "" >> spec-report.md
-
-          spec_count=0
-          for spec_dir in specs/*/; do
-            if [ -d "$spec_dir" ]; then
-              spec_name=$(basename "$spec_dir")
-              ((spec_count++))
-              
-              status=$(grep -i "^Status:" "$spec_dir/README.md" | head -1 | sed 's/^Status:\s*//' || echo "Unknown")
-              
-              echo "### $spec_name" >> spec-report.md
-              echo "" >> spec-report.md
-              echo "- **Status**: $status" >> spec-report.md
-              echo "- **Structure**: ✅ Valid" >> spec-report.md
-              
-              # Check file sizes
-              readme_words=$(wc -w < "$spec_dir/README.md" 2>/dev/null || echo "0")
-              echo "- **README Size**: $readme_words words" >> spec-report.md
-              
-              if [ -f "$spec_dir/DESIGN.md" ]; then
-                design_words=$(wc -w < "$spec_dir/DESIGN.md" 2>/dev/null || echo "0")
-                echo "- **DESIGN Size**: $design_words words" >> spec-report.md
-              fi
-              
-              echo "" >> spec-report.md
-            fi
-          done
-
-          echo "## Summary" >> spec-report.md
-          echo "" >> spec-report.md
-          echo "- **Total Specs**: $spec_count" >> spec-report.md
-          echo "- **Structure Validation**: ✅ Passed" >> spec-report.md
-          echo "- **Content Validation**: ✅ Passed" >> spec-report.md
-          echo "- **Dependency Validation**: ✅ Passed" >> spec-report.md
-          echo "- **Constitutional Compliance**: ✅ Checked" >> spec-report.md
-          echo "" >> spec-report.md
-
-          cat spec-report.md
+          echo "::error::Spec validation failed. See .github/DEBUGGING.md#spec-validation"
+          exit 1
 
       - name: Upload Spec Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: spec-guard-report
           path: spec-report.md
           retention-days: 30
+          if-no-files-found: ignore
 
   validate-spec-lane-compliance:
     name: Validate Spec Lane Compliance
@@ -353,12 +109,12 @@ jobs:
               if [ -z "$PR_BODY" ] || ! echo "$PR_BODY" | grep -Ei "closes|fixes|resolves"; then
                 echo "⚠️ Warning: AI spec changes should reference an issue"
               fi
-              
+
               # Check for human oversight indicators
               if ! echo "$PR_TITLE" | grep -q "\[AI\]"; then
                 echo "⚠️ Warning: AI spec changes should be clearly labeled"
               fi
-              
+
               echo "✅ AI lane compliance validated for spec changes"
             else
               echo "✅ Human lane spec changes - standard validation applies"
