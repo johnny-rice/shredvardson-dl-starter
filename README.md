@@ -76,6 +76,7 @@ Documentation that **evolves with your codebase**, not against it.
 - **Wiki Auto-Sync**: GitHub Wiki stays in sync with your codebase
 
 **Unlike static docs**, the micro-lesson system prevents knowledge rot:
+
 - Old lessons fade (recency decay)
 - Useful lessons get boosted (usage tracking)
 - No single lesson monopolizes the top (capped contribution)
@@ -88,6 +89,7 @@ Documentation that **evolves with your codebase**, not against it.
 Don't over-engineer simple features. Don't under-engineer risky ones.
 
 Decision framework built in:
+
 - ✅ Bug fix? → Simple lane
 - ⚠️ Auth system? → Spec lane
 - ✅ CSS tweak? → Simple lane
@@ -136,6 +138,7 @@ See [Database Recipe](docs/recipes/db.md) for the complete workflow.
 **Use this if:** You're building a production SaaS, want to ship fast with AI assistance, and value automated quality over cowboy coding.
 
 **Don't use this if:**
+
 - You want a minimal starter (try create-next-app instead)
 - You're building a static site (this is overkill)
 - You hate documentation and structure (this won't work for you)
@@ -145,16 +148,16 @@ See [Database Recipe](docs/recipes/db.md) for the complete workflow.
 
 ### What Makes This Different?
 
-| Feature | create-next-app | vercel/commerce | **This Starter** |
-|---------|----------------|-----------------|------------------|
-| AI Collaboration Tools | ❌ | ❌ | ✅ 26 slash commands |
-| Self-Learning Docs | ❌ | ❌ | ✅ Micro-lessons + heat ranking |
-| Automated PR Fixes | ❌ | ❌ | ✅ `/git:fix-pr` |
-| Testing Infrastructure | ⚠️ Basic | ⚠️ Partial | ✅ Full (70% coverage) |
-| Database Migrations | ❌ | ⚠️ Basic | ✅ Validated + seeded |
-| Quality Gates | ❌ | ⚠️ Lint only | ✅ 23 doctor checks |
-| Two-Lane Workflow | ❌ | ❌ | ✅ Simple + Spec-driven |
-| Production Ready | ⚠️ Starter | ✅ | ✅ Battle-tested |
+| Feature                | create-next-app | vercel/commerce | **This Starter**                |
+| ---------------------- | --------------- | --------------- | ------------------------------- |
+| AI Collaboration Tools | ❌              | ❌              | ✅ 26 slash commands            |
+| Self-Learning Docs     | ❌              | ❌              | ✅ Micro-lessons + heat ranking |
+| Automated PR Fixes     | ❌              | ❌              | ✅ `/git:fix-pr`                |
+| Testing Infrastructure | ⚠️ Basic        | ⚠️ Partial      | ✅ Full (70% coverage)          |
+| Database Migrations    | ❌              | ⚠️ Basic        | ✅ Validated + seeded           |
+| Quality Gates          | ❌              | ⚠️ Lint only    | ✅ 23 doctor checks             |
+| Two-Lane Workflow      | ❌              | ❌              | ✅ Simple + Spec-driven         |
+| Production Ready       | ⚠️ Starter      | ✅              | ✅ Battle-tested                |
 
 ## 📘 Project Wiki
 
@@ -211,6 +214,7 @@ See [docs/testing/TESTING_GUIDE.md](docs/testing/TESTING_GUIDE.md) for complete 
 ## Scripts
 
 ### Development
+
 ```bash
 pnpm dev              # Start Next.js dev server
 pnpm build            # Build all packages
@@ -219,6 +223,7 @@ pnpm lint             # Lint all packages
 ```
 
 ### Database
+
 ```bash
 pnpm db:start         # Start local Supabase
 pnpm db:stop          # Stop local Supabase

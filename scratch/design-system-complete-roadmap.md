@@ -1,8 +1,10 @@
 # Complete Design System Roadmap
+
 **Date:** 2025-10-16
 **Status:** Planning
 
 This document outlines ALL the work needed to complete the DL Starter design system, combining:
+
 1. Original recommendations from AI Design Systems Research Report review
 2. New findings from UX pattern documentation research
 3. Your requirements as a product designer
@@ -12,6 +14,7 @@ This document outlines ALL the work needed to complete the DL Starter design sys
 ## Current State Assessment
 
 ### What We Have ✅
+
 - [x] Monorepo with Turborepo
 - [x] shadcn/ui components installed in `packages/ui`
 - [x] Tailwind CSS configured
@@ -20,6 +23,7 @@ This document outlines ALL the work needed to complete the DL Starter design sys
 - [x] Light/dark theme support
 
 ### What We're Missing ❌
+
 - [ ] Formalized token structure (primitive → semantic → component)
 - [ ] Motion tokens (durations, easings)
 - [ ] Component API documentation (JSDoc with examples)
@@ -39,11 +43,13 @@ This document outlines ALL the work needed to complete the DL Starter design sys
 ### Phase 1: Foundation (CRITICAL) - ~24-28 hours
 
 #### Task 1.1: Formalize Design Token Structure (~4 hours)
+
 **File:** `packages/ui/src/globals.css`
 
 **Current state:** We have basic CSS variables, but they're not systematically organized.
 
 **What to do:**
+
 1. Reorganize tokens into 3-tier structure:
    - **Primitives**: `--color-blue-500`, `--space-4`, `--radius-md`
    - **Semantic**: `--color-background-primary`, `--color-text-primary`, `--space-section`
@@ -56,6 +62,7 @@ This document outlines ALL the work needed to complete the DL Starter design sys
    - Shadow scale
 
 **Example structure:**
+
 ```css
 :root {
   /* Primitives - Raw values */
@@ -84,10 +91,13 @@ This document outlines ALL the work needed to complete the DL Starter design sys
 ---
 
 #### Task 1.2: Add Motion Tokens (~2 hours)
+
 **File:** `packages/ui/src/globals.css`
 
 **What to do:**
+
 1. Define duration tokens:
+
    ```css
    --motion-duration-instant: 100ms;
    --motion-duration-fast: 150ms;
@@ -96,6 +106,7 @@ This document outlines ALL the work needed to complete the DL Starter design sys
    ```
 
 2. Define easing tokens:
+
    ```css
    --motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
    --motion-easing-decelerate: cubic-bezier(0, 0, 0.2, 1);
@@ -111,10 +122,12 @@ This document outlines ALL the work needed to complete the DL Starter design sys
 ---
 
 #### Task 1.3: Add JSDoc to All Components (~6 hours)
+
 **Files:** All components in `packages/ui/src/components/`
 
 **What to do:**
 Add comprehensive JSDoc comments to EVERY component with:
+
 - Description of what the component does
 - When to use it
 - Prop descriptions with examples
@@ -122,7 +135,8 @@ Add comprehensive JSDoc comments to EVERY component with:
 - Accessibility notes
 
 **Example:**
-```tsx
+
+````tsx
 /**
  * Primary button component for actions and navigation.
  *
@@ -144,17 +158,18 @@ Add comprehensive JSDoc comments to EVERY component with:
  */
 export interface ButtonProps {
   /** Visual style variant */
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 
   /** Size of the button */
-  size?: 'default' | 'sm' | 'lg' | 'icon'
+  size?: 'default' | 'sm' | 'lg' | 'icon';
 
   /** Whether button spans full width */
-  asChild?: boolean
+  asChild?: boolean;
 }
-```
+````
 
 **Why this matters for LLMs:**
+
 - JSDoc appears in IDE autocomplete and in LLM context
 - Examples serve as few-shot learning
 - Clear prop descriptions reduce hallucination
@@ -166,16 +181,19 @@ export interface ButtonProps {
 ---
 
 #### Task 1.4: Create CONTEXT.md for LLMs (~2 hours)
+
 **File:** `CONTEXT.md` (repo root)
 
 **What to do:**
 Create a concise briefing document that LLMs (and humans) read first when working on the project.
 
 **Structure:**
+
 ```markdown
 # DL Starter - Project Context
 
 ## Architecture
+
 - **Type**: SaaS starter template
 - **Stack**: Next.js 15, React 19, TypeScript, Tailwind CSS
 - **Monorepo**: Turborepo with `apps/web` and `packages/ui`
@@ -183,18 +201,21 @@ Create a concise briefing document that LLMs (and humans) read first when workin
 - **Styling**: Tailwind utility classes + CSS variables for theming
 
 ## Design System Principles
+
 1. **Code as source of truth**: Components live in `packages/ui`, not Figma
 2. **Accessible by default**: Built on Radix UI primitives
 3. **AI-friendly**: JSDoc comments, clear patterns, predictable structure
 4. **Lightweight**: No heavy dependencies, copy-paste components
 
 ## Key Conventions
+
 - Components: `packages/ui/src/components/[component-name].tsx`
 - Tokens: `packages/ui/src/globals.css` (primitives → semantic → component)
 - Patterns: `docs/design/patterns/[pattern-name].md`
 - Tests: Co-located `[file].test.tsx` files
 
 ## When Working on UI
+
 1. Check `docs/design/patterns/` for established UX patterns
 2. Use existing components from `packages/ui`
 3. Follow token structure (use semantic tokens, not primitives directly)
@@ -202,6 +223,7 @@ Create a concise briefing document that LLMs (and humans) read first when workin
 5. Add JSDoc comments with examples
 
 ## Common Tasks
+
 - Add component: `pnpm dlx shadcn@latest add [component]`
 - Run dev: `pnpm dev`
 - Type check: `pnpm typecheck`
@@ -209,6 +231,7 @@ Create a concise briefing document that LLMs (and humans) read first when workin
 - Visual preview: Open `/design` route in dev
 
 ## References
+
 - Design System Viewer: `/design` route
 - UX Patterns: `docs/design/patterns/`
 - Component Docs: JSDoc comments in source files
@@ -221,6 +244,7 @@ Create a concise briefing document that LLMs (and humans) read first when workin
 ---
 
 #### Task 1.5: UX Pattern Documentation (~10-12 hours)
+
 **Files:** New directory `docs/design/patterns/`
 
 **What to do:**
@@ -233,6 +257,7 @@ This is **Issue #145, Part 1**. Create 5 core pattern documents:
 5. `accessibility.md` - Color contrast, keyboard nav, screen readers, ARIA
 
 Each pattern doc should include:
+
 - When to use (decision criteria)
 - Code examples (using actual components)
 - Accessibility requirements
@@ -246,6 +271,7 @@ Each pattern doc should include:
 ---
 
 #### Task 1.6: Foundations Documentation (~4 hours)
+
 **Files:** New directory `docs/design/foundations/`
 
 **What to do:**
@@ -264,7 +290,9 @@ This is **Issue #145, Part 1 (continued)**. Create 3 foundation documents:
 ### Phase 2: Designer Tools (HIGH VALUE) - ~8-10 hours
 
 #### Task 2.1: Build `/design` Route (~6-8 hours)
+
 **Files:**
+
 - `apps/web/app/design/page.tsx`
 - `apps/web/app/design/components/` (helper components)
 
@@ -272,6 +300,7 @@ This is **Issue #145, Part 1 (continued)**. Create 3 foundation documents:
 This is **Issue #145, Part 2**. Create a full-featured design system showcase page.
 
 **Features to implement:**
+
 1. Component showcase with all variants
 2. Light/dark theme toggle
 3. Copy code button for each example
@@ -280,6 +309,7 @@ This is **Issue #145, Part 2**. Create a full-featured design system showcase pa
 6. Search/filter components (optional)
 
 **Example structure:**
+
 ```tsx
 // apps/web/app/design/page.tsx
 export default function DesignSystemPage() {
@@ -315,11 +345,12 @@ export default function DesignSystemPage() {
         <PatternExample pattern="error-handling" />
       </Section>
     </div>
-  )
+  );
 }
 ```
 
 **Components to build:**
+
 - `ComponentGrid` - Responsive grid layout
 - `Preview` - Individual component preview with label
 - `CodeBlock` - Syntax-highlighted code display (copy button)
@@ -334,7 +365,9 @@ export default function DesignSystemPage() {
 ---
 
 #### Task 2.2: Document TweakCN Workflow (~1 hour)
+
 **Files:**
+
 - `docs/design/README.md` (add section)
 - Or `README.md` (designer workflow section)
 
@@ -342,6 +375,7 @@ export default function DesignSystemPage() {
 This is **Issue #145, Part 3**. Document the visual theme editing workflow.
 
 **Content:**
+
 1. What TweakCN is and why we use it
 2. Step-by-step workflow:
    - Open TweakCN in browser
@@ -361,27 +395,32 @@ This is **Issue #145, Part 3**. Document the visual theme editing workflow.
 ### Phase 3: Quality & Automation (CRITICAL) - ~6-8 hours
 
 #### Task 3.1: Add Accessibility Testing with axe-core (~3 hours)
+
 **Files:**
+
 - `.github/workflows/ci.yml` (add axe-core check)
 - `apps/web/tests/a11y/` (new directory for accessibility tests)
 
 **What to do:**
+
 1. Install axe-core: `pnpm add -D @axe-core/playwright`
 
 2. Create accessibility test:
+
    ```typescript
    // apps/web/tests/a11y/components.test.ts
-   import { test, expect } from '@playwright/test'
-   import AxeBuilder from '@axe-core/playwright'
+   import { test, expect } from '@playwright/test';
+   import AxeBuilder from '@axe-core/playwright';
 
    test('design system page should be accessible', async ({ page }) => {
-     await page.goto('/design')
-     const results = await new AxeBuilder({ page }).analyze()
-     expect(results.violations).toEqual([])
-   })
+     await page.goto('/design');
+     const results = await new AxeBuilder({ page }).analyze();
+     expect(results.violations).toEqual([]);
+   });
    ```
 
 3. Add to CI workflow:
+
    ```yaml
    - name: Run accessibility tests
      run: pnpm test:a11y
@@ -403,9 +442,11 @@ This is **Issue #145, Part 3**. Document the visual theme editing workflow.
 ---
 
 #### Task 3.2: Add Visual Regression Testing (~3-4 hours)
+
 **Options:**
 
 **Option A: Chromatic (recommended, easiest)**
+
 1. Sign up for Chromatic (free tier available)
 2. Install: `pnpm add -D chromatic`
 3. Add to CI:
@@ -417,12 +458,13 @@ This is **Issue #145, Part 3**. Document the visual theme editing workflow.
    ```
 
 **Option B: Playwright visual comparisons (free, more complex)**
+
 1. Add screenshot tests:
    ```typescript
    test('button variants match snapshots', async ({ page }) => {
-     await page.goto('/design#buttons')
-     await expect(page.locator('#buttons')).toHaveScreenshot()
-   })
+     await page.goto('/design#buttons');
+     await expect(page.locator('#buttons')).toHaveScreenshot();
+   });
    ```
 
 **Deliverable:** Visual regression testing prevents UI breaks
@@ -434,10 +476,12 @@ This is **Issue #145, Part 3**. Document the visual theme editing workflow.
 ### Phase 4: Polish & Optimization (NICE TO HAVE) - ~4-6 hours
 
 #### Task 4.1: Create Contribution Guidelines (~2 hours)
+
 **File:** `docs/design/CONTRIBUTING.md`
 
 **What to do:**
 Document how to:
+
 - Add a new component
 - Modify an existing component
 - Add a new pattern
@@ -449,10 +493,12 @@ Document how to:
 ---
 
 #### Task 4.2: Add Component Composition Examples (~2-3 hours)
+
 **Files:** `docs/design/examples/`
 
 **What to do:**
 Create real-world examples showing how to compose components:
+
 - Login form
 - Settings page
 - Data table with actions
@@ -464,12 +510,15 @@ Create real-world examples showing how to compose components:
 ---
 
 #### Task 4.3: Optional: Add Ladle (if /design route insufficient) (~2-3 hours)
+
 **Only do this if:**
+
 - `/design` route doesn't provide enough isolation
 - You need true component isolation testing
 - Team prefers Storybook-style workflow
 
 **What to do:**
+
 1. Install Ladle: `pnpm add -D @ladle/react`
 2. Create stories for each component
 3. Configure `.ladle/` directory
@@ -484,27 +533,30 @@ Create real-world examples showing how to compose components:
 ## Complete Time Estimates
 
 ### By Phase:
-| Phase | Hours | Priority |
-|-------|-------|----------|
-| **Phase 1: Foundation** | 24-28 | CRITICAL |
-| **Phase 2: Designer Tools** | 8-10 | HIGH |
-| **Phase 3: Quality & Automation** | 6-8 | CRITICAL |
-| **Phase 4: Polish** | 4-6 | NICE TO HAVE |
-| **Total** | **42-52 hours** | |
+
+| Phase                             | Hours           | Priority     |
+| --------------------------------- | --------------- | ------------ |
+| **Phase 1: Foundation**           | 24-28           | CRITICAL     |
+| **Phase 2: Designer Tools**       | 8-10            | HIGH         |
+| **Phase 3: Quality & Automation** | 6-8             | CRITICAL     |
+| **Phase 4: Polish**               | 4-6             | NICE TO HAVE |
+| **Total**                         | **42-52 hours** |              |
 
 ### By Task Priority:
-| Priority | Tasks | Hours |
-|----------|-------|-------|
-| **CRITICAL** (Must Do) | Token structure, Motion tokens, JSDoc, CONTEXT.md, Pattern docs, Foundations docs, axe-core | 28-32 |
-| **HIGH** (Should Do) | `/design` route, TweakCN docs | 8-10 |
-| **MEDIUM** (Nice to Have) | Visual regression, Contribution guide, Examples | 7-10 |
-| **LOW** (Optional) | Ladle | 2-3 |
+
+| Priority                  | Tasks                                                                                       | Hours |
+| ------------------------- | ------------------------------------------------------------------------------------------- | ----- |
+| **CRITICAL** (Must Do)    | Token structure, Motion tokens, JSDoc, CONTEXT.md, Pattern docs, Foundations docs, axe-core | 28-32 |
+| **HIGH** (Should Do)      | `/design` route, TweakCN docs                                                               | 8-10  |
+| **MEDIUM** (Nice to Have) | Visual regression, Contribution guide, Examples                                             | 7-10  |
+| **LOW** (Optional)        | Ladle                                                                                       | 2-3   |
 
 ---
 
 ## Recommended Implementation Order
 
 ### Sprint 1 (Week 1): Foundation + Issue #145
+
 **Total: ~24-28 hours**
 
 1. ✅ Token structure (4h) - Foundation for everything
@@ -517,6 +569,7 @@ Create real-world examples showing how to compose components:
 **After Sprint 1:** You have a complete, usable design system with docs and visual viewer.
 
 ### Sprint 2 (Week 2): Code Quality
+
 **Total: ~11 hours**
 
 7. ✅ JSDoc on components (6h) - Better DX and AI context
@@ -526,6 +579,7 @@ Create real-world examples showing how to compose components:
 **After Sprint 2:** Code quality is high, LLMs have good context, accessibility is enforced.
 
 ### Sprint 3 (Optional): Polish
+
 **Total: ~7-10 hours**
 
 10. ⏭️ Visual regression (3-4h) - Prevent UI breaks
@@ -537,6 +591,7 @@ Create real-world examples showing how to compose components:
 ## What Issue #145 Covers
 
 **Issue #145** (created earlier) covers:
+
 - ✅ UX Pattern Documentation (5 patterns)
 - ✅ Foundations Documentation (3 docs)
 - ✅ `/design` Route (component viewer)
@@ -549,6 +604,7 @@ Create real-world examples showing how to compose components:
 ## What's NOT in Issue #145 (Remaining Work)
 
 ### Critical:
+
 - Token structure formalization (4h)
 - Motion tokens (2h)
 - JSDoc on components (6h)
@@ -558,6 +614,7 @@ Create real-world examples showing how to compose components:
 **Subtotal:** ~17 hours
 
 ### Nice to Have:
+
 - Visual regression testing (3-4h)
 - Contribution guidelines (2h)
 - Composition examples (2-3h)
@@ -570,7 +627,9 @@ Create real-world examples showing how to compose components:
 ## Suggested Next Steps
 
 ### Option A: Do Everything (Complete Design System)
+
 Create **Issue #146** for the remaining critical work:
+
 - Token structure + motion tokens
 - JSDoc on all components
 - CONTEXT.md
@@ -579,6 +638,7 @@ Create **Issue #146** for the remaining critical work:
 **Total remaining:** ~17 hours critical + ~9-12 hours optional = **26-29 hours**
 
 ### Option B: Phased Approach (Recommended)
+
 1. **Now**: Complete Issue #145 (17-21 hours) → Get usable design system with docs
 2. **Next**: Issue #146 for code quality (JSDoc, CONTEXT.md) → ~8 hours
 3. **Then**: Issue #147 for tokens + automation (tokens, motion, axe-core) → ~9 hours

@@ -6,21 +6,18 @@ import { cn } from '../../lib/utils';
  * Card component variants using CVA (Class Variance Authority)
  * Provides consistent styling with semantic design tokens
  */
-const cardVariants = cva(
-  'rounded-lg border bg-card text-card-foreground transition-all',
-  {
-    variants: {
-      variant: {
-        default: 'shadow-sm',
-        elevated: 'shadow-md hover:shadow-lg',
-        outlined: 'shadow-none border-2',
-      },
+const cardVariants = cva('rounded-lg border bg-card text-card-foreground transition-all', {
+  variants: {
+    variant: {
+      default: 'shadow-sm',
+      elevated: 'shadow-md hover:shadow-lg',
+      outlined: 'shadow-none border-2',
     },
-    defaultVariants: {
-      variant: 'default',
-    },
-  }
-);
+  },
+  defaultVariants: {
+    variant: 'default',
+  },
+});
 
 /**
  * Card component props extending standard HTML div attributes

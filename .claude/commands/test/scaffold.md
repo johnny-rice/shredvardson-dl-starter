@@ -29,6 +29,8 @@ allowed-tools:
   - 'Write(*)'
   - 'Read(*)'
   - 'Bash(pnpm test:*)'
+  - 'Bash(pnpm add:*)'
+  - 'Bash(pnpm install:*)'
 
 preconditions:
   - 'Feature plan exists and is approved'
@@ -72,14 +74,40 @@ Write failing tests from approved plan before implementation.
 **Prompt:**
 
 1. Confirm lane (**lightweight**) against `CLAUDE.md` decision rules.
-2. Write failing tests only from the approved plan.
-3. Create test files in the target directory (default: `__tests__`, override with `testDir` argument):
-   - `__tests__/` for unit tests
-   - `tests/e2e/` for end-to-end tests
-4. Follow naming: `ComponentName.test.ts` or `feature-name.test.ts`
-5. Tests should fail initially - do not implement functionality yet.
-6. Produce test **artifacts** and **link** results in related Issue/PR.
-7. Emit **Result**: tests created, failure status, and next suggested command.
+2. Identify target code from the approved plan (read plan file if needed).
+3. **Delegate to Test Generator sub-agent** with JSON input:
+
+   ```ts
+   // Type shape (for documentation)
+   {
+     target: {
+       type: 'file' | 'function' | 'component' | 'api' | 'feature'
+       path: string
+       name?: string
+     }
+     test_types: ('unit' | 'integration' | 'e2e')[]
+     coverage_goal: number
+     focus_areas: ('happy_path' | 'edge_cases' | 'error_handling')[]
+   }
+   ```
+
+   Example payload:
+
+   ```json
+   {
+     "target": { "type": "file", "path": "path/to/target.ts" },
+     "test_types": ["unit"],
+     "coverage_goal": 70,
+     "focus_areas": ["happy_path", "edge_cases", "error_handling"]
+   }
+   ```
+
+4. Receive JSON output from Test Generator with `test_file_path`, `test_code`, `coverage_analysis`, `dependencies`, `setup_required`.
+5. Write test file to `test_file_path` (or override with `testDir` argument).
+6. Install any missing dependencies from `dependencies` list.
+7. Run tests to verify they fail initially (TDD requirement).
+8. Produce test **artifacts** and **link** results in related Issue/PR.
+9. Emit **Result**: tests created, failure status, coverage estimate, and next suggested command.
 
 **Examples:**
 

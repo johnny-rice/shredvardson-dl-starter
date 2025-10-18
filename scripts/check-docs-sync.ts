@@ -43,7 +43,9 @@ function getFileContent(path: string): string {
 
 function checkSlashCommands(changedFiles: string[]): DocGap[] {
   const gaps: DocGap[] = [];
-  const commandFiles = changedFiles.filter(f => f.startsWith('.claude/commands/') && f.endsWith('.md'));
+  const commandFiles = changedFiles.filter(
+    (f) => f.startsWith('.claude/commands/') && f.endsWith('.md')
+  );
 
   if (commandFiles.length === 0) return gaps;
 
@@ -64,7 +66,7 @@ function checkSlashCommands(changedFiles: string[]): DocGap[] {
         item: commandRef,
         suggestedDoc: 'docs/ai/CLAUDE.md',
         priority: 'high',
-        reason: `New slash command ${commandRef} not referenced in CLAUDE.md`
+        reason: `New slash command ${commandRef} not referenced in CLAUDE.md`,
       });
     }
   }
@@ -98,7 +100,7 @@ function checkPackageScripts(changedFiles: string[]): DocGap[] {
         item: `pnpm ${scriptName}`,
         suggestedDoc: 'README.md',
         priority: 'medium',
-        reason: `New package script "${scriptName}" not documented in README`
+        reason: `New package script "${scriptName}" not documented in README`,
       });
     }
   } catch {}
@@ -108,8 +110,8 @@ function checkPackageScripts(changedFiles: string[]): DocGap[] {
 
 function checkEnvVariables(changedFiles: string[]): DocGap[] {
   const gaps: DocGap[] = [];
-  const relevantFiles = changedFiles.filter(f =>
-    f.endsWith('.ts') || f.endsWith('.tsx') || f.endsWith('.js') || f.endsWith('.jsx')
+  const relevantFiles = changedFiles.filter(
+    (f) => f.endsWith('.ts') || f.endsWith('.tsx') || f.endsWith('.js') || f.endsWith('.jsx')
   );
 
   if (relevantFiles.length === 0) return gaps;
@@ -137,9 +139,11 @@ function checkEnvVariables(changedFiles: string[]): DocGap[] {
           gaps.push({
             type: 'env-var',
             item: varName,
-            suggestedDoc: existsSync('docs/setup/ENVIRONMENT.md') ? 'docs/setup/ENVIRONMENT.md' : 'README.md',
+            suggestedDoc: existsSync('docs/setup/ENVIRONMENT.md')
+              ? 'docs/setup/ENVIRONMENT.md'
+              : 'README.md',
             priority: 'high',
-            reason: `New environment variable ${varName} not documented`
+            reason: `New environment variable ${varName} not documented`,
           });
         }
       }
@@ -151,8 +155,8 @@ function checkEnvVariables(changedFiles: string[]): DocGap[] {
 
 function checkApiRoutes(changedFiles: string[]): DocGap[] {
   const gaps: DocGap[] = [];
-  const routeFiles = changedFiles.filter(f =>
-    f.includes('/api/') && (f.includes('route.ts') || f.includes('route.js'))
+  const routeFiles = changedFiles.filter(
+    (f) => f.includes('/api/') && (f.includes('route.ts') || f.includes('route.js'))
   );
 
   if (routeFiles.length === 0) return gaps;
@@ -173,7 +177,7 @@ function checkApiRoutes(changedFiles: string[]): DocGap[] {
         item: routePath,
         suggestedDoc: existsSync('docs/api/README.md') ? 'docs/api/README.md' : 'README.md',
         priority: 'medium',
-        reason: `New API route ${routePath} not documented`
+        reason: `New API route ${routePath} not documented`,
       });
     }
   }
@@ -190,9 +194,9 @@ function formatOutput(gaps: DocGap[]): void {
   console.log('\n📝 Documentation update suggestions:\n');
 
   // Group by priority
-  const high = gaps.filter(g => g.priority === 'high');
-  const medium = gaps.filter(g => g.priority === 'medium');
-  const low = gaps.filter(g => g.priority === 'low');
+  const high = gaps.filter((g) => g.priority === 'high');
+  const medium = gaps.filter((g) => g.priority === 'medium');
+  const low = gaps.filter((g) => g.priority === 'low');
 
   const printGaps = (gaps: DocGap[], emoji: string) => {
     for (const gap of gaps) {
@@ -233,7 +237,7 @@ function main(): void {
     ...checkSlashCommands(changedFiles),
     ...checkPackageScripts(changedFiles),
     ...checkEnvVariables(changedFiles),
-    ...checkApiRoutes(changedFiles)
+    ...checkApiRoutes(changedFiles),
   ];
 
   formatOutput(allGaps);

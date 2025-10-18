@@ -25,16 +25,19 @@ fi
 ```
 
 **Why it matters:**
+
 - Prevents data loss in fork/contributor workflows
 - Supports open-source contribution patterns
 - CodeRabbit caught this as a "Major" issue
 
 **Key pattern:**
+
 - Always check `@{upstream}` exists before using remote deletion as signal
 - Parse remote name from upstream ref (don't assume origin)
 - Skip origin-specific heuristics for non-origin remotes
 
 **References:**
+
 - Issue #123 - Fix git:finish for squash-merged PRs
 - PR #122 - CodeRabbit review caught fork safety bug
 - ADR-003 - Git workflow improvements

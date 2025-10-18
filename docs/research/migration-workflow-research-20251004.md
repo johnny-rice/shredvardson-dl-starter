@@ -10,6 +10,7 @@
 #### Key Findings
 
 **Rollback Strategy Evolution:**
+
 - Modern approach: **Never rollback databases, always roll forward** (fix-forward pattern)
 - Safe rollback criteria: No schema changes OR adding columns to views/stored procedures
 - Unsafe rollback: Significant schema changes (column drops, type changes)
@@ -21,6 +22,7 @@
 3. **Blue-Green Deployments**: Maintain two database versions, switch traffic on failure
 
 **Safety Best Practices:**
+
 - **Atomic migrations**: One focused change per migration (easier rollback/debug)
 - **Dry runs**: Test with data subsets before production
 - **Phased migration**: Break into smaller parts (table-by-table, service-by-service)
@@ -38,11 +40,13 @@
 #### Official Recommendations
 
 **Environment Strategy:**
+
 - **Strongly recommended**: Local → Staging → Production
 - **Production rule**: Never change database via Dashboard, always use migrations
 - **Branching support**: Supabase provides preview branches for PR-based workflows
 
 **CI/CD Pipeline (Recommended):**
+
 1. Use GitHub Actions for production deployments (not local machine)
 2. Two projects minimum: Production + Staging
 3. Workflow:
@@ -53,10 +57,12 @@
    - Merge deploys to production project
 
 **Alternative Deployment Options:**
+
 - **GitHub Integration**: Auto-push migrations on PR merge (requires branching enabled)
 - **Custom CI/CD**: Set up own pipeline with Supabase CLI
 
 **Best Practices:**
+
 - All changes via version-controlled migrations
 - Run migrations via bastion host or CI platform
 - **Use approval workflows** to prevent accidental production migrations
@@ -71,6 +77,7 @@
 #### Synthetic Data
 
 **Pros:**
+
 - **100% privacy-safe**: No real individual data, no re-identification risk
 - **GDPR/compliance**: Not bound by data protection laws
 - **Accuracy**: Up to 99% statistical similarity to production
@@ -78,11 +85,13 @@
 - **Scalability**: Generate unlimited data for testing
 
 **Cons:**
+
 - **Complex setup**: Requires model training and configuration
 - **Less precise**: May not capture all real-world edge cases
 - **Initial effort**: Higher upfront investment
 
 **Best For:**
+
 - New applications without existing data
 - Performance testing requiring large datasets
 - Public demos and documentation
@@ -91,17 +100,20 @@
 #### Anonymized Production Data
 
 **Pros:**
+
 - **Simpler implementation**: Direct transformation of existing data
 - **Real-world accuracy**: Mirrors actual production scenarios
 - **Data integrity**: Preserves relationships and patterns
 
 **Cons:**
+
 - **Re-identification risk**: High risk if identifiers linked or keys stolen
 - **Reduced utility**: Encryption/suppression affects ML model accuracy
 - **Compliance burden**: Still subject to data protection laws
 - **One-to-one limitation**: Can't generate additional scenarios
 
 **Best For:**
+
 - Critical data integrity requirements
 - Testing with realistic production patterns
 - When synthetic data complexity is prohibitive
@@ -109,6 +121,7 @@
 #### Industry Recommendation (2024)
 
 **Hybrid approach gaining popularity:**
+
 - Use synthetic data for development and public demos
 - Use anonymized data for pre-production staging tests
 - Tools like Neosync enable synthetic data generation for Supabase
@@ -122,6 +135,7 @@
 #### Current Landscape
 
 **Key Statistics:**
+
 - **27% of AI-generated code contains vulnerabilities** (industry studies)
 - Speed of generation exceeds review capacity
 - Need for real-time guardrails during code generation
@@ -145,23 +159,27 @@
 #### Essential Security Controls
 
 **Authentication & Access:**
+
 - Two-factor authentication or SSO before AI tool access
 - Role-based access control (RBAC) for sensitive resources
 - Track and verify origin of AI-generated code
 - Ensure licensing compliance
 
 **Validation Layers (McKinsey Taxonomy):**
+
 1. **Appropriateness**: Check for toxic, harmful, biased content
 2. **Hallucination**: Validate factual correctness
 3. **Regulatory Compliance**: Meet legal requirements
 4. **Validation**: Verify specific criteria
 
 **Shift-Left Approach:**
+
 - Catch vulnerabilities at source (during writing)
 - Real-time enforcement in IDE
 - Before PR checks and auto-remediation
 
 **Human-in-the-Loop:**
+
 - **Critical operations require approval**: Infrastructure changes, database migrations
 - **Dry-run capabilities**: Preview before execution
 - **Audit logging**: Track all AI-assisted changes
@@ -175,27 +193,32 @@
 #### Modern Patterns
 
 **Quality Gates:**
+
 1. **CI Validation**: Lint checks, syntax validation, policy evaluation
 2. **Integration Testing**: Confirm correctness of changes
 3. **Approval Process**: Required before production deployment
 4. **Release Gates**: Azure DevOps multi-stage pipelines
 
 **Automation vs Approval:**
+
 - **Automated**: Development, staging environments
 - **Manual approval required**: Production deployments
 - **Hybrid approach**: Auto-deploy after PR approval + merge
 
 **Popular Tooling:**
+
 - **GitHub Actions**: Most common for Supabase projects
 - **GitLab CI, Jenkins, Azure DevOps**: Enterprise alternatives
 - **Migration tools**: Flyway, Liquibase, DBmaestro
 
 **Deployment Artifacts:**
+
 - Same artifacts used across all environments
 - Generated during CI, deployed with approval
 - Includes: Application build + database migration scripts
 
 **Best Practice Workflow:**
+
 1. Developer creates migration locally
 2. CI validates and tests migration
 3. Auto-deploy to staging on PR merge to `develop`

@@ -22,6 +22,7 @@ supabase migration new <description>
 ```
 
 **Best Practices**:
+
 - Always enable RLS on new tables: `ALTER TABLE <table> ENABLE ROW LEVEL SECURITY;`
 - Add indexes for foreign keys: `CREATE INDEX idx_<table>_<column> ON <table>(<column>);`
 - Include type conversion clauses: `ALTER COLUMN <col> TYPE <type> USING <col>::<type>`
@@ -36,6 +37,7 @@ pnpm db:validate
 ```
 
 **Validation Checks**:
+
 - ❌ **Errors (blocking)**:
   - `DROP TABLE` - Permanently deletes data
   - `DROP COLUMN` - Permanently deletes column data
@@ -47,6 +49,7 @@ pnpm db:validate
   - `TYPE_CHANGE` - Column type change without USING clause
 
 **Example Output**:
+
 ```text
 Validating 3 migration files...
 
@@ -62,6 +65,7 @@ Validating 3 migration files...
 ### Applying Migrations
 
 **Local Development**:
+
 ```bash
 # Reset database and apply all migrations
 pnpm db:reset
@@ -71,6 +75,7 @@ supabase db reset
 ```
 
 **Production/Staging**:
+
 ```bash
 # Link to remote project
 supabase link --project-ref <project-id>
@@ -94,6 +99,7 @@ USER_COUNT=100 pnpm db:seed:dev
 ```
 
 **Features**:
+
 - Uses [@faker-js/faker](https://fakerjs.dev/) for realistic data
 - Generates unique emails, names, bios, avatars
 - Configurable entity counts
@@ -108,6 +114,7 @@ pnpm db:seed:test
 ```
 
 **Features**:
+
 - Fixed user IDs: `test-user-1`, `test-user-2`, `test-user-admin`
 - Known emails: `test1@example.com`, `admin@example.com`
 - Deterministic - same data every run
@@ -116,6 +123,7 @@ pnpm db:seed:test
 ## Common Workflows
 
 ### Full Local Reset
+
 ```bash
 # Stop Supabase
 pnpm db:stop
@@ -131,6 +139,7 @@ pnpm db:seed:dev
 ```
 
 ### Pre-commit Checks
+
 ```bash
 # Validate migrations before committing
 pnpm db:validate
@@ -171,6 +180,7 @@ pnpm db:status
 ## CI/CD Integration
 
 Migrations are validated in CI:
+
 - ✅ Pre-commit hook runs validation
 - ✅ CI workflow blocks on validation errors
 - ✅ Staging deploys after validation passes

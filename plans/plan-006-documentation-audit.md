@@ -12,6 +12,7 @@ issue: 137
 ✅ **Simple Workflow** (Documentation updates)
 
 **Decision Criteria:**
+
 1. **Risk**: Could this break authentication, payments, or data? ❌ No - pure documentation
 2. **Scope**: Will this touch 3+ files or take more than 2 hours? ✅ Yes - multiple docs, ~4-6 hours
 3. **Clarity**: Do I fully understand what needs to be built? ✅ Yes - audit and update docs
@@ -176,6 +177,7 @@ Update project documentation to reflect features implemented in PRs #106-#135. T
 **Likelihood**: Medium
 **Impact**: High - confusing for users
 **Mitigation**:
+
 - Cross-check docs against actual code
 - Test documented procedures
 - When in doubt, check code as source of truth
@@ -186,6 +188,7 @@ Update project documentation to reflect features implemented in PRs #106-#135. T
 **Likelihood**: Low
 **Impact**: Medium
 **Mitigation**:
+
 - Review full PR descriptions and comments
 - Check related issues for context
 - Review commit messages for implementation details
@@ -196,6 +199,7 @@ Update project documentation to reflect features implemented in PRs #106-#135. T
 **Likelihood**: Medium
 **Impact**: Low - delays PR
 **Mitigation**:
+
 - Strict documentation-only changes
 - Create follow-up issues for code discrepancies
 - Don't fix code bugs discovered during audit
@@ -203,6 +207,7 @@ Update project documentation to reflect features implemented in PRs #106-#135. T
 ## No Code Changes
 
 This is a **documentation-only** update. The only code files that may be touched are:
+
 - None (pure documentation)
 
 If documentation reveals bugs or inconsistencies in code, **create follow-up issues** rather than fixing them in this PR.
@@ -216,6 +221,7 @@ No packages will be added or modified.
 Since this is documentation-only, testing involves:
 
 1. **Link validation**
+
    ```bash
    pnpm doctor  # Should pass with no broken links
    ```

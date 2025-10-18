@@ -55,7 +55,9 @@ export async function seedDev(config: SeedConfig = {}): Promise<SeedResult> {
 
     faker.setDefaultRefDate(new Date());
 
-    console.log(`🌱 Seeding development data (${userCount} users${deterministic ? ', deterministic mode' : ''})...\n`);
+    console.log(
+      `🌱 Seeding development data (${userCount} users${deterministic ? ', deterministic mode' : ''})...\n`
+    );
 
     // Generate users
     const users = [];
@@ -93,7 +95,6 @@ export async function seedDev(config: SeedConfig = {}): Promise<SeedResult> {
     console.log(`\n✅ Seeding complete in ${result.duration}ms`);
 
     return result;
-
   } catch (error: any) {
     result.errors.push(error.message);
     result.duration = Date.now() - startTime;

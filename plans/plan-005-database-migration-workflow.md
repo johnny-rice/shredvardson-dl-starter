@@ -28,11 +28,13 @@ Implement a safe, documented database migration workflow for Supabase that preve
 **Decision**: Pre-commit validation script + CI validation + optional approval gate
 
 **Rationale**:
+
 - Catches issues early (shift-left)
 - Multiple layers of safety (defense in depth)
 - Doesn't block local development velocity
 
 **Stack**:
+
 - TypeScript validation script (Node.js)
 - SQL parsing via regex (simple, no external dependencies)
 - GitHub Actions for CI integration
@@ -42,12 +44,14 @@ Implement a safe, documented database migration workflow for Supabase that preve
 **Decision**: Synthetic data via @faker-js/faker + optional Neosync integration
 
 **Rationale**:
+
 - Privacy-safe (GDPR compliant)
 - No production data exposure risk
 - Unlimited generation for testing
 - 99% statistical similarity (research-backed)
 
 **Stack**:
+
 - `@faker-js/faker` for synthetic data generation
 - TypeScript seed scripts
 - Supabase CLI for seed application
@@ -57,12 +61,14 @@ Implement a safe, documented database migration workflow for Supabase that preve
 **Decision**: GitHub Actions with environment-based deployment + manual approval for production
 
 **Rationale**:
+
 - Follows Supabase 2024 best practices
 - Native GitHub integration
 - No additional infrastructure
 - Clear approval trail
 
 **Workflow**:
+
 ```
 develop branch → auto-deploy to staging
 main branch → manual approval → deploy to production
@@ -73,11 +79,13 @@ main branch → manual approval → deploy to production
 **Decision**: Wiki-based with executable examples
 
 **Rationale**:
+
 - Easy to maintain alongside code
 - Searchable and linkable
 - Examples can be copy-pasted
 
 **Structure**:
+
 - Migration workflow guide (step-by-step)
 - RLS patterns library (copy-paste templates)
 - Common schema patterns (with examples)
@@ -158,11 +166,13 @@ docs/wiki/
 
 ```markdown
 // README.md - Add migration workflow section
+
 ## Database Migrations
 
 See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for complete guide.
 
 **Quick commands**:
+
 - `pnpm db:validate` - Validate migration files
 - `pnpm db:seed:dev` - Seed development data
 - `pnpm db:reset` - Reset local database
@@ -182,6 +192,7 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
 **Objective**: Create migration validation script
 
 **Tasks**:
+
 1. Create `scripts/validate-migration.ts`
    - Parse migration files in `supabase/migrations/`
    - Check for destructive operations (DROP, TRUNCATE)
@@ -195,6 +206,7 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
 3. Test validation with sample migrations (good and bad)
 
 **Acceptance Criteria**:
+
 - Validation script detects all specified dangerous patterns
 - Script outputs clear, actionable error messages
 - Script exits with non-zero code on errors
@@ -205,6 +217,7 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
 **Objective**: Create synthetic seed data generators
 
 **Tasks**:
+
 1. Create `scripts/seed-dev.ts`
    - Use @faker-js/faker for realistic data
    - Generate users, organizations (if exists), sample entities
@@ -224,6 +237,7 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
 4. Add seed scripts to package.json
 
 **Acceptance Criteria**:
+
 - Dev seed generates realistic, varied data
 - Test seed generates consistent, testable data
 - Seeds respect RLS policies (use service role key)
@@ -234,6 +248,7 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
 **Objective**: Comprehensive migration guides
 
 **Tasks**:
+
 1. Create `docs/wiki/database-migrations.md`
    - Step-by-step workflow (local → staging → prod)
    - How to create migration (Studio vs manual)
@@ -264,6 +279,7 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
    - Emergency rollback procedure
 
 **Acceptance Criteria**:
+
 - All docs have executable examples
 - Templates are copy-pasteable
 - Common scenarios covered
@@ -274,7 +290,9 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
 **Objective**: Automated deployment pipeline
 
 **Tasks**:
+
 1. Create `.github/workflows/deploy-staging.yml`
+
    ```yaml
    name: Deploy to Staging
    on:
@@ -293,6 +311,7 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
    ```
 
 2. Create `.github/workflows/deploy-production.yml`
+
    ```yaml
    name: Deploy to Production
    on:
@@ -324,6 +343,7 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
    - Deployment branches: main only
 
 **Acceptance Criteria**:
+
 - Staging deploys automatically on develop merge
 - Production requires manual approval
 - Failed migrations don't deploy
@@ -334,17 +354,21 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
 **Objective**: Safe AI-assisted migration creation
 
 **Tasks**:
+
 1. Create `.claude/commands/db-create-migration.md`
+
    ```markdown
    # Create Database Migration
 
    **IMPORTANT SAFETY RULES**:
+
    - NEVER apply migrations directly to any environment
    - ALWAYS create migration file for human review
    - ALWAYS run validation after creation
    - ALWAYS document intent in migration header
 
    Process:
+
    1. Ask user to describe schema change needed
    2. Generate SQL migration file
    3. Add header comments (purpose, dependencies, risks)
@@ -356,12 +380,14 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
    ```
 
 2. Create `.claude/commands/db-validate-migration.md`
+
    ```markdown
    # Validate Migration
 
    Run migration validation on specified file or all migrations.
 
    Process:
+
    1. Run pnpm db:validate
    2. Parse output
    3. Explain any warnings/errors in plain language
@@ -370,12 +396,14 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
    ```
 
 3. Create `.claude/commands/db-seed-dev.md`
+
    ```markdown
    # Seed Development Database
 
    Generate and load synthetic development data.
 
    Process:
+
    1. Ask user which entities to seed
    2. Ask for quantity (default: 50)
    3. Run pnpm db:reset (warns user data will be lost)
@@ -389,6 +417,7 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
    - Reference new documentation
 
 **Acceptance Criteria**:
+
 - AI commands never auto-apply migrations
 - Validation runs before any migration suggestion
 - Clear warnings for dangerous operations
@@ -400,6 +429,7 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
 **Objective**: Comprehensive testing of all components
 
 **Tasks**:
+
 1. Create test migrations (good and bad)
    - Migration that passes validation
    - Migration with DROP TABLE (should warn)
@@ -437,6 +467,7 @@ See [docs/wiki/database-migrations.md](docs/wiki/database-migrations.md) for com
    - Verify troubleshooting guide is accurate
 
 **Acceptance Criteria**:
+
 - All validation tests pass
 - Seeds create realistic data
 - CI/CD pipeline works end-to-end
@@ -483,19 +514,14 @@ describe('Migration Validation', () => {
 describe('Development Seed Data', () => {
   it('should create users that can access their own data', async () => {
     await seedDev();
-    const { data, error } = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', testUserId);
+    const { data, error } = await supabase.from('users').select('*').eq('id', testUserId);
     expect(error).toBeNull();
     expect(data).toHaveLength(1);
   });
 
   it('should respect organization isolation', async () => {
     await seedDev();
-    const { data } = await supabase
-      .from('organizations')
-      .select('*');
+    const { data } = await supabase.from('organizations').select('*');
     // User can only see their own orgs
     expect(data.length).toBeLessThan(totalOrgCount);
   });
@@ -575,6 +601,7 @@ describe('SQL Validators', () => {
 **Risk**: AI-generated migrations could contain destructive operations
 
 **Mitigation**:
+
 - Validation script runs on every migration
 - Human review required before production
 - Clear warnings for all dangerous patterns
@@ -585,6 +612,7 @@ describe('SQL Validators', () => {
 **Risk**: Seed data might expose production patterns
 
 **Mitigation**:
+
 - Use synthetic data only (no production data)
 - Separate seeds for dev vs test
 - Seeds use service role key (secured via env vars)
@@ -595,6 +623,7 @@ describe('SQL Validators', () => {
 **Risk**: Leaked secrets could allow unauthorized deployments
 
 **Mitigation**:
+
 - Use GitHub environment secrets
 - Limit secret access to production environment
 - Enable GitHub environment protection
@@ -606,6 +635,7 @@ describe('SQL Validators', () => {
 **Risk**: Missing or incorrect RLS policies could expose data
 
 **Mitigation**:
+
 - Validation warns on missing RLS
 - RLS pattern documentation with tested examples
 - Seed data tests verify RLS works
@@ -643,6 +673,7 @@ describe('SQL Validators', () => {
 **Probability**: Medium
 
 **Mitigation**:
+
 - Thorough testing with real-world migrations
 - Clear documentation on override process
 - Feedback loop to improve validation rules
@@ -657,6 +688,7 @@ describe('SQL Validators', () => {
 **Probability**: Low
 
 **Mitigation**:
+
 - Test on staging first
 - Require manual approval for production
 - Comprehensive CI testing before production use
@@ -671,6 +703,7 @@ describe('SQL Validators', () => {
 **Probability**: Medium
 
 **Mitigation**:
+
 - Seed scripts run after migrations
 - Test seeds in CI
 - Documentation on updating seeds
@@ -685,6 +718,7 @@ describe('SQL Validators', () => {
 **Probability**: Medium
 
 **Mitigation**:
+
 - Documentation is executable (copy-paste examples)
 - Version docs alongside code
 - Regular documentation review

@@ -12,6 +12,7 @@ Severity: normal
 **Example.**
 
 **Before** (relying on paid tool):
+
 ```typescript
 // CodeRabbit CLI catches this, but takes 90s and hits rate limits
 function addUser(user: any) {
@@ -20,6 +21,7 @@ function addUser(user: any) {
 ```
 
 **After** (caught instantly by ESLint):
+
 ```json
 // eslint.config.mjs
 {
@@ -32,6 +34,7 @@ function addUser(user: any) {
 **Result**: Catches the same issue in ~3s with unlimited runs.
 
 **Guardrails.**
+
 - Enable `@typescript-eslint/no-explicit-any` to catch type safety bypasses
 - Add `prefer-const`, `no-var`, `eqeqeq`, and `curly` for code quality baseline
 - Test pre-commit hook performance (<5s target) after adding new rules

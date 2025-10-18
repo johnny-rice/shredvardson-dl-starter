@@ -8,9 +8,11 @@
 ## What Was Created
 
 ### 1. Guidelines Document
+
 **File:** [docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md](../docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md)
 
 **Contains:**
+
 - 8 core principles for token optimization
 - Enforcement mechanisms
 - Review processes
@@ -18,6 +20,7 @@
 - Migration path for existing code
 
 **Key Principles:**
+
 1. Extract, Don't Embed
 2. Reference, Don't Duplicate
 3. Exclude External Docs
@@ -30,44 +33,51 @@
 ---
 
 ### 2. CI Enforcement Workflow
+
 **File:** [.github/workflows/token-optimization-guard.yml](../.github/workflows/token-optimization-guard.yml)
 
 **Checks on Every PR:**
+
 - ✅ Workflow file sizes (<200 lines)
-- ⚠️  Inline script length (<20 lines)
-- ⚠️  Setup duplication (use composite actions)
+- ⚠️ Inline script length (<20 lines)
+- ⚠️ Setup duplication (use composite actions)
 - ✅ Error messages reference debugging guide
-- ⚠️  Local script availability (package.json commands)
-- ⚠️  Documentation file sizes (<500 lines)
+- ⚠️ Local script availability (package.json commands)
+- ⚠️ Documentation file sizes (<500 lines)
 - ✅ .claudeignore patterns (required exclusions)
-- ℹ️  Command file overlap (informational)
+- ℹ️ Command file overlap (informational)
 
 **Output:** Automated report in PR with metrics and recommendations
 
 ---
 
 ### 3. Constitutional Amendment
+
 **File:** [docs/constitution.md](../docs/constitution.md)
 
 **Added Article IX: Token Efficiency**
 
 **Section 9.1: Context Minimization**
+
 - Extract inline scripts
 - Reference instead of duplicate
 - Exclude external docs
 - Archive stale content
 
 **Section 9.2: Workflow Efficiency**
+
 - Consolidate with composite actions
 - Error messages with debugging references
 - Local-first testing
 
 **Section 9.3: Command Optimization**
+
 - Consolidate overlapping commands
 - Document all commands
 - Size limits (300 lines)
 
 **Section 9.4: Enforcement**
+
 - Automated guards
 - Quarterly audits
 - Metrics tracking
@@ -79,9 +89,11 @@
 ---
 
 ### 4. Pre-commit Hook
+
 **File:** [scripts/git-hooks/token-optimization.sh](../scripts/git-hooks/token-optimization.sh)
 
 **Checks Before Commit:**
+
 - Workflow modifications (prompts to extract scripts)
 - Documentation additions (warns about size)
 - External docs (prompts .claudeignore update)
@@ -99,6 +111,7 @@
 **Example: Adding Design System Guidelines**
 
 1. **Developer creates documentation:**
+
    ```
    docs/design-system/
    ├── README.md (index + quick reference)
@@ -118,6 +131,7 @@
    - ✅ PR approved
 
 **If guidelines violated:**
+
 - Pre-commit hook warns developer
 - Developer can fix or override
 - CI provides detailed report
@@ -130,6 +144,7 @@
 **Example: Adding New CI Validation**
 
 1. **Developer extracts script first:**
+
    ```bash
    # Create script
    scripts/ci/validate-design-system.sh
@@ -139,6 +154,7 @@
    ```
 
 2. **Developer creates thin workflow:**
+
    ```yaml
    # .github/workflows/design-system-check.yml
    jobs:
@@ -163,18 +179,21 @@
 ## Enforcement Levels
 
 ### Blocking (❌)
+
 - Workflow >200 lines
 - Error message without debugging reference
 - Missing .claudeignore patterns
 - CI check failures
 
 ### Warning (⚠️)
+
 - Inline script >20 lines
 - Setup duplication
 - Documentation >500 lines
 - CI script without package.json command
 
 ### Informational (ℹ️)
+
 - Command file overlap
 - Optimization opportunities
 - Best practice suggestions
@@ -187,6 +206,7 @@
 **Next Audit:** 2026-01-15
 
 **Steps:**
+
 1. Run `pnpm run token:audit` (to be implemented in Phase 4)
 2. Review metrics vs. baseline
 3. Identify high-impact optimizations
@@ -194,6 +214,7 @@
 5. Update guidelines based on learnings
 
 **Metrics Tracked:**
+
 - Total workflow YAML size
 - Average inline script length
 - Documentation duplication percentage
@@ -207,6 +228,7 @@
 ### Scenario 1: Adding Comprehensive Feature Docs
 
 **❌ Token-Inefficient:**
+
 ```
 README.md (500 lines)
   - All feature documentation embedded
@@ -215,6 +237,7 @@ README.md (500 lines)
 ```
 
 **✅ Token-Optimized:**
+
 ```
 docs/features/
   ├── README.md (50 lines - index)
@@ -231,6 +254,7 @@ docs/wiki/features/ (excluded via .claudeignore)
 ### Scenario 2: Adding Complex CI Workflow
 
 **❌ Token-Inefficient:**
+
 ```yaml
 # 300-line workflow with:
 - 50 lines of inline bash scripts
@@ -240,6 +264,7 @@ docs/wiki/features/ (excluded via .claudeignore)
 ```
 
 **✅ Token-Optimized:**
+
 ```yaml
 # 50-line workflow with:
 jobs:
@@ -259,6 +284,7 @@ package.json: "feature:validate" (local)
 ### Scenario 3: Creating New Slash Commands
 
 **❌ Token-Inefficient:**
+
 ```
 .claude/commands/
   ├── feature-a.md (400 lines)
@@ -267,6 +293,7 @@ package.json: "feature:validate" (local)
 ```
 
 **✅ Token-Optimized:**
+
 ```
 .claude/commands/
   ├── feature-a.md (150 lines)
@@ -283,23 +310,23 @@ package.json: "feature:validate" (local)
 
 ### Target Metrics (from Issue #142)
 
-| Metric | Baseline | Target | Status |
-|--------|----------|--------|--------|
-| Token consumption | 2.4M/month | 1.6M/month | ⏳ Pending Phase 1 |
-| Workflow YAML size | 106KB | 50KB | ⏳ Pending Phase 1 |
-| CI jobs count | 6 | 3 | ⏳ Pending Phase 1 |
-| Local validation | 0% | 100% | ⏳ Pending Phase 1 |
-| CI failure rate | 20% | <10% | ⏳ Pending Phase 1 |
+| Metric             | Baseline   | Target     | Status             |
+| ------------------ | ---------- | ---------- | ------------------ |
+| Token consumption  | 2.4M/month | 1.6M/month | ⏳ Pending Phase 1 |
+| Workflow YAML size | 106KB      | 50KB       | ⏳ Pending Phase 1 |
+| CI jobs count      | 6          | 3          | ⏳ Pending Phase 1 |
+| Local validation   | 0%         | 100%       | ⏳ Pending Phase 1 |
+| CI failure rate    | 20%        | <10%       | ⏳ Pending Phase 1 |
 
 ### Governance Metrics (New)
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| Workflow compliance | 100% | CI check pass rate |
-| Pre-commit warnings | <5 per week | Hook logs |
-| Quarterly violations | 0 | Audit reports |
-| Command overlap | <30% | Similarity analysis |
-| Doc duplication | <5% | Duplicate detection |
+| Metric               | Target      | Measurement         |
+| -------------------- | ----------- | ------------------- |
+| Workflow compliance  | 100%        | CI check pass rate  |
+| Pre-commit warnings  | <5 per week | Hook logs           |
+| Quarterly violations | 0           | Audit reports       |
+| Command overlap      | <30%        | Similarity analysis |
+| Doc duplication      | <5%         | Duplicate detection |
 
 ---
 
@@ -308,6 +335,7 @@ package.json: "feature:validate" (local)
 ### How Governance Fits with Issue #142
 
 **Issue #142 Phases:**
+
 1. ✅ Phase 0: `.claudeignore` created
 2. ⏳ Phase 1: Workflow simplification (governance ready)
 3. ⏳ Phase 2: CI job consolidation (governance ready)
@@ -316,6 +344,7 @@ package.json: "feature:validate" (local)
 6. ⏳ Phase 5: Structural improvements (governance ready)
 
 **Governance ensures:**
+
 - Phase 1+ changes follow best practices
 - Future work doesn't regress optimizations
 - Patterns are reusable for new features
@@ -328,6 +357,7 @@ package.json: "feature:validate" (local)
 ### Before Governance
 
 Developer adds new CI workflow:
+
 1. Copies existing workflow
 2. Adds 100 lines of inline bash
 3. No idea if this is optimal
@@ -337,6 +367,7 @@ Developer adds new CI workflow:
 ### With Governance
 
 Developer adds new CI workflow:
+
 1. Pre-commit hook prompts: "Extract scripts?"
 2. Developer creates `scripts/ci/new-check.sh`
 3. Adds package.json command
@@ -354,18 +385,21 @@ Developer adds new CI workflow:
 ### For Developers
 
 **Install pre-commit hook:**
+
 ```bash
 # Hook is installed automatically via pnpm hooks:install
 pnpm run hooks:install
 ```
 
 **Review guidelines:**
+
 ```bash
 # Read guidelines before making changes
 cat docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md
 ```
 
 **Test locally:**
+
 ```bash
 # Make changes
 git add .
@@ -380,12 +414,14 @@ bash scripts/git-hooks/token-optimization.sh
 ### For Reviewers
 
 **Check PR for compliance:**
+
 1. Review CI check results
 2. Check for token optimization warnings
 3. Verify recommendations addressed
 4. Approve if guidelines followed
 
 **Metrics visible in PR:**
+
 - Workflow file sizes
 - Inline script counts
 - Documentation metrics
@@ -398,6 +434,7 @@ bash scripts/git-hooks/token-optimization.sh
 ### Phase 4 (Documentation Cleanup) Will Add:
 
 **Token Audit Script:**
+
 ```bash
 pnpm run token:audit          # Generate report
 pnpm run token:audit --baseline  # Set baseline
@@ -405,6 +442,7 @@ pnpm run token:audit --compare   # Compare to baseline
 ```
 
 **Features:**
+
 - Automated duplication detection
 - Command overlap analysis
 - Stale content identification

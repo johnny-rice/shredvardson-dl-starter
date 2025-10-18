@@ -25,7 +25,7 @@ jobs:
           fetch-depth: 0
 
       - name: Check workflow file sizes
-        continue-on-error: true  # Advisory only - don't block merges during Phase 1.1 implementation
+        continue-on-error: true # Advisory only - don't block merges during Phase 1.1 implementation
         run: |
           echo "Checking workflow file sizes..."
           threshold=200
@@ -113,7 +113,7 @@ jobs:
           fi
 
       - name: Check error messages for debugging references
-        continue-on-error: true  # Advisory only - don't block merges during Phase 1.1 implementation
+        continue-on-error: true # Advisory only - don't block merges during Phase 1.1 implementation
         run: |
           echo "Checking error messages reference debugging guide..."
           failed=0
@@ -186,7 +186,7 @@ jobs:
           fi
 
       - name: Check .claudeignore patterns
-        continue-on-error: true  # Advisory only - don't block merges during Phase 1.1 implementation
+        continue-on-error: true # Advisory only - don't block merges during Phase 1.1 implementation
         run: |
           echo "Checking .claudeignore has required patterns..."
           failed=0

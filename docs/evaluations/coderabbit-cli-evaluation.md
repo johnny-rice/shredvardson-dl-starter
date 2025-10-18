@@ -128,6 +128,7 @@ post_review:
 #### Test Code Sample
 
 Created sample TypeScript with intentional issues:
+
 - `any` types instead of proper interfaces
 - Missing error handling
 - Non-idiomatic loops (`for` instead of `.map()`, `.find()`)
@@ -210,6 +211,7 @@ and run type checks to confirm no remaining any usage.
 ```
 
 **Observations**:
+
 - ✅ Accurate identification of type safety issue
 - ✅ Clear explanation of why it's problematic
 - ✅ Concrete fix suggestion with code diff
@@ -222,6 +224,7 @@ and run type checks to confirm no remaining any usage.
 **`--prompt-only` Mode**: Could not fully test due to rate limits
 
 **Expected Workflow**:
+
 1. AI agent writes code
 2. Runs `coderabbit review --prompt-only`
 3. Parses structured prompts
@@ -229,6 +232,7 @@ and run type checks to confirm no remaining any usage.
 5. Repeats until clean
 
 **Actual Experience**:
+
 - ❌ Rate limits prevent iterative workflow
 - ✅ Prompt format is well-structured (when it works)
 - ❌ ~90s per review too slow for TDD loops
@@ -260,17 +264,20 @@ and run type checks to confirm no remaining any usage.
 ### Strengths
 
 ✅ **Review Quality**
+
 - Accurate issue identification (caught `any` type usage)
 - Clear explanations of why issues matter
 - Concrete fix suggestions with code diffs
 - Well-structured AI agent prompts for automated fixing
 
 ✅ **Installation & Setup**
+
 - Smooth installation process
 - Clean OAuth authentication
 - Good documentation
 
 ✅ **AI Agent Integration Design**
+
 - `--prompt-only` mode has good structured output format
 - Prompts are actionable and specific
 - Designed for automated fix workflows
@@ -278,36 +285,40 @@ and run type checks to confirm no remaining any usage.
 ### Weaknesses
 
 ❌ **Rate Limiting (CRITICAL)**
+
 - Hit rate limit after only ~2 review attempts
 - 28-58 minute wait times between reviews
 - Makes iterative development impossible
 - Blocks any meaningful AI agent workflow
 
 ❌ **Performance**
+
 - ~90 seconds per review (vs ~5s for ESLint + TypeScript)
 - Too slow for pre-commit hooks
 - Too slow for TDD loops
 - Would frustrate developers if blocking commits
 
 ❌ **Limited Scope**
+
 - Cannot review specific files (only all/committed/uncommitted)
 - No severity filtering
 - No incremental review mode
 
 ❌ **Overlap with Existing Tools**
+
 - TypeScript already catches type issues
 - ESLint can catch `any` usage with `@typescript-eslint/no-explicit-any`
 - Our existing stack is faster and more reliable
 
 ### Comparison vs Current Stack
 
-| Tool | Speed | Coverage | Integration | Cost |
-|------|-------|----------|-------------|------|
-| TypeScript | ⚡ ~2s | Type safety | ✅ Pre-commit | Free |
-| ESLint | ⚡ ~3s | Code quality | ✅ Pre-commit | Free |
-| Playwright | ⚙️ ~10s | E2E behavior | ✅ CI/CD | Free |
+| Tool               | Speed   | Coverage        | Integration     | Cost               |
+| ------------------ | ------- | --------------- | --------------- | ------------------ |
+| TypeScript         | ⚡ ~2s  | Type safety     | ✅ Pre-commit   | Free               |
+| ESLint             | ⚡ ~3s  | Code quality    | ✅ Pre-commit   | Free               |
+| Playwright         | ⚙️ ~10s | E2E behavior    | ✅ CI/CD        | Free               |
 | **CodeRabbit CLI** | 🐌 ~90s | Semantic issues | ❌ Rate limited | Free tier unusable |
-| CodeRabbit PR | N/A | Comprehensive | ✅ PR reviews | ✅ Working well |
+| CodeRabbit PR      | N/A     | Comprehensive   | ✅ PR reviews   | ✅ Working well    |
 
 ### False Positives
 
@@ -317,6 +328,7 @@ and run type checks to confirm no remaining any usage.
 ### False Negatives
 
 ⚠️ **Likely Missing Issues** (not caught before timeout):
+
 - Missing error handling in `fetchUserData`
 - Non-idiomatic loops (could use `.find()`, `.reduce()`)
 - Missing return type annotations
@@ -352,11 +364,13 @@ and run type checks to confirm no remaining any usage.
 ### ROI Assessment
 
 **Current Stack (Free)**:
+
 - TypeScript + ESLint: ~5s, unlimited runs ✅
 - Playwright: ~10s, reliable ✅
 - CodeRabbit PR reviews: Works well for comprehensive reviews ✅
 
 **CodeRabbit CLI (Free Tier)**:
+
 - ~90s per review ❌
 - Rate limited to ~2 reviews/hour ❌
 - Blocks development workflow ❌

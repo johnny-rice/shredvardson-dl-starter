@@ -73,15 +73,35 @@ Improve code clarity and performance while checking OWASP Top 10 security risks.
 
 1. Confirm lane (**lightweight/spec**) against `CLAUDE.md` decision rules.
 2. If `requiresHITL` true, ask for human confirmation citing `riskPolicyRef`.
-3. Analyze and improve code security focusing on:
-   - Input validation and sanitization
-   - Authentication/authorization checks
-   - Data exposure prevention
-   - XSS/CSRF protection
-   - Dependency vulnerabilities
-4. Focus on `src/app/` routes and API endpoints. Maintain test compatibility.
-5. Produce security analysis **report** and **link** results in related Issue/PR.
-6. Emit **Result**: security improvements made, test status, and next suggested command.
+3. **Delegate to Security Scanner sub-agent** with JSON input:
+
+   ```json
+   {
+     "scope": "full",
+     "focus_areas": ["auth", "rls", "api", "secrets"],
+     "severity_threshold": "medium"
+   }
+   ```
+
+4. Receive JSON output with `vulnerabilities`, `summary`, `recommendations`.
+5. **Delegate to Refactor Analyzer sub-agent** for code quality issues:
+
+   ```json
+   {
+     "target": {
+       "type": "codebase"
+     },
+     "focus_areas": ["readability", "performance", "maintainability"],
+     "severity_threshold": "moderate"
+   }
+   ```
+
+6. Combine findings from both sub-agents and prioritize by severity and impact.
+7. Apply fixes for critical/high severity issues first, then moderate issues.
+8. Run tests after each refactoring to ensure no regression.
+9. Generate security analysis report combining findings from both sub-agents.
+10. Produce security analysis **report** and **link** results in related Issue/PR.
+11. Emit **Result**: security improvements made, refactorings applied, test status, and next suggested command.
 
 **Examples:**
 

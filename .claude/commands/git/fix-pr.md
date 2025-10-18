@@ -222,6 +222,7 @@ Automatically fetch PR feedback from all sources (CI, CodeRabbit, doctor) and fi
 **Implementation Notes:**
 
 This command orchestrates multiple tools and workflows:
+
 1. Uses `gh` CLI for PR/CI interaction
 2. Uses git commands for fixing and committing
 3. Uses pnpm scripts for validation and fixes

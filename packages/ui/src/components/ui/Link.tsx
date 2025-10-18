@@ -13,7 +13,8 @@ const linkVariants = cva(
       variant: {
         default: 'text-primary hover:text-primary/80 underline-offset-4 hover:underline',
         primary: 'bg-primary text-primary-foreground hover:bg-primary/90 rounded-md px-4 py-2',
-        secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-md px-4 py-2',
+        secondary:
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-md px-4 py-2',
         ghost: 'hover:bg-accent hover:text-accent-foreground rounded-md px-4 py-2',
         nav: 'text-foreground/60 hover:text-foreground hover:bg-accent/50 rounded-md px-3 py-2',
       },

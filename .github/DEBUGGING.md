@@ -26,16 +26,19 @@ Quick reference for debugging CI failures locally.
 ### Error: "Spec directory does not follow naming convention"
 
 **Local Test:**
+
 ```bash
 pnpm run specs:validate
 ```
 
 **Common Causes:**
+
 - Spec directory not named with `###-name` format
 - Missing leading zeros (e.g., `1-test` instead of `001-test`)
 - Invalid characters in directory name
 
 **Fix:**
+
 ```bash
 # Rename spec directory to follow convention
 mv specs/bad-name specs/001-good-name
@@ -49,16 +52,19 @@ mkdir specs/002-new-feature
 ### Error: "Missing required file"
 
 **Local Test:**
+
 ```bash
 pnpm run specs:validate
 ```
 
 **Common Causes:**
+
 - Missing `README.md` in spec directory
 - Missing `DESIGN.md` in spec directory
 - Files in wrong location
 
 **Fix:**
+
 ```bash
 # Create missing files
 cd specs/001-feature
@@ -73,16 +79,19 @@ pnpm run new-spec
 ### Error: "Spec README.md missing proper header"
 
 **Local Test:**
+
 ```bash
 pnpm run specs:validate
 ```
 
 **Common Causes:**
+
 - README doesn't start with `# Spec`
 - Missing YAML frontmatter
 - Incorrect heading format
 
 **Fix:**
+
 ```markdown
 ---
 id: SPEC-YYYYMMDD-feature-name
@@ -99,22 +108,26 @@ Status: Draft
 ### Error: "Spec README.md missing status field"
 
 **Local Test:**
+
 ```bash
 pnpm run specs:validate
 ```
 
 **Common Causes:**
+
 - No `Status:` field in README
 - Status field misspelled
 - Status field in wrong location
 
 **Fix:**
+
 ```markdown
 # Spec: Feature Name
 
 Status: Draft
 
 ## Overview
+
 ...
 ```
 
@@ -127,16 +140,19 @@ Status: Draft
 ### Error: "Unable to detect spec lane"
 
 **Local Test:**
+
 ```bash
 pnpm run specs:check-lane
 ```
 
 **Common Causes:**
+
 - Spec file doesn't exist
 - No spec content changes in current PR
 - File path incorrect
 
 **Fix:**
+
 ```bash
 # Check if spec file exists
 ls -la specs/SPEC-*.md
@@ -155,17 +171,20 @@ git diff --name-only HEAD | grep specs/
 ### Error: "Type check failed"
 
 **Local Test:**
+
 ```bash
 pnpm run typecheck
 ```
 
 **Common Causes:**
+
 - Type mismatches
 - Missing type imports
 - Incorrect generic types
 - Using `any` type
 
 **Fix:**
+
 ```bash
 # Run typecheck and review errors
 pnpm run typecheck
@@ -180,6 +199,7 @@ pnpm run typecheck
 ```
 
 **Tips:**
+
 - Read error message carefully (shows file:line:column)
 - Check import statements
 - Verify type definitions exist
@@ -192,17 +212,20 @@ pnpm run typecheck
 ### Error: "Lint check failed"
 
 **Local Test:**
+
 ```bash
 pnpm run lint
 ```
 
 **Common Causes:**
+
 - Code style violations
 - Unused imports
 - Console.log statements
 - Missing semicolons/trailing commas
 
 **Fix:**
+
 ```bash
 # Auto-fix most issues
 pnpm run format
@@ -215,6 +238,7 @@ pnpm --filter=web lint
 ```
 
 **Tips:**
+
 - Most issues can be auto-fixed with `pnpm run format`
 - Some errors require manual fixes
 - Check `.eslintrc` for project rules
@@ -226,17 +250,20 @@ pnpm --filter=web lint
 ### Error: "Test suite failed"
 
 **Local Test:**
+
 ```bash
 pnpm run test
 ```
 
 **Common Causes:**
+
 - Broken test assertions
 - Missing test fixtures
 - Environment variable issues
 - Database not running (for integration tests)
 
 **Fix:**
+
 ```bash
 # Run tests with verbose output
 pnpm run test -- --reporter=verbose
@@ -253,6 +280,7 @@ pnpm run test
 ```
 
 **Tips:**
+
 - Read test failure message carefully
 - Check test fixtures and mocks
 - Verify environment variables
@@ -265,17 +293,20 @@ pnpm run test
 ### Error: "Build failed"
 
 **Local Test:**
+
 ```bash
 pnpm run build
 ```
 
 **Common Causes:**
+
 - Missing dependencies
 - Import path errors
 - Configuration issues
 - TypeScript errors (build includes typecheck)
 
 **Fix:**
+
 ```bash
 # Clean and rebuild
 pnpm run clean
@@ -291,6 +322,7 @@ pnpm install --frozen-lockfile
 ```
 
 **Tips:**
+
 - Build errors often indicate TypeScript or import issues
 - Check that all dependencies are installed
 - Verify import paths are correct
@@ -303,6 +335,7 @@ pnpm install --frozen-lockfile
 ### Error: "Failed to scrape AI reviews"
 
 **Local Test:**
+
 ```bash
 # Requires GitHub CLI authentication
 gh auth status
@@ -312,12 +345,14 @@ pnpm run ai:scrape-reviews
 ```
 
 **Common Causes:**
+
 - Not authenticated with GitHub CLI
 - Missing PR context
 - Insufficient permissions
 - PR doesn't exist
 
 **Fix:**
+
 ```bash
 # Authenticate with GitHub CLI
 gh auth login
@@ -333,6 +368,7 @@ pnpm run ai:scrape-reviews 123
 ```
 
 **Tips:**
+
 - Requires `gh` CLI tool installed
 - Must be authenticated to GitHub
 - Works in PR context or with explicit PR number

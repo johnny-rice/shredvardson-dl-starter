@@ -69,9 +69,11 @@ interface SeedConfig {
 ## Implementation Details
 
 **Package Dependencies:**
+
 - `@faker-js/faker` (devDependency) for realistic test data generation
 
 **NPM Scripts:**
+
 ```json
 {
   "db:validate": "tsx scripts/validate-migration.ts",
@@ -82,6 +84,7 @@ interface SeedConfig {
 ```
 
 **CI Integration:**
+
 - Added to CI pipeline as a required check
 - Blocks merges if blocking errors are detected
 - Warnings are reported but don't fail the build

@@ -12,6 +12,7 @@ Severity: high
 **Example.**
 
 ❌ **Failing:**
+
 ```yaml
 - name: Check PR body
   run: |
@@ -21,6 +22,7 @@ Severity: high
 ```
 
 ✅ **Passing:**
+
 ```yaml
 - name: Check PR body
   env:
@@ -32,6 +34,7 @@ Severity: high
 ```
 
 **Guardrails.**
+
 - Store GitHub context variables (`${{ }}`) in `env:` block before using in bash scripts
 - Always quote bash variables: `"$VAR"` not `$VAR`
 - Test workflows with PR bodies containing special characters: `()`, `[]`, `$`, `` ` ``, `\`

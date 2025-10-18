@@ -12,6 +12,7 @@ Severity: normal
 **Example.**
 
 ❌ **Before**: PR has spec/plan/task docs but no ADR
+
 ```
 Modified files:
 - scripts/validate-migration.ts
@@ -29,6 +30,7 @@ Result: Doctor check fails with ADR compliance error
 ```
 
 ✅ **After**: Add ADR documenting architectural decisions
+
 ```
 Added:
 ✅ docs/decisions/ADR-005-database-migration-workflow.md
@@ -44,6 +46,7 @@ Result: Doctor check passes, future maintainers understand rationale
 ```
 
 **Guardrails.**
+
 - **Doctor enforcement**: Run `pnpm doctor:report` locally before pushing script changes
 - **ADR naming**: Use sequential numbering (ADR-001, ADR-002, etc.) and descriptive titles
 - **Link in PR**: Always reference the ADR in the PR description under an "ADR" section
@@ -51,6 +54,7 @@ Result: Doctor check passes, future maintainers understand rationale
 - **Cross-reference**: Link ADR to related specs/plans/tasks for full traceability
 
 **Why Scripts Need ADRs More Than Regular Code:**
+
 - Scripts often encode critical business logic (validation rules, safety checks)
 - They run in CI/CD pipelines affecting deployment safety
 - They may bypass application-level safeguards (service role keys, admin access)

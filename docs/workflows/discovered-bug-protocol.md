@@ -95,12 +95,12 @@ gh pr edit <PR-NUMBER> --body "[Update summary to add: Fixes #<ISSUE-NUMBER>]"
 
 ## Comparison to Normal Workflows
 
-| Scenario | Workflow | Why |
-|----------|----------|-----|
-| **Discovered bug** | This bypass protocol | Don't block current work |
-| **Planned bug fix** | Simple workflow | Follow normal process |
-| **New feature** | Spec-driven (if complex) | Needs planning |
-| **Security issue** | Incident response | Critical path |
+| Scenario            | Workflow                 | Why                      |
+| ------------------- | ------------------------ | ------------------------ |
+| **Discovered bug**  | This bypass protocol     | Don't block current work |
+| **Planned bug fix** | Simple workflow          | Follow normal process    |
+| **New feature**     | Spec-driven (if complex) | Needs planning           |
+| **Security issue**  | Incident response        | Critical path            |
 
 ## Quality Checklist
 

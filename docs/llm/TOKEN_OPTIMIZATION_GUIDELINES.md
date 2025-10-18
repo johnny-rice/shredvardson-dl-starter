@@ -17,6 +17,7 @@
 **Why:** Reduces context size when debugging CI, enables local testing, improves maintainability.
 
 **Example:**
+
 ```yaml
 # ❌ BAD: Inline bash script
 - name: Validate something
@@ -45,21 +46,28 @@
 **Why:** Reduces redundancy in context, ensures consistency, easier maintenance.
 
 **Example:**
+
 ```markdown
 # ❌ BAD: Duplicated content
+
 ## Component Guidelines (in README.md)
+
 Components should use TypeScript...
 [200 lines of guidelines]
 
 ## Component Guidelines (in CONTRIBUTING.md)
+
 Components should use TypeScript...
 [200 lines of same guidelines]
 
 # ✅ GOOD: Reference pattern
+
 ## Component Guidelines (in README.md)
+
 See [docs/architecture/components.md](docs/architecture/components.md) for detailed guidelines.
 
 ## Component Guidelines (in CONTRIBUTING.md)
+
 See [docs/architecture/components.md](docs/architecture/components.md) for detailed guidelines.
 ```
 
@@ -74,6 +82,7 @@ See [docs/architecture/components.md](docs/architecture/components.md) for detai
 **Why:** External docs (Wiki, public guides) aren't relevant for internal development.
 
 **Pattern:**
+
 ```
 docs/
 ├── wiki/              # External (excluded via .claudeignore)
@@ -93,6 +102,7 @@ docs/
 **Why:** Old content clutters context without providing value.
 
 **Pattern:**
+
 ```
 docs/
 ├── active/            # Current docs (included)
@@ -110,6 +120,7 @@ docs/
 **Why:** Reduces duplication, clearer failure context, easier updates.
 
 **Example:**
+
 ```yaml
 # ❌ BAD: Duplicated setup
 jobs:
@@ -149,6 +160,7 @@ jobs:
 **Why:** Reduces need to read full workflow files, enables self-service debugging.
 
 **Example:**
+
 ```yaml
 # ❌ BAD: Opaque error
 - name: Validate
@@ -174,6 +186,7 @@ jobs:
 **Why:** Enables debugging without CI, faster feedback loops, consistent environments.
 
 **Pattern:**
+
 ```json
 {
   "scripts": {
@@ -194,6 +207,7 @@ jobs:
 **Why:** Reduces command file size, ensures consistency, easier maintenance.
 
 **Pattern:**
+
 ```
 .claude/commands/
 ├── git/
@@ -215,6 +229,7 @@ jobs:
 **File:** `.github/workflows/token-optimization-guard.yml`
 
 **Checks:**
+
 1. **Workflow line count:** Fails if any workflow >200 lines
 2. **Inline script length:** Warns if inline script >20 lines
 3. **Setup duplication:** Warns if setup steps duplicated across jobs
@@ -232,6 +247,7 @@ jobs:
 **File:** `scripts/git-hooks/token-optimization.sh`
 
 **Checks:**
+
 1. **Workflow modifications:** Prompt developer to extract inline scripts
 2. **New documentation:** Suggest archival location if appropriate
 3. **Command changes:** Check for overlap with existing commands
@@ -247,6 +263,7 @@ jobs:
 **Title:** Token Efficiency
 
 **Sections:**
+
 - Section 9.1: Context Minimization (principles 1-4)
 - Section 9.2: Workflow Efficiency (principles 5-7)
 - Section 9.3: Command Optimization (principle 8)
@@ -265,6 +282,7 @@ jobs:
 **Who:** Maintainers + AI agents
 
 **Actions:**
+
 1. Run `pnpm run token:audit` to generate report
 2. Identify violations and candidates for improvement
 3. Create issues for high-impact optimizations
@@ -290,17 +308,20 @@ Add to PR template:
 ## Migration Path for Existing Code
 
 ### Phase 1: Create Baseline (Week 1)
+
 ```bash
 pnpm run token:audit --baseline
 # Generates: scratch/token-baseline.md
 ```
 
 ### Phase 2: Fix High-Impact Issues (Weeks 2-4)
+
 1. Extract inline scripts from workflows
 2. Create composite actions
 3. Archive stale documentation
 
 ### Phase 3: Enable Enforcement (Week 5)
+
 ```bash
 # Enable CI checks
 git add .github/workflows/token-optimization-guard.yml
@@ -308,6 +329,7 @@ git commit -m "chore(ci): enable token optimization enforcement"
 ```
 
 ### Phase 4: Monitor and Improve (Ongoing)
+
 ```bash
 # Monthly check
 pnpm run token:audit --compare scratch/token-baseline.md
@@ -324,6 +346,7 @@ pnpm run token:audit --compare scratch/token-baseline.md
 **Token-Optimized Approach:**
 
 1. **Single Source of Truth:**
+
    ```
    docs/design-system/
    ├── README.md              # Index + quick reference
@@ -335,23 +358,29 @@ pnpm run token:audit --compare scratch/token-baseline.md
    ```
 
 2. **Reference Pattern:**
+
    ```markdown
    # README.md
+
    For detailed guidelines:
+
    - [Colors](./colors.md)
    - [Typography](./typography.md)
    - [Components](./components.md)
    ```
 
 3. **External vs Internal:**
+
    ```
    docs/design-system/        # Internal (for developers)
    docs/wiki/design-system/   # External (for public, excluded)
    ```
 
 4. **Slash Command:**
+
    ```markdown
    # .claude/commands/design/apply-system.md
+
    See [docs/design-system/README.md](../../../docs/design-system/README.md)
    for guidelines.
 
@@ -359,6 +388,7 @@ pnpm run token:audit --compare scratch/token-baseline.md
    ```
 
 **What NOT to do:**
+
 - ❌ Put 500 lines of design guidelines in README
 - ❌ Duplicate guidelines in multiple places
 - ❌ Create 50-line slash command with all guidelines
@@ -373,6 +403,7 @@ pnpm run token:audit --compare scratch/token-baseline.md
 **Token-Optimized Approach:**
 
 1. **Extract to Script:**
+
    ```bash
    # scripts/ci/validate-design-system.sh
    #!/bin/bash
@@ -381,6 +412,7 @@ pnpm run token:audit --compare scratch/token-baseline.md
    ```
 
 2. **Thin Workflow:**
+
    ```yaml
    # .github/workflows/design-system-check.yml
    jobs:
@@ -392,6 +424,7 @@ pnpm run token:audit --compare scratch/token-baseline.md
    ```
 
 3. **Local Command:**
+
    ```json
    {
      "scripts": {
@@ -401,6 +434,7 @@ pnpm run token:audit --compare scratch/token-baseline.md
    ```
 
 4. **Error Handling:**
+
    ```bash
    # In script
    if ! validate_colors; then
@@ -412,13 +446,16 @@ pnpm run token:audit --compare scratch/token-baseline.md
 5. **Debugging Guide:**
    ```markdown
    # .github/DEBUGGING.md
+
    ## Design System Validation
+
    **Error:** "Color validation failed"
    **Local test:** `pnpm run design:validate`
    **Fix:** Review [docs/design-system/colors.md](../docs/design-system/colors.md)
    ```
 
 **What NOT to do:**
+
 - ❌ 100 lines of inline bash in workflow
 - ❌ Duplicate setup steps (use composite action)
 - ❌ Error without debugging reference
@@ -430,13 +467,13 @@ pnpm run token:audit --compare scratch/token-baseline.md
 
 ### Target Metrics
 
-| Metric | Target | Current | Trend |
-|--------|--------|---------|-------|
-| Workflow YAML size | <50KB | [TBD] | [TBD] |
-| Inline script lines | <20 per workflow | [TBD] | [TBD] |
-| Doc duplication | <5% | [TBD] | [TBD] |
-| Local validation | 100% | [TBD] | [TBD] |
-| Command overlap | <30% | [TBD] | [TBD] |
+| Metric              | Target           | Current | Trend |
+| ------------------- | ---------------- | ------- | ----- |
+| Workflow YAML size  | <50KB            | [TBD]   | [TBD] |
+| Inline script lines | <20 per workflow | [TBD]   | [TBD] |
+| Doc duplication     | <5%              | [TBD]   | [TBD] |
+| Local validation    | 100%             | [TBD]   | [TBD] |
+| Command overlap     | <30%             | [TBD]   | [TBD] |
 
 ### Measurement Commands
 
@@ -462,12 +499,14 @@ diff .claude/commands/git/branch.md .claude/commands/git/fix-pr.md
 ## Getting Help
 
 **Questions about token optimization?**
+
 1. Review this guide
 2. Check `.github/DEBUGGING.md` for CI-specific help
 3. Run `pnpm run token:audit` for automated suggestions
 4. Ask in team chat with context
 
 **Proposing changes to guidelines?**
+
 1. Create RFC in `docs/decisions/`
 2. Include token impact analysis
 3. Follow constitutional amendment process (Article VII)
@@ -486,47 +525,47 @@ diff .claude/commands/git/branch.md .claude/commands/git/fix-pr.md
  * Scans repository for token optimization violations and opportunities.
  */
 
-import { readFileSync, readdirSync, statSync } from 'fs'
-import { join } from 'path'
+import { readFileSync, readdirSync, statSync } from 'fs';
+import { join } from 'path';
 
 interface AuditResult {
-  violations: Violation[]
-  warnings: Warning[]
-  opportunities: Opportunity[]
-  metrics: Metrics
+  violations: Violation[];
+  warnings: Warning[];
+  opportunities: Opportunity[];
+  metrics: Metrics;
 }
 
 interface Violation {
-  type: string
-  file: string
-  line?: number
-  message: string
-  impact: 'high' | 'medium' | 'low'
+  type: string;
+  file: string;
+  line?: number;
+  message: string;
+  impact: 'high' | 'medium' | 'low';
 }
 
 interface Warning {
-  type: string
-  file: string
-  message: string
+  type: string;
+  file: string;
+  message: string;
 }
 
 interface Opportunity {
-  type: string
-  description: string
-  estimatedSavings: string
+  type: string;
+  description: string;
+  estimatedSavings: string;
 }
 
 interface Metrics {
-  workflowSize: number
-  inlineScriptLines: number
-  docDuplication: number
-  commandOverlap: number
+  workflowSize: number;
+  inlineScriptLines: number;
+  docDuplication: number;
+  commandOverlap: number;
 }
 
 // Implementation would go here...
 // [Detailed implementation in actual file]
 
-export { auditTokenOptimization }
+export { auditTokenOptimization };
 ```
 
 ---

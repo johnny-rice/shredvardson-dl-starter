@@ -32,11 +32,13 @@ fi
 ```
 
 **Why it matters:**
+
 - Prevents "branch not merged" errors on squash-merged PRs
 - Enables automated cleanup workflows
 - Supports GitHub's recommended merge strategy
 
 **References:**
+
 - Issue #123 - Fix git:finish for squash-merged PRs
 - PR #122 - Implementation with CodeRabbit safety reviews
 

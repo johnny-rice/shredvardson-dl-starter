@@ -20,6 +20,34 @@
 
 ### General
 
+#### '/research:explore'
+
+**Purpose**: Deep codebase exploration to answer questions about architecture, patterns, or implementation details.
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: 'LOW'
+
+**Tags**: research, exploration, codebase
+
+---
+
+#### '/security:scan'
+
+**Purpose**: Scan codebase for security vulnerabilities including RLS policies, auth issues, and OWASP Top 10.
+
+**When to use**: Code quality and security improvements
+
+**Example**: Standard development workflow
+
+**Risk Level**: 'LOW'
+
+**Tags**: security, scanning, vulnerabilities, rls
+
+---
+
 #### README
 
 **Purpose**: No description available
@@ -61,6 +89,20 @@
 **Risk Level**: 'MEDIUM' (Requires Human Approval)
 
 **Tags**: git, conventional-commits
+
+---
+
+#### '/git:fix-pr'
+
+**Purpose**: Automatically address PR feedback from CI checks, CodeRabbit, and doctor failures.
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: 'MEDIUM' (Requires Human Approval)
+
+**Tags**: git, pr, ci, automation, feedback
 
 ---
 
@@ -117,20 +159,6 @@
 **Risk Level**: 'LOW'
 
 **Tags**: pr, traceability, automation
-
----
-
-#### git:ensure-branch
-
-**Purpose**: No description available
-
-**When to use**: General development tasks
-
-**Example**: Standard development workflow
-
-**Risk Level**: LOW
-
-**Tags**: git, implementation
 
 ---
 

@@ -41,6 +41,7 @@ The system must prevent or warn about:
 - **Security Gaps**: Missing RLS policies on new tables
 
 Each check should provide:
+
 - Clear explanation of the risk
 - Suggested fix or alternative approach
 - Option to override with explicit confirmation
@@ -76,6 +77,7 @@ The system should provide guidance for:
 - **Soft Deletes**: archived_at patterns vs hard deletes
 
 These patterns should be:
+
 - Copy-pasteable templates
 - Explained with use cases
 - Tested and verified to work
@@ -121,21 +123,25 @@ These patterns should be:
 ## Success Criteria
 
 ### Developer Confidence
+
 - Developer can create migrations without fear of breaking production
 - Developer can test migrations thoroughly before deployment
 - Developer understands what each migration will do
 
 ### Safety Net
+
 - System prevents accidental data loss
 - System catches common migration mistakes
 - System provides rollback capability
 
 ### Collaboration
+
 - AI tools can suggest migrations but not apply them unsafely
 - Migration intent is documented for future reference
 - Changes are reviewable by others (or future self)
 
 ### Productivity
+
 - Common schema patterns are quick to implement
 - Local development database is easy to reset
 - Migration process doesn't slow down development
@@ -163,40 +169,52 @@ These patterns should be:
 Research conducted October 2024. Full report: [docs/research/migration-workflow-research-20251004.md](../docs/research/migration-workflow-research-20251004.md)
 
 ### 1. Staging Environment Strategy
+
 **Decision**: Semi-automated with approval gates
+
 - **Staging**: Auto-deploy on merge to `develop` branch
 - **Production**: Manual approval required via GitHub Actions workflow
 - **Rationale**: Follows Supabase 2024 best practices, balances velocity with safety
 
 ### 2. Seed Data Strategy
+
 **Decision**: Synthetic data primary, anonymized optional
+
 - **Development**: Synthetic data using Faker or Neosync
 - **Staging** (optional): Anonymized production subset for critical testing
 - **Rationale**: Privacy-safe, GDPR compliant, unlimited generation. Synthetic data achieves 99% statistical similarity to production (2024 research)
 
 ### 3. Rollback Strategy
+
 **Decision**: Fix-forward primary, point-in-time backup available
+
 - **Default**: Forward migration (write compensating script to undo changes)
 - **Fallback**: Point-in-time recovery for catastrophic failures only
 - **Never**: Automatic rollback (requires human decision)
 - **Rationale**: Modern best practice (2024) is "never rollback databases, always roll forward". Atomic migrations make forward fixes safer.
 
 ### 4. Data Migrations
+
 **Decision**: Separate data migrations from schema migrations
+
 - **Schema migrations**: Structural changes only (tables, columns, indexes, RLS policies)
 - **Data migrations**: Separate scripts for data transformation/backfill
 - **Pattern**: Two-step process (1. Schema change, 2. Data backfill if needed)
 - **Rationale**: Keeps migrations atomic and focused, easier to test and rollback
 
 ### 5. Migration Order & Dependencies
+
 **Decision**: Timestamp-based with dependency documentation
+
 - **Ordering**: Use Supabase's existing timestamp format (yyyymmddhhmmss)
 - **Dependencies**: Document in migration file header comments
 - **Complex scenarios**: Break into multiple sequential migrations
 - **Rationale**: Supabase already uses timestamps, comments provide context for future developers
 
 ### 6. Approval Process
+
 **Decision**: GitHub Actions approval workflow for production
+
 - **Development → Staging**: Auto-deploy on PR merge to `develop`
 - **Staging → Production**: Manual approval required via GitHub Actions approval gate
 - **Emergency**: Override flag available with audit logging
@@ -211,12 +229,14 @@ Research conducted October 2024. Full report: [docs/research/migration-workflow-
 ## User Personas
 
 ### Primary: Solo Developer
+
 - Needs safety without bureaucracy
 - Values clear documentation over complex tooling
 - Wants AI assistance but with guardrails
 - Fears production incidents
 
 ### Secondary: Future Team Members
+
 - Need to understand migration history
 - Must be able to reproduce schema state
 - Should have consistent patterns to follow

@@ -1,7 +1,7 @@
 name: Weekly Telemetry Report
 
 on:
-  workflow_dispatch:  # Manual trigger only - reduces token overhead
+  workflow_dispatch: # Manual trigger only - reduces token overhead
     inputs:
       date_range:
         description: 'Date range for report (days)'

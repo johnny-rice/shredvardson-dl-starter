@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2025-10-14T07:35:57.355Z",
+  "generated": "2025-10-18T07:29:40.926Z",
   "commands": [
     {
       "name": "'/adr:draft'",
@@ -302,6 +302,21 @@
       "requiresHITL": false
     },
     {
+      "name": "'/research:explore'",
+      "path": ".claude/commands/research/explore.md",
+      "category": "General",
+      "tags": [
+        "research",
+        "exploration",
+        "codebase"
+      ],
+      "when": "General development tasks",
+      "purpose": "Deep codebase exploration to answer questions about architecture, patterns, or implementation details.",
+      "example": "Standard development workflow",
+      "riskLevel": "'LOW'",
+      "requiresHITL": false
+    },
+    {
       "name": "'/review:self-critique'",
       "path": ".claude/commands/review/self-critique.md",
       "category": "Review & Quality",
@@ -312,6 +327,22 @@
       ],
       "when": "General development tasks",
       "purpose": "Start fresh session and skeptically review recent changes for quality.",
+      "example": "Standard development workflow",
+      "riskLevel": "'LOW'",
+      "requiresHITL": false
+    },
+    {
+      "name": "'/security:scan'",
+      "path": ".claude/commands/security/scan.md",
+      "category": "General",
+      "tags": [
+        "security",
+        "scanning",
+        "vulnerabilities",
+        "rls"
+      ],
+      "when": "Code quality and security improvements",
+      "purpose": "Scan codebase for security vulnerabilities including RLS policies, auth issues, and OWASP Top 10.",
       "example": "Standard development workflow",
       "riskLevel": "'LOW'",
       "requiresHITL": false

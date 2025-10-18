@@ -12,14 +12,16 @@ Severity: normal
 **Example.**
 
 ❌ **Before:** Testing guide exists but invisible
-```
+
+```text
 docs/testing/TESTING_GUIDE.md exists
 docs/ai/CLAUDE.md → no link to testing docs
 Agent asks "how do I write tests?" → can't find guide
 ```
 
 ✅ **After:** Testing guide linked from entry point
-```
+
+```markdown
 docs/ai/CLAUDE.md:
 ## Testing
 See [Testing Guide](../testing/TESTING_GUIDE.md) for comprehensive testing patterns.
@@ -38,16 +40,19 @@ See [Testing Guide](../testing/TESTING_GUIDE.md) for comprehensive testing patte
 **Findings from Issue #102 Navigation Audit:**
 
 ✅ **Well-Indexed (6/8 scenarios passed)**
+
 - Micro-lessons: CLAUDE.md → Learning Loop → INDEX.md ✓
 - Recipes: CLAUDE.md → References → auth/db/stripe ✓
 - Commands: CLAUDE.md → Commands Index ✓
 - Quality Gates: INDEX.md → WIKI-Quality-Gates.md ✓
 
 ⚠️ **Poorly Indexed (2/8 scenarios failed)**
+
 - Testing: docs/testing/ exists but not in CLAUDE.md or INDEX.md
 - Decisions: docs/decisions/ exists but only via /adr:draft command
 
 **Recommended Fixes:**
+
 1. Add Testing section to CLAUDE.md with link to TESTING_GUIDE.md
 2. Add Decisions/ADRs to INDEX.md
 3. Link docs/evaluations/ from CLAUDE.md (currently only in INDEX.md)

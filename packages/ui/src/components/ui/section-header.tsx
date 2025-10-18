@@ -6,49 +6,43 @@ import { cn } from '../../lib/utils';
  * SectionHeader component variants using CVA (Class Variance Authority)
  * Provides consistent styling with semantic design tokens and fluid typography
  */
-const sectionHeaderVariants = cva(
-  'font-bold tracking-tight text-foreground',
-  {
-    variants: {
-      size: {
-        sm: 'text-lg md:text-xl',
-        md: 'text-2xl md:text-3xl',
-        lg: 'text-3xl md:text-4xl lg:text-5xl',
-      },
-      align: {
-        left: 'text-left',
-        center: 'text-center',
-        right: 'text-right',
-      },
+const sectionHeaderVariants = cva('font-bold tracking-tight text-foreground', {
+  variants: {
+    size: {
+      sm: 'text-lg md:text-xl',
+      md: 'text-2xl md:text-3xl',
+      lg: 'text-3xl md:text-4xl lg:text-5xl',
     },
-    defaultVariants: {
-      size: 'md',
-      align: 'left',
+    align: {
+      left: 'text-left',
+      center: 'text-center',
+      right: 'text-right',
     },
-  }
-);
+  },
+  defaultVariants: {
+    size: 'md',
+    align: 'left',
+  },
+});
 
-const sectionDescriptionVariants = cva(
-  'text-muted-foreground',
-  {
-    variants: {
-      size: {
-        sm: 'text-sm',
-        md: 'text-base',
-        lg: 'text-lg',
-      },
-      align: {
-        left: 'text-left',
-        center: 'text-center',
-        right: 'text-right',
-      },
+const sectionDescriptionVariants = cva('text-muted-foreground', {
+  variants: {
+    size: {
+      sm: 'text-sm',
+      md: 'text-base',
+      lg: 'text-lg',
     },
-    defaultVariants: {
-      size: 'md',
-      align: 'left',
+    align: {
+      left: 'text-left',
+      center: 'text-center',
+      right: 'text-right',
     },
-  }
-);
+  },
+  defaultVariants: {
+    size: 'md',
+    align: 'left',
+  },
+});
 
 /**
  * SectionHeader component props

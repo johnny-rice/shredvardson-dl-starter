@@ -10,6 +10,7 @@ source: https://github.com/Shredvardson/dl-starter/issues/137
 ## User Need
 
 **As a developer (human or AI) working in the codebase**, I need accurate, up-to-date documentation that reflects the current state of the system, so that I can:
+
 - Understand what features exist and how to use them
 - Follow correct workflows without trial-and-error
 - Find information quickly without cross-checking code
@@ -21,6 +22,7 @@ Recent development velocity (8 major features in 3 weeks: PRs #106-#135) has cre
 ## Problem Statement
 
 Documentation has fallen behind the actual codebase state:
+
 - **Feature documentation gaps**: New workflows (DB migrations, testing infrastructure, git workflows) are implemented but not documented
 - **Stale status information**: Roadmap shows incomplete items that are actually done
 - **Broken navigation**: Cross-references between documents may point to outdated or moved content
@@ -31,7 +33,9 @@ This creates a discovery tax where every task requires code archaeology before p
 ## Functional Requirements
 
 ### FR1: Documentation Accuracy Audit
+
 The system must provide documentation that accurately reflects:
+
 - All implemented features from PRs #106-#135
 - Current status of roadmap items (what's done, what's in progress, what's blocked)
 - All available slash commands and their actual behavior
@@ -40,7 +44,9 @@ The system must provide documentation that accurately reflects:
 - Database migration workflow (from #129)
 
 ### FR2: Documentation Completeness
+
 The system must ensure documentation exists for:
+
 - All user-facing workflows (git, testing, database, deployment)
 - All slash commands in `.claude/commands/`
 - All architectural decisions (Wiki Architecture page)
@@ -48,14 +54,18 @@ The system must ensure documentation exists for:
 - Getting started procedures for new contributors
 
 ### FR3: Documentation Consistency
+
 Documentation must maintain consistency:
+
 - No conflicting information between different docs
 - Cross-references must be valid and point to current content
 - Terminology must be consistent across all docs
 - Navigation structure follows the improvements from #120
 
 ### FR4: Documentation Maintainability
+
 Documentation updates must be:
+
 - Traceable to specific PRs and features
 - Organized in a way that supports future updates
 - Written in a format that both humans and AI assistants can parse
@@ -64,6 +74,7 @@ Documentation updates must be:
 ## User Experience
 
 ### Before (Current State)
+
 1. Developer starts a task
 2. Checks documentation for procedure
 3. Finds outdated or missing information
@@ -72,6 +83,7 @@ Documentation updates must be:
 6. Risks following obsolete patterns
 
 ### After (Desired State)
+
 1. Developer starts a task
 2. Checks documentation for procedure
 3. Finds accurate, complete information
@@ -82,24 +94,28 @@ Documentation updates must be:
 ### Specific Documentation Needs
 
 **For Testing:**
+
 - Where to find tests
 - How to run different test types (unit, E2E, coverage)
 - How to write new tests following project patterns
 - Coverage requirements and exclusions
 
 **For Database Migrations:**
+
 - How to create a new migration
 - How to test migrations locally
 - How to validate migration safety
 - How to handle seed data
 
 **For Git Workflow:**
+
 - How to create feature branches
 - How to handle squash-merged PRs
 - How to use git-related slash commands
 - When to use different PR workflows
 
 **For Quality Gates:**
+
 - What checks run on PRs
 - How to run checks locally
 - How to fix common issues
@@ -108,6 +124,7 @@ Documentation updates must be:
 ## Success Criteria
 
 ### Must Have
+
 - ✅ All features from PRs #106-#135 are documented
 - ✅ Roadmap completion status matches reality
 - ✅ All slash commands have accurate documentation
@@ -116,12 +133,14 @@ Documentation updates must be:
 - ✅ Wiki pages reflect current system state
 
 ### Should Have
+
 - ✅ Documentation follows navigation structure from #120
 - ✅ Consistent terminology across all docs
 - ✅ Clear ownership of different doc sections
 - ✅ Examples and code snippets are tested/verified
 
 ### Won't Have (Out of Scope)
+
 - ❌ Creating entirely new documentation systems
 - ❌ Documenting unimplemented features
 - ❌ Marketing or external-facing documentation
@@ -157,13 +176,13 @@ None - scope is well-defined by the list of recent PRs and existing documentatio
 
 ## Appendix: Recent Features Requiring Documentation
 
-| PR | Feature | Documentation Need |
-|---|---|---|
-| #135 | Doc sync check | How it works, how to use it |
-| #129 | DB migration workflow | Complete migration guide |
-| #122 | Git workflow improvements | Updated git workflow docs |
-| #121 | Component baseline audit | Component inventory, patterns |
-| #120 | LLM doc navigation | Navigation structure guidance |
-| #119 | ESLint semantic checks | Linting rules, how to fix issues |
-| #109 | Testing infrastructure | Testing guide, coverage requirements |
-| #106 | Design system tokens | Token usage, integration patterns |
+| PR   | Feature                   | Documentation Need                   |
+| ---- | ------------------------- | ------------------------------------ |
+| #135 | Doc sync check            | How it works, how to use it          |
+| #129 | DB migration workflow     | Complete migration guide             |
+| #122 | Git workflow improvements | Updated git workflow docs            |
+| #121 | Component baseline audit  | Component inventory, patterns        |
+| #120 | LLM doc navigation        | Navigation structure guidance        |
+| #119 | ESLint semantic checks    | Linting rules, how to fix issues     |
+| #109 | Testing infrastructure    | Testing guide, coverage requirements |
+| #106 | Design system tokens      | Token usage, integration patterns    |

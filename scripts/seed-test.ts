@@ -54,7 +54,10 @@ export async function seedTest(config: SeedConfig = {}): Promise<SeedResult> {
     await supabase
       .from('users')
       .delete()
-      .in('id', testUsers.map(u => u.id));
+      .in(
+        'id',
+        testUsers.map((u) => u.id)
+      );
 
     const { data: insertedUsers, error: userError } = await supabase
       .from('users')
@@ -74,7 +77,6 @@ export async function seedTest(config: SeedConfig = {}): Promise<SeedResult> {
     console.log(`\n✅ Test seeding complete in ${result.duration}ms`);
 
     return result;
-
   } catch (error: any) {
     result.errors.push(error.message);
     result.duration = Date.now() - startTime;

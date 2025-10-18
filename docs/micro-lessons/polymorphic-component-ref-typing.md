@@ -38,6 +38,7 @@ export const SectionHeader = React.forwardRef<HTMLHeadingElement, SectionHeaderP
 ```
 
 **Guardrails.**
+
 - When using polymorphic `as` prop for semantic elements (h1-h6, button, a, etc.), type the ref to the most specific element type (HTMLHeadingElement, HTMLButtonElement, HTMLAnchorElement)
 - If the component truly can render different element types with incompatible refs, consider using a discriminated union type or separate components
 - Avoid `as React.Ref<T>` type casts in component implementations - they indicate incorrect ref typing in forwardRef

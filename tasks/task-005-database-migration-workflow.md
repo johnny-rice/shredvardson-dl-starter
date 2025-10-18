@@ -20,6 +20,7 @@ source: https://github.com/Shredvardson/dl-starter/issues/124
 ## Implementation Order
 
 Following constitutional TDD order:
+
 1. **Contracts & Interfaces** - Define validation rules and interfaces
 2. **Test Foundation** - Integration → E2E → Unit tests
 3. **Implementation** - Build features with tests passing
@@ -35,9 +36,11 @@ Following constitutional TDD order:
 **Objective**: Establish what makes a migration safe
 
 **Files to Create**:
+
 - `scripts/types/migration-validation.ts`
 
 **Implementation**:
+
 ```typescript
 // scripts/types/migration-validation.ts
 export interface ValidationResult {
@@ -82,11 +85,13 @@ export interface MigrationFile {
 ```
 
 **Acceptance Criteria**:
+
 - [ ] Types defined for all validation scenarios
 - [ ] Error vs warning distinction clear
 - [ ] Extensible for future validation rules
 
 **Commands**:
+
 ```bash
 # Create types file
 mkdir -p scripts/types
@@ -98,9 +103,11 @@ touch scripts/types/migration-validation.ts
 **Objective**: Establish seed data interface
 
 **Files to Create**:
+
 - `scripts/types/seed-data.ts`
 
 **Implementation**:
+
 ```typescript
 // scripts/types/seed-data.ts
 export interface SeedConfig {
@@ -128,11 +135,13 @@ export interface SeedEntity {
 ```
 
 **Acceptance Criteria**:
+
 - [ ] Types support both dev and test seeds
 - [ ] Configurable entity counts
 - [ ] Result tracking for debugging
 
 **Commands**:
+
 ```bash
 # Create types file
 touch scripts/types/seed-data.ts
@@ -147,10 +156,12 @@ touch scripts/types/seed-data.ts
 **Objective**: Tests for validation rules (contracts first!)
 
 **Files to Create**:
+
 - `scripts/__tests__/validate-migration.test.ts`
 - `scripts/__tests__/fixtures/migrations/`
 
 **Implementation**:
+
 ```typescript
 // scripts/__tests__/validate-migration.test.ts
 import { describe, it, expect } from 'vitest';
@@ -160,7 +171,12 @@ describe('Migration Validation', () => {
   describe('Destructive Operations', () => {
     it('should error on DROP TABLE', () => {
       const sql = 'DROP TABLE users;';
-      const result = validateMigration({ sql, path: 'test.sql', timestamp: '20251004', name: 'test' });
+      const result = validateMigration({
+        sql,
+        path: 'test.sql',
+        timestamp: '20251004',
+        name: 'test',
+      });
 
       expect(result.valid).toBe(false);
       expect(result.errors).toHaveLength(1);
@@ -171,7 +187,12 @@ describe('Migration Validation', () => {
 
     it('should error on DROP COLUMN', () => {
       const sql = 'ALTER TABLE users DROP COLUMN email;';
-      const result = validateMigration({ sql, path: 'test.sql', timestamp: '20251004', name: 'test' });
+      const result = validateMigration({
+        sql,
+        path: 'test.sql',
+        timestamp: '20251004',
+        name: 'test',
+      });
 
       expect(result.valid).toBe(false);
       expect(result.errors[0].code).toBe('DROP_COLUMN');
@@ -179,7 +200,12 @@ describe('Migration Validation', () => {
 
     it('should error on TRUNCATE', () => {
       const sql = 'TRUNCATE TABLE posts;';
-      const result = validateMigration({ sql, path: 'test.sql', timestamp: '20251004', name: 'test' });
+      const result = validateMigration({
+        sql,
+        path: 'test.sql',
+        timestamp: '20251004',
+        name: 'test',
+      });
 
       expect(result.valid).toBe(false);
       expect(result.errors[0].code).toBe('TRUNCATE');
@@ -189,12 +215,19 @@ describe('Migration Validation', () => {
   describe('RLS Policy Validation', () => {
     it('should warn on CREATE TABLE without RLS', () => {
       const sql = 'CREATE TABLE posts (id uuid PRIMARY KEY);';
-      const result = validateMigration({ sql, path: 'test.sql', timestamp: '20251004', name: 'test' });
+      const result = validateMigration({
+        sql,
+        path: 'test.sql',
+        timestamp: '20251004',
+        name: 'test',
+      });
 
       expect(result.valid).toBe(true); // Warnings don't block
       expect(result.warnings).toHaveLength(1);
       expect(result.warnings[0].code).toBe('MISSING_RLS');
-      expect(result.warnings[0].suggestion).toContain('ALTER TABLE posts ENABLE ROW LEVEL SECURITY');
+      expect(result.warnings[0].suggestion).toContain(
+        'ALTER TABLE posts ENABLE ROW LEVEL SECURITY'
+      );
     });
 
     it('should pass when RLS is enabled', () => {
@@ -202,9 +235,14 @@ describe('Migration Validation', () => {
         CREATE TABLE posts (id uuid PRIMARY KEY);
         ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
       `;
-      const result = validateMigration({ sql, path: 'test.sql', timestamp: '20251004', name: 'test' });
+      const result = validateMigration({
+        sql,
+        path: 'test.sql',
+        timestamp: '20251004',
+        name: 'test',
+      });
 
-      expect(result.warnings.filter(w => w.code === 'MISSING_RLS')).toHaveLength(0);
+      expect(result.warnings.filter((w) => w.code === 'MISSING_RLS')).toHaveLength(0);
     });
   });
 
@@ -216,10 +254,17 @@ describe('Migration Validation', () => {
           post_id uuid REFERENCES posts(id)
         );
       `;
-      const result = validateMigration({ sql, path: 'test.sql', timestamp: '20251004', name: 'test' });
+      const result = validateMigration({
+        sql,
+        path: 'test.sql',
+        timestamp: '20251004',
+        name: 'test',
+      });
 
-      expect(result.warnings.some(w => w.code === 'MISSING_INDEX_FK')).toBe(true);
-      expect(result.warnings.find(w => w.code === 'MISSING_INDEX_FK')?.suggestion).toContain('CREATE INDEX');
+      expect(result.warnings.some((w) => w.code === 'MISSING_INDEX_FK')).toBe(true);
+      expect(result.warnings.find((w) => w.code === 'MISSING_INDEX_FK')?.suggestion).toContain(
+        'CREATE INDEX'
+      );
     });
 
     it('should pass when foreign key has index', () => {
@@ -230,33 +275,53 @@ describe('Migration Validation', () => {
         );
         CREATE INDEX idx_comments_post_id ON comments(post_id);
       `;
-      const result = validateMigration({ sql, path: 'test.sql', timestamp: '20251004', name: 'test' });
+      const result = validateMigration({
+        sql,
+        path: 'test.sql',
+        timestamp: '20251004',
+        name: 'test',
+      });
 
-      expect(result.warnings.filter(w => w.code === 'MISSING_INDEX_FK')).toHaveLength(0);
+      expect(result.warnings.filter((w) => w.code === 'MISSING_INDEX_FK')).toHaveLength(0);
     });
   });
 
   describe('Type Changes', () => {
     it('should warn on ALTER COLUMN type change', () => {
       const sql = 'ALTER TABLE users ALTER COLUMN age TYPE text;';
-      const result = validateMigration({ sql, path: 'test.sql', timestamp: '20251004', name: 'test' });
+      const result = validateMigration({
+        sql,
+        path: 'test.sql',
+        timestamp: '20251004',
+        name: 'test',
+      });
 
-      expect(result.warnings.some(w => w.code === 'TYPE_CHANGE')).toBe(true);
-      expect(result.warnings.find(w => w.code === 'TYPE_CHANGE')?.suggestion).toContain('USING');
+      expect(result.warnings.some((w) => w.code === 'TYPE_CHANGE')).toBe(true);
+      expect(result.warnings.find((w) => w.code === 'TYPE_CHANGE')?.suggestion).toContain('USING');
     });
 
     it('should pass when type change has USING clause', () => {
       const sql = 'ALTER TABLE users ALTER COLUMN age TYPE text USING age::text;';
-      const result = validateMigration({ sql, path: 'test.sql', timestamp: '20251004', name: 'test' });
+      const result = validateMigration({
+        sql,
+        path: 'test.sql',
+        timestamp: '20251004',
+        name: 'test',
+      });
 
-      expect(result.warnings.filter(w => w.code === 'TYPE_CHANGE')).toHaveLength(0);
+      expect(result.warnings.filter((w) => w.code === 'TYPE_CHANGE')).toHaveLength(0);
     });
   });
 
   describe('Safe Operations', () => {
     it('should pass on adding column', () => {
       const sql = 'ALTER TABLE users ADD COLUMN bio text;';
-      const result = validateMigration({ sql, path: 'test.sql', timestamp: '20251004', name: 'test' });
+      const result = validateMigration({
+        sql,
+        path: 'test.sql',
+        timestamp: '20251004',
+        name: 'test',
+      });
 
       expect(result.valid).toBe(true);
       expect(result.errors).toHaveLength(0);
@@ -264,7 +329,12 @@ describe('Migration Validation', () => {
 
     it('should pass on creating index', () => {
       const sql = 'CREATE INDEX idx_users_email ON users(email);';
-      const result = validateMigration({ sql, path: 'test.sql', timestamp: '20251004', name: 'test' });
+      const result = validateMigration({
+        sql,
+        path: 'test.sql',
+        timestamp: '20251004',
+        name: 'test',
+      });
 
       expect(result.valid).toBe(true);
       expect(result.errors).toHaveLength(0);
@@ -274,6 +344,7 @@ describe('Migration Validation', () => {
 ```
 
 **Test Fixtures**:
+
 ```bash
 # Create test fixtures directory
 mkdir -p scripts/__tests__/fixtures/migrations
@@ -308,12 +379,14 @@ EOF
 ```
 
 **Acceptance Criteria**:
+
 - [ ] All validation scenarios have tests
 - [ ] Tests fail initially (no implementation yet)
 - [ ] Clear test descriptions
 - [ ] Test fixtures cover edge cases
 
 **Commands**:
+
 ```bash
 # Install test dependencies (if not already)
 pnpm add -D vitest @vitest/ui
@@ -331,10 +404,12 @@ pnpm vitest scripts/__tests__/validate-migration.test.ts
 **Objective**: Tests for seed data generation
 
 **Files to Create**:
+
 - `scripts/__tests__/seed-dev.test.ts`
 - `scripts/__tests__/seed-test.test.ts`
 
 **Implementation**:
+
 ```typescript
 // scripts/__tests__/seed-dev.test.ts
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
@@ -346,10 +421,7 @@ describe('Development Seed Data', () => {
 
   beforeEach(async () => {
     // Use test database
-    supabase = createClient(
-      process.env.SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
     // Clean database
     await supabase.from('users').delete().neq('id', '00000000-0000-0000-0000-000000000000');
@@ -366,10 +438,7 @@ describe('Development Seed Data', () => {
   it('should create realistic user data', async () => {
     await seedDev({ userCount: 5 });
 
-    const { data: users } = await supabase
-      .from('users')
-      .select('*')
-      .limit(5);
+    const { data: users } = await supabase.from('users').select('*').limit(5);
 
     expect(users).toHaveLength(5);
 
@@ -383,10 +452,7 @@ describe('Development Seed Data', () => {
   it('should generate unique data', async () => {
     await seedDev({ userCount: 20 });
 
-    const { data: users } = await supabase
-      .from('users')
-      .select('email')
-      .limit(20);
+    const { data: users } = await supabase.from('users').select('email').limit(20);
 
     const emails = users.map((u: any) => u.email);
     const uniqueEmails = new Set(emails);
@@ -441,12 +507,14 @@ describe('Test Seed Data', () => {
 ```
 
 **Acceptance Criteria**:
+
 - [ ] Tests verify data quality (realistic, unique)
 - [ ] Tests verify RLS compatibility
 - [ ] Tests verify deterministic mode
 - [ ] Tests initially fail
 
 **Commands**:
+
 ```bash
 # Create test files
 touch scripts/__tests__/seed-dev.test.ts
@@ -461,9 +529,11 @@ pnpm vitest scripts/__tests__/seed-dev.test.ts
 **Objective**: End-to-end validation of migration lifecycle
 
 **Files to Create**:
+
 - `apps/web/tests/e2e/migration-workflow.spec.ts`
 
 **Implementation**:
+
 ```typescript
 // apps/web/tests/e2e/migration-workflow.spec.ts
 import { test, expect } from '@playwright/test';
@@ -526,6 +596,7 @@ EOF`);
 ```
 
 **Acceptance Criteria**:
+
 - [ ] Tests full local workflow
 - [ ] Tests validation blocking
 - [ ] Tests can be run in CI
@@ -539,10 +610,12 @@ EOF`);
 **Objective**: Build validation logic to make tests pass
 
 **Files to Create**:
+
 - `scripts/validate-migration.ts`
 - `scripts/validators/index.ts`
 
 **Implementation**:
+
 ```typescript
 // scripts/validate-migration.ts
 import fs from 'fs';
@@ -552,7 +625,7 @@ import {
   detectDestructiveOperations,
   detectMissingRLS,
   detectMissingIndexOnFK,
-  detectTypeChanges
+  detectTypeChanges,
 } from './validators';
 
 export function validateMigration(file: MigrationFile): ValidationResult {
@@ -591,8 +664,9 @@ export async function validateAllMigrations(): Promise<void> {
     return;
   }
 
-  const files = fs.readdirSync(migrationsDir)
-    .filter(f => f.endsWith('.sql'))
+  const files = fs
+    .readdirSync(migrationsDir)
+    .filter((f) => f.endsWith('.sql'))
     .sort();
 
   if (files.length === 0) {
@@ -620,7 +694,7 @@ export async function validateAllMigrations(): Promise<void> {
 
     if (result.errors.length > 0) {
       console.log(`❌ ${file}`);
-      result.errors.forEach(error => {
+      result.errors.forEach((error) => {
         console.log(`   ERROR [${error.code}]: ${error.message}`);
         if (error.suggestion) {
           console.log(`   → ${error.suggestion}`);
@@ -629,7 +703,7 @@ export async function validateAllMigrations(): Promise<void> {
       hasErrors = true;
     } else if (result.warnings.length > 0) {
       console.log(`⚠️  ${file}`);
-      result.warnings.forEach(warning => {
+      result.warnings.forEach((warning) => {
         console.log(`   WARN [${warning.code}]: ${warning.message}`);
         if (warning.suggestion) {
           console.log(`   → ${warning.suggestion}`);
@@ -672,7 +746,8 @@ export function detectDestructiveOperations(sql: string): ValidationError[] {
         code: ValidationCode.DROP_TABLE,
         message: 'Destructive operation: DROP TABLE will permanently delete data',
         line: index + 1,
-        suggestion: 'Consider: 1) Rename table instead, 2) Add archived_at column for soft delete, 3) Create backup first',
+        suggestion:
+          'Consider: 1) Rename table instead, 2) Add archived_at column for soft delete, 3) Create backup first',
       });
     }
 
@@ -715,7 +790,7 @@ export function detectMissingRLS(sql: string): ValidationWarning[] {
     rlsEnabled.add(match[1].toLowerCase());
   }
 
-  tables.forEach(table => {
+  tables.forEach((table) => {
     if (!rlsEnabled.has(table)) {
       warnings.push({
         code: ValidationCode.MISSING_RLS,
@@ -745,7 +820,7 @@ export function detectMissingIndexOnFK(sql: string): ValidationWarning[] {
     indexedColumns.add(match[1].toLowerCase());
   }
 
-  fkColumns.forEach(column => {
+  fkColumns.forEach((column) => {
     if (!indexedColumns.has(column)) {
       warnings.push({
         code: ValidationCode.MISSING_INDEX_FK,
@@ -783,12 +858,14 @@ export function detectTypeChanges(sql: string): ValidationWarning[] {
 ```
 
 **Acceptance Criteria**:
+
 - [ ] All validation tests pass
 - [ ] CLI works: `pnpm db:validate`
 - [ ] Clear, actionable error messages
 - [ ] Suggestion for every error/warning
 
 **Commands**:
+
 ```bash
 # Create implementation files
 mkdir -p scripts/validators
@@ -810,11 +887,13 @@ pnpm db:validate
 **Objective**: Build seed data generators
 
 **Files to Create**:
+
 - `scripts/seed-dev.ts`
 - `scripts/seed-test.ts`
 - `supabase/seed.sql`
 
 **Implementation**:
+
 ```typescript
 // scripts/seed-dev.ts
 import { faker } from '@faker-js/faker';
@@ -878,7 +957,6 @@ export async function seedDev(config: SeedConfig = {}): Promise<SeedResult> {
     console.log(`\n✅ Seeding complete in ${result.duration}ms`);
 
     return result;
-
   } catch (error: any) {
     result.errors.push(error.message);
     result.duration = Date.now() - startTime;
@@ -960,7 +1038,6 @@ export async function seedTest(config: SeedConfig = {}): Promise<SeedResult> {
     console.log(`\n✅ Test seeding complete in ${result.duration}ms`);
 
     return result;
-
   } catch (error: any) {
     result.errors.push(error.message);
     result.duration = Date.now() - startTime;
@@ -993,6 +1070,7 @@ ON CONFLICT (id) DO NOTHING;
 ```
 
 **Acceptance Criteria**:
+
 - [ ] Dev seed creates realistic data
 - [ ] Test seed creates deterministic data
 - [ ] All seed tests pass
@@ -1000,6 +1078,7 @@ ON CONFLICT (id) DO NOTHING;
 - [ ] Error handling works
 
 **Commands**:
+
 ```bash
 # Install dependency
 pnpm add -D @faker-js/faker
@@ -1030,10 +1109,12 @@ pnpm db:seed:dev
 **Objective**: CI/CD pipeline for migrations
 
 **Files to Create**:
+
 - `.github/workflows/deploy-staging.yml`
 - `.github/workflows/deploy-production.yml`
 
 **Implementation**:
+
 ```yaml
 # .github/workflows/deploy-staging.yml
 name: Deploy to Staging
@@ -1158,12 +1239,14 @@ jobs:
 ```
 
 **Acceptance Criteria**:
+
 - [ ] Workflows run on correct branches
 - [ ] Validation blocks deployment
 - [ ] Production requires approval
 - [ ] Clear status reporting
 
 **Commands**:
+
 ```bash
 # Create workflow files
 mkdir -p .github/workflows
@@ -1184,23 +1267,27 @@ touch .github/workflows/deploy-production.yml
 **Objective**: Safe AI-assisted migration workflows
 
 **Files to Create**:
+
 - `.claude/commands/db-create-migration.md`
 - `.claude/commands/db-validate-migration.md`
 - `.claude/commands/db-seed-dev.md`
 
 **Implementation**:
-```markdown
-<!-- .claude/commands/db-create-migration.md -->
----
+
+````markdown
+## <!-- .claude/commands/db-create-migration.md -->
+
 name: db-create-migration
 description: Create a new database migration with safety checks
 requiresHITL: true
 riskPolicyRef: docs/constitution.md#database-safety
+
 ---
 
 # Create Database Migration
 
 **IMPORTANT SAFETY RULES**:
+
 - ❌ NEVER apply migrations directly to any environment
 - ✅ ALWAYS create migration file for human review
 - ✅ ALWAYS run validation after creation
@@ -1251,3 +1338,4 @@ riskPolicyRef: docs/constitution.md#database-safety
 ## Example Usage
 
 User: "Add a posts table with title and content"
+````

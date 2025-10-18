@@ -23,7 +23,10 @@ export function detectDestructiveOperations(sql: string): ValidationError[] {
   lines.forEach((line, index) => {
     const trimmed = line.trim().toUpperCase();
     // Remove SQL comments to prevent bypass via comments
-    const withoutComments = trimmed.replace(/--.*$/, '').replace(/\/\*.*?\*\//g, '').trim();
+    const withoutComments = trimmed
+      .replace(/--.*$/, '')
+      .replace(/\/\*.*?\*\//g, '')
+      .trim();
 
     // Use word boundary regex to catch DROP TABLE anywhere in the line
     if (/\bDROP\s+TABLE\b/i.test(withoutComments)) {
@@ -31,7 +34,8 @@ export function detectDestructiveOperations(sql: string): ValidationError[] {
         code: ValidationCode.DROP_TABLE,
         message: 'Destructive operation: DROP TABLE will permanently delete data',
         line: index + 1,
-        suggestion: 'Consider: 1) Rename table instead, 2) Add archived_at column for soft delete, 3) Create backup first',
+        suggestion:
+          'Consider: 1) Rename table instead, 2) Add archived_at column for soft delete, 3) Create backup first',
       });
     }
 
@@ -75,8 +79,10 @@ export function detectDestructiveOperations(sql: string): ValidationError[] {
 export function detectMissingRLS(sql: string): ValidationWarning[] {
   const warnings: ValidationWarning[] = [];
   // Match table names: word chars OR quoted identifiers OR schema.table
-  const createTableRegex = /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?:(\w+)\.)?("[^"]+"|[\w]+)/gi;
-  const rlsRegex = /ALTER\s+TABLE\s+(?:(\w+)\.)?("[^"]+"|[\w]+)\s+ENABLE\s+ROW\s+LEVEL\s+SECURITY/gi;
+  const createTableRegex =
+    /CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(?:(\w+)\.)?("[^"]+"|[\w]+)/gi;
+  const rlsRegex =
+    /ALTER\s+TABLE\s+(?:(\w+)\.)?("[^"]+"|[\w]+)\s+ENABLE\s+ROW\s+LEVEL\s+SECURITY/gi;
 
   const tables = new Set<string>();
   const rlsEnabled = new Set<string>();
@@ -93,7 +99,7 @@ export function detectMissingRLS(sql: string): ValidationWarning[] {
     rlsEnabled.add(tableName);
   }
 
-  tables.forEach(table => {
+  tables.forEach((table) => {
     if (!rlsEnabled.has(table)) {
       warnings.push({
         code: ValidationCode.MISSING_RLS,
@@ -138,7 +144,7 @@ export function detectMissingIndexOnFK(sql: string): ValidationWarning[] {
     indexedColumns.add(match[1].toLowerCase());
   }
 
-  fkColumns.forEach(column => {
+  fkColumns.forEach((column) => {
     if (!indexedColumns.has(column)) {
       warnings.push({
         code: ValidationCode.MISSING_INDEX_FK,

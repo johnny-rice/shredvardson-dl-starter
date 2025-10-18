@@ -5,7 +5,7 @@ import {
   detectDestructiveOperations,
   detectMissingRLS,
   detectMissingIndexOnFK,
-  detectTypeChanges
+  detectTypeChanges,
 } from './validators';
 
 /**
@@ -83,8 +83,9 @@ export async function validateAllMigrations(): Promise<void> {
     return;
   }
 
-  const files = fs.readdirSync(migrationsDir)
-    .filter(f => f.endsWith('.sql'))
+  const files = fs
+    .readdirSync(migrationsDir)
+    .filter((f) => f.endsWith('.sql'))
     .sort();
 
   if (files.length === 0) {
@@ -122,7 +123,7 @@ export async function validateAllMigrations(): Promise<void> {
 
     if (result.errors.length > 0) {
       console.log(`❌ ${file}`);
-      result.errors.forEach(error => {
+      result.errors.forEach((error) => {
         console.log(`   ERROR [${error.code}]: ${error.message}`);
         if (error.suggestion) {
           console.log(`   → ${error.suggestion}`);
@@ -131,7 +132,7 @@ export async function validateAllMigrations(): Promise<void> {
       hasErrors = true;
     } else if (result.warnings.length > 0) {
       console.log(`⚠️  ${file}`);
-      result.warnings.forEach(warning => {
+      result.warnings.forEach((warning) => {
         console.log(`   WARN [${warning.code}]: ${warning.message}`);
         if (warning.suggestion) {
           console.log(`   → ${warning.suggestion}`);

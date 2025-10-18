@@ -40,68 +40,82 @@ Define expected behavior and contracts before writing any implementation.
 **Objective:** Define contracts for all CI scripts
 
 **Commands:**
+
 ```bash
 mkdir -p tests/ci
 touch tests/ci/contracts.md
 ```
 
 **Implementation:**
+
 ```markdown
 # CI Workflow Testing Contracts
 
 ## Spec Validation Contract
+
 **Script:** `scripts/ci/validate-specs.sh`
 **Command:** `pnpm run specs:validate`
 
 **Input:**
+
 - Spec directory path (default: `specs/`)
 - Optional: `--help` flag
 
 **Output:**
+
 - Exit code 0: All specs valid
 - Exit code 1: Validation failed
 - STDOUT: Validation messages with ✅/❌ prefixes
 - STDERR: Error details referencing debugging guide
 
 **Behavior:**
+
 - Checks spec directory naming (###-name format)
 - Validates required files (README.md, DESIGN.md)
 - Validates README structure (header, status field)
 - Identical behavior in CI and local environments
 
 ## Spec Lane Check Contract
+
 **Script:** `scripts/ci/check-spec-lane.sh`
 **Command:** `pnpm run specs:check-lane`
 
 **Input:**
+
 - Spec file path (optional, auto-detects from git changes)
 - Optional: `--help` flag
 
 **Output:**
+
 - Exit code 0: Always (informational only)
 - STDOUT: Lane recommendation with reasoning
 - Format: "Recommended lane: [spec|dev] - Reason: [explanation]"
 
 **Behavior:**
+
 - Analyzes spec content for lane indicators
 - Outputs clear lane choice explanation
 - Identical behavior in CI and local environments
 
 ## AI Review Scraper Contract
+
 **Script:** `scripts/ci/scrape-ai-reviews.sh`
 **Command:** `pnpm run ai:scrape-reviews`
 
 **Input:**
+
 - PR number (from environment or argument)
 - GitHub token (from environment)
 
 **Output:**
+
 - Exit code 0: Scrape successful
 - Exit code 1: Scrape failed (missing auth, PR not found)
 - STDOUT: JSON array of review comments
 - STDERR: Error details with debugging guidance
 
 **Behavior:**
+
 - Uses GH CLI to fetch PR comments
 - Filters for AI-generated reviews
 - Structured JSON output for parsing
@@ -109,9 +123,11 @@ touch tests/ci/contracts.md
 ```
 
 **Files Created:**
+
 - `tests/ci/contracts.md`
 
 **Acceptance Criteria:**
+
 - ✅ Every script has defined contract
 - ✅ Input/output/behavior documented
 - ✅ Exit codes specified
@@ -126,6 +142,7 @@ touch tests/ci/contracts.md
 **Objective:** Define script signatures and shared libraries
 
 **Commands:**
+
 ```bash
 mkdir -p scripts/ci/lib
 touch scripts/ci/lib/common.sh
@@ -135,6 +152,7 @@ touch scripts/ci/lib/error-reporter.sh
 **Implementation:**
 
 **File:** `scripts/ci/lib/common.sh`
+
 ```bash
 #!/bin/bash
 # Common functions for CI scripts
@@ -184,6 +202,7 @@ require_directory() {
 ```
 
 **File:** `scripts/ci/lib/error-reporter.sh`
+
 ```bash
 #!/bin/bash
 # Standardized error reporting for CI
@@ -216,10 +235,12 @@ report_ci_success() {
 ```
 
 **Files Created:**
+
 - `scripts/ci/lib/common.sh`
 - `scripts/ci/lib/error-reporter.sh`
 
 **Acceptance Criteria:**
+
 - ✅ Shared functions defined
 - ✅ Error reporting standardized
 - ✅ CI/local environment detection
@@ -234,17 +255,20 @@ report_ci_success() {
 **Objective:** Define debugging guide sections before implementation
 
 **Commands:**
+
 ```bash
 touch .github/DEBUGGING.md
 ```
 
 **Implementation:**
-```markdown
+
+````markdown
 # CI Debugging Guide
 
 Quick reference for debugging CI failures locally.
 
 ## Table of Contents
+
 - [Spec Validation](#spec-validation)
 - [Spec Lane Check](#spec-lane-check)
 - [TypeScript Errors](#typescript-errors)
@@ -260,15 +284,19 @@ Quick reference for debugging CI failures locally.
 ### Error: "Spec directory does not follow naming convention"
 
 **Local Test:**
+
 ```bash
 pnpm run specs:validate
 ```
+````
 
 **Common Causes:**
+
 - Spec directory not named with `###-name` format
 - Missing leading zeros (e.g., `1-test` instead of `001-test`)
 
 **Fix:**
+
 ```bash
 # Rename spec directory to follow convention
 mv specs/bad-name specs/001-good-name
@@ -281,15 +309,18 @@ mv specs/bad-name specs/001-good-name
 ### Error: "Unable to detect spec lane"
 
 **Local Test:**
+
 ```bash
 pnpm run specs:check-lane
 ```
 
 **Common Causes:**
+
 - Spec file doesn't exist
 - No spec content changes in current PR
 
 **Fix:**
+
 - Ensure spec file exists in `specs/` directory
 - Review spec content for lane indicators
 
@@ -300,16 +331,19 @@ pnpm run specs:check-lane
 ### Error: "Type check failed"
 
 **Local Test:**
+
 ```bash
 pnpm run typecheck
 ```
 
 **Common Causes:**
+
 - Type mismatches
 - Missing type imports
 - Incorrect generic types
 
 **Fix:**
+
 ```bash
 # Run typecheck and review errors
 pnpm run typecheck
@@ -326,16 +360,19 @@ pnpm run typecheck
 ### Error: "Lint check failed"
 
 **Local Test:**
+
 ```bash
 pnpm run lint
 ```
 
 **Common Causes:**
+
 - Code style violations
 - Unused imports
 - Console.log statements
 
 **Fix:**
+
 ```bash
 # Auto-fix most issues
 pnpm run format
@@ -351,16 +388,19 @@ pnpm run lint
 ### Error: "Test suite failed"
 
 **Local Test:**
+
 ```bash
 pnpm run test
 ```
 
 **Common Causes:**
+
 - Broken test assertions
 - Missing test fixtures
 - Environment variable issues
 
 **Fix:**
+
 ```bash
 # Run tests with verbose output
 pnpm run test -- --reporter=verbose
@@ -376,16 +416,19 @@ pnpm run test -- path/to/test.test.ts
 ### Error: "Build failed"
 
 **Local Test:**
+
 ```bash
 pnpm run build
 ```
 
 **Common Causes:**
+
 - Missing dependencies
 - Import path errors
 - Configuration issues
 
 **Fix:**
+
 ```bash
 # Clean and rebuild
 pnpm run clean
@@ -400,6 +443,7 @@ pnpm run build
 ### Error: "Failed to scrape AI reviews"
 
 **Local Test:**
+
 ```bash
 # Requires GitHub CLI authentication
 gh auth status
@@ -409,11 +453,13 @@ pnpm run ai:scrape-reviews
 ```
 
 **Common Causes:**
+
 - Not authenticated with GitHub CLI
 - Missing PR context
 - Insufficient permissions
 
 **Fix:**
+
 ```bash
 # Authenticate with GitHub CLI
 gh auth login
@@ -435,10 +481,12 @@ pnpm run ai:scrape-reviews
 ## Getting Help
 
 If the above doesn't help:
+
 1. Check recent CI runs for similar failures
 2. Review PR comments for automated feedback
 3. Ask in team chat with CI failure details
-```
+
+````
 
 **Files Created:**
 - `.github/DEBUGGING.md`
@@ -466,9 +514,10 @@ Build test infrastructure before implementation.
 mkdir -p tests/ci/fixtures
 touch tests/ci/validate-specs.test.sh
 chmod +x tests/ci/validate-specs.test.sh
-```
+````
 
 **Implementation:**
+
 ```bash
 #!/bin/bash
 # Integration tests for spec validation script
@@ -616,10 +665,12 @@ main
 ```
 
 **Files Created:**
+
 - `tests/ci/validate-specs.test.sh`
 - `tests/ci/fixtures/` (directory)
 
 **Acceptance Criteria:**
+
 - ✅ Tests cover valid and invalid cases
 - ✅ Tests are executable and self-contained
 - ✅ Tests clean up after themselves
@@ -634,12 +685,14 @@ main
 **Objective:** Test spec lane detection logic
 
 **Commands:**
+
 ```bash
 touch tests/ci/check-spec-lane.test.sh
 chmod +x tests/ci/check-spec-lane.test.sh
 ```
 
 **Implementation:**
+
 ```bash
 #!/bin/bash
 # Integration tests for spec lane detection
@@ -740,9 +793,11 @@ main
 ```
 
 **Files Created:**
+
 - `tests/ci/check-spec-lane.test.sh`
 
 **Acceptance Criteria:**
+
 - ✅ Tests detect spec vs dev lane
 - ✅ Tests verify output format
 - ✅ Tests fail when script doesn't exist (TDD)
@@ -758,12 +813,14 @@ main
 **Status:** ✅ **COMPLETED**
 
 **Commands:**
+
 ```bash
 # Edit package.json
 ```
 
 **Implementation:**
 Add to `package.json` scripts:
+
 ```json
 {
   "scripts": {
@@ -773,9 +830,11 @@ Add to `package.json` scripts:
 ```
 
 **Files Modified:**
+
 - `package.json`
 
 **Acceptance Criteria:**
+
 - ✅ Tests runnable via `pnpm run test:ci-scripts`
 - ✅ Tests integrated with existing test suite
 
@@ -794,22 +853,26 @@ Add to `package.json` scripts:
 **Implementation:**
 
 **Pre-Push Hook Integration:**
+
 - Added CI script tests before unit tests
 - Fast validation (~2s) catches broken scripts early
 - Blocks pushes if governance scripts fail
 - Can bypass with `--no-verify` flag
 
 **Slash Command Integration:**
+
 - Updated `/git:prepare-pr` to include `pnpm test:ci-scripts`
 - LLM automatically validates scripts before creating PRs
 - Runs as first verification step
 
 **Documentation Updated:**
+
 - `README.md` - Added test:ci-scripts to testing section
 - `TESTING_GUIDE.md` - Added workflow integration details
 - Pre-push hook behavior documented
 
 **Files Modified:**
+
 - `scripts/git-hooks/pre-push`
 - `.claude/commands/git/prepare-pr.md`
 - `.git/hooks/pre-push` (reinstalled)
@@ -817,6 +880,7 @@ Add to `package.json` scripts:
 - `docs/testing/TESTING_GUIDE.md`
 
 **Acceptance Criteria:**
+
 - ✅ Tests run in pre-push hook
 - ✅ Tests included in `/git:prepare-pr` verification
 - ✅ Documentation updated
@@ -837,6 +901,7 @@ Implement scripts to satisfy tests.
 **Objective:** Create working spec validation script
 
 **Commands:**
+
 ```bash
 mkdir -p scripts/ci
 touch scripts/ci/validate-specs.sh
@@ -844,6 +909,7 @@ chmod +x scripts/ci/validate-specs.sh
 ```
 
 **Implementation:**
+
 ```bash
 #!/bin/bash
 set -euo pipefail
@@ -943,9 +1009,11 @@ fi
 ```
 
 **Files Created:**
+
 - `scripts/ci/validate-specs.sh`
 
 **Acceptance Criteria:**
+
 - ✅ All integration tests pass
 - ✅ Script matches contract specification
 - ✅ Error messages reference debugging guide
@@ -960,12 +1028,14 @@ fi
 **Objective:** Create working lane detection script
 
 **Commands:**
+
 ```bash
 touch scripts/ci/check-spec-lane.sh
 chmod +x scripts/ci/check-spec-lane.sh
 ```
 
 **Implementation:**
+
 ```bash
 #!/bin/bash
 set -euo pipefail
@@ -1072,9 +1142,11 @@ exit 0
 ```
 
 **Files Created:**
+
 - `scripts/ci/check-spec-lane.sh`
 
 **Acceptance Criteria:**
+
 - ✅ All integration tests pass
 - ✅ Script matches contract specification
 - ✅ Clear lane recommendation with reasoning
@@ -1089,12 +1161,14 @@ exit 0
 **Objective:** Create working review scraper script
 
 **Commands:**
+
 ```bash
 touch scripts/ci/scrape-ai-reviews.sh
 chmod +x scripts/ci/scrape-ai-reviews.sh
 ```
 
 **Implementation:**
+
 ```bash
 #!/bin/bash
 set -euo pipefail
@@ -1172,9 +1246,11 @@ exit 0
 ```
 
 **Files Created:**
+
 - `scripts/ci/scrape-ai-reviews.sh`
 
 **Acceptance Criteria:**
+
 - ✅ Script uses GitHub CLI
 - ✅ JSON output format
 - ✅ Error handling for auth issues
@@ -1189,12 +1265,14 @@ exit 0
 **Objective:** Make scripts runnable via pnpm
 
 **Commands:**
+
 ```bash
 # Edit package.json
 ```
 
 **Implementation:**
 Add to `package.json` scripts:
+
 ```json
 {
   "scripts": {
@@ -1207,9 +1285,11 @@ Add to `package.json` scripts:
 ```
 
 **Files Modified:**
+
 - `package.json`
 
 **Acceptance Criteria:**
+
 - ✅ All scripts runnable via pnpm
 - ✅ Scripts work locally and in CI
 - ✅ CI validation combines multiple checks
@@ -1223,6 +1303,7 @@ Add to `package.json` scripts:
 **Objective:** Replace inline bash with script calls
 
 **Commands:**
+
 ```bash
 # Edit .github/workflows/spec-guard.yml
 ```
@@ -1230,6 +1311,7 @@ Add to `package.json` scripts:
 **Implementation:**
 
 Replace spec validation steps (lines 52-214) with:
+
 ```yaml
 - name: Validate Spec Directory Structure
   run: pnpm run specs:validate
@@ -1240,12 +1322,14 @@ Replace spec validation steps (lines 52-214) with:
 ```
 
 **Files Modified:**
+
 - `.github/workflows/spec-guard.yml`
 
 **Before:** 369 lines
 **After:** ~80 lines (77% reduction)
 
 **Acceptance Criteria:**
+
 - ✅ Workflow calls scripts instead of inline bash
 - ✅ Error messages reference debugging guide
 - ✅ CI passes with new approach
@@ -1260,6 +1344,7 @@ Replace spec validation steps (lines 52-214) with:
 **Objective:** Replace AI review scraper with script call
 
 **Commands:**
+
 ```bash
 # Edit .github/workflows/ci.yml
 ```
@@ -1267,6 +1352,7 @@ Replace spec validation steps (lines 52-214) with:
 **Implementation:**
 
 Replace AI review scraping steps (lines 88-147) with:
+
 ```yaml
 - name: Scrape AI Reviews
   if: github.event_name == 'pull_request'
@@ -1275,9 +1361,11 @@ Replace AI review scraping steps (lines 88-147) with:
 ```
 
 **Files Modified:**
+
 - `.github/workflows/ci.yml`
 
 **Acceptance Criteria:**
+
 - ✅ Workflow calls script instead of inline bash
 - ✅ Graceful failure handling
 - ✅ CI passes with new approach
@@ -1295,6 +1383,7 @@ Complete Phase 1 features and begin Phase 2.
 **Objective:** Convert telemetry and wiki workflows to manual trigger
 
 **Commands:**
+
 ```bash
 # Edit workflow files
 ```
@@ -1302,28 +1391,32 @@ Complete Phase 1 features and begin Phase 2.
 **Implementation:**
 
 **File:** `.github/workflows/telemetry-weekly.yml`
+
 ```yaml
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch: # Manual trigger
   schedule:
-    - cron: '0 0 * * 1'  # Weekly backup (optional)
+    - cron: '0 0 * * 1' # Weekly backup (optional)
 ```
 
 **File:** `.github/workflows/wiki-publish.yml`
+
 ```yaml
 on:
-  workflow_dispatch:  # Manual trigger
+  workflow_dispatch: # Manual trigger
   push:
     branches: [main]
     paths:
-      - 'docs/wiki/**'  # Only on wiki changes
+      - 'docs/wiki/**' # Only on wiki changes
 ```
 
 **Files Modified:**
+
 - `.github/workflows/telemetry-weekly.yml`
 - `.github/workflows/wiki-publish.yml`
 
 **Acceptance Criteria:**
+
 - ✅ Workflows only run when triggered manually
 - ✅ Schedule remains as backup option
 - ✅ Documentation explains manual triggering
@@ -1337,6 +1430,7 @@ on:
 **Objective:** Consolidate common CI setup steps
 
 **Commands:**
+
 ```bash
 mkdir -p .github/actions/setup
 touch .github/actions/setup/action.yml
@@ -1346,12 +1440,13 @@ touch .github/actions/setup/README.md
 **Implementation:**
 
 **File:** `.github/actions/setup/action.yml`
+
 ```yaml
 name: 'Setup Repository'
 description: 'Common setup steps for CI jobs'
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Checkout repository
       uses: actions/checkout@v5
@@ -1376,6 +1471,7 @@ runs:
 ```
 
 **File:** `.github/actions/setup/README.md`
+
 ```markdown
 # Setup Action
 
@@ -1384,8 +1480,9 @@ Composite action for common repository setup steps.
 ## Usage
 
 \`\`\`yaml
+
 - uses: ./.github/actions/setup
-\`\`\`
+  \`\`\`
 
 ## What it does
 
@@ -1403,10 +1500,12 @@ Composite action for common repository setup steps.
 ```
 
 **Files Created:**
+
 - `.github/actions/setup/action.yml`
 - `.github/actions/setup/README.md`
 
 **Acceptance Criteria:**
+
 - ✅ Composite action works across workflows
 - ✅ Documentation complete
 - ✅ Single source of truth established
@@ -1420,6 +1519,7 @@ Composite action for common repository setup steps.
 **Objective:** Reduce CI jobs from 6 to 3
 
 **Commands:**
+
 ```bash
 # Edit .github/workflows/ci.yml
 ```
@@ -1427,6 +1527,7 @@ Composite action for common repository setup steps.
 **Implementation:**
 
 **Before:** 6 jobs
+
 - `doctor` (health checks)
 - `docs-link-check` (documentation validation)
 - `spec-gate` (spec validation)
@@ -1435,6 +1536,7 @@ Composite action for common repository setup steps.
 - `promote-gate` (promotion checks)
 
 **After:** 3 jobs
+
 ```yaml
 jobs:
   preflight:
@@ -1483,9 +1585,11 @@ jobs:
 ```
 
 **Files Modified:**
+
 - `.github/workflows/ci.yml`
 
 **Acceptance Criteria:**
+
 - ✅ Jobs consolidated from 6 to 3
 - ✅ Clear dependency chain
 - ✅ All workflows use composite action
@@ -1500,6 +1604,7 @@ jobs:
 **Objective:** Replace setup steps across all workflows
 
 **Commands:**
+
 ```bash
 # Edit multiple workflow files
 ```
@@ -1507,12 +1612,14 @@ jobs:
 **Implementation:**
 
 Replace setup steps in:
+
 - `.github/workflows/spec-guard.yml`
 - `.github/workflows/promote-gate.yml`
 - `.github/workflows/doctor-recheck.yml`
 - `.github/workflows/routing-contract.yml`
 
 Replace:
+
 ```yaml
 - name: Checkout repository
   uses: actions/checkout@v5
@@ -1520,14 +1627,17 @@ Replace:
 ```
 
 With:
+
 ```yaml
 - uses: ./.github/actions/setup
 ```
 
 **Files Modified:**
+
 - Multiple workflow files
 
 **Acceptance Criteria:**
+
 - ✅ All workflows use composite action
 - ✅ No duplicated setup code
 - ✅ All workflows pass
@@ -1545,6 +1655,7 @@ Complete documentation and prepare for release.
 **Objective:** Document manual workflow triggers
 
 **Commands:**
+
 ```bash
 # Edit README.md
 ```
@@ -1552,6 +1663,7 @@ Complete documentation and prepare for release.
 **Implementation:**
 
 Add section to README.md:
+
 ```markdown
 ## Manual Workflows
 
@@ -1575,20 +1687,22 @@ gh workflow run wiki-publish.yml
 
 Run all CI checks locally before pushing:
 \`\`\`bash
-pnpm run ci:validate  # Specs validation
-pnpm run typecheck    # TypeScript check
-pnpm run lint         # Linting
-pnpm run test         # All tests
-pnpm run build        # Build check
+pnpm run ci:validate # Specs validation
+pnpm run typecheck # TypeScript check
+pnpm run lint # Linting
+pnpm run test # All tests
+pnpm run build # Build check
 \`\`\`
 
 See [.github/DEBUGGING.md](.github/DEBUGGING.md) for debugging CI failures.
 ```
 
 **Files Modified:**
+
 - `README.md`
 
 **Acceptance Criteria:**
+
 - ✅ Manual workflows documented
 - ✅ Local validation commands listed
 - ✅ Debugging guide referenced
@@ -1602,6 +1716,7 @@ See [.github/DEBUGGING.md](.github/DEBUGGING.md) for debugging CI failures.
 **Objective:** Document CI scripts for maintainers
 
 **Commands:**
+
 ```bash
 touch scripts/ci/README.md
 ```
@@ -1609,6 +1724,7 @@ touch scripts/ci/README.md
 **Implementation:**
 
 **File:** `scripts/ci/README.md`
+
 ```markdown
 # CI Scripts
 
@@ -1627,11 +1743,13 @@ pnpm run specs:validate
 \`\`\`
 
 **What it checks:**
+
 - Spec naming convention (###-name)
 - Required files (README.md, DESIGN.md)
 - README structure (header, status)
 
 **Exit codes:**
+
 - 0: All specs valid
 - 1: Validation failed
 
@@ -1648,10 +1766,12 @@ pnpm run specs:check-lane
 \`\`\`
 
 **Output:**
+
 - Recommended lane (spec or dev)
 - Reasoning for recommendation
 
 **Exit codes:**
+
 - 0: Always (informational)
 
 ---
@@ -1667,12 +1787,15 @@ pnpm run ai:scrape-reviews
 \`\`\`
 
 **Requirements:**
+
 - GitHub CLI installed and authenticated
 
 **Output:**
+
 - JSON array of review comments
 
 **Exit codes:**
+
 - 0: Scrape successful
 - 1: Scrape failed
 
@@ -1683,6 +1806,7 @@ pnpm run ai:scrape-reviews
 ### lib/common.sh
 
 Common utility functions:
+
 - \`log_info()\` - Success messages
 - \`log_error()\` - Error messages
 - \`log_warning()\` - Warning messages
@@ -1692,6 +1816,7 @@ Common utility functions:
 ### lib/error-reporter.sh
 
 Standardized error reporting:
+
 - \`report_ci_error()\` - Report error with debugging guide reference
 - \`report_ci_success()\` - Report success
 
@@ -1707,6 +1832,7 @@ pnpm run test:ci-scripts
 \`\`\`
 
 Individual test files:
+
 - \`tests/ci/validate-specs.test.sh\`
 - \`tests/ci/check-spec-lane.test.sh\`
 
@@ -1730,22 +1856,24 @@ Individual test files:
 set -euo pipefail
 
 # Source shared libraries
+
 SCRIPT_DIR="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
 source "\$SCRIPT_DIR/lib/common.sh"
 source "\$SCRIPT_DIR/lib/error-reporter.sh"
 
 # Help text
+
 show_help() {
-  cat <<EOF
+cat <<EOF
 Usage: script.sh [OPTIONS]
 
 Description of what script does.
 
 Options:
-  -h, --help   Show this help message
+-h, --help Show this help message
 
 Examples:
-  ./script.sh
+./script.sh
 EOF
 }
 
@@ -1757,7 +1885,8 @@ EOF
 ## Troubleshooting
 
 See [.github/DEBUGGING.md](../../.github/DEBUGGING.md) for CI debugging help.
-```
+
+````
 
 **Files Created:**
 - `scripts/ci/README.md`
@@ -1779,11 +1908,12 @@ See [.github/DEBUGGING.md](../../.github/DEBUGGING.md) for CI debugging help.
 **Commands:**
 ```bash
 touch scratch/token-baseline.md
-```
+````
 
 **Implementation:**
 
 **File:** `scratch/token-baseline.md`
+
 ```markdown
 # Token Consumption Measurement
 
@@ -1792,12 +1922,14 @@ touch scratch/token-baseline.md
 **Measurement Date:** 2025-10-15
 
 ### Context Size
+
 - Workflow YAML: 106KB
 - Documentation (Wiki + micro-lessons): 324KB
 - AI sessions per month: ~48
 - Average tokens per session: ~50K
 
 ### Monthly Consumption
+
 - Total: ~2.4M tokens/month
 - CI debugging (8 failures): ~400K tokens
 - Development sessions (40): ~2M tokens
@@ -1809,16 +1941,19 @@ touch scratch/token-baseline.md
 **Implementation Date:** [TBD]
 
 ### Context Reduction
+
 - ✅ .claudeignore created (excludes 324KB docs)
 - ✅ Workflow YAML: 106KB → [Measure after implementation]
 - ✅ Debugging guide created (reduces context reading)
 
 ### Expected Savings
+
 - Context exclusion: 15K tokens/session × 48 = 720K/month
 - Workflow simplification: ~10K tokens/failure × 8 = 80K/month
 - **Total Expected:** ~800K tokens/month (33% reduction)
 
 ### Actual Savings
+
 - [Measure after 1 month of usage]
 - [Compare against baseline]
 - [Adjust Phase 2 estimates]
@@ -1834,9 +1969,11 @@ touch scratch/token-baseline.md
 ```
 
 **Files Created:**
+
 - `scratch/token-baseline.md`
 
 **Acceptance Criteria:**
+
 - ✅ Baseline documented
 - ✅ Expected savings calculated
 - ✅ Measurement plan established
@@ -1850,6 +1987,7 @@ touch scratch/token-baseline.md
 **Objective:** Submit Phase 1 implementation for review
 
 **Commands:**
+
 ```bash
 git add .
 git commit -m "feat(ci): Phase 1 - Workflow simplification and local validation
@@ -1872,6 +2010,7 @@ gh pr create --title "feat(ci): Phase 1 - Workflow Simplification (Issue #142)" 
 ```
 
 **Files Changed:**
+
 - `scripts/ci/` (new scripts)
 - `.github/DEBUGGING.md` (new)
 - `.github/workflows/spec-guard.yml` (simplified)
@@ -1884,6 +2023,7 @@ gh pr create --title "feat(ci): Phase 1 - Workflow Simplification (Issue #142)" 
 - `README.md` (documentation)
 
 **Acceptance Criteria:**
+
 - ✅ All tests pass locally
 - ✅ All tests pass in CI
 - ✅ PR description complete
@@ -1915,12 +2055,12 @@ gh pr create --title "feat(ci): Phase 1 - Workflow Simplification (Issue #142)" 
 
 ### Success Metrics (Phase 1 Only)
 
-| Metric | Baseline | Target | Achieved |
-|--------|----------|--------|----------|
-| Workflow YAML | 106KB | 50KB | [TBD] |
-| Local validation | 0% | 100% | [TBD] |
-| CI jobs | 6 | 3 | [TBD] |
-| Token savings | 0 | 800K/month | [TBD] |
+| Metric           | Baseline | Target     | Achieved |
+| ---------------- | -------- | ---------- | -------- |
+| Workflow YAML    | 106KB    | 50KB       | [TBD]    |
+| Local validation | 0%       | 100%       | [TBD]    |
+| CI jobs          | 6        | 3          | [TBD]    |
+| Token savings    | 0        | 800K/month | [TBD]    |
 
 ### Branch Strategy
 
@@ -1940,6 +2080,7 @@ gh pr create --title "feat(ci): Phase 1 - Workflow Simplification (Issue #142)" 
 ## Implementation Commands
 
 ### Create Feature Branch
+
 ```bash
 git checkout main
 git pull origin main
@@ -1947,6 +2088,7 @@ git checkout -b feature/142-llm-context-optimization
 ```
 
 ### Run Tests Locally
+
 ```bash
 # Run all tests
 pnpm run test
@@ -1964,6 +2106,7 @@ pnpm run build
 ```
 
 ### Commit Changes
+
 ```bash
 git add .
 git commit -m "feat(ci): Phase 1 - Workflow simplification
@@ -1977,6 +2120,7 @@ Refs #142, #143"
 ```
 
 ### Create Pull Request
+
 ```bash
 gh pr create --title "feat(ci): Phase 1 - Workflow Simplification (Issue #142)" \
   --body "$(cat <<'EOF'
@@ -2050,6 +2194,7 @@ If Phase 1 implementation causes issues:
 ### Quick Rollback (Workflow Files)
 
 Workflow files have old implementation commented out:
+
 ```yaml
 # Old implementation (commented, ready to restore)
 # - name: Validate specs (OLD)
@@ -2062,6 +2207,7 @@ Workflow files have old implementation commented out:
 ```
 
 To rollback:
+
 1. Uncomment old implementation
 2. Comment out new implementation
 3. Push changes

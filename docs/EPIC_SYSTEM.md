@@ -23,14 +23,17 @@ Is this >3 days of work OR spawns multiple PRs?
 ## Labels
 
 ### Epic & Lane Labels
+
 - `epic` - Multi-issue initiative (>3 days work)
 - `spec-lane` - Complex work requiring specification
 - `simple-lane` - Straightforward implementation
 
 ### Status Labels
+
 - `blocked` - Work is blocked by external dependency
 
 ### Domain Labels (add as needed)
+
 - `db` - Database-related work
 - `auth` - Authentication-related
 - `ui` - User interface work
@@ -42,6 +45,7 @@ Is this >3 days of work OR spawns multiple PRs?
 **Title:** `Epic: [Brief Description]`
 
 **Body:**
+
 ```markdown
 # Epic: [Name]
 
@@ -54,10 +58,12 @@ Is this >3 days of work OR spawns multiple PRs?
 ## Sub-Issues
 
 ### Phase 1: [Phase Name] (Priority)
+
 - [ ] #123 - Issue title (~Xh estimate)
 - [ ] #124 - Issue title (~Xh estimate)
 
 ### Phase 2: [Phase Name] (Priority)
+
 - [ ] #125 - Issue title (~Xh estimate)
 
 ## Total Effort
@@ -82,6 +88,7 @@ Is this >3 days of work OR spawns multiple PRs?
 **Title:** Clear, actionable description
 
 **Body:**
+
 - Problem statement
 - Proposed solution
 - Success criteria
@@ -91,14 +98,18 @@ Is this >3 days of work OR spawns multiple PRs?
 ## Lane Selection
 
 ### Spec Lane (Complex)
+
 Use when:
+
 - Novel architecture or design decisions
 - Multiple approaches to consider
 - Significant risk or unknowns
 - Needs formal specification before implementation
 
 ### Simple Lane (Straightforward)
+
 Use when:
+
 - Clear path to implementation
 - Well-understood problem
 - Tactical, focused work
@@ -109,6 +120,7 @@ See [CLAUDE.md](../CLAUDE.md) for detailed lane decision rules.
 ## Workflow
 
 ### Creating an Epic
+
 1. Identify multi-issue work (>3 days OR multiple PRs)
 2. Create Epic issue with `epic` label
 3. Create sub-issues for each phase/component
@@ -116,12 +128,14 @@ See [CLAUDE.md](../CLAUDE.md) for detailed lane decision rules.
 5. Track progress via Epic checklist
 
 ### Working on Sub-Issues
+
 1. Pick issue from Epic
 2. Follow normal dev lane workflow (spec or simple)
 3. Reference Epic in commits/PRs if relevant
 4. Check off item in Epic when complete
 
 ### Closing an Epic
+
 - Close Epic when all sub-issues are complete
 - Epic remains as historical record
 
@@ -130,11 +144,13 @@ See [CLAUDE.md](../CLAUDE.md) for detailed lane decision rules.
 We use GitHub's native Projects for kanban view:
 
 **Columns:**
+
 - **Backlog** - Todo
 - **Active** - In progress (limit to 1-2 items)
 - **Done** - Closed issues (auto-populated)
 
 **Rules:**
+
 - Only work on 1-2 Active items at a time
 - Active column = priority
 - No complex automations - built-in "set status on close" sufficient
@@ -151,12 +167,14 @@ We use GitHub's native Projects for kanban view:
 ## Examples
 
 ### Epic: Complete Design System (#151)
+
 - **Epic Issue**: #151
 - **Sub-Issues**: #145, #146, #147, #148, #149
 - **Phases**: 3 phases (Designer Value, Code Quality, Protection)
 - **Total Effort**: ~39-43 hours
 
 ### Regular Issue: Add UX Pattern Documentation (#145)
+
 - **Type**: Regular issue (part of Epic #151)
 - **Lane**: Spec lane (requires design decisions)
 - **Parent**: Epic #151
@@ -164,11 +182,13 @@ We use GitHub's native Projects for kanban view:
 ## Migration from roadmap.md
 
 The old `roadmap.md` has been replaced by:
+
 1. **Epics** - For multi-issue initiatives
 2. **Milestones** - For time-based grouping (optional)
 3. **GitHub Projects** - For kanban view (optional)
 
 Benefits:
+
 - No manual syncing between roadmap and issues
 - Clear hierarchy via Epic → Sub-Issue relationship
 - Native GitHub features (no custom tooling)

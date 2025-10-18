@@ -95,6 +95,7 @@ pnpm learn:index
 - [x] **Saved rework:** Followed established patterns, avoided metadata inconsistencies
 
 Common patterns checked:
+
 - [x] Consistent YAML frontmatter metadata format
 - [x] Proper command categorization in CLAUDE.md
 - [x] Constitution checksum updated after doc changes
