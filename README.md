@@ -66,6 +66,18 @@ Coverage-driven TDD with escape hatches for pragmatism.
 
 See [Testing Guide](docs/testing/TESTING_GUIDE.md) for the full philosophy.
 
+### 🔍 Automated Quality Commands
+
+One-command automation for critical quality checks using AI sub-agents.
+
+- **`/security:scan`** - Scan for vulnerabilities (RLS policies, OWASP Top 10, secrets)
+- **`/accessibility:audit`** - Validate WCAG 2.1 AA compliance with axe-core
+- **`/db:migrate`** - Database migration workflow with RLS validation
+
+**Cost-optimized:** Uses Haiku 4.5 sub-agents for 68% cost reduction vs Sonnet.
+
+See [Automation Commands Guide](docs/automation-commands.md) for full details.
+
 ### 📚 Self-Organizing Knowledge
 
 Documentation that **evolves with your codebase**, not against it.

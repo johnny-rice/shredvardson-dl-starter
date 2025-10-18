@@ -1,0 +1,88 @@
+name: Validate Migrations
+
+on:
+  pull_request:
+    paths:
+      - 'supabase/migrations/**'
+      - 'packages/db/**'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate Database Migrations
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Start Supabase
+        run: supabase start
+
+      - name: Validate migrations
+        run: pnpm db:migrate:validate
+
+      - name: Run Supabase advisors
+        run: supabase db advisor --local
+
+      - name: Check RLS policies
+        id: rls_check
+        run: |
+          echo "Checking for tables without RLS..."
+          TABLES_WITHOUT_RLS=$(supabase db execute --local "
+            SELECT tablename FROM pg_tables
+            WHERE schemaname = 'public'
+            AND rowsecurity = false
+          ")
+
+          if echo "$TABLES_WITHOUT_RLS" | grep -v "(0 rows)"; then
+            echo "::error::Tables without RLS enabled found"
+            echo "$TABLES_WITHOUT_RLS"
+            exit 1
+          else
+            echo "✅ All public tables have RLS enabled"
+          fi
+
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: migration-validation-report
+          path: scratch/migration-validation-*.md
+          if-no-files-found: warn
+
+      - name: Stop Supabase
+        if: always()
+        run: supabase stop --no-backup
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ❌ Migration Validation Failed\n\nThe database migration validation failed. Please check the workflow logs for details.\n\n**Common issues:**\n- Missing RLS policies on new tables\n- SQL syntax errors\n- Breaking schema changes\n\nSee the full validation report in the workflow artifacts.`
+            });

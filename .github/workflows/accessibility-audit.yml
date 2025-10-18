@@ -1,0 +1,102 @@
+name: Accessibility Audit
+
+on:
+  pull_request:
+    paths:
+      - 'apps/web/**'
+      - 'packages/ui/**'
+  workflow_dispatch:
+    inputs:
+      severity:
+        description: 'Severity threshold (critical, serious, moderate, minor)'
+        required: false
+        default: 'moderate'
+
+jobs:
+  accessibility:
+    name: Run Accessibility Audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build application
+        run: pnpm --filter=web build
+
+      - name: Start dev server
+        run: |
+          pnpm --filter=web dev &
+          echo "DEV_SERVER_PID=$!" >> $GITHUB_ENV
+
+      - name: Wait for dev server
+        run: |
+          echo "Waiting for dev server to start..."
+          npx wait-on http://localhost:3000 --timeout 60000
+
+      - name: Run accessibility audit
+        id: audit
+        run: |
+          SEVERITY="${{ github.event.inputs.severity || 'moderate' }}"
+          pnpm a11y:audit full $SEVERITY || echo "AUDIT_FAILED=true" >> $GITHUB_ENV
+        continue-on-error: true
+
+      - name: Upload audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: accessibility-report
+          path: scratch/accessibility-audit-*.md
+          if-no-files-found: warn
+
+      - name: Stop dev server
+        if: always()
+        run: |
+          if [ -n "$DEV_SERVER_PID" ]; then
+            kill $DEV_SERVER_PID || true
+          fi
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request' && env.AUDIT_FAILED == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const glob = require('glob');
+
+            const reportFiles = glob.sync('scratch/accessibility-audit-*.md');
+            if (reportFiles.length === 0) {
+              console.log('No audit report found');
+              return;
+            }
+
+            const report = fs.readFileSync(reportFiles[0], 'utf8');
+            const summary = report.split('## Summary')[1]?.split('##')[0] || 'See full report';
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## ⚠️ Accessibility Audit Failed\n\n${summary}\n\nSee the full report in the workflow artifacts.`
+            });
+
+      - name: Fail if audit failed
+        if: env.AUDIT_FAILED == 'true'
+        run: |
+          echo "::error::Accessibility audit failed. See report for details."
+          exit 1
