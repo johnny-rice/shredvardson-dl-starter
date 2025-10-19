@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2025-10-18T12:58:50.498Z",
+  "generated": "2025-10-18T18:07:18.465Z",
   "commands": [
     {
       "name": "'/accessibility:audit'",
@@ -424,6 +424,87 @@
       "purpose": "Write failing tests from approved plan before implementation.",
       "example": "Standard development workflow",
       "riskLevel": "'LOW'",
+      "requiresHITL": false
+    },
+    {
+      "name": "branch-validation",
+      "path": ".claude/commands/git/shared/branch-validation.md",
+      "category": "Git Workflow",
+      "tags": [
+        "git",
+        "testing",
+        "security",
+        "implementation"
+      ],
+      "when": "Setting up tests and TDD workflows",
+      "purpose": "No description available",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "commit-formatting",
+      "path": ".claude/commands/git/shared/commit-formatting.md",
+      "category": "Git Workflow",
+      "tags": [
+        "git",
+        "testing",
+        "security",
+        "planning",
+        "implementation"
+      ],
+      "when": "Setting up tests and TDD workflows",
+      "purpose": "No description available",
+      "example": "Create conventional commit for completed feature",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "common-git-workflow",
+      "path": ".claude/commands/git/shared/common-git-workflow.md",
+      "category": "Git Workflow",
+      "tags": [
+        "git",
+        "testing",
+        "planning"
+      ],
+      "when": "Setting up tests and TDD workflows",
+      "purpose": "No description available",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "error-handling",
+      "path": ".claude/commands/git/shared/error-handling.md",
+      "category": "Git Workflow",
+      "tags": [
+        "git",
+        "testing",
+        "security",
+        "planning"
+      ],
+      "when": "Setting up tests and TDD workflows",
+      "purpose": "No description available",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "QUICK_REFERENCE",
+      "path": ".claude/commands/QUICK_REFERENCE.md",
+      "category": "General",
+      "tags": [
+        "testing",
+        "security",
+        "planning",
+        "implementation",
+        "quality"
+      ],
+      "when": "Setting up tests and TDD workflows",
+      "purpose": "** Create new feature branch from issue",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
       "requiresHITL": false
     },
     {

@@ -82,6 +82,10 @@ references:
   - 'docs/constitution.md#git-workflow'
   - 'CLAUDE.md#pr-rules'
   - 'docs/micro-lessons/README.md'
+  - 'git/shared/common-git-workflow.md'
+  - 'git/shared/branch-validation.md'
+  - 'git/shared/error-handling.md'
+  - 'git/shared/commit-formatting.md'
 ---
 
 **Slash Command:** `/git:fix-pr`
@@ -89,19 +93,26 @@ references:
 **Goal:**
 Automatically fetch PR feedback from all sources (CI, CodeRabbit, doctor) and fix issues iteratively.
 
+**Shared Patterns:**
+
+- **Validation**: See [branch-validation.md](./shared/branch-validation.md) for PR validation patterns
+- **Workflow**: See [common-git-workflow.md](./shared/common-git-workflow.md) for git best practices
+- **Error Handling**: See [error-handling.md](./shared/error-handling.md) for error recovery patterns
+- **Commit Format**: See [commit-formatting.md](./shared/commit-formatting.md) for commit message standards
+
 **Prompt:**
 
-1. **Validate environment:**
-   - Confirm lane (**lightweight**) against `CLAUDE.md` decision rules.
-   - If `requiresHITL` true, ask for human confirmation citing `riskPolicyRef`.
-   - Check git status (warn if uncommitted changes)
+1. **Validate environment** (see `branch-validation.md`):
+   - Confirm lane (**lightweight**) against `CLAUDE.md` decision rules
+   - If `requiresHITL` true, ask for human confirmation citing `riskPolicyRef`
+   - Check git status using patterns from `common-git-workflow.md`
    - Verify we're on a feature branch (not main/master)
-   - Confirm PR exists for current branch or use provided PR number
+   - Confirm PR exists using patterns from `branch-validation.md`
 
-2. **Wait for CI checks:**
+2. **Wait for CI checks** (see `error-handling.md` for timeout patterns):
    - Fetch PR checks: `gh pr checks [PR_NUMBER]`
-   - If checks are pending, wait up to 5 minutes (poll every 30s)
-   - If timeout, report status and ask user to re-run later
+   - If checks pending, wait up to 5 minutes (poll every 30s)
+   - Use retry/timeout patterns from `error-handling.md`
 
 3. **Fetch all feedback:**
    - **CI checks:** `gh pr checks [PR_NUMBER]`
@@ -110,26 +121,16 @@ Automatically fetch PR feedback from all sources (CI, CodeRabbit, doctor) and fi
    - **Failed workflow details:** `gh run view [RUN_ID]` for failed checks
 
 4. **Categorize issues:**
-   - **Auto-fixable:**
-     - CLAUDE.md line count (condense sections)
-     - Constitution checksum (`pnpm constitution:update`)
-     - ADR compliance (add missing labels)
-     - Documentation wording (CodeRabbit suggestions)
-     - Formatting issues (`pnpm lint --fix`)
-     - Type errors (if simple)
-   - **Pre-existing:**
-     - Check if error exists on base branch
-     - Skip with note in report
-   - **Manual:**
-     - Complex logic errors
-     - Architecture decisions
-     - Report with guidance for user
+   - **Auto-fixable:** CLAUDE.md line count, constitution checksum, ADR compliance, formatting, simple type errors
+   - **Pre-existing:** Check if error exists on base branch, skip with note
+   - **Manual:** Complex logic errors, architecture decisions, report with guidance
 
 5. **Fix iteratively:**
    - Fix issues one at a time
-   - Create separate commit for each fix
+   - Create separate commits using format from `commit-formatting.md`
    - Re-validate after each fix
    - If fix breaks something, revert and mark as manual
+   - Use error recovery patterns from `error-handling.md`
    - Push all commits together at the end
 
 6. **Capture micro-lessons:**
@@ -137,12 +138,6 @@ Automatically fetch PR feedback from all sources (CI, CodeRabbit, doctor) and fi
    - Check if similar lesson exists in `docs/micro-lessons/`
    - If new pattern, create micro-lesson using `/ops:learning-capture`
    - Include in summary: "📝 Created micro-lesson: X"
-
-   **When to create micro-lessons:**
-   - Repeated failure patterns
-   - Non-obvious fixes
-   - Tool-specific quirks
-   - Best practices discovered
 
 7. **Generate report:**
    - Summary of fixes applied (count, type)
@@ -158,19 +153,6 @@ Automatically fetch PR feedback from all sources (CI, CodeRabbit, doctor) and fi
    - Link to fix report artifact
    - Next suggested command (`gh pr checks`, `gh pr merge`)
 
-**Edge Cases Handled:**
-
-1. **Pre-existing failures:** Check base branch, skip with note
-2. **Infrastructure-only PRs:** Handle skipped jobs gracefully
-3. **Uncommitted changes:** Warn user, offer to stash
-4. **CI still running:** Wait with timeout (5min)
-5. **CodeRabbit not ready:** Optional, proceed with CI only
-6. **Conflicting fixes:** Iterative approach, re-validate each
-7. **Non-auto-fixable:** Detect, report with guidance
-8. **Label overrides:** Use `gh pr edit --add-label`
-9. **Draft/bot PRs:** Check permissions before proceeding
-10. **Concurrent fixes:** Pull latest, handle merge conflicts
-
 **Examples:**
 
 ```bash
@@ -182,51 +164,18 @@ Automatically fetch PR feedback from all sources (CI, CodeRabbit, doctor) and fi
 
 # Preview fixes without applying
 /git:fix-pr --dry-run
-
-# Fix specific PR in dry-run mode
-/git:fix-pr 135 --dry-run
 ```
 
-**Example Output:**
+**Implementation:**
 
-```bash
-🔍 Fetching feedback for PR #135...
-📊 Found 4 issues: 3 auto-fixable, 1 pre-existing
+Follow these steps, referencing shared templates:
 
-1️⃣ Fixing CLAUDE.md line count... ✅
-2️⃣ Fixing documentation wording... ✅
-3️⃣ Adding error logging... ✅
-⏭️  Skipping pre-existing typecheck failure
+1. **Validate environment** using `branch-validation.md` and `common-git-workflow.md`
+2. **Wait for CI** using timeout patterns from `error-handling.md`
+3. **Fetch feedback** from all sources
+4. **Categorize** issues (auto-fixable, pre-existing, manual)
+5. **Fix iteratively** using commit format from `commit-formatting.md`
+6. **Handle errors** using patterns from `error-handling.md`
+7. **Generate report** and capture micro-lessons
 
-✅ Fixed 3 issues, pushed 3 commits
-⏭️  Skipped 1 pre-existing issue
-
-📝 Captured learnings:
-   - Created micro-lesson: doctor-checks-iterative-fixing.md
-   - Pattern: Fix doctor failures one at a time for easier debugging
-
-💡 Next steps:
-   - Review changes: git log -3
-   - Check CI: gh pr checks 135
-   - Merge when green: gh pr merge 135
-```
-
-**Failure & Recovery:**
-
-- If no PR found → suggest creating one with `/git:prepare-pr`
-- If CI checks not available → suggest waiting or checking workflow status
-- If all issues are manual → report findings and suggest manual review
-- If git push fails → check for conflicts and suggest pulling latest
-- If micro-lesson creation fails → continue with fixes, log warning
-
-**Implementation Notes:**
-
-This command orchestrates multiple tools and workflows:
-
-1. Uses `gh` CLI for PR/CI interaction
-2. Uses git commands for fixing and committing
-3. Uses pnpm scripts for validation and fixes
-4. Uses `/ops:learning-capture` for micro-lessons
-5. Generates markdown artifacts for traceability
-
-The command follows the "fix iteratively" pattern to ensure each fix is isolated and can be reverted if needed. This is a key learning that should be captured as a micro-lesson on first successful run.
+For complete validation, error handling, and commit formatting implementations, reference the shared templates.
