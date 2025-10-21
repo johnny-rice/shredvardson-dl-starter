@@ -146,12 +146,12 @@ Current git commands: 475 lines (branch.md: 245, fix-pr.md: 230)
 
 ### Token Savings (Estimated Annual)
 
-| Phase                   | Tokens Saved/Incident | Frequency        | Annual Savings         |
-| ----------------------- | --------------------- | ---------------- | ---------------------- |
-| .claudeignore           | 15K                   | 48/month         | 8.64M                  |
-| Workflow simplification | 35K                   | 8 failures/month | 3.4M                   |
-| Failure summaries       | 20K                   | 5 failures/month | 1.2M                   |
-| Command consolidation   | 5K                    | 10 uses/month    | 600K                   |
+| Phase                   | Tokens Saved/Incident | Frequency        | Annual Savings          |
+| ----------------------- | --------------------- | ---------------- | ----------------------- |
+| .claudeignore           | 15K                   | 48/month         | 8.64M                   |
+| Workflow simplification | 35K                   | 8 failures/month | 3.4M                    |
+| Failure summaries       | 20K                   | 5 failures/month | 1.2M                    |
+| Command consolidation   | 5K                    | 10 uses/month    | 600K                    |
 | **TOTAL**               |                       |                  | **~13.84M tokens/year** |
 
 ### Quality Metrics

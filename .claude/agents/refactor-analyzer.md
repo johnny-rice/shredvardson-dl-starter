@@ -35,6 +35,7 @@ You will receive a JSON input with the following structure:
 ```
 
 **Example:**
+
 ```json
 {
   "target": {
@@ -94,6 +95,7 @@ Return your analysis in the following JSON structure:
 ### Code Smells
 
 **Long Method/Function:**
+
 ```json
 {
   "severity": "moderate",
@@ -114,6 +116,7 @@ Return your analysis in the following JSON structure:
 ```
 
 **Duplicated Code:**
+
 ```json
 {
   "severity": "moderate",
@@ -133,6 +136,7 @@ Return your analysis in the following JSON structure:
 ```
 
 **Large Component:**
+
 ```json
 {
   "severity": "major",
@@ -154,6 +158,7 @@ Return your analysis in the following JSON structure:
 ### Anti-Patterns
 
 **God Object:**
+
 ```json
 {
   "severity": "major",
@@ -173,6 +178,7 @@ Return your analysis in the following JSON structure:
 ```
 
 **Prop Drilling:**
+
 ```json
 {
   "severity": "moderate",
@@ -194,6 +200,7 @@ Return your analysis in the following JSON structure:
 ### Performance Issues
 
 **Unnecessary Re-renders:**
+
 ```json
 {
   "severity": "moderate",
@@ -213,6 +220,7 @@ Return your analysis in the following JSON structure:
 ```
 
 **N+1 Queries:**
+
 ```json
 {
   "severity": "major",
@@ -234,6 +242,7 @@ Return your analysis in the following JSON structure:
 ### Readability Issues
 
 **Magic Numbers:**
+
 ```json
 {
   "severity": "minor",
@@ -253,6 +262,7 @@ Return your analysis in the following JSON structure:
 ```
 
 **Poor Naming:**
+
 ```json
 {
   "severity": "minor",
@@ -274,6 +284,7 @@ Return your analysis in the following JSON structure:
 ### Architecture Issues
 
 **Circular Dependencies:**
+
 ```json
 {
   "severity": "major",
@@ -293,6 +304,7 @@ Return your analysis in the following JSON structure:
 ```
 
 **Tight Coupling:**
+
 ```json
 {
   "severity": "moderate",
@@ -323,18 +335,21 @@ Return your analysis in the following JSON structure:
 ## Severity Guidelines
 
 ### Major
+
 - Security vulnerabilities
 - Performance bottlenecks (N+1 queries, memory leaks)
 - Architecture violations (circular dependencies)
 - Major code smells (god objects, 500+ line files)
 
 ### Moderate
+
 - Readability issues in critical code paths
 - Moderate duplication (3-5 instances)
 - Prop drilling through 4+ levels
 - Missing error handling
 
 ### Minor
+
 - Magic numbers
 - Poor variable naming
 - Minor duplication (2 instances)
@@ -343,18 +358,21 @@ Return your analysis in the following JSON structure:
 ## Effort Guidelines
 
 ### Low (< 2 hours)
+
 - Rename variables
 - Extract constants
 - Add React.memo
 - Fix minor duplication
 
 ### Medium (2-8 hours)
+
 - Split large components
 - Extract hooks
 - Refactor validation logic
 - Fix prop drilling
 
 ### High (> 8 hours)
+
 - Redesign architecture
 - Split god objects
 - Fix circular dependencies
@@ -387,10 +405,7 @@ Return your analysis in the following JSON structure:
     "Code quality is good overall",
     "Follows project conventions consistently"
   ],
-  "recommendations": [
-    "Continue following current patterns",
-    "Consider adding more unit tests"
-  ],
+  "recommendations": ["Continue following current patterns", "Consider adding more unit tests"],
   "confidence": "high"
 }
 ```
@@ -398,6 +413,7 @@ Return your analysis in the following JSON structure:
 ### Target Not Found
 
 Include in recommendations:
+
 ```
 "Verify target file exists: path/to/target.ts"
 ```

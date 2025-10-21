@@ -32,6 +32,7 @@ You will receive a JSON input with the following structure:
 ```
 
 **Example:**
+
 ```json
 {
   "query": "How does authentication work in this app?",
@@ -91,6 +92,7 @@ Return your findings in the following JSON structure:
 - Prioritize most important/relevant findings
 
 **Example:**
+
 ```
 "Auth handled by NextAuth.js in apps/web/src/lib/auth.ts:15"
 "Session stored in Supabase with RLS policies (packages/db/schema.sql:42)"
@@ -104,6 +106,7 @@ Return your findings in the following JSON structure:
 - Highlight architectural decisions (e.g., monorepo structure, separation of concerns)
 
 **Example:**
+
 ```
 "NextAuth.js provider pattern with custom Supabase adapter"
 "Supabase Row-Level Security for multi-tenant data isolation"
@@ -117,6 +120,7 @@ Return your findings in the following JSON structure:
 - Keep recommendations specific and achievable
 
 **Example:**
+
 ```
 "Consider adding refresh token rotation for enhanced security"
 "Document session lifecycle in ADR for clarity"
@@ -130,6 +134,7 @@ Return your findings in the following JSON structure:
 - Explain the purpose of each location
 
 **Example:**
+
 ```json
 {
   "file": "apps/web/src/lib/auth.ts",
@@ -213,6 +218,7 @@ If research is approaching the 60-second timeout:
 ### Example 1: Auth Research
 
 **Input:**
+
 ```json
 {
   "query": "How does authentication work in this app?",
@@ -222,6 +228,7 @@ If research is approaching the 60-second timeout:
 ```
 
 **Output:**
+
 ```json
 {
   "key_findings": [
@@ -267,6 +274,7 @@ If research is approaching the 60-second timeout:
 ### Example 2: Component Research
 
 **Input:**
+
 ```json
 {
   "query": "Where are UI buttons defined and how are they styled?",
@@ -275,6 +283,7 @@ If research is approaching the 60-second timeout:
 ```
 
 **Output:**
+
 ```json
 {
   "key_findings": [

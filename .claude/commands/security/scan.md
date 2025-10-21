@@ -94,7 +94,7 @@ Scan codebase for security vulnerabilities using isolated Security Scanner conte
 
 Present findings clearly:
 
-```markdown
+````markdown
 # Security Scan Report
 
 **Date:** YYYY-MM-DD
@@ -118,12 +118,15 @@ Present findings clearly:
 **Impact:** Authenticated users can create profiles for any user_id, breaking data isolation.
 
 **Evidence:**
+
 ```sql
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 -- No INSERT policy defined
 ```
+````
 
 **Remediation:**
+
 ```sql
 CREATE POLICY profiles_insert ON profiles FOR INSERT
 WITH CHECK (auth.uid() = user_id);
@@ -142,8 +145,8 @@ WITH CHECK (auth.uid() = user_id);
 - Consider implementing automated security scanning in CI/CD
 
 **Confidence:** High/Medium/Low
-```markdown
 
+```markdown
 **Failure & Recovery:**
 
 - If no issues found → Document clean security status
@@ -153,8 +156,10 @@ WITH CHECK (auth.uid() = user_id);
 **Important:**
 
 This is a **defensive security tool only**. It will:
+
 - ✅ Detect vulnerabilities and provide remediation
 - ✅ Analyze authentication/authorization logic
 - ✅ Review RLS policies for completeness
 - ❌ NOT assist with credential harvesting
 - ❌ NOT provide offensive security techniques
+```

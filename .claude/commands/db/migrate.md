@@ -4,6 +4,11 @@ name: '/db:migrate'
 version: '1.0.0'
 lane: 'lightweight'
 tags: ['database', 'migration', 'supabase', 'schema', 'rls']
+deprecated: true
+deprecation_notice: >
+  DEPRECATED: This command is being migrated to the `supabase-integration` Skill.
+  Use `/db` discovery command instead. This command will remain functional during
+  the 12-week transition period. See docs/adr/002-skills-architecture.md for details.
 when_to_use: >
   Streamline Supabase database migration workflow with validation and RLS policy checks.
 
@@ -109,6 +114,7 @@ Streamline Supabase database migration workflow with automatic validation, RLS p
 ```
 
 **Steps:**
+
 1. Generate timestamp-based migration filename
 2. Create migration file in `supabase/migrations/`
 3. Open file for editing
@@ -118,6 +124,7 @@ Streamline Supabase database migration workflow with automatic validation, RLS p
    - Run validation before committing
 
 **Output:**
+
 ```
 ✅ Created migration: supabase/migrations/20251018143000_add_user_preferences.sql
 
@@ -135,9 +142,11 @@ Next steps:
 ```
 
 **Steps:**
+
 1. Check SQL syntax
 2. Identify new tables
 3. Verify RLS policies for new tables:
+
    ```sql
    -- Check if table has RLS enabled
    SELECT tablename FROM pg_tables
@@ -150,6 +159,7 @@ Next steps:
    WHERE t.schemaname = 'public'
    AND p.policyname IS NULL;
    ```
+
 4. Run Supabase advisors:
    ```bash
    supabase db advisor --local
@@ -162,7 +172,8 @@ Next steps:
 6. Generate validation report
 
 **Output:**
-```markdown
+
+````markdown
 # Migration Validation Report
 
 **Date:** 2025-10-18
@@ -181,6 +192,7 @@ Next steps:
 **Impact:** Table is not protected by RLS, allowing unrestricted access.
 
 **Remediation:**
+
 ```sql
 ALTER TABLE user_preferences ENABLE ROW LEVEL SECURITY;
 
@@ -196,6 +208,7 @@ CREATE POLICY user_preferences_update ON user_preferences
 CREATE POLICY user_preferences_delete ON user_preferences
   FOR DELETE USING (auth.uid() = user_id);
 ```
+````
 
 ## Supabase Advisors
 
@@ -205,6 +218,9 @@ CREATE POLICY user_preferences_delete ON user_preferences
 ## Recommendation
 
 ❌ DO NOT APPLY - Fix RLS policies first
+
+```bash
+pnpm db:migrate apply
 ```
 
 ### 3. Apply Migration
@@ -214,6 +230,7 @@ CREATE POLICY user_preferences_delete ON user_preferences
 ```
 
 **Steps:**
+
 1. Run validation first
 2. If validation passes:
    - Apply migration to local DB: `supabase db push`
@@ -224,6 +241,7 @@ CREATE POLICY user_preferences_delete ON user_preferences
 4. Suggest next steps (push to staging, etc.)
 
 **Output:**
+
 ```
 ✅ Migration applied successfully
 ✅ TypeScript types updated
@@ -241,6 +259,7 @@ Next steps:
 ```
 
 **Steps:**
+
 1. Identify last applied migration
 2. Warn user about potential data loss
 3. Request confirmation
@@ -249,6 +268,7 @@ Next steps:
 6. Generate rollback report
 
 **Output:**
+
 ```
 ⚠️  WARNING: Rolling back migration may cause data loss
 

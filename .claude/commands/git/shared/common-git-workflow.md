@@ -12,13 +12,16 @@ This template contains standard git command sequences and best practices used ac
 ## Standard Git Operations
 
 ### Branch Validation
+
 Before creating or switching branches:
+
 1. Check git status for uncommitted changes
 2. Ensure working directory is clean or changes are stashed
 3. Verify current branch (avoid working on main/master directly)
 4. Pull latest changes from remote
 
 ### Safe Branch Operations
+
 ```bash
 # Check for uncommitted changes (handles repos without initial commit)
 if git rev-parse --verify --quiet HEAD >/dev/null 2>&1; then
@@ -38,6 +41,7 @@ fi
 ```
 
 ### Branch Existence Check
+
 ```bash
 # Check if branch already exists
 if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
@@ -49,12 +53,14 @@ fi
 ## Branch Hygiene
 
 ### Always Pull Before Push
+
 ```bash
 # Ensure local branch is up to date
 git pull origin $(git branch --show-current)
 ```
 
 ### Remote Branch Synchronization
+
 ```bash
 # Fetch latest from remote
 git fetch origin
@@ -69,7 +75,9 @@ fi
 ## Conflict Resolution
 
 ### Basic Conflict Handling
+
 If conflicts occur during merge/pull:
+
 1. Identify conflicted files: `git status`
 2. Resolve conflicts manually
 3. Stage resolved files: `git add <file>`
@@ -77,6 +85,7 @@ If conflicts occur during merge/pull:
 5. If stuck, abort: `git merge --abort` or `git rebase --abort`
 
 ### Pull-Push Pattern
+
 ```bash
 # Safe push pattern
 git pull origin $(git branch --show-current)
@@ -99,17 +108,18 @@ fi
 
 ## Common Error Scenarios
 
-| Error | Cause | Solution |
-|-------|-------|----------|
-| `fatal: not a git repository` | Not in git directory | Navigate to repo root |
-| `error: Your local changes...` | Uncommitted changes | Commit or stash changes |
-| `error: pathspec ... did not match` | Branch doesn't exist | Check branch name spelling |
-| `CONFLICT (content): Merge conflict` | Conflicting changes | Resolve conflicts manually |
-| `error: failed to push` | Remote has newer commits | Pull then push |
+| Error                                | Cause                    | Solution                   |
+| ------------------------------------ | ------------------------ | -------------------------- |
+| `fatal: not a git repository`        | Not in git directory     | Navigate to repo root      |
+| `error: Your local changes...`       | Uncommitted changes      | Commit or stash changes    |
+| `error: pathspec ... did not match`  | Branch doesn't exist     | Check branch name spelling |
+| `CONFLICT (content): Merge conflict` | Conflicting changes      | Resolve conflicts manually |
+| `error: failed to push`              | Remote has newer commits | Pull then push             |
 
 ## Integration with Other Commands
 
 This template is referenced by:
+
 - `/git:branch` - Branch creation validation
 - `/git:fix-pr` - Pre-check logic before applying fixes
 - `/git:prepare-pr` - Pre-PR validation

@@ -444,6 +444,7 @@ pnpm run token:audit --compare scratch/token-baseline.md
    ```
 
 5. **Debugging Guide:**
+
    ```markdown
    # .github/DEBUGGING.md
 

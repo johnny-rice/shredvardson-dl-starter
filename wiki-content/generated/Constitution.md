@@ -161,24 +161,54 @@ This constitution establishes the architectural decisions, governance patterns, 
 - **Error Messages with Context**: CI error messages must reference `.github/DEBUGGING.md` sections
 - **Local-First Testing**: All CI checks must be runnable locally via package.json scripts
 
-### Section 9.3: Command Optimization
+### Section 9.3: Skills & Discovery Commands
 
-- **Command Consolidation**: Slash commands with >50% overlap must extract shared patterns to reusable modules
-- **Command Documentation**: All commands must have clear purpose and usage documentation
-- **Command Size Limits**: Individual command files should not exceed 300 lines
+- **Discovery Command Limit**: Maximum 5 discovery commands (`/db`, `/test`, `/git`, `/spec`, `/code`)
+- **Skills as Procedural Knowledge**: Complex workflows must be implemented as Skills with progressive disclosure
+- **Skill Size Limits**: Primary SKILL.md files should not exceed 500 lines
+- **Legacy Command Migration**: Slash commands with >50% overlap must be consolidated into Skills
 
 ### Section 9.4: Enforcement
 
 - **Automated Guards**: Token optimization guard workflow validates compliance on all PRs
 - **Quarterly Audits**: Maintainers conduct quarterly token optimization audits
-- **Metrics Tracking**: Monthly tracking of workflow size, inline scripts, doc duplication, and command overlap
+- **Metrics Tracking**: Monthly tracking of workflow size, inline scripts, doc duplication, and Skill efficiency
 - **Guidelines Reference**: All token optimization patterns documented in `docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md`
+
+## Article X: Skills Architecture
+
+### Section 10.1: Skills Governance
+
+- **Skills as Procedural Knowledge**: Skills codify repeatable workflows with progressive disclosure
+- **Discovery Commands**: Maximum 5 discovery commands (`/db`, `/test`, `/git`, `/spec`, `/code`)
+- **Version Control**: All Skills must use semantic versioning (MAJOR.MINOR.PATCH)
+- **Security Review**: Skills with script execution require automated security scan plus self-review
+
+### Section 10.2: Skill Development Standards
+
+- **SKILL.md Size**: Primary skill file must be under 500 lines
+- **Progressive Disclosure**: Use docs/ and scripts/ subdirectories for detailed content
+- **Sub-Agent Integration**: Skills orchestrate workflows, sub-agents execute specialized tasks
+- **Error Handling**: All Skills must provide graceful degradation and manual fallback instructions
+
+### Section 10.3: Skill Testing Requirements
+
+- **Structural Validation**: Automated YAML frontmatter validation (name ≤64 chars, description ≤1024 chars)
+- **Functional Testing**: Minimum 3 test scenarios per Skill
+- **Cross-Model Validation**: Skills tested with Haiku 4.5, Sonnet 4.5, Opus 4.5 before release
+
+### Section 10.4: Token Optimization
+
+- **Skill Metadata**: Always loaded (~20 tokens per Skill)
+- **Skill Instructions**: Loaded only when triggered (~250 tokens)
+- **Scripts and Docs**: Loaded or executed on-demand only
+- **Target Efficiency**: 51-90% token reduction compared to equivalent command implementation
 
 ---
 
 **Ratified**: 2025-09-18
-**Last Amended**: 2025-10-15 (Article IX: Token Efficiency)
-**Version**: 1.1.0
+**Last Amended**: 2025-10-21 (Article X: Skills Architecture)
+**Version**: 1.2.0
 **Next Review**: 2025-12-18
 
 This constitution serves as the foundational governance document for all development activities within the Dissonance Labs Starter project. All contributors, human and AI, are bound by these principles.

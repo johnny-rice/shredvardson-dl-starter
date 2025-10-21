@@ -339,7 +339,9 @@ describe('Sub-Agent Delegation Framework', () => {
       mockFailedDelegation('Scanner failed');
 
       const results = await Promise.all(
-        inputs.map((input) => delegateToAgent(input).catch((e) => ({ success: false, error: e.message })))
+        inputs.map((input) =>
+          delegateToAgent(input).catch((e) => ({ success: false, error: e.message }))
+        )
       );
 
       expect(results[0].success).toBe(true);

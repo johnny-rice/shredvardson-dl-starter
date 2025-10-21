@@ -35,7 +35,7 @@ interface AxeViolation {
 }
 
 const SEVERITY_LEVELS = ['minor', 'moderate', 'serious', 'critical'] as const;
-type SeverityLevel = typeof SEVERITY_LEVELS[number];
+type SeverityLevel = (typeof SEVERITY_LEVELS)[number];
 
 // Default routes to scan
 const DEFAULT_ROUTES = ['/', '/design'];
@@ -56,8 +56,7 @@ async function runAccessibilityAudit(
     const page: Page = await browser.newPage();
 
     // Define routes to scan
-    const routes =
-      target === 'full' ? DEFAULT_ROUTES : target.startsWith('/') ? [target] : ['/'];
+    const routes = target === 'full' ? DEFAULT_ROUTES : target.startsWith('/') ? [target] : ['/'];
 
     for (const route of routes) {
       try {

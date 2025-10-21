@@ -29,10 +29,12 @@ if (value.startsWith('"') && value.endsWith('"')) {
 ```
 
 **Impact:**
+
 - **Before:** `riskLevel: 'LOW'` → JSON output: `"riskLevel": "'LOW'"` (corrupt)
 - **After:** `riskLevel: 'LOW'` → JSON output: `"riskLevel": "LOW"` (correct)
 
 **Guardrails.**
+
 - Always test YAML parsers with both `'value'` and `"value"` formats
 - Validate generated JSON output matches expected schema (no embedded quotes)
 - Add integration tests that parse YAML with mixed quote styles

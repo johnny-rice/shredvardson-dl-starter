@@ -77,6 +77,7 @@ references:
 Create a new git branch following standardized naming conventions.
 
 **Shared Patterns:**
+
 - **Validation**: See [branch-validation.md](./shared/branch-validation.md) for validation patterns
 - **Workflow**: See [common-git-workflow.md](./shared/common-git-workflow.md) for git best practices
 - **Error Handling**: See [error-handling.md](./shared/error-handling.md) for error recovery

@@ -125,7 +125,7 @@ Run comprehensive accessibility audit using axe-core to validate WCAG 2.1 AA com
 
 Present findings clearly:
 
-```markdown
+````markdown
 # Accessibility Audit Report
 
 **Date:** YYYY-MM-DD
@@ -151,15 +151,19 @@ Present findings clearly:
 **Impact:** Screen reader users cannot identify form fields.
 
 **Affected Elements:**
+
 - `input#email` in [Login.tsx:42](apps/web/src/components/Login.tsx#L42)
 - `input#password` in [Login.tsx:48](apps/web/src/components/Login.tsx#L48)
 
 **Evidence:**
+
 ```html
 <input type="email" id="email" placeholder="Email" />
 ```
+````
 
 **Remediation:**
+
 ```tsx
 <label htmlFor="email">Email</label>
 <input type="email" id="email" placeholder="Email" />
@@ -179,9 +183,11 @@ Present findings clearly:
 **Impact:** Users with low vision cannot read text.
 
 **Affected Elements:**
+
 - `.text-muted` in [Button.tsx:15](packages/ui/components/Button.tsx#L15) - Contrast ratio 3.2:1 (needs 4.5:1)
 
 **Evidence:**
+
 ```css
 .text-muted {
   color: #9ca3af; /* Gray-400 on white background */
@@ -189,6 +195,7 @@ Present findings clearly:
 ```
 
 **Remediation:**
+
 ```css
 .text-muted {
   color: #6b7280; /* Gray-500 - contrast ratio 4.6:1 */
@@ -218,7 +225,8 @@ Present findings clearly:
 - **Best Practices:** ⚠️ PARTIAL (9 recommendations)
 
 **Overall:** Not compliant with WCAG 2.1 AA
-```
+
+````
 
 **Implementation:**
 
@@ -286,7 +294,7 @@ function generateReport(violations: any[], target: string, threshold: string): s
 const target = process.argv[2] || 'full';
 const severity = process.argv[3] || 'moderate';
 runAccessibilityAudit(target, severity);
-```
+````
 
 **Failure & Recovery:**
 

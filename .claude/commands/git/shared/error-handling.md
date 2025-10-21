@@ -14,6 +14,7 @@ This template contains common git error scenarios, detection, and remediation pa
 ### Repository Errors
 
 #### Not a Git Repository
+
 ```bash
 # Error: fatal: not a git repository (or any of the parent directories): .git
 # Detection
@@ -25,6 +26,7 @@ fi
 ```
 
 #### Repository Not Initialized
+
 ```bash
 # Error: No commits yet
 # Detection
@@ -38,6 +40,7 @@ fi
 ### Branch Errors
 
 #### Branch Already Exists
+
 ```bash
 # Error: fatal: A branch named 'feature/123' already exists
 # Detection
@@ -56,6 +59,7 @@ fi
 ```
 
 #### Branch Does Not Exist
+
 ```bash
 # Error: error: pathspec 'feature/123' did not match any file(s) known to git
 # Detection
@@ -68,6 +72,7 @@ fi
 ```
 
 #### Protected Branch Operation
+
 ```bash
 # Error: Attempting to modify main/master directly
 # Detection
@@ -82,6 +87,7 @@ fi
 ### Working Directory Errors
 
 #### Uncommitted Changes
+
 ```bash
 # Error: error: Your local changes to the following files would be overwritten
 # Detection and remediation
@@ -98,6 +104,7 @@ fi
 ```
 
 #### Untracked Files
+
 ```bash
 # Error: The following untracked working tree files would be overwritten
 # Detection
@@ -113,6 +120,7 @@ fi
 ### Remote Errors
 
 #### Remote Branch Diverged
+
 ```bash
 # Error: ! [rejected] branch -> branch (non-fast-forward)
 # Detection
@@ -135,6 +143,7 @@ fi
 ```
 
 #### Push Rejected
+
 ```bash
 # Error: error: failed to push some refs
 # Detection and safe push pattern
@@ -150,6 +159,7 @@ fi
 ```
 
 #### No Remote Configured
+
 ```bash
 # Error: fatal: No configured push destination
 # Detection
@@ -163,6 +173,7 @@ fi
 ### Merge Conflict Errors
 
 #### Merge Conflicts Detected
+
 ```bash
 # Error: CONFLICT (content): Merge conflict in <file>
 # Detection
@@ -188,6 +199,7 @@ fi
 ### CI/GitHub Errors
 
 #### PR Not Found
+
 ```bash
 # Error: no pull requests found
 # Detection
@@ -200,6 +212,7 @@ fi
 ```
 
 #### CI Checks Pending
+
 ```bash
 # Error: Checks are still running
 # Detection and wait pattern
@@ -227,6 +240,7 @@ fi
 ```
 
 #### GitHub CLI Not Authenticated
+
 ```bash
 # Error: gh: authentication required
 # Detection
@@ -240,6 +254,7 @@ fi
 ## Error Recovery Patterns
 
 ### Retry with Backoff
+
 ```bash
 MAX_RETRIES=3
 RETRY_COUNT=0
@@ -265,6 +280,7 @@ fi
 ```
 
 ### Safe Abort Pattern
+
 ```bash
 # Provide safe exit on errors
 set -e  # Exit on error
@@ -283,6 +299,7 @@ trap cleanup EXIT
 ## Error Messages Best Practices
 
 ### Clear Error Messages
+
 ```bash
 # ❌ Bad: Unclear error
 echo "Error occurred"
@@ -294,6 +311,7 @@ echo "Or choose a different name"
 ```
 
 ### Actionable Guidance
+
 ```bash
 # ❌ Bad: Error without solution
 echo "Uncommitted changes detected"
@@ -310,6 +328,7 @@ echo "  3. Discard: git restore ."
 ## Integration with Other Commands
 
 This template is referenced by:
+
 - `/git:branch` - Branch creation error handling
 - `/git:fix-pr` - PR fixing error recovery
 - `/git:commit` - Commit error handling
@@ -318,6 +337,7 @@ This template is referenced by:
 ## Debugging Tips
 
 ### Enable Verbose Git Output
+
 ```bash
 # For debugging, enable verbose output
 GIT_TRACE=1 git <command>
@@ -325,6 +345,7 @@ GIT_CURL_VERBOSE=1 git push  # For remote operations
 ```
 
 ### Check Git Configuration
+
 ```bash
 # Verify git config
 git config --list --show-origin
@@ -333,6 +354,7 @@ git config user.email
 ```
 
 ### Validate Repository State
+
 ```bash
 # Full repository health check
 git fsck --full

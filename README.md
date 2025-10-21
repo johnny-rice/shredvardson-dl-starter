@@ -34,15 +34,53 @@
 
 ## Why This Starter?
 
-### 🤖 Built for Human-AI Collaboration
+### 🤖 Built for Human-AI Collaboration with Skills
 
-Most templates assume you're coding alone. This one assumes **you're pair programming with Claude/GPT-5**.
+Most templates assume you're coding alone. This one assumes **you're pair programming with Claude**.
 
-- **26 Slash Commands**: `/git:prepare-pr`, `/git:fix-pr`, `/test:scaffold` - complex workflows in one command
-- **LLM-Optimized Docs**: `CLAUDE.md`, context maps, and structured prompts that AI agents understand
-- **Self-Learning System**: 60+ micro-lessons auto-ranked by usefulness, preventing repeat mistakes
+- **5 Discovery Commands + 11 Skills**: `/db`, `/test`, `/git`, `/spec`, `/code` - intuitive entry points
+- **Progressive Disclosure**: Skills load only what's needed, saving 51-90% tokens
+- **Self-Improving**: `skill-creator` meta-Skill lets you create new Skills from conversation
+- **LLM-Optimized**: Skills work seamlessly with sub-agents for specialized tasks
 
-**Real example:** Hit a bug? Create a 90-second micro-lesson. Next time you (or your AI agent) work on similar code, the lesson appears in the Top-10 index. Knowledge compounds automatically.
+**Real example:** Type `/db create user_preferences` → `supabase-integration` Skill generates migration, validates RLS policies, updates TypeScript types - all in one workflow.
+
+#### How Skills Work
+
+Skills use 3-tier progressive disclosure:
+
+1. **Metadata** (always loaded): "This Skill handles database migrations"
+2. **Instructions** (loaded when triggered): Step-by-step workflow
+3. **Resources** (on-demand): Scripts executed, docs read only when needed
+
+**Result**: Multi-step workflows that used to consume 3,200 tokens now use ~800 tokens (75% savings).
+
+#### Built-In Skills (Coming Soon)
+
+**Database & Backend**:
+
+- `supabase-integration` - Migrations, RLS validation, type generation
+- `dependency-manager` - Security updates and vulnerability scanning
+
+**Development Workflow**:
+
+- `test-scaffolder` - Generate tests from acceptance criteria (integrates with Test Generator sub-agent)
+- `implementation-assistant` - Code generation with project standards
+- `code-reviewer` - Automated quality gates before commit
+
+**Git & Documentation**:
+
+- `git-workflow` - Commits, PRs, branch management
+- `documentation-sync` - Keep docs fresh automatically
+- `learning-capturer` - Auto-save solutions as micro-lessons
+
+**Advanced**:
+
+- `project-scaffolder` - Generate components/routes/APIs with DL Starter conventions
+- `skill-creator` (meta-skill) - Create new Skills from conversation
+- `prd-analyzer` - Extract acceptance criteria from specs
+
+See [Skills Documentation](.claude/skills/README.md) for complete catalog (available after Phase 1 implementation).
 
 ### ⚡ Automated Quality Gates (That Actually Help)
 
@@ -93,19 +131,35 @@ Documentation that **evolves with your codebase**, not against it.
 - Useful lessons get boosted (usage tracking)
 - No single lesson monopolizes the top (capped contribution)
 
-### 🏗️ Two-Lane Development Model
+### 🏗️ Two Skill Workflows
 
-**80% of work = Simple workflow** (Plan → Test → Code → PR)
-**20% of work = Spec-driven workflow** (Specify → Plan → Tasks → Code → PR)
+**Quick Workflow** (80% of work) - Test → Code → Commit
+
+```bash
+/test           # test-scaffolder Skill generates failing tests
+/code           # implementation-assistant implements to pass tests
+/git commit     # git-workflow creates conventional commit
+```
+
+**Spec-Driven Workflow** (20% of work) - Specify → Test → Code → Commit
+
+```bash
+/spec           # prd-analyzer extracts acceptance criteria
+                # Auto-chains to test-scaffolder
+/code           # implementation-assistant implements
+/git commit     # git-workflow creates commit
+```
+
+**Skill Chaining**: Skills automatically call other Skills when needed (e.g., `prd-analyzer` → `test-scaffolder`).
 
 Don't over-engineer simple features. Don't under-engineer risky ones.
 
 Decision framework built in:
 
-- ✅ Bug fix? → Simple lane
-- ⚠️ Auth system? → Spec lane
-- ✅ CSS tweak? → Simple lane
-- ⚠️ Payment integration? → Spec lane
+- ✅ Bug fix? → Quick workflow
+- ⚠️ Auth system? → Spec-driven workflow
+- ✅ CSS tweak? → Quick workflow
+- ⚠️ Payment integration? → Spec-driven workflow
 
 See [CLAUDE.md](docs/ai/CLAUDE.md) for full decision rules.
 
@@ -160,16 +214,17 @@ See [Database Recipe](docs/recipes/db.md) for the complete workflow.
 
 ### What Makes This Different?
 
-| Feature                | create-next-app | vercel/commerce | **This Starter**                |
-| ---------------------- | --------------- | --------------- | ------------------------------- |
-| AI Collaboration Tools | ❌              | ❌              | ✅ 26 slash commands            |
-| Self-Learning Docs     | ❌              | ❌              | ✅ Micro-lessons + heat ranking |
-| Automated PR Fixes     | ❌              | ❌              | ✅ `/git:fix-pr`                |
-| Testing Infrastructure | ⚠️ Basic        | ⚠️ Partial      | ✅ Full (70% coverage)          |
-| Database Migrations    | ❌              | ⚠️ Basic        | ✅ Validated + seeded           |
-| Quality Gates          | ❌              | ⚠️ Lint only    | ✅ 23 doctor checks             |
-| Two-Lane Workflow      | ❌              | ❌              | ✅ Simple + Spec-driven         |
-| Production Ready       | ⚠️ Starter      | ✅              | ✅ Battle-tested                |
+| Feature                | create-next-app | vercel/commerce | **This Starter**                       |
+| ---------------------- | --------------- | --------------- | -------------------------------------- |
+| AI Collaboration Tools | ❌              | ❌              | ✅ 5 discovery commands + 11 Skills    |
+| Self-Learning Docs     | ❌              | ❌              | ✅ Micro-lessons + heat ranking        |
+| Automated PR Fixes     | ❌              | ❌              | ✅ `/git:fix-pr`                       |
+| Testing Infrastructure | ⚠️ Basic        | ⚠️ Partial      | ✅ Full (70% coverage)                 |
+| Database Migrations    | ❌              | ⚠️ Basic        | ✅ Validated + seeded                  |
+| Quality Gates          | ❌              | ⚠️ Lint only    | ✅ 23 doctor checks                    |
+| Skills Architecture    | ❌              | ❌              | ✅ Progressive disclosure (51-90% ↓)   |
+| Two-Lane Workflow      | ❌              | ❌              | ✅ Quick + Spec-driven Skill workflows |
+| Production Ready       | ⚠️ Starter      | ✅              | ✅ Battle-tested                       |
 
 ## 📘 Project Wiki
 

@@ -70,7 +70,7 @@ Generates a security report (`scratch/security-scan-YYYY-MM-DD.md`) with:
 
 ### Example Output
 
-```markdown
+````markdown
 # Security Scan Report
 
 **Date:** 2025-10-18
@@ -94,6 +94,7 @@ Generates a security report (`scratch/security-scan-YYYY-MM-DD.md`) with:
 **Impact:** SECURITY DEFINER functions bypass RLS if not properly authorized.
 
 **Remediation:**
+
 ```sql
 -- Ensure function is SECURITY INVOKER
 CREATE OR REPLACE FUNCTION function_name()
@@ -106,7 +107,9 @@ BEGIN
 END;
 $$;
 ```
-```
+````
+
+````
 
 ### Integration
 
@@ -140,7 +143,7 @@ Can be run automatically on:
 # Filter by severity
 /accessibility:audit full critical    # Critical issues only
 /accessibility:audit / serious        # Serious+ on homepage
-```
+````
 
 ### Audit Areas
 
@@ -177,7 +180,7 @@ Generates an accessibility report (`scratch/accessibility-audit-YYYY-MM-DD.md`) 
 
 ### Example Output
 
-```markdown
+````markdown
 # Accessibility Audit Report
 
 **Date:** 2025-10-18
@@ -203,14 +206,17 @@ Generates an accessibility report (`scratch/accessibility-audit-YYYY-MM-DD.md`) 
 **Impact:** Users with low vision cannot read text.
 
 **Affected Elements:**
+
 - `.text-muted` in Button.tsx:15 - Contrast ratio 3.2:1 (needs 4.5:1)
 
 **Remediation:**
+
 ```css
 .text-muted {
   color: #6b7280; /* Gray-500 - contrast ratio 4.6:1 */
 }
 ```
+````
 
 ## Compliance Status
 
@@ -219,7 +225,8 @@ Generates an accessibility report (`scratch/accessibility-audit-YYYY-MM-DD.md`) 
 - **Best Practices:** ⚠️ PARTIAL (9 recommendations)
 
 **Overall:** ❌ Not compliant with WCAG 2.1 AA
-```
+
+````
 
 ### Integration
 
@@ -235,7 +242,7 @@ Runs automatically on:
 ```bash
 pnpm a11y:audit              # Full audit
 pnpm a11y:audit:critical     # Critical issues only
-```
+````
 
 ---
 
@@ -272,6 +279,7 @@ pnpm a11y:audit:critical     # Critical issues only
 - Opens file for editing
 
 **Output:**
+
 ```
 ✅ Created migration: supabase/migrations/20251018143000_add_user_preferences.sql
 
@@ -299,7 +307,7 @@ Next steps:
 
 **Output:**
 
-```markdown
+````markdown
 # Migration Validation Report
 
 **Date:** 2025-10-18
@@ -318,6 +326,7 @@ Next steps:
 **Impact:** Table not protected by RLS, allowing unrestricted access.
 
 **Remediation:**
+
 ```sql
 ALTER TABLE user_preferences ENABLE ROW LEVEL SECURITY;
 
@@ -325,17 +334,19 @@ CREATE POLICY user_preferences_select ON user_preferences
   FOR SELECT USING (auth.uid() = user_id);
 -- ... (other policies)
 ```
+````
 
 ## Recommendation
 
 ❌ DO NOT APPLY - Fix RLS policies first
-```
+
+````
 
 #### 3. Apply Migration
 
 ```bash
 /db:migrate apply
-```
+````
 
 - Validates migration first
 - Applies to local database
@@ -343,6 +354,7 @@ CREATE POLICY user_preferences_select ON user_preferences
 - Runs post-migration advisors
 
 **Output:**
+
 ```
 ✅ Migration applied successfully
 ✅ TypeScript types updated
@@ -369,10 +381,12 @@ Next steps:
 **CI Workflow:** `.github/workflows/validate-migrations.yml`
 
 Runs automatically on:
+
 - Pull requests affecting migrations (`supabase/migrations/**`)
 - Manual workflow dispatch
 
 **Validation Steps:**
+
 1. Start local Supabase instance
 2. Run migration validation
 3. Check RLS policies
@@ -394,13 +408,14 @@ pnpm db:migrate:rollback                  # Rollback
 
 These automation commands use Haiku 4.5 sub-agents where appropriate:
 
-| Command | Model | Cost vs Sonnet |
-|---------|-------|----------------|
-| `/security:scan` | Haiku 4.5 | 68% cheaper |
-| `/accessibility:audit` | Playwright (script) + Haiku analysis | N/A |
-| `/db:migrate` | Script-based | N/A |
+| Command                | Model                                | Cost vs Sonnet |
+| ---------------------- | ------------------------------------ | -------------- |
+| `/security:scan`       | Haiku 4.5                            | 68% cheaper    |
+| `/accessibility:audit` | Playwright (script) + Haiku analysis | N/A            |
+| `/db:migrate`          | Script-based                         | N/A            |
 
 **Estimated Savings:**
+
 - Security scanning: ~$0.15 → ~$0.05 per scan (67% reduction)
 - Total project savings: ~$100/month with regular scanning
 

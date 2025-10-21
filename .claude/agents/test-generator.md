@@ -66,16 +66,9 @@ Return your generated tests in the following JSON structure:
       "Loading state displays spinner",
       "Error state shows error message"
     ],
-    "uncovered_scenarios": [
-      "Profile image upload failure",
-      "Network timeout during fetch"
-    ]
+    "uncovered_scenarios": ["Profile image upload failure", "Network timeout during fetch"]
   },
-  "dependencies": [
-    "@testing-library/react",
-    "@testing-library/user-event",
-    "vitest"
-  ],
+  "dependencies": ["@testing-library/react", "@testing-library/user-event", "vitest"],
   "setup_required": [
     "Mock Supabase client in test setup",
     "Add window.matchMedia mock if not present"
@@ -106,23 +99,24 @@ Return your generated tests in the following JSON structure:
 - Fast execution (<100ms per test)
 
 **Example:**
+
 ```typescript
-import { describe, it, expect } from 'vitest'
-import { sum } from './math'
+import { describe, it, expect } from 'vitest';
+import { sum } from './math';
 
 describe('sum', () => {
   it('adds two positive numbers', () => {
-    expect(sum(2, 3)).toBe(5)
-  })
+    expect(sum(2, 3)).toBe(5);
+  });
 
   it('adds negative numbers', () => {
-    expect(sum(-2, -3)).toBe(-5)
-  })
+    expect(sum(-2, -3)).toBe(-5);
+  });
 
   it('handles zero', () => {
-    expect(sum(0, 5)).toBe(5)
-  })
-})
+    expect(sum(0, 5)).toBe(5);
+  });
+});
 ```
 
 ### Integration Tests
@@ -133,6 +127,7 @@ describe('sum', () => {
 - Medium execution time (100ms-1s per test)
 
 **Example:**
+
 ```typescript
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
@@ -162,15 +157,16 @@ describe('UserProfile integration', () => {
 - Slow execution (seconds per test)
 
 **Example:**
+
 ```typescript
-import { test, expect } from '@playwright/test'
+import { test, expect } from '@playwright/test';
 
 test('user can view profile', async ({ page }) => {
-  await page.goto('/')
-  await page.click('text=Profile')
-  await expect(page).toHaveURL(/\/profile/)
-  await expect(page.getByRole('heading', { name: 'My Profile' })).toBeVisible()
-})
+  await page.goto('/');
+  await page.click('text=Profile');
+  await expect(page).toHaveURL(/\/profile/);
+  await expect(page.getByRole('heading', { name: 'My Profile' })).toBeVisible();
+});
 ```
 
 ## Coverage Analysis
@@ -184,6 +180,7 @@ Estimated Coverage = (Covered Scenarios / Total Scenarios) * 100
 ```
 
 **Example:**
+
 - Total scenarios: 10
 - Covered: 8
 - Uncovered: 2
@@ -192,17 +189,20 @@ Estimated Coverage = (Covered Scenarios / Total Scenarios) * 100
 ### Scenario Identification
 
 **Happy Path:**
+
 - Primary user flow succeeds
 - Data loads and displays correctly
 - Forms submit successfully
 
 **Edge Cases:**
+
 - Empty data sets
 - Boundary values (min/max)
 - Concurrent operations
 - Race conditions
 
 **Error Handling:**
+
 - Network failures
 - Invalid input
 - Permission denied
@@ -220,10 +220,11 @@ Before generating tests, analyze existing tests to identify:
 6. **Setup/teardown:** beforeEach, afterEach patterns
 
 **Example Convention Detection:**
+
 ```typescript
 // Found in apps/web/tests/unit/components/Header.test.tsx:
-import { describe, it, expect } from 'vitest'
-import { render, screen } from '@/tests/utils/test-utils'
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@/tests/utils/test-utils';
 
 // Pattern identified:
 // - Framework: Vitest
@@ -255,6 +256,7 @@ import { render, screen } from '@/tests/utils/test-utils'
 ### Component Test Generation
 
 **Input:**
+
 ```json
 {
   "target": {
@@ -267,6 +269,7 @@ import { render, screen } from '@/tests/utils/test-utils'
 ```
 
 **Output:**
+
 ```json
 {
   "test_file_path": "apps/web/tests/unit/components/Button.test.tsx",
@@ -279,16 +282,9 @@ import { render, screen } from '@/tests/utils/test-utils'
       "Button is disabled",
       "Variant classes applied"
     ],
-    "uncovered_scenarios": [
-      "Loading state with spinner",
-      "asChild prop behavior"
-    ]
+    "uncovered_scenarios": ["Loading state with spinner", "asChild prop behavior"]
   },
-  "dependencies": [
-    "vitest",
-    "@testing-library/react",
-    "@testing-library/user-event"
-  ],
+  "dependencies": ["vitest", "@testing-library/react", "@testing-library/user-event"],
   "setup_required": [],
   "confidence": "high"
 }
@@ -297,6 +293,7 @@ import { render, screen } from '@/tests/utils/test-utils'
 ### Function Test Generation
 
 **Input:**
+
 ```json
 {
   "target": {
@@ -310,6 +307,7 @@ import { render, screen } from '@/tests/utils/test-utils'
 ```
 
 **Output:**
+
 ```json
 {
   "test_file_path": "apps/web/tests/unit/lib/validation.test.ts",
@@ -356,10 +354,7 @@ import { render, screen } from '@/tests/utils/test-utils'
     "uncovered_scenarios": []
   },
   "dependencies": [],
-  "setup_required": [
-    "Verify target file exists: path/to/target.ts",
-    "Check file path is correct"
-  ],
+  "setup_required": ["Verify target file exists: path/to/target.ts", "Check file path is correct"],
   "confidence": "low"
 }
 ```
@@ -367,6 +362,7 @@ import { render, screen } from '@/tests/utils/test-utils'
 ### No Existing Test Patterns
 
 If no existing tests found, use sensible defaults:
+
 - Vitest for unit tests
 - Playwright for E2E tests
 - React Testing Library for components

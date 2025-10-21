@@ -32,6 +32,7 @@ You will receive a JSON input with the following structure:
 ```
 
 **Example:**
+
 ```json
 {
   "scope": "rls",
@@ -86,6 +87,7 @@ Return your findings in the following JSON structure:
 - **Common mistakes:** `auth.uid()` misuse, policy bypass conditions
 
 **Example Finding:**
+
 ```json
 {
   "severity": "critical",
@@ -110,6 +112,7 @@ Return your findings in the following JSON structure:
 - **Credential handling:** Plaintext passwords, weak hashing
 
 **Example Finding:**
+
 ```json
 {
   "severity": "high",
@@ -133,6 +136,7 @@ Return your findings in the following JSON structure:
 - **ORM misuse:** Unsafe use of raw query methods
 
 **Example Finding:**
+
 ```json
 {
   "severity": "critical",
@@ -157,6 +161,7 @@ Return your findings in the following JSON structure:
 - **Weak secrets:** Default passwords, predictable tokens
 
 **Example Finding:**
+
 ```json
 {
   "severity": "high",
@@ -181,6 +186,7 @@ Return your findings in the following JSON structure:
 - **Template injection:** Server-side template vulnerabilities
 
 **Example Finding:**
+
 ```json
 {
   "severity": "medium",
@@ -210,24 +216,28 @@ Return your findings in the following JSON structure:
 ## Severity Guidelines
 
 ### Critical
+
 - Unauthenticated access to admin functions
 - SQL injection with data access
 - Missing RLS policies on sensitive tables
 - Exposed production secrets in code
 
 ### High
+
 - Missing authentication on API endpoints
 - XSS vulnerabilities in user content
 - Weak password hashing (e.g., MD5, SHA1)
 - Client-side secret exposure
 
 ### Medium
+
 - Missing CSRF protection
 - Insecure session configuration
 - Incomplete RLS policies (e.g., missing DELETE)
 - Potential timing attacks
 
 ### Low
+
 - Missing security headers
 - Verbose error messages
 - Weak rate limiting

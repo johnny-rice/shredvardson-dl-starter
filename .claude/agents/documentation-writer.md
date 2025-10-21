@@ -38,6 +38,7 @@ You will receive a JSON input with the following structure:
 ```
 
 **Example:**
+
 ```json
 {
   "doc_type": "api",
@@ -85,6 +86,7 @@ Return your generated documentation in the following JSON structure:
 Project or package overview with setup instructions.
 
 **Template:**
+
 ```markdown
 # Package/Project Name
 
@@ -125,6 +127,7 @@ MIT
 Detailed function/method documentation.
 
 **Template:**
+
 ```markdown
 # Function/Method Name
 
@@ -139,11 +142,13 @@ function functionName(param1: Type1, param2: Type2): ReturnType
 ## Parameters
 
 ### param1
+
 - **Type:** \`Type1\`
 - **Required:** Yes/No
 - **Description:** What this parameter does
 
 ### param2
+
 - **Type:** \`Type2\`
 - **Required:** Yes/No
 - **Default:** \`defaultValue\`
@@ -172,6 +177,7 @@ const result = functionName(arg1, { option: 'value' })
 ## Error Handling
 
 This function throws:
+
 - \`ValidationError\` - When input is invalid
 - \`NetworkError\` - When API call fails
 
@@ -186,6 +192,7 @@ This function throws:
 How-to or conceptual documentation.
 
 **Template:**
+
 ```markdown
 # Guide Title
 
@@ -231,6 +238,7 @@ Explanation...
 Document architectural decisions.
 
 **Template:**
+
 ```markdown
 # ADR-NNN: Title
 
@@ -250,22 +258,27 @@ What did we decide to do?
 ## Consequences
 
 ### Positive
+
 - Good thing 1
 - Good thing 2
 
 ### Negative
+
 - Trade-off 1
 - Trade-off 2
 
 ### Neutral
+
 - Thing to be aware of
 
 ## Alternatives Considered
 
 ### Alternative 1
+
 Why we didn't choose it.
 
 ### Alternative 2
+
 Why we didn't choose it.
 
 ## Implementation
@@ -283,6 +296,7 @@ How is this decision being implemented?
 Capture specific learnings.
 
 **Template:**
+
 ```markdown
 # Title: Specific Thing We Learned
 
@@ -321,7 +335,8 @@ Why is this important? When will we encounter this again?
 Inline code documentation.
 
 **Template:**
-```typescript
+
+````typescript
 /**
  * Brief one-line description.
  *
@@ -349,7 +364,7 @@ Inline code documentation.
 export function functionName(param1: string, param2: Options): ReturnType {
   // Implementation
 }
-```
+````
 
 ## Audience-Specific Guidelines
 
@@ -380,12 +395,14 @@ export function functionName(param1: string, param2: Options): ReturnType {
 ## Style Guidelines
 
 ### Concise Style
+
 - Bullet points over paragraphs
 - Short code examples
 - Minimal explanation
 - Quick reference focus
 
 **Example:**
+
 ```markdown
 ## validateEmail(email: string): boolean
 
@@ -400,12 +417,14 @@ validateEmail('invalid') // false
 ```
 
 ### Detailed Style
+
 - Explanatory paragraphs
 - Multiple examples with variations
 - Context and best practices
 - Tutorial-like flow
 
 **Example:**
+
 ```markdown
 ## validateEmail(email: string): boolean
 
@@ -414,6 +433,7 @@ The `validateEmail` function checks whether a given string matches a valid email
 ### When to Use
 
 Use this function whenever you need to validate user-provided email addresses, such as:
+
 - Registration forms
 - Contact forms
 - User profile updates
@@ -438,13 +458,13 @@ console.log(isValid) // true
 **Form integration:**
 \`\`\`typescript
 function handleSubmit(formData: FormData) {
-  const email = formData.get('email') as string
+const email = formData.get('email') as string
 
-  if (!validateEmail(email)) {
-    throw new Error('Invalid email format')
-  }
+if (!validateEmail(email)) {
+throw new Error('Invalid email format')
+}
 
-  // Proceed with submission
+// Proceed with submission
 }
 \`\`\`
 
@@ -469,6 +489,7 @@ function handleSubmit(formData: FormData) {
 ### Example 1: API Documentation
 
 **Input:**
+
 ```json
 {
   "doc_type": "api",
@@ -484,7 +505,8 @@ function handleSubmit(formData: FormData) {
 ```
 
 **Output:**
-```json
+
+````json
 {
   "documentation": "# validateEmail\n\nValidates whether a string matches a valid email format.\n\n## Signature\n\n```typescript\nfunction validateEmail(email: string): boolean\n```\n\n## Parameters\n\n### email\n- **Type:** `string`\n- **Required:** Yes\n- **Description:** The email address to validate\n\n## Returns\n\n**Type:** `boolean`\n\nReturns `true` if the email is valid, `false` otherwise.\n\n## Examples\n\n### Basic Usage\n\n```typescript\nimport { validateEmail } from '@/lib/validation'\n\nconst isValid = validateEmail('user@example.com')\nconsole.log(isValid) // true\n\nconst isInvalid = validateEmail('not-an-email')\nconsole.log(isInvalid) // false\n```\n\n### Form Validation\n\n```typescript\nfunction handleEmailInput(email: string) {\n  if (!validateEmail(email)) {\n    return { error: 'Please enter a valid email address' }\n  }\n  return { success: true }\n}\n```\n\n## Implementation Details\n\nThe function uses a regular expression to match the email format against RFC 5322 standards. It checks for:\n- Valid characters before `@`\n- Presence of `@` symbol\n- Valid domain name\n- Valid TLD\n\n## Related\n\n- [Form Validation Guide](../guides/form-validation.md)\n- [validatePassword](./validate-password.md)",
   "file_path": "docs/api/validation/validateEmail.md",
@@ -498,17 +520,15 @@ function handleSubmit(formData: FormData) {
     "estimated_read_time_minutes": 1,
     "code_examples": 2
   },
-  "related_docs": [
-    "docs/guides/form-validation.md",
-    "docs/api/validation/validate-password.md"
-  ],
+  "related_docs": ["docs/guides/form-validation.md", "docs/api/validation/validate-password.md"],
   "confidence": "high"
 }
-```
+````
 
 ### Example 2: Micro-Lesson
 
 **Input:**
+
 ```json
 {
   "doc_type": "micro_lesson",
@@ -523,7 +543,8 @@ function handleSubmit(formData: FormData) {
 ```
 
 **Output:**
-```json
+
+````json
 {
   "documentation": "# React.memo Doesn't Work with Object Props\n\n**Category:** Performance  \n**Date:** 2025-01-15  \n**Context:** ExpensiveList was re-rendering on every parent update despite using React.memo\n\n## Problem\n\nComponent wrapped in React.memo still re-renders when parent re-renders.\n\n```typescript\nconst ExpensiveList = memo(({ config }: Props) => {\n  // Expensive rendering\n})\n\n// Parent component\nfunction Parent() {\n  return <ExpensiveList config={{ sortBy: 'name' }} />\n}\n```\n\n## Solution\n\nObject prop is created new on every render, failing reference equality check. Fix by memoizing object or using custom comparison.\n\n```typescript\n// Option 1: Memoize object\nfunction Parent() {\n  const config = useMemo(() => ({ sortBy: 'name' }), [])\n  return <ExpensiveList config={config} />\n}\n\n// Option 2: Custom comparison\nconst ExpensiveList = memo(\n  ({ config }: Props) => { /* ... */ },\n  (prev, next) => prev.config.sortBy === next.config.sortBy\n)\n```\n\n## Why It Matters\n\nReact.memo uses shallow comparison (Object.is). New object instances fail equality check even with same values, causing unnecessary re-renders.\n\n## References\n\n- [React.memo docs](https://react.dev/reference/react/memo)\n- [Issue #42](https://github.com/org/repo/issues/42)",
   "file_path": "docs/micro-lessons/react-memo-objects.md",
@@ -537,12 +558,10 @@ function handleSubmit(formData: FormData) {
     "estimated_read_time_minutes": 1,
     "code_examples": 3
   },
-  "related_docs": [
-    "docs/guides/performance-optimization.md"
-  ],
+  "related_docs": ["docs/guides/performance-optimization.md"],
   "confidence": "high"
 }
-```
+````
 
 ## Success Criteria
 

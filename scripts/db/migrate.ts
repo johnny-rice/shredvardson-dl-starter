@@ -45,11 +45,7 @@ function createMigration(name: string): void {
 
   // Generate timestamp
   const now = new Date();
-  const timestamp = now
-    .toISOString()
-    .replace(/[-:]/g, '')
-    .split('.')[0]
-    .replace('T', '');
+  const timestamp = now.toISOString().replace(/[-:]/g, '').split('.')[0].replace('T', '');
 
   const filename = `${timestamp}_${name.replace(/\s+/g, '_')}.sql`;
   const filepath = join('supabase', 'migrations', filename);
@@ -146,10 +142,9 @@ async function validateMigrations(): Promise<void> {
       AND rowsecurity = false
     `;
 
-    const tablesWithoutRLS = execSync(
-      `supabase db execute --local "${rlsCheckQuery}"`,
-      { encoding: 'utf-8' }
-    );
+    const tablesWithoutRLS = execSync(`supabase db execute --local "${rlsCheckQuery}"`, {
+      encoding: 'utf-8',
+    });
 
     if (tablesWithoutRLS.includes('(0 rows)')) {
       console.log('✅ All public tables have RLS enabled\n');
@@ -170,10 +165,9 @@ async function validateMigrations(): Promise<void> {
       GROUP BY t.tablename
     `;
 
-    const tablesWithoutPolicies = execSync(
-      `supabase db execute --local "${policyCheckQuery}"`,
-      { encoding: 'utf-8' }
-    );
+    const tablesWithoutPolicies = execSync(`supabase db execute --local "${policyCheckQuery}"`, {
+      encoding: 'utf-8',
+    });
 
     if (tablesWithoutPolicies.includes('(0 rows)')) {
       console.log('✅ All RLS-enabled tables have policies\n');

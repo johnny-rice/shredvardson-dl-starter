@@ -536,28 +536,24 @@ Present security report to user with remediation steps.
 **Contracts:**
 
 1. **Research Agent Contract**
-
    - Input: Valid task object with required fields
    - Output: Summary <5K tokens with required sections
    - Timeout: <60 seconds for targeted research
    - Success: All required sections present, actionable insights
 
 2. **Security Scanner Contract**
-
    - Input: Valid scan configuration
    - Output: Report <5K tokens with findings categorized by severity
    - Timeout: <90 seconds for full scan
    - Success: Critical findings highlighted, pass/fail clear
 
 3. **Test Generator Contract**
-
    - Input: Valid test type and targets
    - Output: Test files generated with coverage strategy
    - Timeout: <45 seconds
    - Success: Tests executable, coverage strategy documented
 
 4. **Refactor Analyzer Contract**
-
    - Input: Valid file list
    - Output: Report <5K tokens with prioritized recommendations
    - Timeout: <60 seconds
@@ -672,9 +668,7 @@ describe('Sub-Agent E2E Workflows', () => {
   });
 
   test('/research:explore returns actionable insights', async () => {
-    const output = await runCommand(
-      '/research:explore "How does auth work?"'
-    );
+    const output = await runCommand('/research:explore "How does auth work?"');
 
     expect(output).toContain('Key Findings');
     expect(output).toContain('Architecture Patterns');
@@ -702,9 +696,7 @@ describe('Sub-Agent E2E Workflows', () => {
 describe('Sub-Agent Utilities', () => {
   test('detectDelegatableTask identifies research tasks', () => {
     expect(detectDelegatableTask('Research auth patterns')).toBe('research');
-    expect(detectDelegatableTask('Find similar implementations')).toBe(
-      'research'
-    );
+    expect(detectDelegatableTask('Find similar implementations')).toBe('research');
   });
 
   test('formatSummary truncates long outputs', () => {

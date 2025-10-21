@@ -12,6 +12,7 @@ This template contains commit message formatting standards used across git comma
 ## Conventional Commits Format
 
 ### Structure
+
 ```
 <type>(<scope>): <subject>
 
@@ -23,7 +24,9 @@ This template contains commit message formatting standards used across git comma
 ### Components
 
 #### Type (Required)
+
 Must be one of:
+
 - **feat**: New feature for the user
 - **fix**: Bug fix for the user
 - **chore**: Maintenance tasks (deps, config, etc.)
@@ -37,7 +40,9 @@ Must be one of:
 - **revert**: Reverts a previous commit
 
 #### Scope (Optional)
+
 The scope specifies the area of the codebase:
+
 - `(api)`: API changes
 - `(ui)`: UI components
 - `(db)`: Database changes
@@ -47,6 +52,7 @@ The scope specifies the area of the codebase:
 Examples: `feat(auth): add OAuth support`, `fix(ui): button alignment`
 
 #### Subject (Required)
+
 - Use imperative mood: "add feature" not "added feature"
 - No capitalization of first letter
 - No period at the end
@@ -54,13 +60,16 @@ Examples: `feat(auth): add OAuth support`, `fix(ui): button alignment`
 - Focus on user-visible impact
 
 #### Body (Optional)
+
 - Use imperative mood
 - Explain the "why" not the "what"
 - 2-4 bullet points for complex changes
 - Wrap at 72 characters per line
 
 #### Footer (Required for DL Starter)
+
 Always include:
+
 ```
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
@@ -70,6 +79,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ## Examples
 
 ### Simple Feature
+
 ```
 feat: add dark mode toggle
 
@@ -79,6 +89,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ### Feature with Body
+
 ```
 feat(auth): add OAuth provider support
 
@@ -92,6 +103,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ### Bug Fix
+
 ```
 fix(ui): correct button alignment on mobile
 
@@ -104,6 +116,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ### Chore
+
 ```
 chore: update dependencies to latest versions
 
@@ -113,6 +126,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ### Documentation
+
 ```
 docs: add API authentication examples
 
@@ -122,6 +136,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ### Breaking Change
+
 ```
 feat(api)!: redesign authentication API
 
@@ -136,11 +151,13 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ## Issue Number Integration
 
 ### In Subject Line
+
 ```
 feat: add user profile page (Issue #123)
 ```
 
 ### In Body
+
 ```
 feat: add user profile page
 
@@ -152,7 +169,9 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ### GitHub Auto-Linking
+
 Use GitHub keywords to auto-close issues:
+
 ```
 fix: resolve login redirect bug
 
@@ -168,6 +187,7 @@ Keywords: `Fixes`, `Closes`, `Resolves` (case-insensitive)
 ## Multi-Line Message with HEREDOC
 
 For complex commits in bash:
+
 ```bash
 git commit -m "$(cat <<'EOF'
 feat(auth): add OAuth provider support
@@ -188,6 +208,7 @@ EOF
 ## Commit Message Validation
 
 ### Subject Line Rules
+
 ```bash
 # Max 72 characters
 if [ ${#SUBJECT} -gt 72 ]; then
@@ -209,6 +230,7 @@ fi
 ```
 
 ### Footer Validation
+
 ```bash
 # Check for required footer
 if ! echo "$MESSAGE" | grep -q "Generated with \[Claude Code\]"; then
@@ -225,6 +247,7 @@ fi
 ## Best Practices
 
 ### Do's
+
 - ✅ Focus on user-visible impact
 - ✅ Use imperative mood ("add" not "added")
 - ✅ Keep subject line under 72 characters
@@ -234,6 +257,7 @@ fi
 - ✅ Use consistent formatting
 
 ### Don'ts
+
 - ❌ List file changes (git log shows this)
 - ❌ Use past tense ("added feature")
 - ❌ Write vague messages ("update stuff")
@@ -244,6 +268,7 @@ fi
 ## Integration with Git Commands
 
 This template is referenced by:
+
 - `/git:commit` - Generates commit messages
 - `/git:fix-pr` - Creates fix commits
 - `/git:prepare-pr` - Validates commit messages in branch
@@ -251,6 +276,7 @@ This template is referenced by:
 ## Commit Message Templates
 
 ### Feature Template
+
 ```
 feat(<scope>): <what user can now do>
 
@@ -264,6 +290,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ### Fix Template
+
 ```
 fix(<scope>): <what is now working correctly>
 
@@ -277,6 +304,7 @@ Co-Authored-By: Claude <noreply@anthropic.com>
 ```
 
 ### Chore Template
+
 ```
 chore: <maintenance task completed>
 

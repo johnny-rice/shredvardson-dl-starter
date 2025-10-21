@@ -21,7 +21,7 @@ export function useReducedMotion() {
 }
 
 // ✅ GOOD: Explicit 'use client' directive
-'use client';
+('use client');
 
 import { useEffect, useState } from 'react';
 

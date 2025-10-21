@@ -23,10 +23,13 @@ Agent asks "how do I write tests?" → can't find guide
 
 ```markdown
 docs/ai/CLAUDE.md:
+
 ## Testing
+
 See [Testing Guide](../testing/TESTING_GUIDE.md) for comprehensive testing patterns.
 
 ## Commands
+
 - /test:scaffold → ../../.claude/commands/test/scaffold.md
 ```
 

@@ -19,6 +19,7 @@ This document defines behavioral contracts for all sub-agents in the Claude Code
 ```
 
 **Example:**
+
 ```json
 {
   "query": "How does authentication work in this app?",
@@ -46,6 +47,7 @@ interface CodeLocation {
 ```
 
 **Example:**
+
 ```json
 {
   "key_findings": [
@@ -109,6 +111,7 @@ interface CodeLocation {
 ```
 
 **Example:**
+
 ```json
 {
   "scan_type": "full",
@@ -144,6 +147,7 @@ interface SecurityFinding {
 ```
 
 **Example:**
+
 ```json
 {
   "findings": [
@@ -215,6 +219,7 @@ interface SecurityFinding {
 ```
 
 **Example:**
+
 ```json
 {
   "target": {
@@ -245,6 +250,7 @@ interface SecurityFinding {
 ```
 
 **Example:**
+
 ```json
 {
   "test_file_path": "packages/ui/src/components/ui/button.test.tsx",
@@ -256,9 +262,7 @@ interface SecurityFinding {
       "handles click events",
       "applies disabled state correctly"
     ],
-    "uncovered_scenarios": [
-      "Loading state with spinner"
-    ]
+    "uncovered_scenarios": ["Loading state with spinner"]
   },
   "dependencies": ["@testing-library/react", "@testing-library/user-event"],
   "setup_required": [],
@@ -305,6 +309,7 @@ interface SecurityFinding {
 ```
 
 **Example:**
+
 ```json
 {
   "targets": ["apps/web/src/lib/**/*.ts"],
@@ -346,6 +351,7 @@ interface CodeSmell {
 ```
 
 **Example:**
+
 ```json
 {
   "opportunities": [
@@ -372,10 +378,7 @@ interface CodeSmell {
     "high_coupling_count": 3,
     "duplication_percentage": 8.5
   },
-  "priority_order": [
-    "apps/web/src/lib/analytics.ts",
-    "apps/web/src/lib/db.ts"
-  ]
+  "priority_order": ["apps/web/src/lib/analytics.ts", "apps/web/src/lib/db.ts"]
 }
 ```
 
@@ -418,6 +421,7 @@ interface CodeSmell {
 ```
 
 **Example:**
+
 ```json
 {
   "doc_type": "jsdoc",
@@ -444,6 +448,7 @@ interface Documentation {
 ```
 
 **Example:**
+
 ```json
 {
   "documentation": [

@@ -12,6 +12,7 @@ This template contains validation logic for branch operations used across multip
 ## Pre-Branch Validation
 
 ### Current Branch Check
+
 ```bash
 # Get current branch name
 CURRENT_BRANCH=$(git branch --show-current)
@@ -24,6 +25,7 @@ fi
 ```
 
 ### Working Directory Status
+
 ```bash
 # Check for uncommitted changes (handles repos without initial commit)
 if git rev-parse --verify --quiet HEAD >/dev/null 2>&1; then
@@ -45,6 +47,7 @@ fi
 ## Branch Naming Validation
 
 ### Branch Type Validation
+
 ```bash
 # Validate branch type
 VALID_TYPES="feature|fix|chore|docs|refactor|test|ci|build"
@@ -56,6 +59,7 @@ fi
 ```
 
 ### Issue Number Validation
+
 ```bash
 # Validate issue number format (numeric)
 if [[ ! "$ISSUE" =~ ^[0-9]+$ ]]; then
@@ -66,6 +70,7 @@ fi
 ```
 
 ### Slug Validation
+
 ```bash
 # Validate slug format (kebab-case, lowercase, no leading/trailing hyphens)
 if [[ ! "$SLUG" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
@@ -80,6 +85,7 @@ fi
 ## Branch Existence Check
 
 ### Local Branch Check
+
 ```bash
 # Check if branch exists locally
 if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
@@ -89,6 +95,7 @@ fi
 ```
 
 ### Remote Branch Check
+
 ```bash
 # Check if branch exists on remote
 if git ls-remote --heads origin "$BRANCH_NAME" | grep -q "$BRANCH_NAME"; then
@@ -100,6 +107,7 @@ fi
 ## PR Validation
 
 ### Check PR Exists for Branch
+
 ```bash
 # Check if PR exists for current branch
 PR_NUMBER=$(gh pr view --json number -q '.number' 2>/dev/null)
@@ -112,6 +120,7 @@ fi
 ```
 
 ### Verify PR State
+
 ```bash
 # Get PR state
 PR_STATE=$(gh pr view "$PR_NUMBER" --json state -q '.state')
@@ -128,6 +137,7 @@ fi
 ## Validation Checklists
 
 ### Before Creating Branch
+
 - [ ] Git repository is initialized
 - [ ] Working directory is clean (no uncommitted changes)
 - [ ] Not on protected branch (main/master)
@@ -137,6 +147,7 @@ fi
 - [ ] Branch name doesn't already exist
 
 ### Before Modifying PR
+
 - [ ] PR exists for current branch
 - [ ] PR is not merged or closed
 - [ ] CI checks have run (or are running)
@@ -144,6 +155,7 @@ fi
 - [ ] User has write permissions
 
 ### Before Committing
+
 - [ ] Changes are staged
 - [ ] Commit message is prepared
 - [ ] No merge conflicts
@@ -152,6 +164,7 @@ fi
 ## Integration with Other Commands
 
 This template is referenced by:
+
 - `/git:branch` - Branch creation validation
 - `/git:fix-pr` - PR validation before fixing
 - `/git:prepare-pr` - Pre-PR validation

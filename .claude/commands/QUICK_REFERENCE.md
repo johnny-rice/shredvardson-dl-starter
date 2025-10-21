@@ -1,271 +1,228 @@
 ---
 name: QUICK_REFERENCE
 when: Fast command discovery and lookup without reading full documentation
-purpose: Consolidated quick reference guide for all 27 available commands with descriptions and usage examples
+purpose: Consolidated quick reference guide for 5 discovery commands and Skills catalog with progressive disclosure architecture
 riskLevel: LOW
 ---
 
-# Claude Commands Quick Reference
+# Skills & Discovery Commands Quick Reference
 
-Quick lookup guide for all available slash commands. Use this to find the right command without reading full documentation.
+**NEW**: DL Starter uses Skills for token-efficient, reusable workflows.
 
-## 🔍 How to Use This Guide
+## 🎯 Discovery Commands (5 Total)
 
-1. **Find your task** in the categories below
-2. **Run the command** with `/command-name`
-3. **Get detailed help** by reading the full command file if needed
+Use these to invoke Skills quickly:
 
----
-
-## Git Commands
-
-### `/git:branch`
-**Purpose:** Create new feature branch from issue
-**Usage:** `/git:branch <type> <issue#> <slug>`
-**Example:** `/git:branch feature 123 add-dark-mode`
-**When:** Starting work on a new issue
-
-### `/git:commit`
-**Purpose:** Create conventional commit for staged changes
-**Usage:** `/git:commit`
-**When:** Committing changes with proper formatting
-
-### `/git:fix-pr`
-**Purpose:** Auto-fix PR feedback from CI/CodeRabbit
-**Usage:** `/git:fix-pr [PR#]`
-**Example:** `/git:fix-pr 135`
-**When:** PR has failing checks or feedback to address
-
-### `/git:pr-assistant`
-**Purpose:** Complete PR workflow with template
-**Usage:** `/git:pr-assistant`
-**When:** Creating a PR with full traceability
-
-### `/git:prepare-pr`
-**Purpose:** Prepare branch and create PR
-**Usage:** `/git:prepare-pr`
-**When:** Ready to create a pull request
-
-### `/git:tag-release`
-**Purpose:** Create and push git release tag
-**Usage:** `/git:tag-release`
-**When:** Releasing a new version
-
-### `/git:workflow`
-**Purpose:** Git workflow guidance and best practices
-**Usage:** `/git:workflow`
-**When:** Need help with git workflow
+| Command | Invokes Skill              | Purpose                                 |
+| ------- | -------------------------- | --------------------------------------- |
+| `/db`   | `supabase-integration`     | Database operations, migrations, RLS    |
+| `/test` | `test-scaffolder`          | Generate test scaffolding               |
+| `/git`  | `git-workflow`             | Git operations (commit, branch, PR)     |
+| `/spec` | `prd-analyzer`             | Create specifications, extract criteria |
+| `/code` | `implementation-assistant` | Implement features with standards       |
 
 ---
 
-## Development Commands
+## 📚 Skills Catalog (Coming Soon)
 
-### `/dev:implement`
-**Purpose:** Implement feature from specification
-**Usage:** `/dev:implement`
-**When:** Ready to code after planning
+Skills use progressive disclosure (load only what's needed). Invoke directly or via discovery commands.
 
-### `/dev:init-new-app`
-**Purpose:** Initialize new application with config
-**Usage:** `/dev:init-new-app`
-**When:** Starting a new app in the monorepo
+### Database & Backend
 
-### `/dev:plan-feature`
-**Purpose:** Plan feature implementation approach
-**Usage:** `/dev:plan-feature <issue#>`
-**Example:** `/dev:plan-feature 123`
-**When:** Before implementing a feature
+**`supabase-integration`** (via `/db`)
 
-### `/dev:refactor-secure`
-**Purpose:** Refactor code with security focus
-**Usage:** `/dev:refactor-secure`
-**When:** Improving code quality and security
+- Create migrations with RLS validation
+- Generate TypeScript types from schema
+- Validate database security policies
+- **Token Savings**: 90% (485 lines → 50)
 
----
+**`dependency-manager`**
 
-## Specification Commands
+- Weekly security vulnerability scans
+- Auto-update patch versions
+- Flag breaking changes for review
 
-### `/spec:specify`
-**Purpose:** Create detailed specification from issue
-**Usage:** `/spec:specify <issue#>`
-**Example:** `/spec:specify 123`
-**When:** Need detailed spec before implementation
+### Development Workflow
 
-### `/spec:plan`
-**Purpose:** Create implementation plan
-**Usage:** `/spec:plan <issue#>`
-**Example:** `/spec:plan 123`
-**When:** Planning implementation approach
+**`test-scaffolder`** (via `/test`)
 
-### `/spec:tasks`
-**Purpose:** Generate task breakdown from spec
-**Usage:** `/spec:tasks <issue#>`
-**Example:** `/spec:tasks 123`
-**When:** Breaking down work into tasks
+- Generate unit, integration, E2E tests
+- Integrate with Test Generator sub-agent
+- Apply 70% coverage standards
+- **Token Savings**: 66% (121 lines → 40)
 
-### `/spec:adr-draft`
-**Purpose:** Draft Architecture Decision Record
-**Usage:** `/spec:adr-draft`
-**When:** Making architectural decisions
+**`implementation-assistant`** (via `/code`)
 
----
+- Implement features following coding standards
+- Apply error handling patterns
+- Ensure TypeScript strict mode compliance
+- **Token Savings**: 57% (88 lines → 35)
 
-## Documentation Commands
+**`code-reviewer`**
 
-### `/docs:generate`
-**Purpose:** Generate documentation for codebase
-**Usage:** `/docs:generate`
-**When:** Creating or updating documentation
+- Pre-commit quality gates
+- Security scanning (secrets, SQL injection)
+- Linting and complexity checks
+- **NEW CAPABILITY** (not possible with old commands)
 
----
+### Git & Documentation
 
-## GitHub Commands
+**`git-workflow`** (via `/git`)
 
-### `/github:create-issue`
-**Purpose:** Create GitHub issue with template
-**Usage:** `/github:create-issue`
-**When:** Creating a new issue
+- Conventional commits
+- PR creation with templates
+- Branch management
+- **Token Savings**: 80% (160 lines → 40)
 
-### `/github:capture-learning`
-**Purpose:** Capture learning as micro-lesson
-**Usage:** `/github:capture-learning`
-**When:** Discovered reusable pattern
+**`documentation-sync`**
 
-### `/github:update-wiki`
-**Purpose:** Update GitHub wiki pages
-**Usage:** `/github:update-wiki`
-**When:** Syncing wiki with docs
+- Detect code-docs mismatches
+- Auto-update API docs
+- Keep wiki in sync
+- **NEW CAPABILITY**
 
----
+**`learning-capturer`**
 
-## Operations Commands
+- Auto-save bug fixes as micro-lessons
+- Detect reusable patterns
+- Update troubleshooting guides
+- **NEW CAPABILITY**
 
-### `/ops:learning-capture`
-**Purpose:** Create micro-lesson from pattern
-**Usage:** `/ops:learning-capture <topic>`
-**Example:** `/ops:learning-capture "doctor checks debugging"`
-**When:** Found reusable pattern or solution
+### Advanced Capabilities
 
-### `/ops:wiki-sync`
-**Purpose:** Verify and fix wiki synchronization
-**Usage:** `/ops:wiki-sync`
-**When:** Checking wiki is up to date
+**`project-scaffolder`**
+
+- Generate Next.js routes with layouts/loading/error
+- Create React components with tests + Storybook
+- Generate Supabase tables with RLS
+- **NEW CAPABILITY**
+
+**`skill-creator`** (meta-skill)
+
+- Create new Skills from conversation
+- Generate SKILL.md, scripts, docs
+- Self-improving system
+- **NEW CAPABILITY**
+
+**`prd-analyzer`** (via `/spec`)
+
+- Parse specification documents
+- Extract acceptance criteria
+- Auto-chain to test-scaffolder
+- **Token Savings**: 71% (105 lines → 30)
 
 ---
 
-## Quality Commands
+## 🔗 Common Workflows
 
-### `/quality:run-linter`
-**Purpose:** Run linter and fix issues
-**Usage:** `/quality:run-linter`
-**When:** Checking code quality
+### Quick Feature (Simple Workflow)
 
-### `/review:self-critique`
-**Purpose:** Self-review code changes
-**Usage:** `/review:self-critique`
-**When:** Before submitting PR
-
----
-
-## Testing Commands
-
-### `/test:scaffold`
-**Purpose:** Generate test scaffolding
-**Usage:** `/test:scaffold`
-**When:** Creating tests for new code
-
----
-
-## Security Commands
-
-### `/security:scan`
-**Purpose:** Scan for security vulnerabilities
-**Usage:** `/security:scan <scope> <severity>`
-**Example:** `/security:scan rls high`
-**When:** Checking for security issues
-
----
-
-## Accessibility Commands
-
-### `/accessibility:audit`
-**Purpose:** Run accessibility audit
-**Usage:** `/accessibility:audit`
-**When:** Checking UI accessibility
-
----
-
-## Database Commands
-
-### `/db:migrate`
-**Purpose:** Create and run database migration
-**Usage:** `/db:migrate`
-**When:** Making database schema changes
-
----
-
-## Research Commands
-
-### `/research:explore`
-**Purpose:** Deep codebase exploration
-**Usage:** `/research:explore <topic>`
-**Example:** `/research:explore "authentication flow"`
-**When:** Understanding existing codebase
-
----
-
-## 🎯 Common Workflows
-
-### Starting New Feature
 ```bash
-/git:branch feature <issue#> <slug>
-/dev:plan-feature <issue#>
-/dev:implement
-/git:commit
-/git:prepare-pr
+/test           # Generate failing tests
+/code           # Implement to pass tests
+/git commit     # Create conventional commit
 ```
 
-### Fixing PR Feedback
+### Spec-Driven Feature
+
 ```bash
-/git:fix-pr [PR#]
-# Reviews and auto-fixes issues
+/spec           # Create spec, extract criteria (auto-chains to /test)
+/code           # Implement
+/git commit     # Commit
 ```
 
-### Creating Specification
+### Database Migration
+
 ```bash
-/spec:specify <issue#>
-/spec:plan <issue#>
-/spec:tasks <issue#>
+/db create add_user_preferences
+# Skill:
+# 1. Generates migration file
+# 2. Validates RLS policies
+# 3. Updates TypeScript types
+# 4. Runs Supabase advisors
 ```
 
-### Pre-PR Checklist
+### Auto-Fix PR Feedback
+
 ```bash
-/quality:run-linter
-/review:self-critique
-/test:scaffold
-/git:prepare-pr
+/git fix-pr 135
+# Skill analyzes CI, CodeRabbit, doctor feedback
+# Categorizes auto-fixable vs manual
+# Applies fixes iteratively
 ```
 
 ---
 
-## 💡 Tips
+## 📖 Learning More
 
-- **Dry-run mode:** Many commands support `--dry-run` flag to preview actions
-- **Help:** Read full command files in [.claude/commands/](.)  for detailed documentation
-- **Shared patterns:** Git commands use shared templates in [git/shared/](git/shared/)
-- **Automation:** Use commands together in workflows for efficiency
-
----
-
-## 📚 Additional Resources
-
-- **Full command docs:** [.claude/commands/README.md](README.md)
-- **Git shared patterns:** [git/shared/](git/shared/)
-- **Constitution:** [docs/constitution.md](../../docs/constitution.md)
-- **CLAUDE.md:** [CLAUDE.md](../../CLAUDE.md)
-- **Micro-lessons:** [docs/micro-lessons/](../../docs/micro-lessons/)
+- **Skills Documentation**: `.claude/skills/README.md` (available after Phase 1 implementation)
+- **Skills Architecture**: `docs/adr/002-skills-architecture.md`
+- **Create Your Own Skill**: Use `skill-creator` Skill
 
 ---
 
-**Last updated:** 2025-10-18
-**Total commands:** 27
+## 🔄 Legacy Commands (Deprecated)
+
+The following 27 legacy slash commands are being migrated to Skills architecture:
+
+**Git Commands** (7 commands → consolidated into `git-workflow` Skill):
+
+- `/git:branch`, `/git:commit`, `/git:fix-pr`, `/git:pr-assistant`, `/git:prepare-pr`, `/git:tag-release`, `/git:workflow`
+
+**Development Commands** (4 commands → consolidated into Skills):
+
+- `/dev:implement`, `/dev:init-new-app`, `/dev:plan-feature`, `/dev:refactor-secure`
+
+**Specification Commands** (4 commands → consolidated into `prd-analyzer` Skill):
+
+- `/spec:specify`, `/spec:plan`, `/spec:tasks`, `/spec:adr-draft`
+
+**Documentation Commands** (1 command → consolidated into `documentation-sync` Skill):
+
+- `/docs:generate`
+
+**GitHub Commands** (3 commands → consolidated into Skills):
+
+- `/github:create-issue`, `/github:capture-learning`, `/github:update-wiki`
+
+**Operations Commands** (2 commands → consolidated into Skills):
+
+- `/ops:learning-capture`, `/ops:wiki-sync`
+
+**Quality Commands** (2 commands → consolidated into `code-reviewer` Skill):
+
+- `/quality:run-linter`, `/review:self-critique`
+
+**Testing Commands** (1 command → consolidated into `test-scaffolder` Skill):
+
+- `/test:scaffold`
+
+**Security Commands** (1 command → `security-scanner` Skill):
+
+- `/security:scan`
+
+**Accessibility Commands** (1 command → `accessibility-auditor` Skill):
+
+- `/accessibility:audit`
+
+**Database Commands** (1 command → `supabase-integration` Skill):
+
+- `/db:migrate`
+
+**Research Commands** (1 command → Research Agent):
+
+- `/research:explore`
+
+**Deprecation Timeline**: These commands will remain functional during the 12-week migration window but will redirect to Skills. See [Skills Migration Plan](../../docs/adr/002-skills-architecture.md) for details.
+
+---
+
+**Token Efficiency**: Skills save 51-90% tokens compared to old commands
+**Self-Improving**: System creates new Skills from learned patterns
+**Sub-Agent Integration**: Skills orchestrate, sub-agents execute
+
+---
+
+**Last updated:** 2025-10-21
+**Total discovery commands:** 5
+**Total Skills (planned):** 11
