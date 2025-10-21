@@ -1,3 +1,10 @@
+---
+name: _shared/common-git-workflow
+when: Following git best practices across all git commands
+purpose: Git workflow best practices including branch protection, commit hygiene, and push/pull patterns
+riskLevel: LOW
+---
+
 # Common Git Workflow Patterns
 
 This template contains standard git command sequences and best practices used across multiple git commands.

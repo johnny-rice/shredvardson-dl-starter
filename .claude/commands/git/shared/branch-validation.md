@@ -1,3 +1,10 @@
+---
+name: _shared/branch-validation
+when: Validating branch names and git state in /git:branch and /git:fix-pr
+purpose: Reusable validation patterns for branch creation, name compliance, and git state checks
+riskLevel: LOW
+---
+
 # Branch Validation Patterns
 
 This template contains validation logic for branch operations used across multiple git commands.

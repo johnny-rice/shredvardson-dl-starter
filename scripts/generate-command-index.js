@@ -134,7 +134,10 @@ function parseSimpleYAML(yamlContent) {
 
         // Handle different value types
         if (value.startsWith('"') && value.endsWith('"')) {
-          // Quoted string
+          // Double-quoted string
+          value = value.slice(1, -1);
+        } else if (value.startsWith("'") && value.endsWith("'")) {
+          // Single-quoted string
           value = value.slice(1, -1);
         } else if (value.startsWith('[') && value.endsWith(']')) {
           // Array
@@ -231,16 +234,16 @@ function parseCommandFile(filePath, relativePath, category) {
     const tags = metadata.tags || extractTags(content, pathParts);
 
     // Extract purpose/description from metadata or content
-    let purpose = metadata.when_to_use || 'No description available';
-    if (!metadata.when_to_use) {
+    let purpose = metadata.purpose || metadata.when_to_use || 'No description available';
+    if (!metadata.purpose && !metadata.when_to_use) {
       const purposeMatch = content.match(/(?:Purpose|Description):\s*(.+)/i);
       if (purposeMatch) {
         purpose = purposeMatch[1].trim();
       }
     }
 
-    // Extract when to use
-    let when = determineWhenToUse(content, tags, commandCategory);
+    // Extract when to use from metadata or fallback to heuristics
+    let when = metadata.when || determineWhenToUse(content, tags, commandCategory);
 
     // Extract example
     let example = determineExample(content, commandCategory, name);

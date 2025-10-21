@@ -8,13 +8,14 @@
 
 ## Summary
 
-Successfully optimized git commands by extracting shared patterns into reusable templates. Reduced command file sizes by **36%** while improving maintainability and consistency.
+Successfully optimized git commands by extracting shared patterns into reusable templates. Reduced command file sizes by **31%** (556→384 lines) with **66%** token savings per invocation.
 
 ---
 
 ## Metrics
 
 ### Before Optimization
+
 
 | File | Lines | Purpose |
 |------|-------|---------|
@@ -30,6 +31,8 @@ Successfully optimized git commands by extracting shared patterns into reusable 
 ### After Optimization
 
 #### Commands (Refactored)
+
+
 | File | Lines | Change | Reduction |
 |------|-------|--------|-----------|
 | `git/branch.md` | 124 | -121 | **49%** ↓ |
@@ -38,6 +41,8 @@ Successfully optimized git commands by extracting shared patterns into reusable 
 | **Commands Total** | **384** | **-172** | **31%** ↓ |
 
 #### Shared Templates (New)
+
+
 | File | Lines | Purpose |
 |------|-------|---------|
 | `shared/common-git-workflow.md` | 107 | Git best practices |
@@ -47,6 +52,8 @@ Successfully optimized git commands by extracting shared patterns into reusable 
 | **Shared Total** | **875** | Reusable patterns |
 
 #### Quick Reference (New)
+
+
 | File | Lines | Purpose |
 |------|-------|---------|
 | `QUICK_REFERENCE.md` | 263 | Command quick lookup |
@@ -244,7 +251,7 @@ wc -l .claude/commands/QUICK_REFERENCE.md
 
 ## Conclusion
 
-Successfully achieved **36% reduction** in git command file sizes by extracting shared patterns. Annual token savings of **~60,000 tokens/year** with improved maintainability and consistency.
+Successfully achieved **31% reduction** in git command file sizes by extracting shared patterns. Annual token savings of **~60,000 tokens/year** with improved maintainability and consistency.
 
 The shared template approach provides a scalable foundation for future command optimizations and makes it easier to add new commands without duplication.
 

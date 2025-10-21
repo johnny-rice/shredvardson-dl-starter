@@ -1,3 +1,10 @@
+---
+name: README
+when: Understanding slash command system and available commands
+purpose: Overview of slash command architecture, usage patterns, and command catalog
+riskLevel: LOW
+---
+
 # Command System Documentation
 
 This directory contains command definitions for the Claude AI development workflow system.

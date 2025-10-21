@@ -1,9 +1,73 @@
 {
   "version": 1,
-  "generated": "2025-10-18T18:07:18.465Z",
+  "generated": "2025-10-21T08:03:03.564Z",
   "commands": [
     {
-      "name": "'/accessibility:audit'",
+      "name": "_shared/branch-validation",
+      "path": ".claude/commands/git/shared/branch-validation.md",
+      "category": "Git Workflow",
+      "tags": [
+        "git",
+        "testing",
+        "security",
+        "implementation"
+      ],
+      "when": "Validating branch names and git state in /git:branch and /git:fix-pr",
+      "purpose": "Reusable validation patterns for branch creation, name compliance, and git state checks",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "_shared/commit-formatting",
+      "path": ".claude/commands/git/shared/commit-formatting.md",
+      "category": "Git Workflow",
+      "tags": [
+        "git",
+        "testing",
+        "security",
+        "planning",
+        "implementation"
+      ],
+      "when": "Creating conventional commits in /git:commit, /git:branch, and /git:fix-pr",
+      "purpose": "Shared commit message formatting standards and conventional commit patterns",
+      "example": "Create conventional commit for completed feature",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "_shared/common-git-workflow",
+      "path": ".claude/commands/git/shared/common-git-workflow.md",
+      "category": "Git Workflow",
+      "tags": [
+        "git",
+        "testing",
+        "planning"
+      ],
+      "when": "Following git best practices across all git commands",
+      "purpose": "Git workflow best practices including branch protection, commit hygiene, and push/pull patterns",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "_shared/error-handling",
+      "path": ".claude/commands/git/shared/error-handling.md",
+      "category": "Git Workflow",
+      "tags": [
+        "git",
+        "testing",
+        "security",
+        "planning"
+      ],
+      "when": "Handling git errors and recovery in /git:branch, /git:fix-pr, and other git commands",
+      "purpose": "Comprehensive error detection, messaging, and recovery patterns for common git failure modes",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "accessibility:audit",
       "path": ".claude/commands/accessibility/audit.md",
       "category": "General",
       "tags": [
@@ -16,11 +80,11 @@
       "when": "General development tasks",
       "purpose": "Run accessibility audit using axe-core to validate WCAG 2.1 AA compliance.",
       "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
+      "riskLevel": "LOW",
       "requiresHITL": false
     },
     {
-      "name": "'/adr:draft'",
+      "name": "adr:draft",
       "path": ".claude/commands/spec/adr-draft.md",
       "category": "Spec-Driven Development",
       "tags": [
@@ -31,11 +95,11 @@
       "when": "Complex features requiring structured approach",
       "purpose": "Draft ADR when governance triggers occur (prompts, workflows, security, compliance changes).",
       "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
+      "riskLevel": "LOW",
       "requiresHITL": true
     },
     {
-      "name": "'/db:migrate'",
+      "name": "db:migrate",
       "path": ".claude/commands/db/migrate.md",
       "category": "General",
       "tags": [
@@ -48,11 +112,11 @@
       "when": "General development tasks",
       "purpose": "Streamline Supabase database migration workflow with validation and RLS policy checks.",
       "example": "Standard development workflow",
-      "riskLevel": "'MEDIUM'",
+      "riskLevel": "MEDIUM",
       "requiresHITL": true
     },
     {
-      "name": "'/dev:implement'",
+      "name": "dev:implement",
       "path": ".claude/commands/dev/implement.md",
       "category": "Simple Development",
       "tags": [
@@ -63,11 +127,11 @@
       "when": "Small changes and quick tasks",
       "purpose": "Write minimal code to make failing tests pass during TDD implementation.",
       "example": "Build feature following established plan",
-      "riskLevel": "'HIGH'",
+      "riskLevel": "HIGH",
       "requiresHITL": true
     },
     {
-      "name": "'/dev:init-new-app'",
+      "name": "dev:init-new-app",
       "path": ".claude/commands/dev/init-new-app.md",
       "category": "Simple Development",
       "tags": [
@@ -78,11 +142,11 @@
       "when": "Small changes and quick tasks",
       "purpose": "Initialize a new app from this starter with customized configuration.",
       "example": "Standard development workflow",
-      "riskLevel": "'HIGH'",
+      "riskLevel": "HIGH",
       "requiresHITL": true
     },
     {
-      "name": "'/dev:plan-feature'",
+      "name": "dev:plan-feature",
       "path": ".claude/commands/dev/plan-feature.md",
       "category": "Simple Development",
       "tags": [
@@ -92,11 +156,11 @@
       "when": "Small changes and quick tasks",
       "purpose": "Plan a small, safe feature with clear acceptance criteria.",
       "example": "Create technical plan for auth implementation",
-      "riskLevel": "'LOW'",
+      "riskLevel": "LOW",
       "requiresHITL": false
     },
     {
-      "name": "'/dev:refactor-secure'",
+      "name": "dev:refactor-secure",
       "path": ".claude/commands/dev/refactor-secure.md",
       "category": "Simple Development",
       "tags": [
@@ -107,11 +171,11 @@
       "when": "Small changes and quick tasks",
       "purpose": "Improve code clarity and performance while checking OWASP Top 10 security risks.",
       "example": "Add security improvements to API endpoints",
-      "riskLevel": "'HIGH'",
+      "riskLevel": "HIGH",
       "requiresHITL": true
     },
     {
-      "name": "'/docs:generate'",
+      "name": "docs:generate",
       "path": ".claude/commands/docs/generate.md",
       "category": "Documentation",
       "tags": [
@@ -121,11 +185,11 @@
       "when": "General development tasks",
       "purpose": "Update documentation from code and tests when docs are outdated.",
       "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
+      "riskLevel": "LOW",
       "requiresHITL": false
     },
     {
-      "name": "'/git:branch'",
+      "name": "git:branch",
       "path": ".claude/commands/git/branch.md",
       "category": "Git Workflow",
       "tags": [
@@ -136,11 +200,11 @@
       "when": "General development tasks",
       "purpose": "Create a new git branch following standardized naming conventions.",
       "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
+      "riskLevel": "LOW",
       "requiresHITL": false
     },
     {
-      "name": "'/git:commit'",
+      "name": "git:commit",
       "path": ".claude/commands/git/commit.md",
       "category": "Git Workflow",
       "tags": [
@@ -150,11 +214,11 @@
       "when": "General development tasks",
       "purpose": "Generate a Conventional Commit message for staged changes.",
       "example": "Create conventional commit for completed feature",
-      "riskLevel": "'MEDIUM'",
+      "riskLevel": "MEDIUM",
       "requiresHITL": true
     },
     {
-      "name": "'/git:fix-pr'",
+      "name": "git:fix-pr",
       "path": ".claude/commands/git/fix-pr.md",
       "category": "Git Workflow",
       "tags": [
@@ -167,11 +231,11 @@
       "when": "General development tasks",
       "purpose": "Automatically address PR feedback from CI checks, CodeRabbit, and doctor failures.",
       "example": "Standard development workflow",
-      "riskLevel": "'MEDIUM'",
+      "riskLevel": "MEDIUM",
       "requiresHITL": true
     },
     {
-      "name": "'/git:prepare-pr'",
+      "name": "git:prepare-pr",
       "path": ".claude/commands/git/prepare-pr.md",
       "category": "Git Workflow",
       "tags": [
@@ -182,11 +246,11 @@
       "when": "General development tasks",
       "purpose": "Create conventional commit and PR body when ready to submit changes.",
       "example": "Standard development workflow",
-      "riskLevel": "'MEDIUM'",
+      "riskLevel": "MEDIUM",
       "requiresHITL": true
     },
     {
-      "name": "'/git:tag-release'",
+      "name": "git:tag-release",
       "path": ".claude/commands/git/tag-release.md",
       "category": "Git Workflow",
       "tags": [
@@ -197,11 +261,11 @@
       "when": "General development tasks",
       "purpose": "Create semantic version from conventional commits when ready to release.",
       "example": "Standard development workflow",
-      "riskLevel": "'HIGH'",
+      "riskLevel": "HIGH",
       "requiresHITL": true
     },
     {
-      "name": "'/git:workflow'",
+      "name": "git:workflow",
       "path": ".claude/commands/git/workflow.md",
       "category": "Git Workflow",
       "tags": [
@@ -212,11 +276,11 @@
       "when": "General development tasks",
       "purpose": "Manage git branch lifecycle using consolidated workflow operations.",
       "example": "Standard development workflow",
-      "riskLevel": "'MEDIUM'",
+      "riskLevel": "MEDIUM",
       "requiresHITL": true
     },
     {
-      "name": "'/github:create-issue'",
+      "name": "github:create-issue",
       "path": ".claude/commands/github/create-issue.md",
       "category": "GitHub Integration",
       "tags": [
@@ -227,11 +291,11 @@
       "when": "GitHub workflow and project management",
       "purpose": "Create a GitHub issue from current planning discussion with proper template.",
       "example": "Create GitHub issue with proper templates",
-      "riskLevel": "'LOW'",
+      "riskLevel": "LOW",
       "requiresHITL": false
     },
     {
-      "name": "'/github:github-learning-capture'",
+      "name": "github:github-learning-capture",
       "path": ".claude/commands/github/capture-learning.md",
       "category": "GitHub Integration",
       "tags": [
@@ -242,11 +306,11 @@
       "when": "GitHub workflow and project management",
       "purpose": "Update an existing issue with implementation outcomes and learnings.",
       "example": "Create GitHub issue with proper templates",
-      "riskLevel": "'LOW'",
+      "riskLevel": "LOW",
       "requiresHITL": false
     },
     {
-      "name": "'/github:update-wiki'",
+      "name": "github:update-wiki",
       "path": ".claude/commands/github/update-wiki.md",
       "category": "GitHub Integration",
       "tags": [
@@ -255,13 +319,13 @@
         "documentation"
       ],
       "when": "GitHub workflow and project management",
-      "purpose": "Sync current project state to wiki pages for GPT-5 context.",
+      "purpose": "Generated wiki content updates",
       "example": "Create GitHub issue with proper templates",
-      "riskLevel": "'LOW'",
+      "riskLevel": "LOW",
       "requiresHITL": true
     },
     {
-      "name": "'/ops:learning-capture'",
+      "name": "ops:learning-capture",
       "path": ".claude/commands/ops/learning-capture.md",
       "category": "Operations",
       "tags": [
@@ -272,11 +336,11 @@
       "when": "General development tasks",
       "purpose": "Convert CodeRabbit feedback into micro-lessons or ADRs for pattern capture.",
       "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
+      "riskLevel": "LOW",
       "requiresHITL": false
     },
     {
-      "name": "'/ops:wiki-sync'",
+      "name": "ops:wiki-sync",
       "path": ".claude/commands/ops/wiki-sync.md",
       "category": "Operations",
       "tags": [
@@ -287,11 +351,11 @@
       "when": "General development tasks",
       "purpose": "Verify docs/PRD.md and docs/wiki/WIKI-PRD.md are in sync, auto-fix if needed.",
       "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
+      "riskLevel": "LOW",
       "requiresHITL": false
     },
     {
-      "name": "'/plan'",
+      "name": "plan",
       "path": ".claude/commands/spec/plan.md",
       "category": "Spec-Driven Development",
       "tags": [
@@ -302,11 +366,11 @@
       "when": "Complex features requiring structured approach",
       "purpose": "Create technical implementation plan within constitutional constraints.",
       "example": "Create technical plan for auth implementation",
-      "riskLevel": "'MEDIUM'",
+      "riskLevel": "MEDIUM",
       "requiresHITL": true
     },
     {
-      "name": "'/pr:assist'",
+      "name": "pr:assist",
       "path": ".claude/commands/git/pr-assistant.md",
       "category": "Git Workflow",
       "tags": [
@@ -317,11 +381,11 @@
       "when": "General development tasks",
       "purpose": "Auto-fill PR template with traceability IDs and metadata before opening PR.",
       "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
+      "riskLevel": "LOW",
       "requiresHITL": false
     },
     {
-      "name": "'/quality:run-linter'",
+      "name": "quality:run-linter",
       "path": ".claude/commands/quality/run-linter.md",
       "category": "Quality Assurance",
       "tags": [
@@ -331,161 +395,6 @@
       ],
       "when": "General development tasks",
       "purpose": "Execute linting and fix all quality issues before commits.",
-      "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
-      "requiresHITL": false
-    },
-    {
-      "name": "'/research:explore'",
-      "path": ".claude/commands/research/explore.md",
-      "category": "General",
-      "tags": [
-        "research",
-        "exploration",
-        "codebase"
-      ],
-      "when": "General development tasks",
-      "purpose": "Deep codebase exploration to answer questions about architecture, patterns, or implementation details.",
-      "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
-      "requiresHITL": false
-    },
-    {
-      "name": "'/review:self-critique'",
-      "path": ".claude/commands/review/self-critique.md",
-      "category": "Review & Quality",
-      "tags": [
-        "review",
-        "quality",
-        "validation"
-      ],
-      "when": "General development tasks",
-      "purpose": "Start fresh session and skeptically review recent changes for quality.",
-      "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
-      "requiresHITL": false
-    },
-    {
-      "name": "'/security:scan'",
-      "path": ".claude/commands/security/scan.md",
-      "category": "General",
-      "tags": [
-        "security",
-        "scanning",
-        "vulnerabilities",
-        "rls"
-      ],
-      "when": "Code quality and security improvements",
-      "purpose": "Scan codebase for security vulnerabilities including RLS policies, auth issues, and OWASP Top 10.",
-      "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
-      "requiresHITL": false
-    },
-    {
-      "name": "'/specify'",
-      "path": ".claude/commands/spec/specify.md",
-      "category": "Spec-Driven Development",
-      "tags": [
-        "spec-kit",
-        "requirements",
-        "planning"
-      ],
-      "when": "Complex features requiring structured approach",
-      "purpose": "Define pure requirements - what and why only, no technical details.",
-      "example": "Define requirements for user authentication system",
-      "riskLevel": "'LOW'",
-      "requiresHITL": false
-    },
-    {
-      "name": "'/tasks'",
-      "path": ".claude/commands/spec/tasks.md",
-      "category": "Spec-Driven Development",
-      "tags": [
-        "spec-kit",
-        "tasks",
-        "implementation"
-      ],
-      "when": "Complex features requiring structured approach",
-      "purpose": "Break down technical plan into actionable implementation tasks with TDD focus.",
-      "example": "Break down auth feature into TDD tasks",
-      "riskLevel": "'MEDIUM'",
-      "requiresHITL": true
-    },
-    {
-      "name": "'/test:scaffold'",
-      "path": ".claude/commands/test/scaffold.md",
-      "category": "Testing",
-      "tags": [
-        "testing",
-        "tdd",
-        "scaffolding"
-      ],
-      "when": "Setting up tests and TDD workflows",
-      "purpose": "Write failing tests from approved plan before implementation.",
-      "example": "Standard development workflow",
-      "riskLevel": "'LOW'",
-      "requiresHITL": false
-    },
-    {
-      "name": "branch-validation",
-      "path": ".claude/commands/git/shared/branch-validation.md",
-      "category": "Git Workflow",
-      "tags": [
-        "git",
-        "testing",
-        "security",
-        "implementation"
-      ],
-      "when": "Setting up tests and TDD workflows",
-      "purpose": "No description available",
-      "example": "Standard development workflow",
-      "riskLevel": "LOW",
-      "requiresHITL": false
-    },
-    {
-      "name": "commit-formatting",
-      "path": ".claude/commands/git/shared/commit-formatting.md",
-      "category": "Git Workflow",
-      "tags": [
-        "git",
-        "testing",
-        "security",
-        "planning",
-        "implementation"
-      ],
-      "when": "Setting up tests and TDD workflows",
-      "purpose": "No description available",
-      "example": "Create conventional commit for completed feature",
-      "riskLevel": "LOW",
-      "requiresHITL": false
-    },
-    {
-      "name": "common-git-workflow",
-      "path": ".claude/commands/git/shared/common-git-workflow.md",
-      "category": "Git Workflow",
-      "tags": [
-        "git",
-        "testing",
-        "planning"
-      ],
-      "when": "Setting up tests and TDD workflows",
-      "purpose": "No description available",
-      "example": "Standard development workflow",
-      "riskLevel": "LOW",
-      "requiresHITL": false
-    },
-    {
-      "name": "error-handling",
-      "path": ".claude/commands/git/shared/error-handling.md",
-      "category": "Git Workflow",
-      "tags": [
-        "git",
-        "testing",
-        "security",
-        "planning"
-      ],
-      "when": "Setting up tests and TDD workflows",
-      "purpose": "No description available",
       "example": "Standard development workflow",
       "riskLevel": "LOW",
       "requiresHITL": false
@@ -501,8 +410,8 @@
         "implementation",
         "quality"
       ],
-      "when": "Setting up tests and TDD workflows",
-      "purpose": "** Create new feature branch from issue",
+      "when": "Fast command discovery and lookup without reading full documentation",
+      "purpose": "Consolidated quick reference guide for all 27 available commands with descriptions and usage examples",
       "example": "Standard development workflow",
       "riskLevel": "LOW",
       "requiresHITL": false
@@ -518,8 +427,99 @@
         "requirements",
         "quality"
       ],
+      "when": "Understanding slash command system and available commands",
+      "purpose": "Overview of slash command architecture, usage patterns, and command catalog",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "research:explore",
+      "path": ".claude/commands/research/explore.md",
+      "category": "General",
+      "tags": [
+        "research",
+        "exploration",
+        "codebase"
+      ],
+      "when": "General development tasks",
+      "purpose": "Deep codebase exploration to answer questions about architecture, patterns, or implementation details.",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "review:self-critique",
+      "path": ".claude/commands/review/self-critique.md",
+      "category": "Review & Quality",
+      "tags": [
+        "review",
+        "quality",
+        "validation"
+      ],
+      "when": "General development tasks",
+      "purpose": "Start fresh session and skeptically review recent changes for quality.",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "security:scan",
+      "path": ".claude/commands/security/scan.md",
+      "category": "General",
+      "tags": [
+        "security",
+        "scanning",
+        "vulnerabilities",
+        "rls"
+      ],
+      "when": "Code quality and security improvements",
+      "purpose": "Scan codebase for security vulnerabilities including RLS policies, auth issues, and OWASP Top 10.",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "specify",
+      "path": ".claude/commands/spec/specify.md",
+      "category": "Spec-Driven Development",
+      "tags": [
+        "spec-kit",
+        "requirements",
+        "planning"
+      ],
+      "when": "Complex features requiring structured approach",
+      "purpose": "Define pure requirements - what and why only, no technical details.",
+      "example": "Define requirements for user authentication system",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "tasks",
+      "path": ".claude/commands/spec/tasks.md",
+      "category": "Spec-Driven Development",
+      "tags": [
+        "spec-kit",
+        "tasks",
+        "implementation"
+      ],
+      "when": "Complex features requiring structured approach",
+      "purpose": "Break down technical plan into actionable implementation tasks with TDD focus.",
+      "example": "Break down auth feature into TDD tasks",
+      "riskLevel": "MEDIUM",
+      "requiresHITL": true
+    },
+    {
+      "name": "test:scaffold",
+      "path": ".claude/commands/test/scaffold.md",
+      "category": "Testing",
+      "tags": [
+        "testing",
+        "tdd",
+        "scaffolding"
+      ],
       "when": "Setting up tests and TDD workflows",
-      "purpose": "No description available",
+      "purpose": "Write failing tests from approved plan before implementation.",
       "example": "Standard development workflow",
       "riskLevel": "LOW",
       "requiresHITL": false

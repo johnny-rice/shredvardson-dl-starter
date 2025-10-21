@@ -1,3 +1,10 @@
+---
+name: _shared/commit-formatting
+when: Creating conventional commits in /git:commit, /git:branch, and /git:fix-pr
+purpose: Shared commit message formatting standards and conventional commit patterns
+riskLevel: LOW
+---
+
 # Commit Message Formatting
 
 This template contains commit message formatting standards used across git commands.

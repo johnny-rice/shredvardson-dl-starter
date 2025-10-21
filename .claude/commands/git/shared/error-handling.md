@@ -1,3 +1,10 @@
+---
+name: _shared/error-handling
+when: Handling git errors and recovery in /git:branch, /git:fix-pr, and other git commands
+purpose: Comprehensive error detection, messaging, and recovery patterns for common git failure modes
+riskLevel: LOW
+---
+
 # Git Error Handling Patterns
 
 This template contains common git error scenarios, detection, and remediation patterns used across git commands.

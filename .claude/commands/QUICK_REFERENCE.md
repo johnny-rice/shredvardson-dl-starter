@@ -1,3 +1,10 @@
+---
+name: QUICK_REFERENCE
+when: Fast command discovery and lookup without reading full documentation
+purpose: Consolidated quick reference guide for all 27 available commands with descriptions and usage examples
+riskLevel: LOW
+---
+
 # Claude Commands Quick Reference
 
 Quick lookup guide for all available slash commands. Use this to find the right command without reading full documentation.
