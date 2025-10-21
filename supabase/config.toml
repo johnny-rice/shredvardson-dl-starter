@@ -119,11 +119,9 @@ enabled = false
 provider = "hcaptcha"
 secret = "env(CAPTCHA_SECRET)"
 
-[edge_functions]
-enabled = true
-# Configure one of the supported request policies: `oneshot`, `per_worker`.
-# Use `oneshot` for hot-reloading, or `per_worker` for load testing.
-request_policy = "oneshot"
+# Edge Functions are enabled by default
+# Individual functions can be configured in [functions.<function-name>] sections
+# For more info: https://supabase.com/docs/guides/functions/function-configuration
 
 [analytics]
 enabled = false
