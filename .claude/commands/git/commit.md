@@ -4,6 +4,11 @@ name: '/git:commit'
 version: '1.0.0'
 lane: 'lightweight'
 tags: ['git', 'conventional-commits']
+deprecated: true
+deprecation_notice: >
+  DEPRECATED: This command is being migrated to the `git-workflow` Skill (Phase 3).
+  Use `/git commit` instead. This command will remain functional during the
+  12-week transition period. See docs/adr/002-skills-architecture.md for details.
 when_to_use: >
   Generate a Conventional Commit message for staged changes.
 

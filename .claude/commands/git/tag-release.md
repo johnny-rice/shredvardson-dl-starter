@@ -4,6 +4,11 @@ name: '/git:tag-release'
 version: '1.0.0'
 lane: 'dev'
 tags: ['git', 'release', 'semver']
+deprecated: true
+deprecation_notice: >
+  DEPRECATED: This command is being migrated to the `git-workflow` Skill (Phase 3).
+  Use `/git tag` instead. This command will remain functional during the
+  12-week transition period. See docs/adr/002-skills-architecture.md for details.
 when_to_use: >
   Create semantic version from conventional commits when ready to release.
 

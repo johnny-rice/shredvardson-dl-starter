@@ -4,6 +4,11 @@ name: '/git:workflow'
 version: '1.0.0'
 lane: 'lightweight'
 tags: ['git', 'workflow', 'branch-management']
+deprecated: true
+deprecation_notice: >
+  DEPRECATED: This command is being migrated to the `git-workflow` Skill (Phase 3).
+  Use `/git workflow` instead. This command will remain functional during the
+  12-week transition period. See docs/adr/002-skills-architecture.md for details.
 when_to_use: >
   Manage git branch lifecycle using consolidated workflow operations.
 
