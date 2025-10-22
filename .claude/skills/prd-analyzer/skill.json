@@ -1,0 +1,23 @@
+{
+  "name": "prd-analyzer",
+  "version": "1.0.0",
+  "description": "Extracts acceptance criteria and validates specs against YAML frontmatter standards",
+  "capabilities": [
+    "parse_yaml_frontmatter",
+    "extract_acceptance_criteria",
+    "validate_spec_structure",
+    "generate_task_breakdown"
+  ],
+  "triggers": [
+    "spec",
+    "prd",
+    "requirements",
+    "acceptance"
+  ],
+  "priority": "p0",
+  "tokenSavings": {
+    "old": 105,
+    "new": 30,
+    "percentage": 71
+  }
+}

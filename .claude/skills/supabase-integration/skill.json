@@ -1,0 +1,33 @@
+{
+  "name": "supabase-integration",
+  "version": "1.0.0",
+  "description": "Database migration workflow with RLS validation and type generation",
+  "category": "database",
+  "tags": ["database", "supabase", "migration", "rls", "types"],
+  "author": "DL Starter",
+  "license": "MIT",
+  "discoveryCommand": "/db",
+  "capabilities": [
+    "create-migration",
+    "validate-migration",
+    "apply-migration",
+    "rollback-migration",
+    "generate-types"
+  ],
+  "scripts": {
+    "create": "scripts/create-migration.ts",
+    "validate": "scripts/validate-migration.ts",
+    "apply": "scripts/apply-migration.ts",
+    "rollback": "scripts/rollback-migration.ts",
+    "types": "scripts/generate-types.ts"
+  },
+  "documentation": {
+    "skill": "SKILL.md",
+    "readme": "README.md",
+    "patterns": "../../docs/database/RLS_PATTERNS.md"
+  },
+  "dependencies": {
+    "supabase": ">=1.0.0",
+    "tsx": ">=4.0.0"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "implementation-assistant",
+  "version": "1.0.0",
+  "description": "Coding standards, error handling patterns, and DL Starter conventions",
+  "capabilities": [
+    "enforce_coding_standards",
+    "validate_component_patterns",
+    "check_error_handling",
+    "verify_typescript_types"
+  ],
+  "triggers": [
+    "code",
+    "implement",
+    "standards",
+    "patterns"
+  ],
+  "priority": "p0",
+  "tokenSavings": {
+    "old": 88,
+    "new": 35,
+    "percentage": 60
+  }
+}

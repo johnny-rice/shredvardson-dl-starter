@@ -48,6 +48,7 @@
     "db:validate:ci": "tsx scripts/db/ci-validate.ts",
     "db:seed:dev": "tsx scripts/seed-dev.ts",
     "db:seed:test": "tsx scripts/seed-test.ts",
+    "skill:measure": "tsx scripts/skills/measure-tokens.ts",
     "new-app": "tsx scripts/new-app.ts",
     "new-repo": "tsx scripts/new-repo-from-template.ts",
     "doctor": "tsx scripts/starter-doctor.ts",
@@ -99,6 +100,7 @@
     "fast-glob": "^3.3.3",
     "gray-matter": "^4.0.3",
     "prettier": "^3.6.2",
+    "tiktoken": "^1.0.22",
     "tsx": "^4.20.6",
     "turbo": "^2.5.8",
     "typescript": "^5"

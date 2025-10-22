@@ -1489,6 +1489,7 @@ function checkRootDocLimits(): CheckResult {
     'CODE_OF_CONDUCT.md',
     'CHANGELOG.md',
     'GOVERNANCE.md',
+    'ROADMAP.md', // Project roadmap
   ];
   const maxLines = 80;
 

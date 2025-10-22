@@ -1,0 +1,24 @@
+{
+  "name": "test-scaffolder",
+  "version": "1.0.0",
+  "description": "TDD workflow automation with Test Generator sub-agent integration",
+  "capabilities": [
+    "scaffold_unit_tests",
+    "scaffold_e2e_tests",
+    "scaffold_rls_tests",
+    "validate_coverage",
+    "integrate_test_generator_agent"
+  ],
+  "triggers": [
+    "test",
+    "scaffold",
+    "coverage",
+    "tdd"
+  ],
+  "priority": "p0",
+  "tokenSavings": {
+    "old": 121,
+    "new": 40,
+    "percentage": 66
+  }
+}
