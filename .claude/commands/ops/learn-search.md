@@ -143,7 +143,7 @@ Search micro-lessons to find relevant learnings quickly without browsing INDEX.m
 ### Output Format
 
 **Standard Output:**
-```
+```text
 🔍 Found N lessons matching "<query>":
 
 1. **[Title]** (tag1, tag2, tag3) [usage×]
@@ -154,7 +154,7 @@ Search micro-lessons to find relevant learnings quickly without browsing INDEX.m
 ```
 
 **No Results:**
-```
+```text
 ❌ No lessons found matching "<query>"
 
 💡 Try:

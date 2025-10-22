@@ -11,9 +11,11 @@ Severity: normal
 
 **Example.**
 
+Example timeline from Phase 4 Skills Architecture (actual PR numbers/dates):
+
 ```text
 ❌ Wrong: Single massive PR for all phases
-PR #180: Phase 4A-D Complete (all features at once)
+PR #X: Phase 4A-D Complete (all features at once)
 - Phase 4A: Observability
 - Phase 4B: Learning Capture
 - Phase 4C: High-Confidence Skills
@@ -31,7 +33,7 @@ PR #182: Phase 4B Complete (merged 2025-10-22)
 
 [Wait 2 weeks for observability data]
 
-PR #XXX: Phase 4C-D (planned ~2025-11-05)
+PR #N: Phase 4C-D (planned ~2025-11-05)
 - Informed by actual usage metrics from 4A
 - Build only high-value Skills identified by data
 ```
@@ -43,4 +45,4 @@ PR #XXX: Phase 4C-D (planned ~2025-11-05)
 - Gate dependent phases on data/validation
 - Document "wait state" in ROADMAP and checklist
 
-**Tags.** git, workflow, pr-strategy, data-driven, phase-gating, observability, phase-4
+**Tags.** #git #workflow #pr-strategy #data-driven #phase-gating #observability #phase-4

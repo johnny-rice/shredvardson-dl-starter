@@ -34,6 +34,7 @@ allowed-tools:
   - 'Bash(git status:*)'
   - 'Bash(git branch:*)'
   - 'Bash(git diff:*)'
+  - 'Bash(git symbolic-ref:*)'
   - 'Bash(pnpm learn:index:*)'
 
 preconditions:
@@ -61,7 +62,7 @@ timeouts:
   hardSeconds: 360
 
 idempotent: true
-dryRun: true
+dryRun: false
 estimatedRuntimeSec: 120
 costHints: 'Medium I/O; git analysis + tag extraction'
 
@@ -90,8 +91,11 @@ Capture development insights as micro-lessons with intelligent automation:
    # Get last 3 commits for context
    git log -3 --oneline --no-decorate
 
-   # Get changed files in current branch
-   git diff --name-only main...HEAD
+   # Detect default branch (handles main/master/custom)
+   BASE="$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null | sed 's@^origin/@@' || echo main)"
+
+   # Get changed files vs default branch
+   git diff --name-only "$BASE"...HEAD
 
    # Parse branch name for issue numbers (e.g., feature/170-phase-4b-*)
    ```
@@ -107,9 +111,15 @@ Capture development insights as micro-lessons with intelligent automation:
 
 3. **Suggest tags based on context:**
    - **From file paths:** Extract patterns (e.g., `scripts/` → bash, `.claude/skills/` → skills)
-   - **From commit messages:** Extract keywords
+   - **From commit messages:** Extract keywords (sanitized - see privacy guardrails below)
    - **From existing corpus:** Read all `docs/micro-lessons/*.md`, parse `**Tags.**` lines, build frequency map
    - **Smart suggestions:** Rank by relevance to current context
+
+   **Privacy Guardrails for Commit-Derived Tags:**
+   - Strip emails, IDs, and ticket URLs from commit messages
+   - Drop high-entropy strings (tokens, keys, hashes)
+   - Drop numeric-only tokens unless whitelisted (e.g., issue numbers like `#170`)
+   - Keep only generic technical keywords (languages, tools, concepts)
 
 4. **Present suggestions:**
    ```text

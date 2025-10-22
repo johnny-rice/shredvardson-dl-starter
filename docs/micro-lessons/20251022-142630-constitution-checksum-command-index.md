@@ -23,6 +23,9 @@ pnpm commands:generate
 pnpm constitution:update  # Updates docs/llm/CONSTITUTION.CHECKSUM
 git add docs/commands/index.json docs/llm/CONSTITUTION.CHECKSUM
 git commit
+
+# Verify locally before pushing
+pnpm doctor:report
 # CI passes
 ```
 
@@ -32,4 +35,4 @@ git commit
 - Run `pnpm constitution:update` after modifying any binding source
 - Doctor check (`pnpm doctor:report`) catches stale checksums in CI
 
-**Tags.** constitution, checksum, commands, ci, doctor, binding-sources, phase-4b
+**Tags.** #constitution #checksum #commands #ci #doctor #binding-sources #phase-4b

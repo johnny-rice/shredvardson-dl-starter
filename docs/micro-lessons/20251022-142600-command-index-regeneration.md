@@ -30,4 +30,4 @@ git commit -m "Add learn search command"
 - Pre-commit hooks don't auto-regenerate (manual step required)
 - Index tracks metadata from YAML frontmatter for routing
 
-**Tags.** commands, index, ci, routing-contract, automation, phase-4b
+**Tags.** #commands #index #ci #routing-contract #automation #phase-4b
