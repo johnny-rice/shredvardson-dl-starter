@@ -36,6 +36,9 @@ Progressive disclosure architecture that reduces LLM token usage by 60-80% while
 
 # Validate spec
 /spec validate specs/my-spec.md
+
+# View usage analytics (Phase 4A)
+/skills stats
 ```
 
 ## Architecture Phases
@@ -43,35 +46,11 @@ Progressive disclosure architecture that reduces LLM token usage by 60-80% while
 - **Phase 1**: Foundation (metadata, discovery, structure) ✅
 - **Phase 2**: Core workflows (git, review, docs, spec, test, db) ✅
 - **Phase 3**: Git consolidation with intelligent routing ✅
-- **Phase 4**: Advanced features (monitoring, analytics)
+- **Phase 4A**: Skills observability and analytics ✅
+- **Phase 4B-D**: Learning capture, high-confidence Skills (planned)
 
 ## Documentation
 
 **📚 Full Documentation**: [docs/skills-architecture.md](docs/skills-architecture.md)
-
-Includes:
-- Detailed implementation guide
-- Migration from slash commands
-- Token measurement methodology
-- Troubleshooting and debugging
-- Complete API reference
-
-## Quick Reference
-
-**Skill Structure:**
-```
-.claude/skills/{skill-name}/
-├── skill.json          # Metadata (50 tokens)
-└── scripts/            # Bash execution (0 tokens)
-```
-
-**Discovery Command:**
-```
-.claude/commands/{category}.md  # Routes to skill (500 tokens)
-```
-
-See [docs/skills-architecture.md](docs/skills-architecture.md) for complete details.
-
----
 
 **ADR**: [ADR-002](docs/adr/002-skills-architecture.md) | **Last Updated**: 2025-10-21

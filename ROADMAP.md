@@ -3,8 +3,8 @@
 > **Note:** This is a **high-level strategic overview**. For detailed planning and tracking, see [GitHub Issues](https://github.com/DissonanceLabs/dl-starter/issues) and Projects.
 
 **Project:** dl-starter-new
-**Last Updated:** 2025-01-21
-**Current Phase:** Phase 3 Complete ✅
+**Last Updated:** 2025-10-22
+**Current Phase:** Phase 4A Complete ✅
 
 ## Vision
 
@@ -75,67 +75,72 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 - `/review` - Code quality automation (TypeScript, ESLint, tests, coverage, build)
 - `/docs` - Documentation sync (sync, validate)
 
-## Current Focus: Phase 4 Planning
+## Current Focus: Phase 4 - Data-Driven Refinement
 
-### 🎯 Phase 4: Advanced Skills & Orchestration
+### ✅ Phase 4A: Skills Observability (COMPLETE)
 
-**Status:** Planning
+**Completed:** 2025-10-22
+**Effort:** 3 hours
+**Decision:** Rejected "Skills Factory" in favor of data-driven approach
+
+**Achievements:**
+- Lightweight CSV-based usage logging
+- `/skills stats` analytics command
+- Integrated logging into all 7 Skill scripts
+- Zero performance impact (<50ms overhead)
+- Foundation for Phase 4B-D decisions
+
+**Deliverables:**
+- [Phase 4A Spec](docs/specs/phase-4a-skills-observability.md)
+- [Skills Factory Evaluation](docs/decisions/skills-factory-evaluation.md)
+- `scripts/utils/skill-logger.sh` - Logging utility
+- `scripts/tools/analyze-skill-usage.ts` - Analytics engine
+- `.claude/commands/ops/skills-stats.md` - Analytics command
+
+**Key Decision:** Deferred Skills Factory (meta-generation) as premature optimization. Focus on observability first, then let data inform which Skills to build next.
+
+### 🎯 Phase 4B-D: Remaining Sub-Phases (Planned)
+
+**Status:** Planning (waiting for 2-week data collection)
 **Target Completion:** TBD
-**Target Token Savings:** 75% average across all workflows
 
-#### Planned Features
+#### Phase 4B: Learning Capture Enhancement (P1 - 4-6 hours)
 
-**1. Advanced Skills**
-- `/deploy` - Deployment automation
-  - Environment validation
-  - Build optimization
-  - Deployment execution
-  - Rollback support
+**Builds on existing 73-lesson foundation:**
+- Enhance `/github:github-learning-capture`
+  - Auto-detect session context
+  - Suggest tags from recent work
+  - Auto-update `docs/micro-lessons/INDEX.md`
+- Add `/learn search <tag>` command
+  - Query existing micro-lessons
+  - Surface relevant patterns
 
-- `/monitor` - System monitoring
-  - Performance metrics
-  - Error tracking integration
-  - Usage analytics
-  - Health checks
+#### Phase 4C: High-Confidence Skills (P2 - based on data)
 
-- `/optimize` - Performance optimization
-  - Bundle analysis
-  - Database query optimization
-  - Image optimization
-  - Caching strategies
+**Data-informed Skill expansion:**
+- `/github` - Issue/PR management expansion
+  - Create issues from conversation
+  - Link PRs to issues
+  - Update project boards
+- `/docs` enhancement - Advanced documentation sync
+  - Auto-detect documentation drift
+  - Suggest updates based on code changes
 
-- `/security` - Security scanning
-  - Dependency vulnerabilities
-  - Code security patterns
-  - RLS policy validation
-  - Secrets detection
+#### Phase 4D: Behavioral-Driven Skills (P3 - TBD)
 
-**2. Cross-Skill Orchestration**
-- Chain multiple Skills for complex workflows
-- Conditional execution based on results
-- Parallel execution where possible
-- State management between Skills
-
-**3. Skill Templates**
-- Generate custom Skills from templates
-- Scaffold new Skill implementations
-- Validate Skill structure
-- Auto-generate documentation
-
-**4. Advanced Caching**
-- Memoize LLM responses
-- Template-based responses
-- Smart defaults from history
-- User preference learning
+**Based on 2-week observability data:**
+- Identify high-frequency manual workflows
+- Build Skills for top 3 pain points
+- Validate with usage metrics
 
 #### Success Criteria
 
-- [ ] 4+ advanced Skills implemented
-- [ ] Cross-skill orchestration working
-- [ ] Skill generator functional
-- [ ] 75% average token savings
+- [x] Phase 4A: Observability operational
+- [ ] Phase 4B: Learning capture enhanced
+- [ ] Phase 4C: 2+ high-confidence Skills shipped
+- [ ] Phase 4D: Data-driven Skills validated
+- [ ] 75% average token savings (across all workflows)
 - [ ] Zero context pollution maintained
-- [ ] Production usage validated
 
 ## Future Phases
 

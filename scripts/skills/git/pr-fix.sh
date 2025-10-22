@@ -4,6 +4,11 @@ set -euo pipefail
 # Git PR Fix Sub-Skill
 # Fixes issues in existing PR
 
+# Setup logging
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../utils/skill-logger.sh"
+setup_skill_logging "git" "pr-fix"
+
 PR_NUMBER="${1:-}"
 
 if [[ -z "$PR_NUMBER" ]]; then

@@ -5,6 +5,11 @@ set -euo pipefail
 # Prepares and creates pull request
 # Delegates to LLM for PR body generation
 
+# Setup logging
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../utils/skill-logger.sh"
+setup_skill_logging "git" "pr-prepare"
+
 # Check if on feature branch
 CURRENT_BRANCH=$(git branch --show-current)
 

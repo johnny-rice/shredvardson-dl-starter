@@ -4,6 +4,11 @@ set -euo pipefail
 # Code Reviewer Skill
 # Automated code quality checks
 
+# Setup logging
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../utils/skill-logger.sh"
+setup_skill_logging "review" "auto"
+
 AUTO_FIX=false
 if [[ "${1:-}" == "--fix" ]]; then
   AUTO_FIX=true

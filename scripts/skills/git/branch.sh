@@ -4,6 +4,11 @@ set -euo pipefail
 # Git Branch Sub-Skill
 # Creates feature branch following naming conventions
 
+# Setup logging
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../utils/skill-logger.sh"
+setup_skill_logging "git" "branch"
+
 ISSUE_INPUT="${1:-}"
 
 if [[ -z "$ISSUE_INPUT" ]]; then

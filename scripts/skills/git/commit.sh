@@ -5,6 +5,11 @@ set -euo pipefail
 # Smart commit with conventional format
 # Delegates to LLM for message generation
 
+# Setup logging
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../utils/skill-logger.sh"
+setup_skill_logging "git" "commit"
+
 MESSAGE="${*:-}"
 
 # Check for staged changes

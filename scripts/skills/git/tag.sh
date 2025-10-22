@@ -5,6 +5,11 @@ set -euo pipefail
 # Creates release tags following semver
 # Delegates to LLM for changelog generation
 
+# Setup logging
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../utils/skill-logger.sh"
+setup_skill_logging "git" "tag"
+
 VERSION="${1:-}"
 
 if [[ -z "$VERSION" ]]; then

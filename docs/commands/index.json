@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2025-10-21T16:01:29.963Z",
+  "generated": "2025-10-22T09:55:19.999Z",
   "commands": [
     {
       "name": "_shared/branch-validation",
@@ -497,6 +497,22 @@
       ],
       "when": "Code quality and security improvements",
       "purpose": "Scan codebase for security vulnerabilities including RLS policies, auth issues, and OWASP Top 10.",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "skills-stats",
+      "path": ".claude/commands/ops/skills-stats.md",
+      "category": "Operations",
+      "tags": [
+        "ops",
+        "analytics",
+        "skills",
+        "observability"
+      ],
+      "when": "General development tasks",
+      "purpose": "Display Skills usage statistics and analytics",
       "example": "Standard development workflow",
       "riskLevel": "LOW",
       "requiresHITL": false

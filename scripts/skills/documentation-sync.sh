@@ -4,6 +4,11 @@ set -euo pipefail
 # Documentation Sync Skill
 # Syncs documentation between repo and GitHub wiki
 
+# Setup logging
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../utils/skill-logger.sh"
+setup_skill_logging "docs" "${1:-sync}"
+
 ACTION="${1:-sync}"
 DRY_RUN=false
 

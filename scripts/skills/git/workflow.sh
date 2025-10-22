@@ -4,6 +4,11 @@ set -euo pipefail
 # Git Workflow Sub-Skill
 # Full git workflow automation
 
+# Setup logging
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/../../utils/skill-logger.sh"
+setup_skill_logging "git" "workflow"
+
 # Get current branch and status
 CURRENT_BRANCH=$(git branch --show-current)
 IS_CLEAN=$(git diff-index --quiet HEAD 2>/dev/null && echo "true" || echo "false")
