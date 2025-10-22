@@ -99,44 +99,75 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 
 **Key Decision:** Deferred Skills Factory (meta-generation) as premature optimization. Focus on observability first, then let data inform which Skills to build next.
 
-### 🎯 Phase 4B-D: Remaining Sub-Phases (Planned)
+### ✅ Phase 4B: Learning Capture Enhancement (COMPLETE)
 
-**Status:** Planning (waiting for 2-week data collection)
-**Target Completion:** TBD
+**Completed:** 2025-10-22
+**Effort:** 4 hours
+**Priority:** P1 (HIGH)
 
-#### Phase 4B: Learning Capture Enhancement (P1 - 4-6 hours)
+**Achievements:**
+- Enhanced `/ops:learning-capture` v2.0 with intelligent automation
+  - Auto-detect session context from git (branch, commits, changed files)
+  - Suggest tags from existing corpus (74 lessons analyzed)
+  - Auto-regenerate INDEX.md after lesson creation
+- Created `/learn <query>` search command
+  - Search by keywords, tags, or patterns
+  - Rank results by relevance
+  - Filter by recency and usage
+- Reduced friction in learning capture workflow
 
-**Builds on existing 73-lesson foundation:**
-- Enhance `/github:github-learning-capture`
-  - Auto-detect session context
-  - Suggest tags from recent work
-  - Auto-update `docs/micro-lessons/INDEX.md`
-- Add `/learn search <tag>` command
-  - Query existing micro-lessons
-  - Surface relevant patterns
+**Deliverables:**
+- [Phase 4B Spec](docs/specs/phase-4b-learning-capture-enhancement.md)
+- [Enhanced Learning Capture Command](.claude/commands/ops/learning-capture.md) (v2.0)
+- [Learn Search Command](.claude/commands/ops/learn-search.md) (new)
+
+**Impact:** Builds on 74-lesson foundation to make knowledge capture and discovery effortless.
+
+### 🎯 Phase 4C-D: Remaining Sub-Phases (Planned)
+
+**Status:** Planning (waiting for 2-week observability data collection)
+**Data Collection Started:** 2025-10-22
+**Data Review Date:** ~2025-11-05
+
+**Decision Criteria (defined for rapid execution):**
+- **Proceed if:** `/learn` search used >5 times/week OR `/ops:learning-capture` shows >50% tag suggestion acceptance
+- **Prioritize:** Commands/workflows with >10 manual invocations in 2-week window
+- **Success threshold:** New Skills reduce manual steps by >60%
+- **Quality gate:** Error rate <5% in production usage
 
 #### Phase 4C: High-Confidence Skills (P2 - based on data)
 
 **Data-informed Skill expansion:**
 - `/github` - Issue/PR management expansion
   - Create issues from conversation
-  - Link PRs to issues
+  - Link PRs to issues automatically
   - Update project boards
-- `/docs` enhancement - Advanced documentation sync
+- `/docs` - Advanced documentation sync
   - Auto-detect documentation drift
   - Suggest updates based on code changes
+
+**Validation Criteria:**
+- Observability shows >10 GitHub CLI invocations/week
+- Documentation drift detected in >3 PRs
+- Token savings >60% vs manual workflow
+- Error rate <5% in production
 
 #### Phase 4D: Behavioral-Driven Skills (P3 - TBD)
 
 **Based on 2-week observability data:**
-- Identify high-frequency manual workflows
-- Build Skills for top 3 pain points
-- Validate with usage metrics
+- Identify high-frequency manual workflows from skill-usage.csv
+- Build Skills for top 3 pain points (sorted by invocation count)
+- Validate with usage metrics (before/after comparison)
+
+**Validation Criteria:**
+- Top 3 workflows have >15 invocations each in 2-week window
+- New Skills reduce invocations by >50%
+- User feedback positive (friction reduced)
 
 #### Success Criteria
 
 - [x] Phase 4A: Observability operational
-- [ ] Phase 4B: Learning capture enhanced
+- [x] Phase 4B: Learning capture enhanced
 - [ ] Phase 4C: 2+ high-confidence Skills shipped
 - [ ] Phase 4D: Data-driven Skills validated
 - [ ] 75% average token savings (across all workflows)

@@ -150,10 +150,83 @@
 - [ ] Configure security scanning
 - [ ] Test with sample PR
 
-## Phase 4: Advanced Capabilities (Week 6)
+## Phase 4: Advanced Capabilities & Refinement
 
-**Estimated Hours**: 32 hours over 1 week
+**Status**: In Progress
+**Priority**: P1-P2 (based on sub-phase)
+
+### Phase 4A: Skills Observability (COMPLETED - 3 hours)
+
+- [x] Lightweight CSV-based usage logging
+- [x] Skills observability scripts (skill-logger.sh)
+- [x] Analytics engine (analyze-skill-usage.ts)
+- [x] `/ops:skills-stats` command
+- [x] Integration with all 7 Skill scripts
+- [x] ADR-003 documenting architecture decisions
+
+**Completed**: 2025-10-22
+**PR**: #181
+
+### Phase 4B: Learning Capture Enhancement (COMPLETED - 4 hours)
+
+**Priority**: P1 (HIGH)
+**Goal**: Reduce friction in learning capture workflow
+
+- [x] Enhanced `/ops:learning-capture` v2.0 with auto-context detection
+- [x] Auto-extract context from git (branch, commits, changed files)
+- [x] Suggest tags from existing corpus and session data
+- [x] Auto-regenerate INDEX.md after lesson creation
+- [x] Created `/learn <query>` search command
+- [x] Phase 4B spec document
+- [x] Tested search functionality (4 merge-related lessons found)
+
+**Completed**: 2025-10-22
+**Deliverables**:
+- [docs/specs/phase-4b-learning-capture-enhancement.md](../specs/phase-4b-learning-capture-enhancement.md)
+- [.claude/commands/ops/learning-capture.md](../../.claude/commands/ops/learning-capture.md) (v2.0)
+- [.claude/commands/ops/learn-search.md](../../.claude/commands/ops/learn-search.md) (new)
+
+### Phase 4C-D: Data-Driven Skills (PLANNED)
+
 **Priority**: P2 (MEDIUM)
+**Status**: Waiting for 2-week observability data collection (started 2025-10-22)
+**Data Review Date**: ~2025-11-05
+
+**Decision Criteria (defined now for rapid execution):**
+- **Proceed if:** `/learn` search used >5 times/week OR `/ops:learning-capture` shows >50% tag suggestion acceptance
+- **Prioritize:** Commands/workflows with >10 manual invocations in 2-week window
+- **Success threshold:** New Skills reduce manual steps by >60%
+- **Quality gate:** Error rate <5% in production usage
+
+**Phase 4C: High-Confidence Skills** (TBD based on data)
+- [ ] `/github` - Issue/PR management expansion
+  - Create issues from conversation
+  - Link PRs to issues automatically
+  - Update project boards
+- [ ] `/docs` - Advanced documentation sync
+  - Auto-detect documentation drift
+  - Suggest updates based on code changes
+
+**Validation Criteria for Phase 4C:**
+- [ ] Observability shows >10 GitHub CLI invocations/week
+- [ ] Documentation drift detected in >3 PRs
+- [ ] Token savings >60% vs manual workflow
+- [ ] Error rate <5% in production
+
+**Phase 4D: Behavioral-Driven Skills** (TBD based on data)
+- [ ] Identify high-frequency manual workflows from skill-usage.csv
+- [ ] Build Skills for top 3 pain points (sorted by invocation count)
+- [ ] Validate with usage metrics (before/after comparison)
+
+**Validation Criteria for Phase 4D:**
+- [ ] Top 3 workflows have >15 invocations each in 2-week window
+- [ ] New Skills reduce invocations by >50%
+- [ ] User feedback positive (friction reduced)
+
+### Phase 4E: Advanced Skills (DEFERRED)
+
+**Priority**: P3 (LOW)
+**Status**: Deferred pending observability insights
 
 ### Project Scaffolder Skill (8 hours)
 
