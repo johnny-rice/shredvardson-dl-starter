@@ -3,6 +3,79 @@ import * as SelectPrimitive from '@radix-ui/react-select';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../lib/utils';
 
+/**
+ * Select component for dropdown selections
+ *
+ * A flexible dropdown component that provides an accessible and customizable
+ * way to select from a list of options. Built on Radix UI Select primitive
+ * with semantic design token patterns.
+ *
+ * @usageGuidelines
+ * - Always pair with a Label component for accessibility
+ * - Use for selecting from 5+ options (for 2-4 options, consider radio buttons)
+ * - Use placeholder text to indicate the expected selection
+ * - Group related options with SelectGroup and SelectLabel
+ * - Consider using a searchable combobox for very long lists (20+ items)
+ * - Provide a sensible default selection when possible
+ * - Use disabled state when selection should not be changeable
+ * - Keep option text concise and scannable
+ *
+ * @accessibilityConsiderations
+ * - Full keyboard navigation support (Arrow keys, Enter, Space, Escape)
+ * - Focus ring uses 2px ring with 2px offset for visibility
+ * - Selected items marked with checkmark icon and aria-selected
+ * - Supports screen readers with proper ARIA labels
+ * - Disabled state prevents interaction and reduces opacity
+ * - Scroll buttons appear for long lists automatically
+ * - Maintains focus management during open/close transitions
+ * - Works with assistive technologies for option announcements
+ *
+ * @example
+ * ```tsx
+ * // Basic select
+ * <Select defaultValue="apple">
+ *   <SelectTrigger className="w-[180px]">
+ *     <SelectValue placeholder="Select a fruit" />
+ *   </SelectTrigger>
+ *   <SelectContent>
+ *     <SelectItem value="apple">Apple</SelectItem>
+ *     <SelectItem value="banana">Banana</SelectItem>
+ *     <SelectItem value="orange">Orange</SelectItem>
+ *   </SelectContent>
+ * </Select>
+ *
+ * // Grouped select with labels
+ * <Select>
+ *   <SelectTrigger className="w-[200px]">
+ *     <SelectValue placeholder="Select a timezone" />
+ *   </SelectTrigger>
+ *   <SelectContent>
+ *     <SelectGroup>
+ *       <SelectLabel>North America</SelectLabel>
+ *       <SelectItem value="est">Eastern Standard Time</SelectItem>
+ *       <SelectItem value="cst">Central Standard Time</SelectItem>
+ *       <SelectItem value="pst">Pacific Standard Time</SelectItem>
+ *     </SelectGroup>
+ *     <SelectSeparator />
+ *     <SelectGroup>
+ *       <SelectLabel>Europe</SelectLabel>
+ *       <SelectItem value="gmt">Greenwich Mean Time</SelectItem>
+ *       <SelectItem value="cet">Central European Time</SelectItem>
+ *     </SelectGroup>
+ *   </SelectContent>
+ * </Select>
+ *
+ * // Different sizes
+ * <Select>
+ *   <SelectTrigger size="sm">
+ *     <SelectValue placeholder="Small" />
+ *   </SelectTrigger>
+ *   <SelectContent>
+ *     <SelectItem value="1">Option 1</SelectItem>
+ *   </SelectContent>
+ * </Select>
+ * ```
+ */
 const Select = SelectPrimitive.Root;
 
 const SelectGroup = SelectPrimitive.Group;

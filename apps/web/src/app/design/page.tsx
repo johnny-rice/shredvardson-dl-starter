@@ -7,6 +7,7 @@ import { Label } from '@ui/src/components/ui/label';
 import { Card } from '@ui/src/components/ui/card';
 import { Link } from '@/components/Link';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@ui/src/components/ui/dialog';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectSeparator } from '@ui/src/components/ui/select';
 
 /**
  * Design System Component Viewer
@@ -27,10 +28,27 @@ import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, Dialog
 export default function DesignSystemViewer() {
   const [copiedCode, setCopiedCode] = React.useState<string | null>(null);
 
-  const copyCode = (code: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(code);
-    setTimeout(() => setCopiedCode(null), 2000);
+  const copyCode = async (code: string) => {
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(code);
+      } else {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = code;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+      }
+      setCopiedCode(code);
+      setTimeout(() => setCopiedCode(null), 2000);
+    } catch (error) {
+      console.error('Failed to copy code:', error);
+    }
   };
 
   return (
@@ -42,6 +60,19 @@ export default function DesignSystemViewer() {
           <p className="text-xl text-muted-foreground">
             Component library with all variants and patterns
           </p>
+          <div className="flex gap-4">
+            <Link href="/design/tokens" variant="default">
+              View Design Tokens →
+            </Link>
+            <Link
+              href="https://github.com/Shredvardson/dl-starter/tree/main/docs/design/patterns"
+              variant="secondary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Pattern Documentation ↗
+            </Link>
+          </div>
         </header>
 
         {/* Buttons Section */}
@@ -255,6 +286,197 @@ export default function DesignSystemViewer() {
               <div className="flex flex-wrap gap-4">
                 <Link href="/docs">Default Link</Link>
                 <Link href="/docs" variant="ghost">Ghost Link</Link>
+              </div>
+            </ComponentExample>
+          </div>
+        </section>
+
+        {/* Select Section */}
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <h2 className="text-3xl font-semibold text-foreground">Select</h2>
+            <p className="text-muted-foreground">
+              Dropdown selection for choosing from a list of options
+            </p>
+            <Link
+              href="https://github.com/Shredvardson/dl-starter/blob/main/docs/design/patterns/forms.md"
+              variant="ghost"
+              className="text-sm"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View Pattern Documentation →
+            </Link>
+          </div>
+
+          <div className="space-y-8">
+            {/* Basic Select */}
+            <ComponentExample
+              title="Basic Select"
+              code={`<div className="space-y-2">
+  <Label id="fruit-label" htmlFor="fruit-select">Fruit</Label>
+  <Select defaultValue="apple">
+    <SelectTrigger id="fruit-select" aria-labelledby="fruit-label" className="w-[180px]">
+      <SelectValue placeholder="Select a fruit" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="apple">Apple</SelectItem>
+      <SelectItem value="banana">Banana</SelectItem>
+      <SelectItem value="orange">Orange</SelectItem>
+    </SelectContent>
+  </Select>
+</div>`}
+              onCopy={copyCode}
+              copied={copiedCode}
+            >
+              <div className="space-y-2">
+                <Label id="fruit-label" htmlFor="fruit-select">Fruit</Label>
+                <Select defaultValue="apple">
+                  <SelectTrigger id="fruit-select" aria-labelledby="fruit-label" className="w-[180px]">
+                    <SelectValue placeholder="Select a fruit" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="apple">Apple</SelectItem>
+                    <SelectItem value="banana">Banana</SelectItem>
+                    <SelectItem value="orange">Orange</SelectItem>
+                    <SelectItem value="grape">Grape</SelectItem>
+                    <SelectItem value="strawberry">Strawberry</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            </ComponentExample>
+
+            {/* Grouped Select */}
+            <ComponentExample
+              title="Grouped Select"
+              code={`<div className="space-y-2">
+  <Label id="timezone-label" htmlFor="timezone-select">Timezone</Label>
+  <Select>
+    <SelectTrigger id="timezone-select" aria-labelledby="timezone-label" className="w-[200px]">
+      <SelectValue placeholder="Select timezone" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectGroup>
+        <SelectLabel>North America</SelectLabel>
+        <SelectItem value="est">Eastern Time</SelectItem>
+        <SelectItem value="cst">Central Time</SelectItem>
+        <SelectItem value="pst">Pacific Time</SelectItem>
+      </SelectGroup>
+      <SelectSeparator />
+      <SelectGroup>
+        <SelectLabel>Europe</SelectLabel>
+        <SelectItem value="gmt">Greenwich Mean Time</SelectItem>
+        <SelectItem value="cet">Central European Time</SelectItem>
+      </SelectGroup>
+    </SelectContent>
+  </Select>
+</div>`}
+              onCopy={copyCode}
+              copied={copiedCode}
+            >
+              <div className="space-y-2">
+                <Label id="timezone-label" htmlFor="timezone-select">Timezone</Label>
+                <Select>
+                  <SelectTrigger id="timezone-select" aria-labelledby="timezone-label" className="w-[200px]">
+                    <SelectValue placeholder="Select timezone" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel>North America</SelectLabel>
+                      <SelectItem value="est">Eastern Time</SelectItem>
+                      <SelectItem value="cst">Central Time</SelectItem>
+                      <SelectItem value="pst">Pacific Time</SelectItem>
+                    </SelectGroup>
+                    <SelectSeparator />
+                    <SelectGroup>
+                      <SelectLabel>Europe</SelectLabel>
+                      <SelectItem value="gmt">Greenwich Mean Time</SelectItem>
+                      <SelectItem value="cet">Central European Time</SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+            </ComponentExample>
+
+            {/* Select Sizes */}
+            <ComponentExample
+              title="Select Sizes"
+              code={`<div className="flex flex-wrap items-center gap-4">
+  <div className="space-y-2">
+    <Label id="size-sm-label" htmlFor="size-sm">Small Size</Label>
+    <Select>
+      <SelectTrigger id="size-sm" size="sm" aria-labelledby="size-sm-label" className="w-[140px]">
+        <SelectValue placeholder="Small" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="sm">Small Size</SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+
+  <div className="space-y-2">
+    <Label id="size-md-label" htmlFor="size-md">Default Size</Label>
+    <Select>
+      <SelectTrigger id="size-md" aria-labelledby="size-md-label" className="w-[160px]">
+        <SelectValue placeholder="Default" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="md">Default Size</SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+
+  <div className="space-y-2">
+    <Label id="size-lg-label" htmlFor="size-lg">Large Size</Label>
+    <Select>
+      <SelectTrigger id="size-lg" size="lg" aria-labelledby="size-lg-label" className="w-[180px]">
+        <SelectValue placeholder="Large" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="lg">Large Size</SelectItem>
+      </SelectContent>
+    </Select>
+  </div>
+</div>`}
+              onCopy={copyCode}
+              copied={copiedCode}
+            >
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="space-y-2">
+                  <Label id="size-sm-label" htmlFor="size-sm">Small Size</Label>
+                  <Select>
+                    <SelectTrigger id="size-sm" size="sm" aria-labelledby="size-sm-label" className="w-[140px]">
+                      <SelectValue placeholder="Small" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sm">Small Size</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label id="size-md-label" htmlFor="size-md">Default Size</Label>
+                  <Select>
+                    <SelectTrigger id="size-md" aria-labelledby="size-md-label" className="w-[160px]">
+                      <SelectValue placeholder="Default" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="md">Default Size</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label id="size-lg-label" htmlFor="size-lg">Large Size</Label>
+                  <Select>
+                    <SelectTrigger id="size-lg" size="lg" aria-labelledby="size-lg-label" className="w-[180px]">
+                      <SelectValue placeholder="Large" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="lg">Large Size</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
             </ComponentExample>
           </div>
