@@ -4,7 +4,7 @@ DL Starter provides three automated quality commands that leverage AI sub-agents
 
 1. `/security:scan` - Security vulnerability scanning
 2. `/accessibility:audit` - WCAG 2.1 AA compliance auditing
-3. `/db:migrate` - Database migration workflow automation
+3. `/db` - Database migration workflow automation
 
 These commands use Haiku 4.5 sub-agents where appropriate for 68% cost reduction compared to Sonnet while maintaining high quality results.
 
@@ -246,24 +246,24 @@ pnpm a11y:audit:critical     # Critical issues only
 
 ---
 
-## `/db:migrate`
+## `/db`
 
-**Purpose:** Streamline Supabase database migration workflow with validation and RLS policy checks.
+**Purpose:** Streamline Supabase database migration workflow with validation and RLS policy checks (via supabase-integration Skill).
 
 ### Usage
 
 ```bash
 # Create new migration
-/db:migrate create "add_user_preferences"
+/db create add_user_preferences
 
 # Validate pending migrations
-/db:migrate validate
+/db validate
 
 # Apply migrations to local database
-/db:migrate apply
+/db apply
 
 # Rollback last migration
-/db:migrate rollback
+/db rollback
 ```
 
 ### Workflow Steps
@@ -271,7 +271,7 @@ pnpm a11y:audit:critical     # Critical issues only
 #### 1. Create Migration
 
 ```bash
-/db:migrate create "add_user_preferences"
+/db create add_user_preferences
 ```
 
 - Generates timestamped migration file
@@ -285,15 +285,15 @@ pnpm a11y:audit:critical     # Critical issues only
 
 Next steps:
 1. Edit the migration file
-2. Run: pnpm db:migrate:validate
-3. Run: pnpm db:migrate:apply
+2. Run: /db validate
+3. Run: /db apply
 4. Commit migration file
 ```
 
 #### 2. Validate Migration
 
 ```bash
-/db:migrate validate
+/db validate
 ```
 
 **Validation Checks:**
@@ -345,7 +345,7 @@ CREATE POLICY user_preferences_select ON user_preferences
 #### 3. Apply Migration
 
 ```bash
-/db:migrate apply
+/db apply
 ````
 
 - Validates migration first
@@ -368,7 +368,7 @@ Next steps:
 #### 4. Rollback Migration
 
 ```bash
-/db:migrate rollback
+/db rollback
 ```
 
 - Warns about data loss
@@ -396,10 +396,10 @@ Runs automatically on:
 **Package Scripts:**
 
 ```bash
-pnpm db:migrate:create "migration_name"   # Create
-pnpm db:migrate:validate                  # Validate
-pnpm db:migrate:apply                     # Apply
-pnpm db:migrate:rollback                  # Rollback
+pnpm db:migrate:create migration_name   # Create migration
+pnpm db:migrate:validate                # Validate migrations
+pnpm db:migrate:apply                   # Apply migrations
+pnpm db:migrate:rollback                # Rollback last migration
 ```
 
 ---
@@ -412,7 +412,7 @@ These automation commands use Haiku 4.5 sub-agents where appropriate:
 | ---------------------- | ------------------------------------ | -------------- |
 | `/security:scan`       | Haiku 4.5                            | 68% cheaper    |
 | `/accessibility:audit` | Playwright (script) + Haiku analysis | N/A            |
-| `/db:migrate`          | Script-based                         | N/A            |
+| `/db`                  | Script-based (via Skill)             | N/A            |
 
 **Estimated Savings:**
 
