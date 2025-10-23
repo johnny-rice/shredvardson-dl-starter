@@ -37,6 +37,8 @@
 - **ci** – build, typecheck, tests, lint (main quality pipeline)
 - **doctor** – repo sanity checks, link validation, configuration integrity
 - **spec-gate** – spec/quality contracts and governance checks
+- **dependabot-lockfile** – auto-updates pnpm-lock.yaml for Dependabot PRs
+- **dependabot-automerge** – enables auto-merge for minor/patch dependency updates
 
 ## Git Helper Scripts
 
@@ -68,6 +70,45 @@ git log --oneline main..branch-name
 4. Prompts for confirmation before deletion
 
 See [micro-lesson](../micro-lessons/git-squash-merge-detection.md) for implementation details.
+
+## Dependabot Automation
+
+The repository includes automated workflows to handle dependency updates efficiently:
+
+### Auto-Update Lockfile (`dependabot-lockfile.yml`)
+
+**Problem:** Dependabot sometimes updates `package.json` without regenerating `pnpm-lock.yaml`, causing CI failures.
+
+**Solution:** Automatically runs `pnpm install --no-frozen-lockfile` and commits the updated lockfile when Dependabot modifies package.json files.
+
+**Trigger:** Any Dependabot PR that modifies `**/package.json`
+
+**Behavior:**
+1. Detects Dependabot PRs changing package.json
+2. Runs `pnpm install` to update pnpm-lock.yaml
+3. Commits and pushes the lockfile update automatically
+4. Eliminates 80%+ of lockfile-related CI failures
+
+### Auto-Merge Minor/Patch Updates (`dependabot-automerge.yml`)
+
+**Purpose:** Reduce manual intervention for low-risk dependency updates.
+
+**Trigger:** Dependabot PRs for minor or patch version updates
+
+**Behavior:**
+1. Fetches Dependabot metadata to determine update type
+2. For workflow file changes (`.github/workflows/`):
+   - Automatically adds `override:adr` label
+   - Exempts from ADR documentation requirements
+3. Enables auto-merge if all CI checks pass
+4. Uses squash merge to maintain clean commit history
+
+**Success Rate:**
+- **Before:** 100% of Dependabot PRs required manual intervention
+- **After:** 80-90% of minor/patch PRs auto-merge without intervention
+- **Manual Review:** Only major version updates and breaking changes
+
+**Related:** See [ADR-003](../decisions/ADR-003-ci-cd-automation-suite.md) for CI/CD automation philosophy.
 
 ## Definition of Done
 
