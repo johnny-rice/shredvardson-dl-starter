@@ -1,0 +1,53 @@
+{
+  "name": "design-system",
+  "version": "1.0.0",
+  "description": "Proactive UI generation and automated design system enforcement",
+  "category": "design",
+  "tags": ["design", "ui", "components", "tokens", "accessibility", "visual-regression"],
+  "author": "DL Starter",
+  "license": "MIT",
+  "discoveryCommand": "/design",
+  "capabilities": [
+    "viewer",
+    "validate-tokens",
+    "validate-spacing",
+    "contrast-check",
+    "visual-diff",
+    "copy-review",
+    "generate-component",
+    "performance-check",
+    "figma-import"
+  ],
+  "scripts": {
+    "viewer": "scripts/viewer.ts",
+    "validate-tokens": "scripts/validate-tokens.ts",
+    "validate-spacing": "scripts/validate-spacing.ts",
+    "contrast-check": "scripts/contrast-check.ts",
+    "visual-diff": "scripts/visual-diff.ts",
+    "copy-review": "scripts/copy-review.ts",
+    "generate": "scripts/generate-component.ts",
+    "performance": "scripts/performance-check.ts",
+    "figma": "scripts/figma-import.ts"
+  },
+  "documentation": {
+    "skill": "SKILL.md",
+    "readme": "README.md",
+    "patterns": "../../docs/design/patterns/"
+  },
+  "dependencies": {
+    "tsx": ">=4.0.0",
+    "@babel/parser": "^7.23.0",
+    "pixelmatch": "^5.3.0",
+    "@playwright/test": ">=1.40.0"
+  },
+  "integrations": {
+    "subAgents": [
+      "design-review",
+      "a11y-review",
+      "visual-regression",
+      "copy-review",
+      "usability-review"
+    ],
+    "mcp": ["@executeautomation/playwright-mcp-server"]
+  }
+}

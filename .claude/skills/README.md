@@ -45,14 +45,28 @@ Skills are the successor to slash commands, offering:
 │       ├── rollback-migration.ts
 │       ├── validate-migration.ts
 │       └── generate-types.ts
-└── test-scaffolder/                # Test generation Skill
+├── test-scaffolder/                # Test generation Skill
+│   ├── skill.json                  # Metadata (20 tokens)
+│   ├── SKILL.md                    # Progressive disclosure doc (230 tokens)
+│   ├── README.md                   # Human documentation
+│   └── scripts/                    # Executable scripts (never in context)
+│       ├── scaffold-e2e.ts
+│       ├── scaffold-rls.ts
+│       └── validate-coverage.ts
+└── design-system/                  # Design system enforcement Skill
     ├── skill.json                  # Metadata (20 tokens)
-    ├── SKILL.md                    # Progressive disclosure doc (230 tokens)
+    ├── SKILL.md                    # Progressive disclosure doc (250 tokens)
     ├── README.md                   # Human documentation
     └── scripts/                    # Executable scripts (never in context)
-        ├── scaffold-e2e.ts
-        ├── scaffold-rls.ts
-        └── validate-coverage.ts
+        ├── viewer.ts
+        ├── validate-tokens.ts
+        ├── validate-spacing.ts
+        ├── contrast-check.ts
+        ├── visual-diff.ts
+        ├── copy-review.ts
+        ├── generate-component.ts
+        ├── performance-check.ts
+        └── figma-import.ts
 ```
 
 ## Available Skills
@@ -142,6 +156,45 @@ Skills are the successor to slash commands, offering:
 /code implement feature_type
 ```
 
+### design-system (Phase 0 ✓)
+
+**Command**: Invoked via `/design` discovery command
+**Purpose**: Proactive UI generation and automated design system enforcement
+**Token Savings**: 80% (estimated, to be measured)
+**Capabilities**:
+
+- Open component viewer at /design route
+- Validate token compliance (AST parsing)
+- Validate spacing consistency (CDP)
+- Check WCAG contrast ratios (CDP)
+- Visual regression testing (Playwright)
+- UX copy review (LLM Judge)
+- Generate components (Handlebars templates)
+- Performance profiling (CDP)
+- Figma token import (Phase 5)
+
+**Sub-Agent Integration**:
+
+- Design Review Agent
+- A11y Review Agent
+- Visual Regression Agent
+- Copy Review Agent
+- Usability Review Agent
+- Manager Agent (orchestrator)
+
+**Usage**:
+
+```bash
+/design viewer                   # Open component browser
+/design validate                 # Run all checks
+/design validate-tokens          # Token compliance
+/design contrast-check           # WCAG contrast
+/design visual-diff              # Screenshot comparison
+/design generate <name> [var]    # Scaffold component
+```
+
+**Phase 0 Status**: Infrastructure complete, scripts stubbed (except viewer)
+
 ## Progressive Disclosure (3-Tier Loading)
 
 ```
@@ -154,12 +207,13 @@ Level 3 (on-demand): Scripts executed, only output returned
 
 ## Discovery Commands
 
-Instead of 27 slash commands, we have 5 lightweight discovery commands:
+Instead of 27 slash commands, we have 6 lightweight discovery commands:
 
 - `/db` → supabase-integration Skill (Phase 1 ✓)
 - `/test` → test-scaffolder Skill (Phase 2 ✓)
 - `/spec` → prd-analyzer Skill (Phase 2 ✓)
 - `/code` → implementation-assistant Skill (Phase 2 ✓)
+- `/design` → design-system Skill (Phase 0 ✓)
 - `/git` → git-workflow Skill (Phase 3, pending)
 
 ## Creating a New Skill
@@ -188,6 +242,7 @@ This validates the progressive disclosure hypothesis and ensures we're achieving
 
 - **Phase 1** (v1.0.0): Foundation + supabase-integration Skill ✓
 - **Phase 2** (v2.0.0): TDD workflow Skills (test-scaffolder, prd-analyzer, implementation-assistant) ✓
+- **Phase 0-DS** (v2.1.0): Design System Skill infrastructure ✓
 - **Phase 3** (v3.0.0 planned): Git consolidation
 - **Phase 4** (v4.0.0 planned): Meta-capabilities (skill-creator, learning-capturer)
 

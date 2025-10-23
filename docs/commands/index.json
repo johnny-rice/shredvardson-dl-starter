@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2025-10-22T13:48:44.811Z",
+  "generated": "2025-10-23T12:57:21.525Z",
   "commands": [
     {
       "name": "_shared/branch-validation",
@@ -140,6 +140,21 @@
       "example": "Standard development workflow",
       "riskLevel": "MEDIUM",
       "requiresHITL": true
+    },
+    {
+      "name": "design - Design System Management",
+      "path": ".claude/commands/design.md",
+      "category": "General",
+      "tags": [
+        "planning",
+        "requirements",
+        "quality"
+      ],
+      "when": "General development tasks",
+      "purpose": "Proactive UI generation and automated design system enforcement",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
     },
     {
       "name": "dev:init-new-app",
