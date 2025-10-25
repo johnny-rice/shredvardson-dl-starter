@@ -1,0 +1,147 @@
+#!/bin/bash
+
+# Pre-push hook to block direct pushes to main branch and run tests
+# This script prevents accidental direct pushes to main and ensures code quality
+
+protected_branch='refs/heads/main'
+
+# Check for --no-verify bypass
+if [ "$SKIP_HOOKS" = "true" ]; then
+    echo "⚠️  Bypassing pre-push hooks (SKIP_HOOKS=true)"
+    exit 0
+fi
+
+# Read the input from stdin (remote name and URL)
+while read local_ref local_sha remote_ref remote_sha
+do
+    if [ "$remote_ref" = "$protected_branch" ]; then
+        echo ""
+        echo "❌ PUSH BLOCKED: Direct pushes to 'main' branch are not allowed!"
+        echo ""
+        echo "🔄 To contribute to this repository:"
+        echo "   1. Create a feature branch:"
+        echo "      git checkout -b feature/your-feature-name"
+        echo ""
+        echo "   2. Push your feature branch:"
+        echo "      git push origin feature/your-feature-name"
+        echo ""
+        echo "   3. Create a Pull Request on GitHub"
+        echo ""
+        echo "💡 This workflow ensures proper code review and maintains repository quality."
+        echo ""
+        exit 1
+    fi
+done
+
+# 1. Check lockfile sync (fast: ~0.5s)
+# Check if package.json changed compared to origin/main (works for new branches)
+if git diff --name-only origin/main...HEAD 2>/dev/null | grep -q "package.json"; then
+    echo "📦 Checking lockfile sync..."
+    if ! pnpm install --frozen-lockfile; then
+        echo ""
+        echo "❌ pnpm-lock.yaml is out of sync with package.json"
+        echo ""
+        echo "💡 Fix: Run 'pnpm install' to update the lockfile"
+        echo ""
+        echo "💡 To bypass this check (not recommended):"
+        echo "   git push --no-verify"
+        echo ""
+        exit 1
+    fi
+    echo "✅ Lockfile is in sync"
+fi
+
+# 2. TypeScript type checking (~8-12s, often cached by Turbo)
+echo "🔎 Type checking..."
+START_TIME=$(date +%s)
+TYPECHECK_OUTPUT=$(pnpm typecheck 2>&1)
+TYPECHECK_EXIT=$?
+echo "$TYPECHECK_OUTPUT" | grep -v "Tasks:"
+if [ $TYPECHECK_EXIT -ne 0 ]; then
+    echo ""
+    echo "❌ TypeScript errors found!"
+    echo ""
+    echo "💡 Fix: Run 'pnpm typecheck' to see errors"
+    echo ""
+    echo "💡 To bypass this check (not recommended):"
+    echo "   git push --no-verify"
+    echo ""
+    exit 1
+fi
+END_TIME=$(date +%s)
+TYPECHECK_DURATION=$((END_TIME - START_TIME))
+if [ $TYPECHECK_DURATION -lt 3 ]; then
+    echo "✅ Type check passed (${TYPECHECK_DURATION}s - cached)"
+else
+    echo "✅ Type check passed (${TYPECHECK_DURATION}s)"
+fi
+
+# 3. Linting (~3-5s)
+echo "✨ Linting..."
+START_TIME=$(date +%s)
+LINT_OUTPUT=$(pnpm lint 2>&1)
+LINT_EXIT=$?
+echo "$LINT_OUTPUT" | grep -v "Tasks:"
+if [ $LINT_EXIT -ne 0 ]; then
+    echo ""
+    echo "❌ Lint errors found!"
+    echo ""
+    echo "💡 Fix: Run 'pnpm lint' to see errors, or 'pnpm format' to auto-fix"
+    echo ""
+    echo "💡 To bypass this check (not recommended):"
+    echo "   git push --no-verify"
+    echo ""
+    exit 1
+fi
+END_TIME=$(date +%s)
+LINT_DURATION=$((END_TIME - START_TIME))
+echo "✅ Lint check passed (${LINT_DURATION}s)"
+
+# 4. Run CI script tests (fast: <2s)
+echo "🔧 Running CI script tests..."
+if ! pnpm --silent test:ci-scripts; then
+    echo ""
+    echo "❌ CI script tests failed! Fix the scripts before pushing."
+    echo ""
+    echo "💡 To bypass this check (not recommended):"
+    echo "   git push --no-verify"
+    echo ""
+    exit 1
+fi
+echo "✅ CI scripts validated"
+
+# 5. Run unit tests (target: <20s for optimal DX)
+echo "🧪 Running unit tests..."
+START_TIME=$(date +%s)
+
+# Run tests with Turbo's affected files detection for speed
+if ! pnpm --silent test:unit; then
+    echo ""
+    echo "❌ Unit tests failed! Fix the tests before pushing."
+    echo ""
+    echo "💡 To bypass this check (not recommended):"
+    echo "   git push --no-verify"
+    echo ""
+    exit 1
+fi
+
+END_TIME=$(date +%s)
+TEST_DURATION=$((END_TIME - START_TIME))
+
+# Provide feedback on execution time
+if [ $TEST_DURATION -lt 5 ]; then
+    echo "✅ All tests passed! (${TEST_DURATION}s - cached)"
+elif [ $TEST_DURATION -lt 15 ]; then
+    echo "✅ All tests passed! (${TEST_DURATION}s)"
+elif [ $TEST_DURATION -lt 30 ]; then
+    echo "✅ All tests passed! (${TEST_DURATION}s - acceptable)"
+else
+    echo "⚠️  Tests passed but took ${TEST_DURATION}s (target: <20s)"
+    echo "💡 Consider running fewer tests in pre-push or relying on CI for full suite"
+fi
+
+echo ""
+echo "🎉 All quality checks passed!"
+echo ""
+
+exit 0
