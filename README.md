@@ -86,18 +86,22 @@ See [Skills Documentation](.claude/skills/README.md) for complete catalog (avail
 
 No more "oops, forgot to run tests" commits.
 
-- **Pre-commit**: Auto-runs tests (<30s) before every commit
-- **Pre-push**: Comprehensive validation suite (15-30s typical)
+- **Pre-commit**: Instant feedback (<1s) with Biome
+  - ⚡ Format & lint ([~35x faster than Prettier](https://biomejs.dev/), instant feedback)
+  - 🔧 Auto-stages fixed files (zero friction)
+  - 📚 Auto-update micro-lessons index
+- **Pre-push**: Comprehensive validation (8-15s with parallel execution)
+  - 🚫 Block direct pushes to main branch
   - 📦 Lockfile sync check when package.json changes
-  - 🔎 TypeScript type checking (Turbo cached)
-  - ✨ Linting (auto-fixable issues flagged)
+  - 🔎 TypeScript type checking + ✨ ESLint (parallel execution)
   - 🔧 CI script validation
   - 🧪 Unit tests
   - ⏭️ Bypass with `git push --no-verify` if needed
+- **Auto-installing hooks**: Lefthook syncs on `pnpm install` (no manual setup!)
 - **CI Pipeline**: Lint (zero warnings), typecheck, build, test, doctor checks
 - **CodeRabbit**: Free AI code review on every PR
 
-**Impact**: Pre-push hook prevents 100% of lockfile sync issues, type errors, and lint failures before CI—saving 20-30 minutes per PR.
+**Impact**: 2x faster validation (15-30s → 8-15s), instant commit feedback, zero setup for new contributors. Pre-push hook prevents 100% of lockfile sync issues, type errors, and lint failures before CI—saving 20-30 minutes per PR.
 
 **The `/git:fix-pr` Command** - fetches all PR feedback (CI, CodeRabbit, doctor), categorizes issues (auto-fixable vs. manual), fixes them iteratively, and captures learnings. Turn CI failures into one-command fixes.
 
