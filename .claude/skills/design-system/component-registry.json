@@ -1,0 +1,257 @@
+{
+  "shadcnComponents": {
+    "button": {
+      "path": "@ui/components",
+      "variants": [
+        "default",
+        "destructive",
+        "outline",
+        "secondary",
+        "ghost",
+        "link"
+      ],
+      "sizes": [
+        "default",
+        "sm",
+        "lg",
+        "icon"
+      ],
+      "features": [
+        "forwardRef",
+        "disabled",
+        "asChild"
+      ],
+      "useCases": [
+        "actions",
+        "forms",
+        "navigation",
+        "triggers"
+      ]
+    },
+    "input": {
+      "path": "@ui/components",
+      "types": [
+        "text",
+        "email",
+        "password",
+        "number",
+        "tel",
+        "url",
+        "search"
+      ],
+      "features": [
+        "forwardRef",
+        "disabled",
+        "placeholder"
+      ],
+      "useCases": [
+        "forms",
+        "search",
+        "data-entry"
+      ]
+    },
+    "card": {
+      "path": "@ui/components",
+      "subComponents": [
+        "CardHeader",
+        "CardTitle",
+        "CardDescription",
+        "CardContent",
+        "CardFooter"
+      ],
+      "features": [
+        "composition",
+        "flexible-layout"
+      ],
+      "useCases": [
+        "containers",
+        "content-groups",
+        "dashboards"
+      ]
+    },
+    "label": {
+      "path": "@ui/components",
+      "features": [
+        "forwardRef",
+        "htmlFor"
+      ],
+      "useCases": [
+        "forms",
+        "accessibility",
+        "field-labels"
+      ]
+    },
+    "select": {
+      "path": "@ui/components",
+      "subComponents": [
+        "SelectTrigger",
+        "SelectContent",
+        "SelectItem",
+        "SelectValue"
+      ],
+      "features": [
+        "controlled",
+        "placeholder",
+        "disabled"
+      ],
+      "useCases": [
+        "forms",
+        "filters",
+        "options"
+      ]
+    },
+    "dialog": {
+      "path": "@ui/components",
+      "subComponents": [
+        "DialogTrigger",
+        "DialogContent",
+        "DialogHeader",
+        "DialogTitle",
+        "DialogDescription",
+        "DialogFooter"
+      ],
+      "features": [
+        "modal",
+        "controlled",
+        "dismissable"
+      ],
+      "useCases": [
+        "modals",
+        "confirmations",
+        "forms-overlay"
+      ]
+    }
+  },
+  "customComponents": {
+    "_comment": "Track custom components created for legitimate reasons"
+  },
+  "aliases": {
+    "btn": "button",
+    "modal": "dialog",
+    "popup": "dialog",
+    "text": "input",
+    "email": "input",
+    "password": "input",
+    "confirm": "dialog"
+  },
+  "similarityGroups": {
+    "containers": [
+      "card",
+      "dialog"
+    ],
+    "inputs": [
+      "input",
+      "select"
+    ],
+    "buttons": [
+      "button"
+    ]
+  },
+  "domainSpecific": {
+    "_comment": "Components that are clearly domain-specific and shouldn't trigger warnings",
+    "patterns": [
+      "chart",
+      "graph",
+      "plot",
+      "calendar",
+      "date-picker",
+      "time-picker",
+      "map",
+      "location",
+      "video",
+      "audio",
+      "media",
+      "editor",
+      "markdown",
+      "code",
+      "data-table",
+      "data-grid",
+      "spreadsheet",
+      "kanban",
+      "timeline",
+      "gantt",
+      "payment",
+      "checkout",
+      "cart",
+      "chat",
+      "messenger",
+      "comments"
+    ]
+  },
+  "externalSources": {
+    "_comment": "Tier 1 external libraries for specialized components (based on 2024-10 research)",
+    "tremor": {
+      "name": "Tremor",
+      "url": "https://tremor.so",
+      "category": "data-visualization",
+      "philosophy": "copy-paste (like shadcn)",
+      "compatibility": "perfect",
+      "styling": "tailwind-native",
+      "license": "Apache-2.0",
+      "bundleImpact": "~15kb (gzipped, approximate - defer to per-template dependencies)",
+      "maintenance": "Vercel-backed",
+      "rscCompatible": true,
+      "conversionEffort": "automatic",
+      "lastReviewed": "2025-10-24",
+      "source": "https://tremor.so/docs",
+      "components": {
+        "LineChart": { "complexity": "medium", "dependencies": ["recharts"] },
+        "BarChart": { "complexity": "medium", "dependencies": ["recharts"] },
+        "AreaChart": { "complexity": "medium", "dependencies": ["recharts"] },
+        "DonutChart": { "complexity": "low", "dependencies": ["recharts"] },
+        "KpiCard": { "complexity": "low", "dependencies": [] }
+      }
+    },
+    "tanstack-table": {
+      "name": "TanStack Table",
+      "url": "https://tanstack.com/table",
+      "category": "data-grid",
+      "philosophy": "headless (logic only)",
+      "compatibility": "perfect",
+      "license": "MIT",
+      "bundleImpact": "~45kb (gzipped, approximate)",
+      "lastReviewed": "2025-10-24",
+      "source": "https://tanstack.com/table/latest/docs/introduction",
+      "templates": ["basic-table", "advanced-table", "server-table"]
+    },
+    "dnd-kit": {
+      "name": "dnd-kit",
+      "url": "https://dndkit.com",
+      "category": "drag-drop",
+      "philosophy": "headless (logic only)",
+      "compatibility": "perfect",
+      "license": "MIT",
+      "bundleImpact": "~35kb (gzipped, approximate)",
+      "lastReviewed": "2025-10-24",
+      "source": "https://docs.dndkit.com/introduction/getting-started",
+      "templates": ["kanban-board", "sortable-list", "reorderable-grid"]
+    },
+    "react-aria": {
+      "name": "React Aria",
+      "url": "https://react-spectrum.adobe.com/react-aria",
+      "category": "primitives",
+      "philosophy": "headless-hooks",
+      "compatibility": "perfect",
+      "license": "Apache-2.0",
+      "lastReviewed": "2025-10-24",
+      "source": "https://react-spectrum.adobe.com/react-aria/getting-started.html",
+      "use": "build-from-scratch for custom components"
+    }
+  },
+  "decisionTree": {
+    "_comment": "Maps user intent keywords to recommended source",
+    "chart": "tremor",
+    "graph": "tremor",
+    "dashboard": "tremor",
+    "table": {
+      "simple": "shadcn",
+      "advanced": "tanstack-table"
+    },
+    "kanban": "dnd-kit",
+    "drag": "dnd-kit",
+    "calendar": {
+      "basic": "shadcn",
+      "advanced": "react-aria"
+    }
+  }
+}

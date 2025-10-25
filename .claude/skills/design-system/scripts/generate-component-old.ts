@@ -1,24 +1,17 @@
 #!/usr/bin/env tsx
 
 /**
- * Component Generator with Guardrails
- * Phase 4: Enhanced with component existence checking
- * Prevents unnecessary duplication of existing shadcn components
+ * Component Generator
+ * Scaffolds new components following design system patterns
+ * Phase 4: Full implementation with Handlebars templates
  */
 
 import * as fs from 'fs';
 import * as path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 import Handlebars from 'handlebars';
-import { checkComponentExists } from './check-component-exists';
-import { createSafeComponentPath } from './utils.js';
+import { execSync } from 'child_process';
 
-// ESM-compatible __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Register Handlebars helpers (same as before)
+// Register Handlebars helpers
 Handlebars.registerHelper('pascalCase', (str: string) => {
   return str.replace(/(-|_|^)(\w)/g, (_, __, c) => c.toUpperCase());
 });
@@ -37,10 +30,7 @@ Handlebars.registerHelper('kebabCase', (str: string) => {
 
 Handlebars.registerHelper('eq', (a: any, b: any) => a === b);
 Handlebars.registerHelper('gt', (a: any, b: any) => a > b);
-Handlebars.registerHelper('typeof', (v: any) => typeof v);
-Handlebars.registerHelper('json', (v: any) => JSON.stringify(v, null, 2));
 
-// Interfaces (keeping existing ones)
 interface GeneratedFile {
   path: string;
   type: 'component' | 'test' | 'story';
@@ -110,15 +100,9 @@ interface ComponentGenerationOutput {
   summary: string;
   nextSteps?: string[];
   firstPassAccuracy?: number;
-  guardCheck?: {
-    blocked: boolean;
-    reason?: string;
-    suggestion?: string;
-    alternatives?: string[];
-  };
 }
 
-// Load pattern configurations (keeping existing)
+// Load pattern configurations
 function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
   const patterns: Record<string, Partial<ComponentConfig>> = {
     button: {
@@ -167,40 +151,44 @@ function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
       isForwardRef: true,
       hasChildren: false,
       hasDisabledState: true,
-      baseClasses: 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-      componentDescription: 'A styled input component for forms',
-      accessibilityNotes: 'Should be paired with a Label component. Supports all standard input attributes.',
+      baseClasses: 'flex h-10 w-full rounded-[var(--radius)] border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+      componentDescription: 'A form input component with consistent styling',
+      accessibilityNotes: 'Supports proper labeling and error states. Compatible with screen readers.',
+      hasAriaLabel: true,
+      needsContrastTest: true,
       patternFile: 'forms.md',
     },
     card: {
       elementTag: 'div',
-      elementType: 'Div',
+      elementType: 'HTMLDiv',
       htmlElement: 'Div',
       isForwardRef: true,
       hasChildren: true,
       baseClasses: 'rounded-lg border bg-card text-card-foreground shadow-sm',
-      componentDescription: 'A card container component',
-      accessibilityNotes: 'Consider adding role="article" or role="region" with aria-label for semantic grouping.',
-      patternFile: 'layout.md',
+      componentDescription: 'A container component for grouping related content',
+      accessibilityNotes: 'Use appropriate ARIA roles when card contains interactive elements.',
+      patternFile: 'cards.md',
+    },
+    dialog: {
+      elementTag: 'div',
+      elementType: 'HTMLDiv',
+      htmlElement: 'Div',
+      hasChildren: true,
+      baseClasses: 'fixed inset-0 z-50 flex items-center justify-center',
+      componentDescription: 'A modal dialog component for overlays',
+      accessibilityNotes: 'Manages focus trap and escape key handling. Announces to screen readers.',
+      role: 'dialog',
+      ariaLabel: 'Dialog',
+      hasAriaLabel: true,
+      needsTheme: true,
+      patternFile: 'modals.md',
     },
   };
 
-  // Generic safe fallback for unknown patterns
-  const fallback: Partial<ComponentConfig> = {
-    elementTag: 'div',
-    elementType: 'Div',
-    htmlElement: 'Div',
-    isForwardRef: true,
-    hasChildren: true,
-    baseClasses: '',
-    componentDescription: 'Generic container component',
-    accessibilityNotes: 'Uses a semantic element; ensure appropriate roles/ARIA as needed.',
-  };
-
-  return patterns[patternName] || fallback;
+  return patterns[patternName] || {};
 }
 
-// Template loading and generation functions (keeping existing)
+// Load templates
 function loadTemplate(templateName: string): string {
   const templatePath = path.join(__dirname, '..', 'templates', `${templateName}.hbs`);
   if (fs.existsSync(templatePath)) {
@@ -209,19 +197,27 @@ function loadTemplate(templateName: string): string {
   throw new Error(`Template not found: ${templateName}`);
 }
 
+// Generate component from template
 function generateFromTemplate(config: ComponentConfig, templateName: string): string {
   const template = loadTemplate(templateName);
   const compiledTemplate = Handlebars.compile(template);
   return compiledTemplate(config);
 }
 
-// Validation functions (keeping existing)
+// Validate generated component
 async function validateComponent(componentPath: string): Promise<ValidationResult> {
   const content = fs.readFileSync(componentPath, 'utf-8');
 
+  // Check for token usage
   const tokenCompliance = calculateTokenCompliance(content);
+
+  // Pattern adherence (simplified check)
   const patternAdherence = content.includes('cn(') ? 90 : 60;
+
+  // Accessibility check
   const accessibility = calculateAccessibilityScore(content);
+
+  // Test coverage (check if test file exists)
   const testPath = componentPath.replace('.tsx', '.test.tsx');
   const testCoverage = fs.existsSync(testPath) ? 80 : 0;
 
@@ -242,29 +238,43 @@ async function validateComponent(componentPath: string): Promise<ValidationResul
 
 function calculateTokenCompliance(content: string): number {
   let score = 100;
+
+  // Check for hardcoded colors (should use tokens)
   if (/bg-(red|blue|green|yellow|purple|pink|indigo)-\d+/.test(content)) {
     score -= 20;
   }
+
+  // Check for hardcoded spacing (should use tokens)
   if (/p[xy]?-\d+/.test(content) && !/var\(--spacing/.test(content)) {
     score -= 10;
   }
+
+  // Check for using CSS variables
   if (/var\(--/.test(content)) {
     score = Math.min(100, score + 10);
   }
+
   return Math.max(0, score);
 }
 
 function calculateAccessibilityScore(content: string): number {
-  let score = 70;
+  let score = 70; // Base score
+
+  // Check for aria attributes
   if (/aria-(label|describedby|labelledby)/.test(content)) {
     score += 10;
   }
+
+  // Check for role attribute
   if (/role=/.test(content)) {
     score += 10;
   }
+
+  // Check for semantic HTML
   if (/<(button|nav|main|header|footer|article|section)/.test(content)) {
     score += 10;
   }
+
   return Math.min(100, score);
 }
 
@@ -277,22 +287,25 @@ function generateSuggestions(
   const suggestions: string[] = [];
 
   if (tokenCompliance < 100) {
-    suggestions.push('Replace hardcoded colors with design tokens');
+    suggestions.push('Replace hardcoded colors with design tokens (e.g., use var(--color-primary))');
   }
+
   if (patternAdherence < 90) {
-    suggestions.push('Ensure component follows established patterns');
+    suggestions.push('Ensure component follows established patterns from docs/design/patterns/');
   }
+
   if (accessibility < 90) {
-    suggestions.push('Add proper ARIA attributes');
+    suggestions.push('Add proper ARIA attributes and semantic HTML elements');
   }
+
   if (testCoverage < 70) {
-    suggestions.push('Add comprehensive test coverage');
+    suggestions.push('Add comprehensive test coverage (target: 70%+)');
   }
 
   return suggestions;
 }
 
-// MAIN GENERATION FUNCTION WITH GUARDRAILS
+// Main generation function
 async function generateComponent(args: string[]): Promise<ComponentGenerationOutput> {
   const componentName = args[0];
   const variant = args[1];
@@ -307,147 +320,13 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
     };
   }
 
-  // ========== NEW GUARDRAIL LOGIC ==========
+  console.error(`✨ Generating ${componentName}${variant ? ` (${variant})` : ''}...`);
 
-  // Check if forcing new component creation
-  const forceNew = args.includes('--force-new');
-  const extendFrom = args.find(arg => arg.startsWith('--extend-from='))?.split('=')[1];
-  const reason = args.find(arg => arg.startsWith('--reason='))?.split('=')[1];
-
-  // Check if component exists
-  const checkResult = checkComponentExists(componentName);
-
-  // Block if exact match found (unless forced)
-  if (checkResult.exists && !forceNew) {
-    console.error(`\n⚠️  Component "${componentName}" already exists!`);
-    console.error(`📦 Type: ${checkResult.type}`);
-
-    if (checkResult.importPath) {
-      console.error(`📍 Import: ${checkResult.importPath}`);
-    }
-
-    if (checkResult.variants) {
-      console.error(`🎨 Variants: ${checkResult.variants.join(', ')}`);
-    }
-
-    console.error(`\n💡 ${checkResult.suggestion}`);
-
-    return {
-      success: false,
-      componentName,
-      files: [],
-      summary: `Component already exists in ${checkResult.type === 'shadcn' ? 'shadcn/ui' : 'custom components'}`,
-      guardCheck: {
-        blocked: true,
-        reason: checkResult.suggestion,
-        alternatives: [
-          `Import and use the existing component`,
-          `Extend with a variant if needed`,
-          `Use --force-new --reason="..." if truly necessary`
-        ]
-      },
-      nextSteps: [
-        ...(checkResult.importPath
-          ? [`import { ${componentName} } from "${checkResult.importPath}"`]
-          : ['Use the existing custom component (no import path available)']),
-        'Or extend the existing component with new variants'
-      ]
-    };
-  }
-
-  // Warn about similar components (unless forced or domain-specific)
-  if (!checkResult.exists && checkResult.similarComponents &&
-      checkResult.similarComponents.length > 0 &&
-      !forceNew && !checkResult.isDomainSpecific) {
-
-    console.error(`\n🤔 Similar components found:`);
-    checkResult.similarComponents.forEach(similar => {
-      console.error(`  - ${similar.name} (${similar.similarity}% similar - ${similar.reason})`);
-    });
-
-    console.error(`\n💡 Consider:`);
-    console.error(`  1. Use existing: import { ${checkResult.similarComponents[0].name} } from "@ui/components/ui/${checkResult.similarComponents[0].name}"`);
-    console.error(`  2. Extend existing: /design generate ${componentName} --extend-from=${checkResult.similarComponents[0].name}`);
-    console.error(`  3. Force new: /design generate ${componentName} --force-new --reason="..."`);
-
-    // If not forced, require confirmation
-    if (!extendFrom) {
-      return {
-        success: false,
-        componentName,
-        files: [],
-        summary: 'Similar components exist. Please confirm your intention.',
-        guardCheck: {
-          blocked: true,
-          reason: `Similar to existing: ${checkResult.similarComponents[0].name}`,
-          suggestion: checkResult.suggestion,
-          alternatives: checkResult.similarComponents.map(s =>
-            `Use or extend ${s.name} (${s.reason})`
-          )
-        },
-        nextSteps: [
-          'Review similar components',
-          'Add --extend-from=<component> to extend',
-          'Add --force-new --reason="..." to create new'
-        ]
-      };
-    }
-  }
-
-  // If forcing new, require a reason
-  if (forceNew && !reason) {
-    console.error(`\n⚠️  Creating new component requires justification`);
-    console.error(`📝 Please explain why existing components won't work`);
-    console.error(`\nUsage: /design generate ${componentName} --force-new --reason="..."`);
-
-    return {
-      success: false,
-      componentName,
-      files: [],
-      summary: 'Justification required for new component',
-      guardCheck: {
-        blocked: true,
-        reason: 'Missing justification for new component'
-      },
-      nextSteps: ['Add --reason="..." to explain why this component is needed']
-    };
-  }
-
-  // Log the decision
-  if (forceNew) {
-    console.error(`\n✅ Creating new component with justification: "${reason}"`);
-  } else if (extendFrom) {
-    console.error(`\n✅ Extending ${extendFrom} to create ${componentName}`);
-  } else if (checkResult.isDomainSpecific) {
-    console.error(`\n✅ Creating domain-specific component: ${componentName}`);
-  }
-
-  // ========== END GUARDRAIL LOGIC ==========
-
-  console.error(`\n✨ Generating ${componentName}${variant ? ` (${variant})` : ''}...`);
-
-  // Determine pattern using registry for intelligent fallback
-  let pattern = extendFrom;
-  if (!pattern) {
-    try {
-      const registryPath = path.join(__dirname, '..', 'component-registry.json');
-      const registry = JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
-      const normalized = componentName.toLowerCase();
-
-      // Check aliases first
-      const aliased = registry.aliases?.[normalized];
-      // Then check known shadcn components
-      const known = registry.shadcnComponents?.[normalized] ? normalized : undefined;
-
-      pattern = aliased || known || 'button'; // Fallback to button pattern
-    } catch (e) {
-      // Fallback to substring matching if registry unavailable
-      pattern = componentName.toLowerCase().includes('button') ? 'button' :
-               componentName.toLowerCase().includes('input') ? 'input' :
-               componentName.toLowerCase().includes('card') ? 'card' :
-               componentName.toLowerCase().includes('dialog') ? 'dialog' : 'button';
-    }
-  }
+  // Determine pattern from component name
+  const pattern = componentName.toLowerCase().includes('button') ? 'button' :
+                  componentName.toLowerCase().includes('input') ? 'input' :
+                  componentName.toLowerCase().includes('card') ? 'card' :
+                  componentName.toLowerCase().includes('dialog') ? 'dialog' : 'button';
 
   // Load pattern configuration
   const patternConfig = loadPatternConfig(pattern);
@@ -472,9 +351,8 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
   try {
     // Generate component file
     const componentContent = generateFromTemplate(config, 'component');
-
-    // Use shared utility for safe path creation
-    const { kebabName, basePath: componentDir } = createSafeComponentPath(componentName);
+    const componentDir = path.join(process.cwd(), 'packages/ui/src/components/ui');
+    const kebabName = componentName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
     const componentPath = path.join(componentDir, `${kebabName}.tsx`);
 
     if (!fs.existsSync(componentDir)) {
@@ -491,28 +369,34 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
 
     console.error(`  ✓ Created component: ${componentPath}`);
 
-    // Generate test file (only if template exists)
-    try {
-      const testContent = generateFromTemplate(config, 'test');
-      const testPath = path.join(componentDir, `${kebabName}.test.tsx`);
-      fs.writeFileSync(testPath, testContent);
+    // Generate test file
+    const testContent = generateFromTemplate(config, 'test');
+    const testPath = path.join(componentDir, `${kebabName}.test.tsx`);
+
+    fs.writeFileSync(testPath, testContent);
+    files.push({
+      path: testPath,
+      type: 'test',
+      created: true,
+      content: testContent,
+    });
+
+    console.error(`  ✓ Created test: ${testPath}`);
+
+    // Generate story file (optional)
+    if (args.includes('--with-story')) {
+      const storyContent = generateFromTemplate(config, 'story');
+      const storyPath = path.join(componentDir, `${kebabName}.stories.tsx`);
+
+      fs.writeFileSync(storyPath, storyContent);
       files.push({
-        path: testPath,
-        type: 'test',
+        path: storyPath,
+        type: 'story',
         created: true,
-        content: testContent,
+        content: storyContent,
       });
-      console.error(`  ✓ Created test: ${testPath}`);
-    } catch (e) {
-      console.error(`  ⚠️  Test template not found, skipping test generation`);
-    }
 
-    // Note: Storybook removed in favor of /design viewer
-    // For visual examples, see .claude/skills/design-system/viewer/examples/
-
-    // Update component registry if new component
-    if (forceNew || checkResult.isDomainSpecific) {
-      updateComponentRegistry(componentName, reason || 'Domain-specific component', extendFrom);
+      console.error(`  ✓ Created story: ${storyPath}`);
     }
 
     // Validate generated component
@@ -530,6 +414,18 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
       validation.suggestions.forEach(s => console.error(`  - ${s}`));
     }
 
+    // Run Sub-Agent validation if available
+    if (fs.existsSync(path.join(__dirname, 'validate-tokens.ts'))) {
+      console.error('\n🤖 Running Sub-Agent validation...');
+      try {
+        execSync(`pnpm tsx ${path.join(__dirname, 'validate-tokens.ts')} ${componentPath}`, {
+          stdio: 'inherit',
+        });
+      } catch (e) {
+        console.error('  ⚠️  Token validation failed');
+      }
+    }
+
     const firstPassAccuracy = validation.score;
 
     return {
@@ -540,10 +436,6 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
       validation,
       firstPassAccuracy,
       summary: `Generated ${componentName} component with ${Math.round(firstPassAccuracy)}% first-pass accuracy`,
-      guardCheck: {
-        blocked: false,
-        reason: forceNew ? `Created with justification: ${reason}` : undefined
-      },
       nextSteps: validation.passed ?
         ['Component is production-ready'] :
         ['Apply suggested improvements', 'Run validation again'],
@@ -559,43 +451,6 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
       summary: `Failed to generate component: ${error.message}`,
       nextSteps: ['Check error message', 'Ensure templates exist'],
     };
-  }
-}
-
-// Update component registry when new component is created
-function updateComponentRegistry(componentName: string, reason: string, extendsFrom?: string) {
-  try {
-    const registryPath = path.join(__dirname, '..', 'component-registry.json');
-
-    // Initialize registry if file doesn't exist
-    let registry: any = { shadcnComponents: {}, customComponents: {}, aliases: {} };
-    if (fs.existsSync(registryPath)) {
-      registry = JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
-    }
-
-    // Ensure customComponents exists
-    if (!registry.customComponents) {
-      registry.customComponents = {};
-    }
-
-    const normalized = componentName.toLowerCase();
-
-    // Only add if not already present
-    if (!registry.customComponents[normalized]) {
-      registry.customComponents[normalized] = {
-        createdAt: new Date().toISOString().split('T')[0],
-        reason,
-        extendsFrom
-      };
-
-      // Atomic write: write to temp file, then rename
-      const tmp = registryPath + '.tmp';
-      fs.writeFileSync(tmp, JSON.stringify(registry, null, 2));
-      fs.renameSync(tmp, registryPath);
-    }
-    console.error(`  ✓ Updated component registry`);
-  } catch (e) {
-    console.error(`  ⚠️  Failed to update component registry`);
   }
 }
 

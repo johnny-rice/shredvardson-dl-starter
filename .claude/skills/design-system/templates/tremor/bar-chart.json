@@ -1,0 +1,22 @@
+{
+  "component": "\"use client\";\n\nimport { BarChart as TremorBarChart } from \"@tremor/react\";\n\nexport interface BarChartProps {\n  data: Array<Record<string, any>>;\n  index: string;\n  categories: string[];\n  /**\n   * Color scheme for the chart bars.\n   * Uses semantic color names that map to your design system.\n   * @default ['primary', 'secondary', 'accent']\n   */\n  colors?: string[];\n  valueFormatter?: (value: number) => string;\n  className?: string;\n  showLegend?: boolean;\n  showGridLines?: boolean;\n  showXAxis?: boolean;\n  showYAxis?: boolean;\n  layout?: 'vertical' | 'horizontal';\n  stack?: boolean;\n}\n\nexport function BarChart({\n  data,\n  index,\n  categories,\n  colors = ['primary', 'secondary', 'accent'],\n  valueFormatter,\n  className,\n  showLegend = true,\n  showGridLines = true,\n  showXAxis = true,\n  showYAxis = true,\n  layout = 'vertical',\n  stack = false,\n}: BarChartProps) {\n  return (\n    <TremorBarChart\n      data={data}\n      index={index}\n      categories={categories}\n      colors={colors}\n      valueFormatter={valueFormatter}\n      className={className}\n      showLegend={showLegend}\n      showGridLines={showGridLines}\n      showXAxis={showXAxis}\n      showYAxis={showYAxis}\n      layout={layout}\n      stack={stack}\n    />\n  );\n}",
+  "viewerExamples": [
+    {
+      "title": "Basic Bar Chart",
+      "code": "const data = [\n  { name: 'Q1', Sales: 2400, Marketing: 1200 },\n  { name: 'Q2', Sales: 1398, Marketing: 800 },\n  { name: 'Q3', Sales: 9800, Marketing: 5200 },\n  { name: 'Q4', Sales: 3908, Marketing: 2100 },\n];\n\n<BarChart\n  data={data}\n  index=\"name\"\n  categories={['Sales', 'Marketing']}\n/>",
+      "description": "Basic vertical bar chart comparing sales and marketing spend"
+    },
+    {
+      "title": "Stacked Bar Chart",
+      "code": "<BarChart\n  data={data}\n  index=\"name\"\n  categories={['Sales', 'Marketing', 'Operations']}\n  stack={true}\n  valueFormatter={(value) => `$${(value / 1000).toFixed(0)}k`}\n/>",
+      "description": "Stacked bars showing total budget breakdown"
+    },
+    {
+      "title": "Horizontal Layout",
+      "code": "<BarChart\n  data={data}\n  index=\"name\"\n  categories={['Sales']}\n  layout=\"horizontal\"\n/>",
+      "description": "Horizontal bar chart for ranking display"
+    }
+  ],
+  "test": "import { describe, it, expect } from 'vitest';\nimport { render, screen } from '@testing-library/react';\nimport { BarChart } from './bar-chart';\n\ndescribe('BarChart', () => {\n  const mockData = [\n    { name: 'A', value: 100 },\n    { name: 'B', value: 200 },\n  ];\n\n  it('renders without crashing', () => {\n    render(\n      <BarChart\n        data={mockData}\n        index=\"name\"\n        categories={['value']}\n      />\n    );\n  });\n\n  it('accepts custom className', () => {\n    const { container } = render(\n      <BarChart\n        data={mockData}\n        index=\"name\"\n        categories={['value']}\n        className=\"custom-class\"\n      />\n    );\n    expect(container.firstChild).toHaveClass('custom-class');\n  });\n\n  it('supports horizontal layout', () => {\n    render(\n      <BarChart\n        data={mockData}\n        index=\"name\"\n        categories={['value']}\n        layout=\"horizontal\"\n      />\n    );\n  });\n});",
+  "dependencies": ["@tremor/react@^3.18.3", "recharts@^2.15.0"]
+}

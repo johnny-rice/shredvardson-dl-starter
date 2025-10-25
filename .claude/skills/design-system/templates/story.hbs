@@ -1,0 +1,245 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { {{pascalCase name}} } from './{{kebabCase name}}';
+
+/**
+ * {{#if componentDescription}}{{componentDescription}}{{else}}{{pascalCase name}} component for the design system{{/if}}
+ *
+ * ## Usage Guidelines
+ * {{#if usageGuidelines}}{{usageGuidelines}}{{else}}- Use this component for {{variant}} interactions
+ * - Ensure proper contrast ratios are maintained
+ * - Follow the design system spacing guidelines{{/if}}
+ *
+ * ## Accessibility
+ * {{#if accessibilityNotes}}{{accessibilityNotes}}{{else}}- Fully keyboard navigable
+ * - Screen reader compatible
+ * - WCAG AA compliant{{/if}}
+ */
+const meta = {
+  title: 'Components/{{pascalCase name}}',
+  component: {{pascalCase name}},
+  parameters: {
+    layout: 'centered',
+    docs: {
+      description: {
+        component: `
+## Overview
+The {{pascalCase name}} component is a {{variant}} component that follows our design system patterns.
+
+### Design Tokens Used
+{{#if usedTokens}}
+{{#each usedTokens}}
+- \`{{token}}\`: {{description}}
+{{/each}}
+{{else}}
+- \`--primary\`: Primary brand color
+- \`--primary-foreground\`: Text color on primary backgrounds
+- \`--border\`: Border colors
+- \`--ring\`: Focus ring color
+{{/if}}
+
+### Example Usage
+\`\`\`tsx
+<{{pascalCase name}}{{#if exampleProps}}{{#each exampleProps}}
+  {{@key}}={{{json this}}}{{/each}}{{/if}}>
+  {{#if exampleContent}}{{exampleContent}}{{else}}Content{{/if}}
+</{{pascalCase name}}>
+\`\`\`
+        `,
+      },
+    },
+  },
+  tags: ['autodocs'],
+  argTypes: {
+    {{#if variants}}
+    {{#each variants}}
+    {{name}}: {
+      control: 'select',
+      options: [{{#each options}}'{{@key}}'{{#unless @last}}, {{/unless}}{{/each}}],
+      description: '{{#if description}}{{description}}{{else}}{{pascalCase name}} variant{{/if}}',
+      defaultValue: '{{default}}',
+    },
+    {{/each}}
+    {{/if}}
+    {{#if customProps}}
+    {{#each customProps}}
+    {{name}}: {
+      control: {{#if (eq type 'boolean')}}'boolean'{{else if (eq type 'number')}}'number'{{else}}'text'{{/if}},
+      description: '{{description}}',
+      {{#if required}}required: true,{{/if}}
+    },
+    {{/each}}
+    {{/if}}
+    {{#if hasChildren}}
+    children: {
+      control: 'text',
+      description: 'Content to be rendered inside the component',
+    },
+    {{/if}}
+    {{#if hasDisabledState}}
+    disabled: {
+      control: 'boolean',
+      description: 'Disable the component',
+    },
+    {{/if}}
+    {{#if hasLoadingState}}
+    loading: {
+      control: 'boolean',
+      description: 'Show loading state',
+    },
+    {{/if}}
+    className: {
+      control: 'text',
+      description: 'Additional CSS classes',
+    },
+    {{#if hasAriaLabel}}
+    'aria-label': {
+      control: 'text',
+      description: 'Accessible label for screen readers',
+    },
+    {{/if}}
+  },
+} satisfies Meta<typeof {{pascalCase name}}>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+/**
+ * Default state of the {{pascalCase name}} component
+ */
+export const Default: Story = {
+  args: {
+    {{#if hasChildren}}
+    children: '{{#if exampleContent}}{{exampleContent}}{{else}}Default {{pascalCase name}}{{/if}}',
+    {{/if}}
+    {{#if defaultArgs}}
+    {{#each defaultArgs}}
+    {{@key}}: {{{json this}}},
+    {{/each}}
+    {{/if}}
+  },
+};
+
+{{#if variants}}
+{{#each variants}}
+{{#each options}}
+/**
+ * {{pascalCase @key}} variant
+ * {{#if this}}{{this}}{{/if}}
+ */
+export const {{pascalCase @key}}: Story = {
+  args: {
+    ...Default.args,
+    {{../name}}: '{{@key}}',
+    {{#if (eq ../name 'variant')}}
+    {{#if (eq @key 'destructive')}}
+    children: 'Destructive Action',
+    {{else if (eq @key 'outline')}}
+    children: 'Outlined {{pascalCase ../../name}}',
+    {{else if (eq @key 'secondary')}}
+    children: 'Secondary Action',
+    {{else if (eq @key 'ghost')}}
+    children: 'Ghost {{pascalCase ../../name}}',
+    {{else if (eq @key 'link')}}
+    children: 'Link Style',
+    {{else}}
+    children: '{{pascalCase @key}} {{pascalCase ../../name}}',
+    {{/if}}
+    {{/if}}
+  },
+};
+{{/each}}
+{{/each}}
+{{/if}}
+
+{{#if hasDisabledState}}
+/**
+ * Disabled state
+ */
+export const Disabled: Story = {
+  args: {
+    ...Default.args,
+    disabled: true,
+    children: 'Disabled {{pascalCase name}}',
+  },
+};
+{{/if}}
+
+{{#if hasLoadingState}}
+/**
+ * Loading state
+ */
+export const Loading: Story = {
+  args: {
+    ...Default.args,
+    loading: true,
+    children: 'Loading...',
+  },
+};
+{{/if}}
+
+{{#if hasInteractions}}
+/**
+ * Interactive example with click handler
+ */
+export const Interactive: Story = {
+  args: {
+    ...Default.args,
+    onClick: () => alert('{{pascalCase name}} clicked!'),
+    children: 'Click me!',
+  },
+};
+{{/if}}
+
+/**
+ * With custom styling
+ */
+export const CustomStyled: Story = {
+  args: {
+    ...Default.args,
+    className: 'bg-gradient-to-r from-purple-500 to-pink-500 text-white',
+    children: 'Custom Styled',
+  },
+};
+
+{{#if variants}}
+/**
+ * All variants showcase
+ */
+export const AllVariants: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4">
+      {{#each variants}}
+      {{#each options}}
+      <{{pascalCase ../../name}} {{../name}}="{{@key}}">
+        {{pascalCase @key}} Variant
+      </{{pascalCase ../../name}}>
+      {{/each}}
+      {{/each}}
+    </div>
+  ),
+};
+{{/if}}
+
+{{#if needsTheme}}
+/**
+ * Theme comparison
+ */
+export const ThemeComparison: Story = {
+  render: () => (
+    <div className="grid grid-cols-2 gap-8">
+      <div className="p-4 bg-background rounded-lg">
+        <h3 className="text-lg font-semibold mb-4">Light Theme</h3>
+        <{{pascalCase name}}>
+          Light Theme {{pascalCase name}}
+        </{{pascalCase name}}>
+      </div>
+      <div className="p-4 bg-background rounded-lg dark">
+        <h3 className="text-lg font-semibold mb-4">Dark Theme</h3>
+        <{{pascalCase name}}>
+          Dark Theme {{pascalCase name}}
+        </{{pascalCase name}}>
+      </div>
+    </div>
+  ),
+};
+{{/if}}

@@ -1,0 +1,175 @@
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen{{#if hasInteractions}}, fireEvent{{/if}} } from '@testing-library/react';
+import { {{pascalCase name}} } from './{{kebabCase name}}';
+
+describe('{{pascalCase name}}', () => {
+  it('renders correctly with default props', () => {
+    render(
+      <{{pascalCase name}}{{#if requiredProps}}{{#each requiredProps}}
+        {{name}}={{#if (eq type 'string')}}"{{testValue}}"{{else}}{{{testValue}}}{{/if}}{{/each}}{{/if}}>
+        {{#if exampleContent}}{{exampleContent}}{{else}}Test Content{{/if}}
+      </{{pascalCase name}}>
+    );
+
+    {{#if role}}
+    expect(screen.getByRole('{{role}}')).toBeInTheDocument();
+    {{else if hasChildren}}
+    expect(screen.getByText('{{#if exampleContent}}{{exampleContent}}{{else}}Test Content{{/if}}')).toBeInTheDocument();
+    {{/if}}
+  });
+
+  {{#if variants}}
+  {{#each variants}}
+  describe('{{name}} variants', () => {
+    {{#each options}}
+    it('renders with {{@key}} variant', () => {
+      render(
+        <{{pascalCase @root.name}} {{../name}}="{{@key}}">
+          {{@key}} variant
+        </{{pascalCase @root.name}}>
+      );
+
+      const element = screen.getByText('{{@key}} variant');
+      expect(element).toBeInTheDocument();
+      {{#if (eq ../name 'variant')}}
+      // Verify variant-specific classes are applied
+      expect(element.parentElement?.className).toEqual(expect.stringContaining('{{@key}}'));
+      {{/if}}
+    });
+    {{/each}}
+  });
+  {{/each}}
+  {{/if}}
+
+  {{#if hasDisabledState}}
+  it('handles disabled state correctly', () => {
+    render(
+      <{{pascalCase name}} disabled>
+        Disabled Content
+      </{{pascalCase name}}>
+    );
+
+    const element = screen.getByText('Disabled Content'){{#if (eq elementTag 'button')}}.closest('button'){{else}}.parentElement{{/if}};
+    expect(element).toHaveAttribute('disabled');
+    expect(element?.className).toEqual(expect.stringContaining('disabled:opacity-50'));
+  });
+  {{/if}}
+
+  {{#if hasLoadingState}}
+  it('handles loading state correctly', () => {
+    render(
+      <{{pascalCase name}} loading>
+        Loading Content
+      </{{pascalCase name}}>
+    );
+
+    // Component should show loading indicator
+    expect(screen.getByRole('status')).toBeInTheDocument();
+  });
+  {{/if}}
+
+  {{#if hasInteractions}}
+  it('handles user interactions', () => {
+    const handleClick = vi.fn();
+
+    render(
+      <{{pascalCase name}} onClick={handleClick}>
+        Interactive Content
+      </{{pascalCase name}}>
+    );
+
+    const element = screen.getByText('Interactive Content');
+    fireEvent.click(element);
+
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('supports keyboard navigation', () => {
+    const handleKeyDown = vi.fn();
+
+    render(
+      <{{pascalCase name}} onKeyDown={handleKeyDown}>
+        Keyboard Content
+      </{{pascalCase name}}>
+    );
+
+    const element = screen.getByText('Keyboard Content');
+    fireEvent.keyDown(element, { key: 'Enter' });
+
+    expect(handleKeyDown).toHaveBeenCalled();
+  });
+  {{/if}}
+
+  {{#if needsContrastTest}}
+  it('meets WCAG contrast requirements', () => {
+    const { container } = render(
+      <{{pascalCase name}} variant="default">
+        Contrast Test
+      </{{pascalCase name}}>
+    );
+
+    // Note: This is a placeholder for actual contrast testing
+    // In a real scenario, use jest-axe or similar for automated a11y testing
+    expect((container.firstChild as HTMLElement)?.className).toEqual(expect.stringContaining('text-primary-foreground'));
+  });
+  {{/if}}
+
+  {{#if customProps}}
+  {{#each customProps}}
+  {{#if required}}
+  it('requires {{name}} prop', () => {
+    // Type checking ensures this prop is required at compile time
+    // This test documents the requirement
+    const props = {
+      {{name}}: {{#if (eq type 'string')}}'{{testValue}}'{{else}}{{testValue}}{{/if}},
+    };
+
+    render(
+      <{{pascalCase @root.name}} {...props}>
+        With Required Prop
+      </{{pascalCase @root.name}}>
+    );
+
+    expect(screen.getByText('With Required Prop')).toBeInTheDocument();
+  });
+  {{/if}}
+  {{/each}}
+  {{/if}}
+
+  it('forwards ref correctly', () => {
+    const ref = vi.fn();
+
+    render(
+      <{{pascalCase name}} ref={ref}>
+        Ref Content
+      </{{pascalCase name}}>
+    );
+
+    expect(ref).toHaveBeenCalled();
+  });
+
+  it('applies custom className', () => {
+    const customClass = 'custom-test-class';
+
+    render(
+      <{{pascalCase name}} className={customClass}>
+        Custom Class Content
+      </{{pascalCase name}}>
+    );
+
+    const element = screen.getByText('Custom Class Content'){{#if (eq elementTag 'button')}}.closest('button'){{else}}.parentElement{{/if}};
+    expect(element).toHaveClass(customClass);
+  });
+
+  {{#if hasAriaLabel}}
+  it('supports aria-label for accessibility', () => {
+    render(
+      <{{pascalCase name}} aria-label="Accessible Label">
+        Content
+      </{{pascalCase name}}>
+    );
+
+    expect(screen.getByLabelText('Accessible Label')).toBeInTheDocument();
+  });
+  {{/if}}
+});

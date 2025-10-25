@@ -1,0 +1,133 @@
+import * as React from "react";
+import { cn } from "@ui/lib/utils";
+{{#if variants}}
+import { cva, type VariantProps } from "class-variance-authority";
+{{/if}}
+
+{{#if variants}}
+const {{camelCase name}}Variants = cva(
+  "{{baseClasses}}",
+  {
+    variants: {
+      {{#each variants}}
+      {{this.name}}: {
+        {{#each this.options}}
+        {{@key}}: "{{this}}",
+        {{/each}}
+      },
+      {{/each}}
+    },
+    defaultVariants: {
+      {{#each variants}}
+      {{this.name}}: "{{this.default}}",
+      {{/each}}
+    },
+  }
+);
+{{/if}}
+
+{{#if isForwardRef}}
+export interface {{pascalCase name}}Props
+  extends React.ComponentPropsWithoutRef<'{{elementTag}}'>{{#if variants}},
+    VariantProps<typeof {{camelCase name}}Variants>{{/if}} {
+  {{#each customProps}}
+  /**
+   * {{this.description}}
+   {{#if this.required}}* @required{{/if}}
+   */
+  {{this.name}}{{#unless this.required}}?{{/unless}}: {{this.type}};
+  {{/each}}
+}
+
+/**
+ * {{componentDescription}}
+ *
+ * @example
+ * ```tsx
+ * <{{pascalCase name}}{{#each exampleProps}} {{@key}}={{this}}{{/each}}>
+ *   {{exampleContent}}
+ * </{{pascalCase name}}>
+ * ```
+ *
+ * @accessibility
+ * {{accessibilityNotes}}
+ */
+const {{pascalCase name}} = React.forwardRef<
+  React.ElementRef<'{{elementTag}}'>,
+  {{pascalCase name}}Props
+>(({ className, {{#if variants}}{{#each variants}}{{this.name}}, {{/each}}{{/if}}{{#each customProps}}{{this.name}}, {{/each}}...props }, ref) => {
+  return (
+    <{{elementTag}}
+      ref={ref}
+      className={cn(
+        {{#if variants}}{{camelCase name}}Variants({ {{#each variants}}{{this.name}}, {{/each}} }),{{else}}"{{baseClasses}}",{{/if}}
+        className
+      )}
+      {{#if ariaLabel}}
+      aria-label={props["aria-label"] || "{{ariaLabel}}"}
+      {{/if}}
+      {{#if role}}
+      role="{{role}}"
+      {{/if}}
+      {...props}
+    {{#if hasChildren}}>
+      {props.children}
+    </{{elementTag}}>{{else}}/>{{/if}}
+  );
+});
+{{else}}
+export interface {{pascalCase name}}Props
+  extends React.ComponentPropsWithoutRef<'{{elementTag}}'>{{#if variants}},
+    VariantProps<typeof {{camelCase name}}Variants>{{/if}} {
+  {{#each customProps}}
+  /**
+   * {{this.description}}
+   {{#if this.required}}* @required{{/if}}
+   */
+  {{this.name}}{{#unless this.required}}?{{/unless}}: {{this.type}};
+  {{/each}}
+}
+
+/**
+ * {{componentDescription}}
+ *
+ * @example
+ * ```tsx
+ * <{{pascalCase name}}{{#each exampleProps}} {{@key}}="{{this}}"{{/each}}>
+ *   {{exampleContent}}
+ * </{{pascalCase name}}>
+ * ```
+ *
+ * @accessibility
+ * {{accessibilityNotes}}
+ */
+export function {{pascalCase name}}({
+  {{#if variants}}{{#each variants}}{{this.name}}, {{/each}}{{/if}}
+  {{#each customProps}}{{this.name}}, {{/each}}
+  className,
+  children,
+  ...props
+}: {{pascalCase name}}Props) {
+  return (
+    <{{elementTag}}
+      className={cn(
+        {{#if variants}}{{camelCase name}}Variants({ {{#each variants}}{{this.name}}, {{/each}} }),{{else}}"{{baseClasses}}",{{/if}}
+        className
+      )}
+      {{#if ariaLabel}}
+      aria-label="{{ariaLabel}}"
+      {{/if}}
+      {{#if role}}
+      role="{{role}}"
+      {{/if}}
+      {...props}
+    >
+      {children}
+    </{{elementTag}}>
+  );
+}
+{{/if}}
+
+{{pascalCase name}}.displayName = "{{pascalCase name}}";
+
+export { {{pascalCase name}} };

@@ -1,0 +1,22 @@
+{
+  "component": "\"use client\";\n\nimport { cn } from \"@ui/components\";\n\nexport interface KpiCardProps {\n  title: string;\n  value: string | number;\n  change?: string;\n  changeType?: 'increase' | 'decrease' | 'neutral';\n  description?: string;\n  className?: string;\n}\n\n/**\n * Maps change types to semantic design token classes\n * Uses CSS custom properties for theme-aware colors\n */\nconst changeTypeStyles = {\n  increase: \"text-[var(--color-success)]\",\n  decrease: \"text-[var(--color-error)]\",\n  neutral: \"text-[var(--color-foreground-muted)]\",\n};\n\nexport function KpiCard({\n  title,\n  value,\n  change,\n  changeType = 'neutral',\n  description,\n  className,\n}: KpiCardProps) {\n  return (\n    <div\n      className={cn(\n        \"rounded-lg border border-[var(--color-border)] bg-[var(--color-background)] p-6 shadow-sm\",\n        className\n      )}\n    >\n      <div className=\"space-y-2\">\n        <p className=\"text-sm text-[var(--color-foreground-muted)]\">{title}</p>\n        <div className=\"flex items-baseline justify-between\">\n          <p className=\"text-3xl font-semibold text-[var(--color-foreground)]\">{value}</p>\n          {change && (\n            <span\n              className={cn(\n                \"text-sm font-medium\",\n                changeTypeStyles[changeType]\n              )}\n            >\n              {change}\n            </span>\n          )}\n        </div>\n        {description && (\n          <p className=\"text-sm text-[var(--color-foreground-muted)]\">{description}</p>\n        )}\n      </div>\n    </div>\n  );\n}",
+  "viewerExamples": [
+    {
+      "title": "Basic KPI",
+      "code": "<KpiCard\n  title=\"Total Revenue\"\n  value=\"$45,231\"\n/>",
+      "description": "Simple metric display"
+    },
+    {
+      "title": "With Positive Change",
+      "code": "<KpiCard\n  title=\"Active Users\"\n  value=\"2,350\"\n  change=\"+12.5%\"\n  changeType=\"increase\"\n  description=\"vs. last month\"\n/>",
+      "description": "Highlight growth metrics"
+    },
+    {
+      "title": "With Negative Change",
+      "code": "<KpiCard\n  title=\"Bounce Rate\"\n  value=\"34.2%\"\n  change=\"-5.2%\"\n  changeType=\"decrease\"\n  description=\"vs. last month\"\n/>",
+      "description": "Show improvement (lower is better)"
+    }
+  ],
+  "test": "import { describe, it, expect } from 'vitest';\nimport { render, screen } from '@testing-library/react';\nimport { KpiCard } from './kpi-card';\n\ndescribe('KpiCard', () => {\n  it('renders title and value', () => {\n    render(<KpiCard title=\"Test Title\" value=\"123\" />);\n    \n    expect(screen.getByText('Test Title')).toBeInTheDocument();\n    expect(screen.getByText('123')).toBeInTheDocument();\n  });\n\n  it('displays change indicator when provided', () => {\n    render(\n      <KpiCard\n        title=\"Metric\"\n        value=\"100\"\n        change=\"+10%\"\n        changeType=\"increase\"\n      />\n    );\n    \n    expect(screen.getByText('+10%')).toBeInTheDocument();\n  });\n\n  it('shows description when provided', () => {\n    render(\n      <KpiCard\n        title=\"Metric\"\n        value=\"100\"\n        description=\"vs. last month\"\n      />\n    );\n    \n    expect(screen.getByText('vs. last month')).toBeInTheDocument();\n  });\n\n  it('applies custom className', () => {\n    const { container } = render(\n      <KpiCard\n        title=\"Metric\"\n        value=\"100\"\n        className=\"custom-class\"\n      />\n    );\n    \n    expect(container.firstChild).toHaveClass('custom-class');\n  });\n});",
+  "dependencies": ["@ui/components"]
+}

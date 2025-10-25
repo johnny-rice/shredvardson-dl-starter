@@ -1,0 +1,22 @@
+{
+  "component": "\"use client\";\n\nimport { AreaChart as TremorAreaChart } from \"@tremor/react\";\n\nexport interface AreaChartProps {\n  data: Array<Record<string, any>>;\n  index: string;\n  categories: string[];\n  /**\n   * Color scheme for the chart areas.\n   * Uses semantic color names that map to your design system.\n   * @default ['primary', 'secondary', 'accent']\n   */\n  colors?: string[];\n  valueFormatter?: (value: number) => string;\n  className?: string;\n  showLegend?: boolean;\n  showGridLines?: boolean;\n  showXAxis?: boolean;\n  showYAxis?: boolean;\n  /**\n   * Gradient display type\n   * @default 'default'\n   */\n  showGradient?: boolean;\n  connectNulls?: boolean;\n}\n\nexport function AreaChart({\n  data,\n  index,\n  categories,\n  colors = ['primary', 'secondary', 'accent'],\n  valueFormatter,\n  className,\n  showLegend = true,\n  showGridLines = true,\n  showXAxis = true,\n  showYAxis = true,\n  showGradient = true,\n  connectNulls = false,\n}: AreaChartProps) {\n  return (\n    <TremorAreaChart\n      data={data}\n      index={index}\n      categories={categories}\n      colors={colors}\n      valueFormatter={valueFormatter}\n      className={className}\n      showLegend={showLegend}\n      showGridLines={showGridLines}\n      showXAxis={showXAxis}\n      showYAxis={showYAxis}\n      showGradient={showGradient}\n      connectNulls={connectNulls}\n    />\n  );\n}",
+  "viewerExamples": [
+    {
+      "title": "Basic Area Chart",
+      "code": "const data = [\n  { month: 'Jan', Users: 2890, Sessions: 4200 },\n  { month: 'Feb', Users: 2756, Sessions: 3900 },\n  { month: 'Mar', Users: 3322, Sessions: 5200 },\n  { month: 'Apr', Users: 3470, Sessions: 5600 },\n  { month: 'May', Users: 3475, Sessions: 6100 },\n  { month: 'Jun', Users: 3129, Sessions: 5400 },\n];\n\n<AreaChart\n  data={data}\n  index=\"month\"\n  categories={['Users', 'Sessions']}\n/>",
+      "description": "Track user engagement metrics over time"
+    },
+    {
+      "title": "With Formatted Values",
+      "code": "<AreaChart\n  data={data}\n  index=\"month\"\n  categories={['Users']}\n  valueFormatter={(value) => `${(value / 1000).toFixed(1)}k`}\n/>",
+      "description": "Display large numbers in compact format"
+    },
+    {
+      "title": "Without Gradient",
+      "code": "<AreaChart\n  data={data}\n  index=\"month\"\n  categories={['Users', 'Sessions']}\n  showGradient={false}\n/>",
+      "description": "Solid fill for clearer separation"
+    }
+  ],
+  "test": "import { describe, it, expect } from 'vitest';\nimport { render, screen } from '@testing-library/react';\nimport { AreaChart } from './area-chart';\n\ndescribe('AreaChart', () => {\n  const mockData = [\n    { month: 'Jan', value: 100 },\n    { month: 'Feb', value: 200 },\n  ];\n\n  it('renders without crashing', () => {\n    render(\n      <AreaChart\n        data={mockData}\n        index=\"month\"\n        categories={['value']}\n      />\n    );\n  });\n\n  it('accepts custom className', () => {\n    const { container } = render(\n      <AreaChart\n        data={mockData}\n        index=\"month\"\n        categories={['value']}\n        className=\"custom-class\"\n      />\n    );\n    expect(container.firstChild).toHaveClass('custom-class');\n  });\n\n  it('supports gradient toggle', () => {\n    render(\n      <AreaChart\n        data={mockData}\n        index=\"month\"\n        categories={['value']}\n        showGradient={false}\n      />\n    );\n  });\n});",
+  "dependencies": ["@tremor/react@^3.18.3", "recharts@^2.15.0"]
+}

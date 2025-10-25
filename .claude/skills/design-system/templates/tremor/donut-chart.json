@@ -1,0 +1,22 @@
+{
+  "component": "\"use client\";\n\nimport { DonutChart as TremorDonutChart } from \"@tremor/react\";\n\nexport interface DonutChartProps {\n  data: Array<{\n    name: string;\n    value: number;\n    [key: string]: any;\n  }>;\n  category: string;\n  index: string;\n  /**\n   * Color scheme for the chart segments.\n   * Uses semantic color names that map to your design system.\n   * @default ['primary', 'secondary', 'accent', 'success', 'warning']\n   */\n  colors?: string[];\n  valueFormatter?: (value: number) => string;\n  className?: string;\n  showLabel?: boolean;\n  showAnimation?: boolean;\n  variant?: 'donut' | 'pie';\n}\n\nexport function DonutChart({\n  data,\n  category,\n  index,\n  colors = ['primary', 'secondary', 'accent', 'success', 'warning'],\n  valueFormatter,\n  className,\n  showLabel = true,\n  showAnimation = true,\n  variant = 'donut',\n}: DonutChartProps) {\n  return (\n    <TremorDonutChart\n      data={data}\n      category={category}\n      index={index}\n      colors={colors}\n      valueFormatter={valueFormatter}\n      className={className}\n      showLabel={showLabel}\n      showAnimation={showAnimation}\n      variant={variant}\n    />\n  );\n}",
+  "viewerExamples": [
+    {
+      "title": "Basic Donut Chart",
+      "code": "const data = [\n  { name: 'Direct', value: 1234 },\n  { name: 'Referral', value: 829 },\n  { name: 'Social', value: 645 },\n  { name: 'Organic', value: 423 },\n  { name: 'Other', value: 189 },\n];\n\n<DonutChart\n  data={data}\n  category=\"value\"\n  index=\"name\"\n/>",
+      "description": "Show traffic source distribution"
+    },
+    {
+      "title": "Pie Chart Variant",
+      "code": "<DonutChart\n  data={data}\n  category=\"value\"\n  index=\"name\"\n  variant=\"pie\"\n  valueFormatter={(value) => `${value} visits`}\n/>",
+      "description": "Full pie chart without center hole"
+    },
+    {
+      "title": "Without Labels",
+      "code": "<DonutChart\n  data={data}\n  category=\"value\"\n  index=\"name\"\n  showLabel={false}\n/>",
+      "description": "Clean visualization without percentage labels"
+    }
+  ],
+  "test": "import { describe, it, expect } from 'vitest';\nimport { render, screen } from '@testing-library/react';\nimport { DonutChart } from './donut-chart';\n\ndescribe('DonutChart', () => {\n  const mockData = [\n    { name: 'A', value: 100 },\n    { name: 'B', value: 200 },\n  ];\n\n  it('renders without crashing', () => {\n    render(\n      <DonutChart\n        data={mockData}\n        category=\"value\"\n        index=\"name\"\n      />\n    );\n  });\n\n  it('accepts custom className', () => {\n    const { container } = render(\n      <DonutChart\n        data={mockData}\n        category=\"value\"\n        index=\"name\"\n        className=\"custom-class\"\n      />\n    );\n    expect(container.firstChild).toHaveClass('custom-class');\n  });\n\n  it('supports pie variant', () => {\n    render(\n      <DonutChart\n        data={mockData}\n        category=\"value\"\n        index=\"name\"\n        variant=\"pie\"\n      />\n    );\n  });\n});",
+  "dependencies": ["@tremor/react@^3.18.3", "recharts@^2.15.0"]
+}
