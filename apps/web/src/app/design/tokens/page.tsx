@@ -1,9 +1,9 @@
 'use client';
 
-import * as React from 'react';
-import { tokens } from '@ui/src/tokens';
-import { Card } from '@ui/src/components/ui/card';
 import { Button } from '@ui/src/components/ui/button';
+import { Card } from '@ui/src/components/ui/card';
+import { tokens } from '@ui/src/tokens';
+import * as React from 'react';
 import { Link } from '@/components/Link';
 
 /**
@@ -98,7 +98,7 @@ export default function DesignTokensViewer() {
           <div className="space-y-4">
             <h3 className="text-xl font-semibold">Semantic</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {['success', 'warning', 'error', 'info'].map(category => (
+              {['success', 'warning', 'error', 'info'].map((category) => (
                 <React.Fragment key={category}>
                   {Object.entries(tokens.colors[category as keyof typeof tokens.colors]).map(
                     ([shade, value]) => (
@@ -121,9 +121,7 @@ export default function DesignTokensViewer() {
         <section className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-3xl font-semibold text-foreground">Spacing</h2>
-            <p className="text-muted-foreground">
-              8px base grid system for consistent spacing
-            </p>
+            <p className="text-muted-foreground">8px base grid system for consistent spacing</p>
           </div>
 
           <div className="space-y-4">
@@ -133,11 +131,8 @@ export default function DesignTokensViewer() {
                   .slice(0, 20) // Show first 20 spacing values
                   .map(([size, value]) => (
                     <div key={size} className="flex items-center gap-4">
-                      <code className="text-sm font-mono w-16">{size}</code>
-                      <div
-                        className="bg-primary h-4"
-                        style={{ width: value }}
-                      />
+                      <code className="text-sm font-mono w-24">spacing.{size}</code>
+                      <div className="bg-primary h-4" style={{ width: value }} />
                       <span className="text-sm text-muted-foreground">{value}</span>
                       <Button
                         size="sm"
@@ -160,9 +155,7 @@ export default function DesignTokensViewer() {
         <section className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-3xl font-semibold text-foreground">Typography</h2>
-            <p className="text-muted-foreground">
-              Font sizes, weights, and line heights
-            </p>
+            <p className="text-muted-foreground">Font sizes, weights, and line heights</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
@@ -171,21 +164,24 @@ export default function DesignTokensViewer() {
               <h3 className="text-lg font-semibold">Font Sizes</h3>
               <div className="space-y-3">
                 {Object.entries(tokens.typography.fontSize).map(([size, value]) => (
-                  <div key={size} className="flex items-baseline justify-between">
-                    <div>
-                      <span style={{ fontSize: value }} className="text-foreground">
-                        {size}
-                      </span>
-                      <code className="ml-2 text-xs text-muted-foreground">{value}</code>
+                  <div key={size} className="space-y-1">
+                    <div className="flex items-baseline justify-between">
+                      <div>
+                        <span className="text-sm font-medium">fontSize.{size}</span>
+                        <code className="ml-2 text-xs text-muted-foreground">{value}</code>
+                      </div>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => copyToken(`fontSize.${size}`)}
+                        className="text-xs"
+                      >
+                        {copiedToken === `fontSize.${size}` ? '✓' : 'Copy'}
+                      </Button>
                     </div>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => copyToken(`fontSize.${size}`)}
-                      className="text-xs"
-                    >
-                      {copiedToken === `fontSize.${size}` ? '✓' : 'Copy'}
-                    </Button>
+                    <div style={{ fontSize: value }} className="text-foreground">
+                      The quick brown fox jumps over the lazy dog
+                    </div>
                   </div>
                 ))}
               </div>
@@ -198,10 +194,7 @@ export default function DesignTokensViewer() {
                 {Object.entries(tokens.typography.fontWeight).map(([weight, value]) => (
                   <div key={weight} className="flex items-center justify-between">
                     <div>
-                      <span
-                        style={{ fontWeight: Number(value) }}
-                        className="text-foreground"
-                      >
+                      <span style={{ fontWeight: Number(value) }} className="text-foreground">
                         {weight}
                       </span>
                       <code className="ml-2 text-xs text-muted-foreground">{value}</code>
@@ -225,18 +218,13 @@ export default function DesignTokensViewer() {
         <section className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-3xl font-semibold text-foreground">Border Radius</h2>
-            <p className="text-muted-foreground">
-              Corner radius values for consistent rounding
-            </p>
+            <p className="text-muted-foreground">Corner radius values for consistent rounding</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {Object.entries(tokens.borderRadius).map(([size, value]) => (
               <Card key={size} className="p-4">
-                <div
-                  className="w-full h-20 bg-primary mb-2"
-                  style={{ borderRadius: value }}
-                />
+                <div className="w-full h-20 bg-primary mb-2" style={{ borderRadius: value }} />
                 <div className="space-y-1">
                   <div className="font-medium">{size}</div>
                   <code className="text-xs text-muted-foreground">{value}</code>
@@ -258,9 +246,7 @@ export default function DesignTokensViewer() {
         <section className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-3xl font-semibold text-foreground">Shadows</h2>
-            <p className="text-muted-foreground">
-              Elevation system for depth and hierarchy
-            </p>
+            <p className="text-muted-foreground">Elevation system for depth and hierarchy</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
@@ -271,10 +257,8 @@ export default function DesignTokensViewer() {
                 style={{ boxShadow: value === 'none' ? undefined : value }}
               >
                 <div className="space-y-2">
-                  <div className="font-medium">{size}</div>
-                  <code className="text-xs text-muted-foreground block break-all">
-                    {value}
-                  </code>
+                  <div className="font-medium">shadows.{size}</div>
+                  <code className="text-xs text-muted-foreground block break-all">{value}</code>
                 </div>
                 <Button
                   size="sm"
@@ -330,9 +314,7 @@ export default function DesignTokensViewer() {
                   <div key={easing} className="flex items-center justify-between">
                     <div className="flex-1">
                       <div className="font-medium">{easing}</div>
-                      <code className="text-xs text-muted-foreground break-all">
-                        {value}
-                      </code>
+                      <code className="text-xs text-muted-foreground break-all">{value}</code>
                     </div>
                     <Button
                       size="sm"
@@ -371,15 +353,10 @@ function ColorSwatch({ name, value, onCopy, isCopied }: ColorSwatchProps) {
         style={{ backgroundColor: value }}
       />
       <div className="space-y-1">
-        <div className="text-sm font-medium">{name.split('.').pop()}</div>
+        <div className="text-sm font-medium">{name}</div>
         <code className="text-xs text-muted-foreground block truncate">{value}</code>
       </div>
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={() => onCopy(name)}
-        className="w-full text-xs"
-      >
+      <Button size="sm" variant="ghost" onClick={() => onCopy(name)} className="w-full text-xs">
         {isCopied ? '✓ Copied' : 'Copy'}
       </Button>
     </Card>

@@ -1,640 +1,171 @@
-'use client';
-
-import * as React from 'react';
-import { Button } from '@ui/src/components/ui/button';
-import { Input } from '@ui/src/components/ui/input';
-import { Label } from '@ui/src/components/ui/label';
-import { Card } from '@ui/src/components/ui/card';
-import { Link } from '@/components/Link';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@ui/src/components/ui/dialog';
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel, SelectSeparator } from '@ui/src/components/ui/select';
-
 /**
- * Design System Component Viewer
+ * Design System Viewer
  *
- * A comprehensive visual reference for all design system components.
- * Shows all variants side-by-side with light/dark theme support.
- *
- * Features:
- * - All components with all variants
- * - Light/dark theme toggle
- * - Copy code button for each example
- * - Links to pattern documentation
- * - Responsive preview
- * - Lives in actual app (real styling, no Storybook overhead)
- *
- * @see docs/design/patterns/ for pattern documentation
+ * Interactive component gallery and documentation viewer
  */
-export default function DesignSystemViewer() {
-  const [copiedCode, setCopiedCode] = React.useState<string | null>(null);
 
-  const copyCode = async (code: string) => {
-    try {
-      if (navigator?.clipboard?.writeText) {
-        await navigator.clipboard.writeText(code);
-      } else {
-        // Fallback for older browsers
-        const textarea = document.createElement('textarea');
-        textarea.value = code;
-        textarea.setAttribute('readonly', '');
-        textarea.style.position = 'absolute';
-        textarea.style.left = '-9999px';
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-      }
-      setCopiedCode(code);
-      setTimeout(() => setCopiedCode(null), 2000);
-    } catch (error) {
-      console.error('Failed to copy code:', error);
-    }
-  };
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@ui/src/components/ui/card';
+import Link from 'next/link';
+import { getAllComponents, getCategories } from '@/design-system/registry';
 
-  return (
-    <main className="min-h-screen bg-background p-8">
-      <div className="max-w-7xl mx-auto space-y-16">
-        {/* Header */}
-        <header className="space-y-4">
-          <h1 className="text-4xl font-bold text-foreground">Design System</h1>
-          <p className="text-xl text-muted-foreground">
-            Component library with all variants and patterns
-          </p>
-          <div className="flex gap-4">
-            <Link href="/design/tokens" variant="default">
-              View Design Tokens →
-            </Link>
-            <Link
-              href="https://github.com/Shredvardson/dl-starter/tree/main/docs/design/patterns"
-              variant="secondary"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Pattern Documentation ↗
-            </Link>
-          </div>
-        </header>
+export default function DesignSystemPage() {
+  const components = getAllComponents();
+  const categories = getCategories();
 
-        {/* Buttons Section */}
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-semibold text-foreground">Buttons</h2>
-            <p className="text-muted-foreground">
-              Primary actions, secondary options, and destructive operations
-            </p>
-            <Link
-              href="https://github.com/Shredvardson/dl-starter/blob/main/docs/design/patterns/buttons.md"
-              variant="ghost"
-              className="text-sm"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Pattern Documentation →
-            </Link>
-          </div>
+  // Calculate total variants across all components
+  const totalVariants = components.reduce((total, component) => {
+    return total + (component.variants ? Object.keys(component.variants).length : 0);
+  }, 0);
 
-          <div className="space-y-8">
-            {/* Button Variants */}
-            <ComponentExample
-              title="Button Variants"
-              code={`<Button variant="default">Default</Button>
-<Button variant="secondary">Secondary</Button>
-<Button variant="destructive">Destructive</Button>
-<Button variant="outline">Outline</Button>
-<Button variant="ghost">Ghost</Button>
-<Button variant="link">Link</Button>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="flex flex-wrap gap-4">
-                <Button variant="default">Default</Button>
-                <Button variant="secondary">Secondary</Button>
-                <Button variant="destructive">Destructive</Button>
-                <Button variant="outline">Outline</Button>
-                <Button variant="ghost">Ghost</Button>
-                <Button variant="link">Link</Button>
-              </div>
-            </ComponentExample>
-
-            {/* Button Sizes */}
-            <ComponentExample
-              title="Button Sizes"
-              code={`<Button size="sm">Small</Button>
-<Button size="default">Default</Button>
-<Button size="lg">Large</Button>
-<Button size="icon">🔍</Button>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="flex flex-wrap items-center gap-4">
-                <Button size="sm">Small</Button>
-                <Button size="default">Default</Button>
-                <Button size="lg">Large</Button>
-                <Button size="icon" aria-label="Search" title="Search">🔍</Button>
-              </div>
-            </ComponentExample>
-
-            {/* Button States */}
-            <ComponentExample
-              title="Button States"
-              code={`<Button>Default</Button>
-<Button disabled>Disabled</Button>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="flex flex-wrap gap-4">
-                <Button>Default</Button>
-                <Button disabled>Disabled</Button>
-              </div>
-            </ComponentExample>
-          </div>
-        </section>
-
-        {/* Forms Section */}
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-semibold text-foreground">Form Controls</h2>
-            <p className="text-muted-foreground">
-              Inputs, labels, and form validation patterns
-            </p>
-            <Link
-              href="https://github.com/Shredvardson/dl-starter/blob/main/docs/design/patterns/forms.md"
-              variant="ghost"
-              className="text-sm"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Pattern Documentation →
-            </Link>
-          </div>
-
-          <div className="space-y-8">
-            {/* Input Examples */}
-            <ComponentExample
-              title="Text Input"
-              code={`<div className="space-y-2">
-  <Label htmlFor="email">Email</Label>
-  <Input id="email" type="email" placeholder="you@example.com" />
-</div>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="max-w-sm space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="you@example.com" />
-              </div>
-            </ComponentExample>
-
-            {/* Disabled Input */}
-            <ComponentExample
-              title="Disabled Input"
-              code={`<div className="space-y-2">
-  <Label htmlFor="disabled">Disabled</Label>
-  <Input id="disabled" disabled placeholder="Cannot edit" />
-</div>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="max-w-sm space-y-2">
-                <Label htmlFor="disabled">Disabled</Label>
-                <Input id="disabled" disabled placeholder="Cannot edit" />
-              </div>
-            </ComponentExample>
-          </div>
-        </section>
-
-        {/* Cards Section */}
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-semibold text-foreground">Cards</h2>
-            <p className="text-muted-foreground">
-              Content containers with headers, bodies, and footers
-            </p>
-            <Link
-              href="https://github.com/Shredvardson/dl-starter/blob/main/docs/design/patterns/cards.md"
-              variant="ghost"
-              className="text-sm"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Pattern Documentation →
-            </Link>
-          </div>
-
-          <div className="space-y-8">
-            <ComponentExample
-              title="Basic Card"
-              code={`<Card className="p-6 space-y-4">
-  <h3 className="text-xl font-semibold">Card Title</h3>
-  <p className="text-muted-foreground">
-    Card content goes here with proper spacing and typography.
-  </p>
-  <Button>Action</Button>
-</Card>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="grid md:grid-cols-2 gap-4">
-                <Card className="p-6 space-y-4">
-                  <h3 className="text-xl font-semibold">Card Title</h3>
-                  <p className="text-muted-foreground">
-                    Card content goes here with proper spacing and typography.
-                  </p>
-                  <Button>Action</Button>
-                </Card>
-                <Card className="p-6 space-y-4">
-                  <h3 className="text-xl font-semibold">Another Card</h3>
-                  <p className="text-muted-foreground">
-                    Cards maintain consistent spacing and visual hierarchy.
-                  </p>
-                  <div className="flex gap-2">
-                    <Button size="sm">Primary</Button>
-                    <Button size="sm" variant="outline">Secondary</Button>
-                  </div>
-                </Card>
-              </div>
-            </ComponentExample>
-          </div>
-        </section>
-
-        {/* Links Section */}
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-semibold text-foreground">Links</h2>
-            <p className="text-muted-foreground">
-              Navigation elements with proper semantics
-            </p>
-            <Link
-              href="https://github.com/Shredvardson/dl-starter/blob/main/docs/design/patterns/buttons.md"
-              variant="ghost"
-              className="text-sm"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Pattern Documentation →
-            </Link>
-          </div>
-
-          <div className="space-y-8">
-            <ComponentExample
-              title="Link Variants"
-              code={`<Link href="/docs">Default Link</Link>
-<Link href="/docs" variant="ghost">Ghost Link</Link>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="flex flex-wrap gap-4">
-                <Link href="/docs">Default Link</Link>
-                <Link href="/docs" variant="ghost">Ghost Link</Link>
-              </div>
-            </ComponentExample>
-          </div>
-        </section>
-
-        {/* Select Section */}
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-semibold text-foreground">Select</h2>
-            <p className="text-muted-foreground">
-              Dropdown selection for choosing from a list of options
-            </p>
-            <Link
-              href="https://github.com/Shredvardson/dl-starter/blob/main/docs/design/patterns/forms.md"
-              variant="ghost"
-              className="text-sm"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Pattern Documentation →
-            </Link>
-          </div>
-
-          <div className="space-y-8">
-            {/* Basic Select */}
-            <ComponentExample
-              title="Basic Select"
-              code={`<div className="space-y-2">
-  <Label id="fruit-label" htmlFor="fruit-select">Fruit</Label>
-  <Select defaultValue="apple">
-    <SelectTrigger id="fruit-select" aria-labelledby="fruit-label" className="w-[180px]">
-      <SelectValue placeholder="Select a fruit" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectItem value="apple">Apple</SelectItem>
-      <SelectItem value="banana">Banana</SelectItem>
-      <SelectItem value="orange">Orange</SelectItem>
-    </SelectContent>
-  </Select>
-</div>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="space-y-2">
-                <Label id="fruit-label" htmlFor="fruit-select">Fruit</Label>
-                <Select defaultValue="apple">
-                  <SelectTrigger id="fruit-select" aria-labelledby="fruit-label" className="w-[180px]">
-                    <SelectValue placeholder="Select a fruit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="apple">Apple</SelectItem>
-                    <SelectItem value="banana">Banana</SelectItem>
-                    <SelectItem value="orange">Orange</SelectItem>
-                    <SelectItem value="grape">Grape</SelectItem>
-                    <SelectItem value="strawberry">Strawberry</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </ComponentExample>
-
-            {/* Grouped Select */}
-            <ComponentExample
-              title="Grouped Select"
-              code={`<div className="space-y-2">
-  <Label id="timezone-label" htmlFor="timezone-select">Timezone</Label>
-  <Select>
-    <SelectTrigger id="timezone-select" aria-labelledby="timezone-label" className="w-[200px]">
-      <SelectValue placeholder="Select timezone" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectGroup>
-        <SelectLabel>North America</SelectLabel>
-        <SelectItem value="est">Eastern Time</SelectItem>
-        <SelectItem value="cst">Central Time</SelectItem>
-        <SelectItem value="pst">Pacific Time</SelectItem>
-      </SelectGroup>
-      <SelectSeparator />
-      <SelectGroup>
-        <SelectLabel>Europe</SelectLabel>
-        <SelectItem value="gmt">Greenwich Mean Time</SelectItem>
-        <SelectItem value="cet">Central European Time</SelectItem>
-      </SelectGroup>
-    </SelectContent>
-  </Select>
-</div>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="space-y-2">
-                <Label id="timezone-label" htmlFor="timezone-select">Timezone</Label>
-                <Select>
-                  <SelectTrigger id="timezone-select" aria-labelledby="timezone-label" className="w-[200px]">
-                    <SelectValue placeholder="Select timezone" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>North America</SelectLabel>
-                      <SelectItem value="est">Eastern Time</SelectItem>
-                      <SelectItem value="cst">Central Time</SelectItem>
-                      <SelectItem value="pst">Pacific Time</SelectItem>
-                    </SelectGroup>
-                    <SelectSeparator />
-                    <SelectGroup>
-                      <SelectLabel>Europe</SelectLabel>
-                      <SelectItem value="gmt">Greenwich Mean Time</SelectItem>
-                      <SelectItem value="cet">Central European Time</SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-            </ComponentExample>
-
-            {/* Select Sizes */}
-            <ComponentExample
-              title="Select Sizes"
-              code={`<div className="flex flex-wrap items-center gap-4">
-  <div className="space-y-2">
-    <Label id="size-sm-label" htmlFor="size-sm">Small Size</Label>
-    <Select>
-      <SelectTrigger id="size-sm" size="sm" aria-labelledby="size-sm-label" className="w-[140px]">
-        <SelectValue placeholder="Small" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="sm">Small Size</SelectItem>
-      </SelectContent>
-    </Select>
-  </div>
-
-  <div className="space-y-2">
-    <Label id="size-md-label" htmlFor="size-md">Default Size</Label>
-    <Select>
-      <SelectTrigger id="size-md" aria-labelledby="size-md-label" className="w-[160px]">
-        <SelectValue placeholder="Default" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="md">Default Size</SelectItem>
-      </SelectContent>
-    </Select>
-  </div>
-
-  <div className="space-y-2">
-    <Label id="size-lg-label" htmlFor="size-lg">Large Size</Label>
-    <Select>
-      <SelectTrigger id="size-lg" size="lg" aria-labelledby="size-lg-label" className="w-[180px]">
-        <SelectValue placeholder="Large" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="lg">Large Size</SelectItem>
-      </SelectContent>
-    </Select>
-  </div>
-</div>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="space-y-2">
-                  <Label id="size-sm-label" htmlFor="size-sm">Small Size</Label>
-                  <Select>
-                    <SelectTrigger id="size-sm" size="sm" aria-labelledby="size-sm-label" className="w-[140px]">
-                      <SelectValue placeholder="Small" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="sm">Small Size</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label id="size-md-label" htmlFor="size-md">Default Size</Label>
-                  <Select>
-                    <SelectTrigger id="size-md" aria-labelledby="size-md-label" className="w-[160px]">
-                      <SelectValue placeholder="Default" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="md">Default Size</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label id="size-lg-label" htmlFor="size-lg">Large Size</Label>
-                  <Select>
-                    <SelectTrigger id="size-lg" size="lg" aria-labelledby="size-lg-label" className="w-[180px]">
-                      <SelectValue placeholder="Large" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="lg">Large Size</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-            </ComponentExample>
-          </div>
-        </section>
-
-        {/* Dialogs Section */}
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-semibold text-foreground">Dialogs</h2>
-            <p className="text-muted-foreground">
-              Modal overlays for focused interactions
-            </p>
-            <Link
-              href="https://github.com/Shredvardson/dl-starter/blob/main/docs/design/patterns/accessibility.md"
-              variant="ghost"
-              className="text-sm"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Pattern Documentation →
-            </Link>
-          </div>
-
-          <div className="space-y-8">
-            <ComponentExample
-              title="Dialog Example"
-              code={`<Dialog>
-  <DialogTrigger asChild>
-    <Button>Open Dialog</Button>
-  </DialogTrigger>
-  <DialogContent>
-    <DialogHeader>
-      <DialogTitle>Dialog Title</DialogTitle>
-      <DialogDescription>Dialog content goes here.</DialogDescription>
-    </DialogHeader>
-  </DialogContent>
-</Dialog>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button>Open Dialog</Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Dialog Title</DialogTitle>
-                    <DialogDescription className="text-muted-foreground">
-                      This is an example dialog with proper focus management and accessibility.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="flex justify-end gap-2 mt-4">
-                    <Button variant="outline">Cancel</Button>
-                    <Button>Confirm</Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </ComponentExample>
-          </div>
-        </section>
-
-        {/* Typography Section */}
-        <section className="space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-3xl font-semibold text-foreground">Typography</h2>
-            <p className="text-muted-foreground">
-              Text styles and semantic hierarchy
-            </p>
-            <Link
-              href="https://github.com/Shredvardson/dl-starter/blob/main/docs/design/patterns/typography.md"
-              variant="ghost"
-              className="text-sm"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View Pattern Documentation →
-            </Link>
-          </div>
-
-          <div className="space-y-8">
-            <ComponentExample
-              title="Headings"
-              code={`<h1 className="text-4xl font-bold">Heading 1</h1>
-<h2 className="text-3xl font-semibold">Heading 2</h2>
-<h3 className="text-2xl font-semibold">Heading 3</h3>
-<h4 className="text-xl font-semibold">Heading 4</h4>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="space-y-4">
-                <h1 className="text-4xl font-bold text-foreground">Heading 1</h1>
-                <h2 className="text-3xl font-semibold text-foreground">Heading 2</h2>
-                <h3 className="text-2xl font-semibold text-foreground">Heading 3</h3>
-                <h4 className="text-xl font-semibold text-foreground">Heading 4</h4>
-              </div>
-            </ComponentExample>
-
-            <ComponentExample
-              title="Body Text"
-              code={`<p className="text-foreground">Default body text</p>
-<p className="text-muted-foreground">Muted secondary text</p>
-<p className="text-sm text-muted-foreground">Small helper text</p>`}
-              onCopy={copyCode}
-              copied={copiedCode}
-            >
-              <div className="space-y-2">
-                <p className="text-foreground">Default body text with standard styling</p>
-                <p className="text-muted-foreground">Muted secondary text for less emphasis</p>
-                <p className="text-sm text-muted-foreground">Small helper text for hints and captions</p>
-              </div>
-            </ComponentExample>
-          </div>
-        </section>
-      </div>
-    </main>
+  // Group components by category
+  const componentsByCategory = categories.reduce(
+    (acc, category) => {
+      acc[category] = components.filter((c) => c.category === category);
+      return acc;
+    },
+    {} as Record<string, typeof components>
   );
-}
-
-/**
- * Component Example Wrapper
- *
- * Displays a component example with code and copy functionality
- */
-interface ComponentExampleProps {
-  title: string;
-  code: string;
-  children: React.ReactNode;
-  onCopy: (code: string) => void;
-  copied: string | null;
-}
-
-function ComponentExample({ title, code, children, onCopy, copied }: ComponentExampleProps) {
-  const isCopied = copied === code;
 
   return (
-    <div className="border border-border rounded-lg p-6 space-y-4 bg-card">
-      <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-card-foreground">{title}</h3>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => onCopy(code)}
-          className="text-xs"
-        >
-          {isCopied ? '✓ Copied' : 'Copy Code'}
-        </Button>
+    <div className="container mx-auto p-8">
+      {/* Header */}
+      <div className="mb-12">
+        <h1 className="text-4xl font-bold tracking-tight mb-2">Design System</h1>
+        <p className="text-lg text-muted-foreground mb-6">
+          Interactive component library and design token reference
+        </p>
+
+        {/* Quick Navigation */}
+        <div className="flex gap-4">
+          <Link
+            href="/design/tokens"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+          >
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"
+              />
+            </svg>
+            Browse Tokens
+          </Link>
+          <a
+            href="https://github.com/Shredvardson/dl-starter"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-input hover:bg-accent transition-colors"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+            View Source
+          </a>
+        </div>
       </div>
-      <div className="p-6 bg-background rounded border border-border">
-        {children}
+
+      {/* Statistics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-3xl font-bold">{components.length}</div>
+            <div className="text-sm text-muted-foreground">Components</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-3xl font-bold">{categories.length}</div>
+            <div className="text-sm text-muted-foreground">Categories</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-3xl font-bold">{totalVariants}</div>
+            <div className="text-sm text-muted-foreground">Total Variants</div>
+          </CardContent>
+        </Card>
       </div>
-      <details className="text-sm">
-        <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
-          View Code
-        </summary>
-        <pre className="mt-2 p-4 bg-muted rounded overflow-x-auto">
-          <code className="text-xs">{code}</code>
-        </pre>
-      </details>
+
+      {/* Components by Category */}
+      <div className="space-y-12">
+        {categories.map((category) => {
+          const categoryComponents = componentsByCategory[category];
+          if (!categoryComponents || categoryComponents.length === 0) {
+            return null;
+          }
+
+          return (
+            <section key={category}>
+              <h2 className="text-2xl font-bold mb-6 capitalize">
+                {category.replaceAll('-', ' ')}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {categoryComponents.map((component) => (
+                  <Link
+                    key={component.name}
+                    href={`/design/components/${component.name}`}
+                    className="group"
+                  >
+                    <Card className="h-full transition-all hover:shadow-lg hover:border-primary/50">
+                      <CardHeader>
+                        <CardTitle className="group-hover:text-primary transition-colors">
+                          {component.displayName}
+                        </CardTitle>
+                        <CardDescription>{component.description}</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <svg
+                            className="w-3 h-3"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                            />
+                          </svg>
+                          <code className="text-xs">{component.filePath}</code>
+                        </div>
+                        {component.variants && (
+                          <div className="mt-3 flex flex-wrap gap-1">
+                            {Object.keys(component.variants).map((variant) => (
+                              <span
+                                key={variant}
+                                className="px-2 py-1 text-xs rounded-md bg-secondary text-secondary-foreground"
+                              >
+                                {variant}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            </section>
+          );
+        })}
+      </div>
     </div>
   );
 }

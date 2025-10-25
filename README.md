@@ -301,6 +301,23 @@ pnpm typecheck        # Type check all packages
 pnpm lint             # Lint all packages
 ```
 
+### UI Components
+
+```bash
+# List existing components
+ls packages/ui/src/components/ui/
+
+# Add shadcn component (from packages/ui/)
+cd packages/ui
+npx shadcn@latest add <component-name>
+
+# Example: Add navigation-menu component
+npx shadcn@latest add navigation-menu
+```
+
+**Always check existing components first before creating new ones!**
+See [docs/COMPONENT_WORKFLOW.md](docs/COMPONENT_WORKFLOW.md) for the complete workflow.
+
 ### Database
 
 ```bash
