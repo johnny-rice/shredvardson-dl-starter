@@ -100,6 +100,115 @@ export default function DesignSystemPage() {
         </Card>
       </div>
 
+      {/* External Libraries */}
+      <Card className="mb-12 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-950/20 dark:to-purple-950/20 border-blue-200/50 dark:border-blue-800/50">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+              />
+            </svg>
+            External Component Libraries
+          </CardTitle>
+          <CardDescription>Tier 1 approved libraries for specialized use cases</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Link href="/design/external/tremor" className="block">
+              <div className="p-4 rounded-lg bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-700 transition-colors">
+                <h3 className="font-semibold mb-1">Tremor</h3>
+                <p className="text-xs text-muted-foreground mb-3">Charts & Data Visualization</p>
+                <div className="flex flex-wrap gap-1 mb-3">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                    LineChart
+                  </span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                    BarChart
+                  </span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                    AreaChart
+                  </span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                    +2 more
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <code className="text-[10px] text-muted-foreground">/design import tremor</code>
+                  <span className="text-[10px] text-blue-600 dark:text-blue-400">
+                    View examples →
+                  </span>
+                </div>
+              </div>
+            </Link>
+            <div className="p-4 rounded-lg bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 opacity-60">
+              <h3 className="font-semibold mb-1">TanStack Table</h3>
+              <p className="text-xs text-muted-foreground mb-3">Advanced Data Grids</p>
+              <div className="flex flex-wrap gap-1 mb-3">
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                  basic-table
+                </span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                  advanced-table
+                </span>
+              </div>
+              <div className="text-[10px] text-amber-600 dark:text-amber-500">
+                Coming soon (#192)
+              </div>
+            </div>
+            <div className="p-4 rounded-lg bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 opacity-60">
+              <h3 className="font-semibold mb-1">dnd-kit</h3>
+              <p className="text-xs text-muted-foreground mb-3">Drag & Drop</p>
+              <div className="flex flex-wrap gap-1 mb-3">
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                  kanban-board
+                </span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+                  sortable-list
+                </span>
+              </div>
+              <div className="text-[10px] text-amber-600 dark:text-amber-500">
+                Coming soon (#193)
+              </div>
+            </div>
+            <div className="p-4 rounded-lg bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50">
+              <h3 className="font-semibold mb-1">React Aria</h3>
+              <p className="text-xs text-muted-foreground mb-3">Custom Components</p>
+              <div className="text-xs mb-3">Headless hooks for accessible UI</div>
+              <a
+                href="https://react-spectrum.adobe.com/react-aria"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[10px] text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                View docs →
+              </a>
+            </div>
+          </div>
+          <div className="mt-4 p-3 rounded-lg bg-blue-50/50 dark:bg-blue-950/20 border border-blue-200/50 dark:border-blue-800/50">
+            <p className="text-sm text-blue-900 dark:text-blue-100">
+              <strong>Component Selection Priority:</strong> Check existing components → shadcn/ui →
+              approved libraries → custom
+            </p>
+            <Link
+              href="/docs/design/EXTERNAL_LIBRARIES.md"
+              className="text-xs text-blue-600 dark:text-blue-400 hover:underline mt-1 inline-block"
+            >
+              View complete external libraries guide →
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Components by Category */}
       <div className="space-y-12">
         {categories.map((category) => {

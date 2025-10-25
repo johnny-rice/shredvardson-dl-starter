@@ -2,103 +2,33 @@
   "shadcnComponents": {
     "button": {
       "path": "@ui/components",
-      "variants": [
-        "default",
-        "destructive",
-        "outline",
-        "secondary",
-        "ghost",
-        "link"
-      ],
-      "sizes": [
-        "default",
-        "sm",
-        "lg",
-        "icon"
-      ],
-      "features": [
-        "forwardRef",
-        "disabled",
-        "asChild"
-      ],
-      "useCases": [
-        "actions",
-        "forms",
-        "navigation",
-        "triggers"
-      ]
+      "variants": ["default", "destructive", "outline", "secondary", "ghost", "link"],
+      "sizes": ["default", "sm", "lg", "icon"],
+      "features": ["forwardRef", "disabled", "asChild"],
+      "useCases": ["actions", "forms", "navigation", "triggers"]
     },
     "input": {
       "path": "@ui/components",
-      "types": [
-        "text",
-        "email",
-        "password",
-        "number",
-        "tel",
-        "url",
-        "search"
-      ],
-      "features": [
-        "forwardRef",
-        "disabled",
-        "placeholder"
-      ],
-      "useCases": [
-        "forms",
-        "search",
-        "data-entry"
-      ]
+      "types": ["text", "email", "password", "number", "tel", "url", "search"],
+      "features": ["forwardRef", "disabled", "placeholder"],
+      "useCases": ["forms", "search", "data-entry"]
     },
     "card": {
       "path": "@ui/components",
-      "subComponents": [
-        "CardHeader",
-        "CardTitle",
-        "CardDescription",
-        "CardContent",
-        "CardFooter"
-      ],
-      "features": [
-        "composition",
-        "flexible-layout"
-      ],
-      "useCases": [
-        "containers",
-        "content-groups",
-        "dashboards"
-      ]
+      "subComponents": ["CardHeader", "CardTitle", "CardDescription", "CardContent", "CardFooter"],
+      "features": ["composition", "flexible-layout"],
+      "useCases": ["containers", "content-groups", "dashboards"]
     },
     "label": {
       "path": "@ui/components",
-      "features": [
-        "forwardRef",
-        "htmlFor"
-      ],
-      "useCases": [
-        "forms",
-        "accessibility",
-        "field-labels"
-      ]
+      "features": ["forwardRef", "htmlFor"],
+      "useCases": ["forms", "accessibility", "field-labels"]
     },
     "select": {
       "path": "@ui/components",
-      "subComponents": [
-        "SelectTrigger",
-        "SelectContent",
-        "SelectItem",
-        "SelectValue"
-      ],
-      "features": [
-        "controlled",
-        "placeholder",
-        "disabled"
-      ],
-      "useCases": [
-        "forms",
-        "filters",
-        "options"
-      ]
+      "subComponents": ["SelectTrigger", "SelectContent", "SelectItem", "SelectValue"],
+      "features": ["controlled", "placeholder", "disabled"],
+      "useCases": ["forms", "filters", "options"]
     },
     "dialog": {
       "path": "@ui/components",
@@ -110,20 +40,19 @@
         "DialogDescription",
         "DialogFooter"
       ],
-      "features": [
-        "modal",
-        "controlled",
-        "dismissable"
-      ],
-      "useCases": [
-        "modals",
-        "confirmations",
-        "forms-overlay"
-      ]
+      "features": ["modal", "controlled", "dismissable"],
+      "useCases": ["modals", "confirmations", "forms-overlay"]
     }
   },
   "customComponents": {
-    "_comment": "Track custom components created for legitimate reasons"
+    "_comment": "Track custom components created for legitimate reasons",
+    "line-chart": {
+      "createdAt": "2025-10-25",
+      "reason": "Imported from tremor",
+      "source": "tremor",
+      "dependencies": ["@tremor/react@^3.18.3", "recharts@^2.15.0"],
+      "viewerExamples": 3
+    }
   },
   "aliases": {
     "btn": "button",
@@ -135,17 +64,9 @@
     "confirm": "dialog"
   },
   "similarityGroups": {
-    "containers": [
-      "card",
-      "dialog"
-    ],
-    "inputs": [
-      "input",
-      "select"
-    ],
-    "buttons": [
-      "button"
-    ]
+    "containers": ["card", "dialog"],
+    "inputs": ["input", "select"],
+    "buttons": ["button"]
   },
   "domainSpecific": {
     "_comment": "Components that are clearly domain-specific and shouldn't trigger warnings",
@@ -195,11 +116,26 @@
       "lastReviewed": "2025-10-24",
       "source": "https://tremor.so/docs",
       "components": {
-        "LineChart": { "complexity": "medium", "dependencies": ["recharts"] },
-        "BarChart": { "complexity": "medium", "dependencies": ["recharts"] },
-        "AreaChart": { "complexity": "medium", "dependencies": ["recharts"] },
-        "DonutChart": { "complexity": "low", "dependencies": ["recharts"] },
-        "KpiCard": { "complexity": "low", "dependencies": [] }
+        "LineChart": {
+          "complexity": "medium",
+          "dependencies": ["recharts"]
+        },
+        "BarChart": {
+          "complexity": "medium",
+          "dependencies": ["recharts"]
+        },
+        "AreaChart": {
+          "complexity": "medium",
+          "dependencies": ["recharts"]
+        },
+        "DonutChart": {
+          "complexity": "low",
+          "dependencies": ["recharts"]
+        },
+        "KpiCard": {
+          "complexity": "low",
+          "dependencies": []
+        }
       }
     },
     "tanstack-table": {

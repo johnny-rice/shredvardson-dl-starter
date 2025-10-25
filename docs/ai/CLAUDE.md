@@ -163,7 +163,9 @@ When you open a PR:
 
 See [docs/workflow-security.md](../workflow-security.md) for complete review commands, operational controls, and security guidelines.
 
-## Testing
+## UI Components & Testing
+
+**Components:** [Workflow](../COMPONENT_WORKFLOW.md) (existing → shadcn → approved libs → custom)
 
 See [Testing Guide](../testing/TESTING_GUIDE.md) for comprehensive testing patterns, coverage requirements, and best practices.
 

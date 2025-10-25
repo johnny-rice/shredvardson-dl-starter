@@ -39,11 +39,25 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        // Tremor color mappings to design tokens
+        'tremor-brand': 'hsl(var(--primary))',
+        'tremor-brand-subtle': 'hsl(var(--primary) / 0.1)',
+        'tremor-brand-muted': 'hsl(var(--primary) / 0.4)',
+        'tremor-brand-emphasis': 'hsl(var(--primary) / 0.8)',
+        'tremor-background': 'hsl(var(--background))',
+        'tremor-background-muted': 'hsl(var(--muted))',
+        'tremor-content': 'hsl(var(--foreground))',
+        'tremor-content-subtle': 'hsl(var(--muted-foreground))',
+        'tremor-border': 'hsl(var(--border))',
       },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+        // Tremor border radius mappings
+        'tremor-small': 'calc(var(--radius) - 4px)',
+        'tremor-default': 'var(--radius)',
+        'tremor-full': '9999px',
       },
       spacing: {
         0: 'var(--spacing-0)',
