@@ -1,0 +1,67 @@
+# .mcp-index-ignore
+#
+# Security configuration for Code Index MCP server to prevent indexing of sensitive files.
+# Code Index MCP provides AST-based code analysis for better AI assistance, but should
+# exclude files containing secrets, credentials, and other sensitive data.
+#
+# See: https://github.com/modelcontextprotocol/servers/tree/main/src/code-index
+# Related: Issue #206
+
+# Sensitive files
+.env*
+*.key
+*.pem
+*.p12
+*.pfx
+*.crt
+*.ppk
+secrets/
+*-secret.json
+*credentials*.json
+*service-account*.json
+.npmrc
+.yarnrc
+.pypirc
+.pgpass
+.my.cnf
+.netrc
+*.token
+id_rsa*
+id_ed25519*
+id_ecdsa*
+.aws/
+gcloud/
+docker-compose.override.yml
+
+# Build artifacts (already in .gitignore but extra safety)
+node_modules/
+.next/
+out/
+dist/
+build/
+.turbo/
+.cache/
+.npm/
+.yarn/
+.pnpm-store/
+.parcel-cache/
+
+# Supabase local
+supabase/.branches/
+supabase/.temp/
+
+# Test coverage
+coverage/
+.nyc_output/
+.jest/
+test-results/
+.pytest_cache/
+htmlcov/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
