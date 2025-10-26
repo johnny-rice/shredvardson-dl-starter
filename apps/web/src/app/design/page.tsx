@@ -150,21 +150,31 @@ export default function DesignSystemPage() {
                 </div>
               </div>
             </Link>
-            <div className="p-4 rounded-lg bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 opacity-60">
-              <h3 className="font-semibold mb-1">TanStack Table</h3>
-              <p className="text-xs text-muted-foreground mb-3">Advanced Data Grids</p>
-              <div className="flex flex-wrap gap-1 mb-3">
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
-                  basic-table
-                </span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400">
-                  advanced-table
-                </span>
+            <Link href="/design/external/tanstack-table" className="block">
+              <div className="p-4 rounded-lg bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-700 transition-colors">
+                <h3 className="font-semibold mb-1">TanStack Table</h3>
+                <p className="text-xs text-muted-foreground mb-3">Advanced Data Grids</p>
+                <div className="flex flex-wrap gap-1 mb-3">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                    DataTable
+                  </span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                    sorting
+                  </span>
+                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+                    pagination
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <code className="text-[10px] text-muted-foreground">
+                    /design import tanstack-table
+                  </code>
+                  <span className="text-[10px] text-blue-600 dark:text-blue-400">
+                    View examples →
+                  </span>
+                </div>
               </div>
-              <div className="text-[10px] text-amber-600 dark:text-amber-500">
-                Coming soon (#192)
-              </div>
-            </div>
+            </Link>
             <div className="p-4 rounded-lg bg-white/50 dark:bg-gray-900/50 border border-gray-200/50 dark:border-gray-700/50 opacity-60">
               <h3 className="font-semibold mb-1">dnd-kit</h3>
               <p className="text-xs text-muted-foreground mb-3">Drag & Drop</p>

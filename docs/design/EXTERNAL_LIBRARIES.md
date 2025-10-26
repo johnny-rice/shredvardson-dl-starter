@@ -60,16 +60,40 @@ See [COMPONENT_WORKFLOW.md](../COMPONENT_WORKFLOW.md) for complete workflow.
 - Well-maintained
 - RSC compatible
 
-**Available templates:**
-- `basic-table` - Sorting and filtering
-- `advanced-table` - Pagination, row selection, multi-column sort
-- `server-table` - Server-side pagination and filtering
+**Available components:**
+- `DataTable` - Headless table with sorting, filtering, pagination, and row selection
 
 **How to use:**
 
 ```bash
-# Coming in Issue #192
-/design import tanstack basic-table
+# Import the DataTable component
+/design import tanstack-table DataTable
+
+# This will:
+# 1. Install @tanstack/react-table dependency
+# 2. Create component wrapper in packages/ui/src/components/ui/data-table/
+# 3. Generate test file
+# 4. Update component registry
+```
+
+**Usage example:**
+
+```tsx
+import { DataTable } from '@ui/components';
+import type { ColumnDef } from '@tanstack/react-table';
+
+const columns: ColumnDef<User>[] = [
+  { accessorKey: 'name', header: 'Name' },
+  { accessorKey: 'email', header: 'Email' },
+];
+
+<DataTable
+  columns={columns}
+  data={users}
+  enableSorting
+  enablePagination
+  pageSize={20}
+/>
 ```
 
 **Note:** For simple tables, use shadcn/ui Table component first.
@@ -182,8 +206,8 @@ Create an issue with:
 # Import from Tremor
 /design import tremor <ComponentName>
 
-# Import from TanStack (Coming soon - Issue #192)
-/design import tanstack <template-name>
+# Import from TanStack Table
+/design import tanstack-table <ComponentName>
 
 # Import from dnd-kit (Coming soon - Issue #193)
 /design import dnd-kit <template-name>

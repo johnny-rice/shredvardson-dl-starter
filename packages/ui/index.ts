@@ -1,29 +1,16 @@
 // Core UI Components
-export { Button, buttonVariants, type ButtonProps } from './src/components/ui/button';
-export { Input, type InputProps } from './src/components/ui/input';
-export { Label } from './src/components/ui/label';
-export {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectScrollDownButton,
-  SelectScrollUpButton,
-  SelectSeparator,
-  SelectTrigger,
-  SelectValue,
-} from './src/components/ui/select';
+export { Button, type ButtonProps, buttonVariants } from './src/components/ui/button';
 export {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
+  type CardProps,
   CardTitle,
   cardVariants,
-  type CardProps,
 } from './src/components/ui/card';
+export { DataTable, type DataTableProps } from './src/components/ui/data-table';
 export {
   Dialog,
   DialogClose,
@@ -36,30 +23,39 @@ export {
   DialogTitle,
   DialogTrigger,
 } from './src/components/ui/dialog';
-
+export { Input, type InputProps } from './src/components/ui/input';
 // Link component
-export { Link, linkVariants, type LinkProps } from './src/components/ui/Link';
-
+export { Link, type LinkProps, linkVariants } from './src/components/ui/Link';
+export { Label } from './src/components/ui/label';
 // Section Header component
 export {
   SectionHeader,
-  sectionHeaderVariants,
-  sectionDescriptionVariants,
   type SectionHeaderProps,
+  sectionDescriptionVariants,
+  sectionHeaderVariants,
 } from './src/components/ui/section-header';
-
-// Utilities
-export { cn } from './src/lib/utils';
-
+export {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectScrollDownButton,
+  SelectScrollUpButton,
+  SelectSeparator,
+  SelectTrigger,
+  SelectValue,
+} from './src/components/ui/select';
 // Animations
 export {
+  type AnimationCustomProps,
   fadeIn,
-  slideUp,
+  getReducedMotionVariants,
   scale,
   slideInRight,
-  getReducedMotionVariants,
-  type AnimationCustomProps,
+  slideUp,
 } from './src/lib/animations';
-
 // Hooks
 export { useReducedMotion } from './src/lib/use-reduced-motion';
+// Utilities
+export { cn } from './src/lib/utils';

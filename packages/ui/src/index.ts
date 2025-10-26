@@ -1,5 +1,26 @@
 // Core UI Components
-export { Button, buttonVariants, type ButtonProps } from './components/ui/button';
+export { Button, type ButtonProps, buttonVariants } from './components/ui/button';
+export {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from './components/ui/card';
+export { DataTable, type DataTableProps } from './components/ui/data-table';
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+} from './components/ui/dialog';
 export { Input, type InputProps } from './components/ui/input';
 export { Label } from './components/ui/label';
 export {
@@ -14,85 +35,59 @@ export {
   SelectTrigger,
   SelectValue,
 } from './components/ui/select';
-export {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from './components/ui/card';
-export {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogOverlay,
-  DialogPortal,
-  DialogTitle,
-  DialogTrigger,
-} from './components/ui/dialog';
-
-// Utilities
-export { cn } from './lib/utils';
-
 // Animations
 export {
+  type AnimationCustomProps,
   fadeIn,
-  slideUp,
+  getReducedMotionVariants,
   scale,
   slideInRight,
-  getReducedMotionVariants,
-  type AnimationCustomProps,
+  slideUp,
 } from './lib/animations';
-
 // Hooks
 export { useReducedMotion } from './lib/use-reduced-motion';
-
-// Design Tokens
-export { tokens, lightTheme, darkTheme } from './tokens';
+// Utilities
+export { cn } from './lib/utils';
 export type {
-  ColorToken,
-  SpacingToken,
-  FontSizeToken,
-  FontWeightToken,
-  LineHeightToken,
-  LetterSpacingToken,
-  BorderRadiusToken,
-  ShadowToken,
   AnimationDurationToken,
   AnimationEasingToken,
+  BorderRadiusToken,
   BreakpointToken,
-  ZIndexToken,
+  ColorToken,
+  FontSizeToken,
+  FontWeightToken,
+  LetterSpacingToken,
+  LineHeightToken,
+  ShadowToken,
+  SpacingToken,
   ThemeTokens,
+  ZIndexToken,
 } from './tokens';
-
-// Token Validation
-export {
-  validateClassName,
-  validateComponentProps,
-  generateComplianceReport,
-  isValidColorToken,
-  isValidSpacingToken,
-  isValidFontSizeToken,
-  isValidBorderRadiusToken,
-  isValidShadowToken,
-  type TokenValidationResult,
-  type TokenComplianceReport,
-} from './tokens/validation';
-
+// Design Tokens
+export { darkTheme, lightTheme, tokens } from './tokens';
 // Token Hooks
 export {
-  useColorToken,
-  useSpacingToken,
-  useTypographyTokens,
-  useThemeTokens,
-  useBreakpoint,
-  useMediaQuery,
   useAnimationTokens,
+  useBreakpoint,
+  useColorToken,
   useCSSVariables,
+  useMediaQuery,
+  useSpacingToken,
+  useThemeTokens,
   useToken,
   useTokenValidation,
+  useTypographyTokens,
 } from './tokens/hooks';
+// Token Validation
+export {
+  generateComplianceReport,
+  isValidBorderRadiusToken,
+  isValidColorToken,
+  isValidFontSizeToken,
+  isValidShadowToken,
+  isValidSpacingToken,
+  type TokenComplianceReport,
+  type TokenValidationResult,
+  validateClassName,
+  validateComponentProps,
+} from './tokens/validation';
