@@ -20,6 +20,12 @@ interface FigmaImportOutput {
   phase: string;
 }
 
+/**
+ * Simulates importing design tokens from a Figma file and indicates that full Figma MCP integration is deferred to Phase 5.
+ *
+ * @param fileId - Optional Figma file ID or file key to import tokens from
+ * @returns An object describing the import result: `success` is `false`, `fileId` echoes the input, `tokens` is an empty array, `summary` explains the deferral, and `phase` is `'Phase 5'`
+ */
 async function importFromFigma(fileId?: string): Promise<FigmaImportOutput> {
   // Phase 0: Stub implementation
   // Phase 5: Full Figma MCP integration (optional enhancement)

@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+
 /**
  * Token Counter Utility
  *
@@ -23,8 +24,8 @@
  * 4. Sufficient accuracy for relative comparisons (~5-10% margin)
  */
 
+import { readFileSync } from 'node:fs';
 import { encoding_for_model } from 'tiktoken';
-import { readFileSync } from 'fs';
 
 // Use cl100k_base encoding (GPT-4/Claude approximation)
 // Provides ~90-95% accuracy for Claude token counting

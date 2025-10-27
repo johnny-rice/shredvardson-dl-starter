@@ -6,9 +6,9 @@
  * Usage: tsx validate-coverage.ts
  */
 
-import { execSync } from 'child_process';
-import { existsSync, readFileSync } from 'fs';
-import { join } from 'path';
+import { execSync } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 const coverageFile = join(process.cwd(), 'apps/web/coverage/coverage-summary.json');
 const contractFile = join(process.cwd(), 'docs/testing/coverage-contract.md');
@@ -37,8 +37,8 @@ function parseContractThresholds(filePath: string) {
       branches: branches ? parseInt(branches, 10) : 65,
       statements: statements ? parseInt(statements, 10) : 70,
     };
-  } catch (error) {
-    console.warn(`Warning: Failed to parse contract file, using defaults`);
+  } catch (_error) {
+    console.warn('Warning: Failed to parse contract file, using defaults');
     return { lines: 70, functions: 70, branches: 65, statements: 70 };
   }
 }
@@ -48,7 +48,7 @@ if (!existsSync(coverageFile)) {
   console.error('No coverage data found. Running tests with coverage...\n');
   try {
     execSync('pnpm --filter=web test:coverage', { stdio: 'inherit' });
-  } catch (error) {
+  } catch (_error) {
     console.error('Error running coverage tests');
     process.exit(1);
   }

@@ -1,4 +1,5 @@
 #!/usr/bin/env tsx
+
 /**
  * Accessibility Audit Script using axe-core
  *
@@ -14,10 +15,10 @@
  *   tsx scripts/accessibility/run-axe.ts full critical # Scan all routes, critical only
  */
 
-import { chromium, Browser, Page } from '@playwright/test';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
-import { writeFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { type Browser, chromium, type Page } from '@playwright/test';
 
 interface AxeViolation {
   id: string;
@@ -50,7 +51,7 @@ async function runAccessibilityAudit(
 
   const browser: Browser = await chromium.launch({ headless: true });
 
-  let allViolations: AxeViolation[] = [];
+  const allViolations: AxeViolation[] = [];
 
   try {
     const page: Page = await browser.newPage();
@@ -159,7 +160,7 @@ function generateReport(
 
   // Critical issues
   if (criticalViolations.length > 0) {
-    report += `## Critical Issues\n\n`;
+    report += '## Critical Issues\n\n';
     criticalViolations.forEach((v, i) => {
       report += formatViolation(v, i + 1);
     });
@@ -167,7 +168,7 @@ function generateReport(
 
   // Serious issues
   if (seriousViolations.length > 0) {
-    report += `## Serious Issues\n\n`;
+    report += '## Serious Issues\n\n';
     seriousViolations.forEach((v, i) => {
       report += formatViolation(v, i + 1);
     });
@@ -175,7 +176,7 @@ function generateReport(
 
   // Moderate issues
   if (moderateViolations.length > 0) {
-    report += `## Moderate Issues\n\n`;
+    report += '## Moderate Issues\n\n';
     moderateViolations.forEach((v, i) => {
       report += formatViolation(v, i + 1);
     });
@@ -183,14 +184,14 @@ function generateReport(
 
   // Minor issues
   if (minorViolations.length > 0) {
-    report += `## Minor Issues\n\n`;
+    report += '## Minor Issues\n\n';
     minorViolations.forEach((v, i) => {
       report += formatViolation(v, i + 1);
     });
   }
 
   // Recommendations
-  report += `## Recommendations\n\n`;
+  report += '## Recommendations\n\n';
 
   if (summary.critical > 0) {
     report += `- ⚠️ **URGENT:** Fix ${summary.critical} critical issue${summary.critical > 1 ? 's' : ''} immediately\n`;
@@ -205,12 +206,12 @@ function generateReport(
     report += `- 🔵 Consider ${summary.minor} minor improvement${summary.minor > 1 ? 's' : ''}\n`;
   }
 
-  report += `- Consider implementing automated a11y testing in CI/CD\n`;
-  report += `- Add accessibility linting (eslint-plugin-jsx-a11y)\n`;
-  report += `- Review design system components for ARIA best practices\n\n`;
+  report += '- Consider implementing automated a11y testing in CI/CD\n';
+  report += '- Add accessibility linting (eslint-plugin-jsx-a11y)\n';
+  report += '- Review design system components for ARIA best practices\n\n';
 
   // Compliance status
-  report += `## Compliance Status\n\n`;
+  report += '## Compliance Status\n\n';
   report += `- **WCAG 2.1 Level A:** ${summary.critical === 0 ? '✅ PASS' : '❌ FAIL'} (${summary.critical} violations)\n`;
   report += `- **WCAG 2.1 Level AA:** ${summary.critical === 0 && summary.serious === 0 ? '✅ PASS' : '❌ FAIL'} (${summary.critical + summary.serious} violations)\n`;
   report += `- **Best Practices:** ${summary.moderate === 0 ? '✅ PASS' : '⚠️ PARTIAL'} (${summary.moderate} recommendations)\n\n`;
@@ -229,14 +230,14 @@ function formatViolation(violation: AxeViolation, index: number): string {
   output += `**Impact:** ${violation.description}\n\n`;
 
   if (violation.nodes.length > 0) {
-    output += `**Affected Elements:**\n`;
+    output += '**Affected Elements:**\n';
     violation.nodes.slice(0, 3).forEach((node) => {
       output += `- \`${node.target.join(' ')}\`\n`;
     });
     if (violation.nodes.length > 3) {
       output += `- ... and ${violation.nodes.length - 3} more\n`;
     }
-    output += `\n`;
+    output += '\n';
 
     output += `**Evidence:**\n\`\`\`html\n${violation.nodes[0].html}\n\`\`\`\n\n`;
   }

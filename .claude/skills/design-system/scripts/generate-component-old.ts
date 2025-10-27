@@ -6,10 +6,10 @@
  * Phase 4: Full implementation with Handlebars templates
  */
 
-import { execSync } from 'child_process';
-import * as fs from 'fs';
+import { execSync } from 'node:child_process';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 import Handlebars from 'handlebars';
-import * as path from 'path';
 
 // Register Handlebars helpers
 Handlebars.registerHelper('pascalCase', (str: string) => {
@@ -102,7 +102,14 @@ interface ComponentGenerationOutput {
   firstPassAccuracy?: number;
 }
 
-// Load pattern configurations
+/**
+ * Provide a predefined partial ComponentConfig for a named UI pattern.
+ *
+ * Returns a pattern-specific configuration (element tag, base classes, variants, accessibility notes, etc.) for common patterns such as "button", "input", "card", and "dialog".
+ *
+ * @param patternName - The pattern identifier (e.g., "button", "input", "card", "dialog")
+ * @returns A Partial<ComponentConfig> containing defaults for the requested pattern, or an empty object if the pattern is not recognized
+ */
 function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
   const patterns: Record<string, Partial<ComponentConfig>> = {
     button: {
@@ -210,7 +217,16 @@ function generateFromTemplate(config: ComponentConfig, templateName: string): st
   return compiledTemplate(config);
 }
 
-// Validate generated component
+/**
+ * Evaluate a generated component file against token usage, design-pattern adherence, accessibility, and test-coverage criteria.
+ *
+ * @param componentPath - Filesystem path to the generated component (.tsx) to validate
+ * @returns A ValidationResult containing:
+ *  - `passed`: whether the component met the pass threshold,
+ *  - `score`: aggregated numeric score (0–100),
+ *  - `details`: per-category scores for `tokenCompliance`, `patternAdherence`, `accessibility`, and `testCoverage`,
+ *  - `suggestions`: actionable guidance for improving the component
+ */
 async function validateComponent(componentPath: string): Promise<ValidationResult> {
   const content = fs.readFileSync(componentPath, 'utf-8');
 
@@ -289,6 +305,15 @@ function calculateAccessibilityScore(content: string): number {
   return Math.min(100, score);
 }
 
+/**
+ * Produce actionable suggestions based on scores for design token usage, pattern adherence, accessibility, and tests.
+ *
+ * @param tokenCompliance - Score (0–100) indicating how well design tokens are used (higher is better)
+ * @param patternAdherence - Score (0–100) indicating conformity to established component patterns (higher is better)
+ * @param accessibility - Score (0–100) indicating accessibility quality (higher is better)
+ * @param testCoverage - Score (0–100) indicating test coverage level (higher is better)
+ * @returns An array of human-readable suggestions for improvements; empty when no suggestions are needed
+ */
 function generateSuggestions(
   tokenCompliance: number,
   patternAdherence: number,
@@ -318,7 +343,16 @@ function generateSuggestions(
   return suggestions;
 }
 
-// Main generation function
+/**
+ * Scaffolds a UI component (files, tests, optional story), validates the generated output, and returns a structured result.
+ *
+ * This function renders templates for a component, its test, and optionally a Storybook story, writes them to
+ * packages/ui/src/components/ui, runs validation checks (including an optional token sub-agent), and assembles a
+ * ComponentGenerationOutput describing success, generated files, validation details, and suggested next steps.
+ *
+ * @param args - CLI-style arguments where index 0 is the component name, index 1 is an optional variant; include `--with-story` to generate a story file
+ * @returns The ComponentGenerationOutput summarizing generation success, generated files, validation results, suggested next steps, and first-pass accuracy
+ */
 async function generateComponent(args: string[]): Promise<ComponentGenerationOutput> {
   const componentName = args[0];
   const variant = args[1];
@@ -439,7 +473,7 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
         execSync(`pnpm tsx ${path.join(__dirname, 'validate-tokens.ts')} ${componentPath}`, {
           stdio: 'inherit',
         });
-      } catch (e) {
+      } catch (_e) {
         console.error('  ⚠️  Token validation failed');
       }
     }

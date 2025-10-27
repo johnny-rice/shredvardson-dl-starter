@@ -1,14 +1,14 @@
+import { execSync } from 'node:child_process';
 import {
-  readFileSync,
-  writeFileSync,
-  mkdirSync,
-  existsSync,
   copyFileSync,
-  statSync,
+  existsSync,
+  mkdirSync,
   readdirSync,
-} from 'fs';
-import { resolve, join, dirname, relative } from 'path';
-import { execSync } from 'child_process';
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
 
 interface AppConfig {
   APP_NAME: string;
@@ -19,7 +19,7 @@ interface AppConfig {
 }
 
 function prompt(question: string, defaultValue?: string): string {
-  const readline = require('readline').createInterface({
+  const readline = require('node:readline').createInterface({
     input: process.stdin,
     output: process.stdout,
   });
@@ -104,7 +104,7 @@ function replacePlaceholders(filePath: string, config: AppConfig): void {
     content = content.replace(/dl-starter \(Monorepo\)/g, config.APP_NAME);
 
     writeFileSync(filePath, content);
-  } catch (error) {
+  } catch (_error) {
     // Skip binary files or files that can't be read as text
   }
 }
@@ -177,7 +177,7 @@ async function main() {
   console.log('📦 Installing dependencies...');
   try {
     execSync('pnpm i', { cwd: targetDir, stdio: 'inherit' });
-  } catch (error) {
+  } catch (_error) {
     console.warn('⚠️  Failed to install dependencies. Run manually: pnpm i');
   }
 
@@ -196,7 +196,7 @@ async function main() {
     );
 
     console.log('📝 Git repository initialized with initial commit');
-  } catch (error) {
+  } catch (_error) {
     console.log('📝 Git initialization skipped (run git init manually if needed)');
   }
 
@@ -205,9 +205,9 @@ async function main() {
   console.log();
   console.log('Next Steps:');
   console.log(`1. cd ../${config.APP_SLUG}`);
-  console.log(`2. Fill docs/product/PRD.md with MVP scope`);
-  console.log(`3. pnpm tsx scripts/starter-doctor.ts`);
-  console.log(`4. pnpm dev`);
+  console.log('2. Fill docs/product/PRD.md with MVP scope');
+  console.log('3. pnpm tsx scripts/starter-doctor.ts');
+  console.log('4. pnpm dev');
   console.log();
   console.log('Optional:');
   console.log(`- git remote add origin https://github.com/yourusername/${config.APP_SLUG}.git`);

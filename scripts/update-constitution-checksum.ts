@@ -1,6 +1,6 @@
-import { readFileSync, writeFileSync, statSync } from 'fs';
-import { createHash } from 'crypto';
-import { resolve } from 'path';
+import { createHash } from 'node:crypto';
+import { readFileSync, statSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { resolveDoc } from './utils/resolveDoc';
 
 interface ContextMapArea {

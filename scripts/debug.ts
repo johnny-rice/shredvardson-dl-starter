@@ -77,7 +77,7 @@ program
 
     // Check package manager
     try {
-      const { execSync } = require('child_process');
+      const { execSync } = require('node:child_process');
       const pnpmVersion = execSync('pnpm --version', { encoding: 'utf8' }).trim();
       console.log(`pnpm: v${pnpmVersion} ✅`);
     } catch {
@@ -85,7 +85,7 @@ program
     }
 
     // Check essential files
-    const fs = require('fs');
+    const fs = require('node:fs');
     const essentialFiles = [
       'package.json',
       'next.config.ts',

@@ -1,6 +1,6 @@
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
-import { resolve, join } from 'path';
-import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 
 interface AppConfig {
   APP_NAME: string;
@@ -16,7 +16,7 @@ interface WebPackageJson {
 }
 
 function prompt(question: string, defaultValue?: string): string {
-  const readline = require('readline').createInterface({
+  const readline = require('node:readline').createInterface({
     input: process.stdin,
     output: process.stdout,
   });
@@ -46,7 +46,7 @@ function createAppFiles(appPath: string, config: AppConfig) {
   if (existsSync(webPackageJsonPath)) {
     try {
       webPackageJson = JSON.parse(readFileSync(webPackageJsonPath, 'utf8'));
-    } catch (error) {
+    } catch (_error) {
       console.warn('⚠️  Could not read apps/web/package.json, using fallback deps');
     }
   }
@@ -289,7 +289,7 @@ async function main() {
   const branchName = `feat/${config.APP_SLUG}-scaffold`;
   try {
     execSync(`git checkout -b ${branchName}`, { stdio: 'inherit' });
-    execSync(`git add .`, { stdio: 'inherit' });
+    execSync('git add .', { stdio: 'inherit' });
     execSync(
       `git commit -m "feat: scaffold ${config.APP_NAME} app
 
@@ -308,13 +308,13 @@ async function main() {
     console.log();
     console.log('Next steps:');
     console.log(`1) pnpm turbo run dev --filter=${config.APP_SLUG}`);
-    console.log(`2) pnpm doctor`);
+    console.log('2) pnpm doctor');
     console.log();
     console.log('📋 Additional setup:');
-    console.log(`• Fill docs/product/PRD.md with MVP scope`);
-    console.log(`• Plan → Scaffold Tests → Implement → Prepare PR`);
-    console.log(`• Set SENTRY_DSN to enable error tracking (optional)`);
-  } catch (error) {
+    console.log('• Fill docs/product/PRD.md with MVP scope');
+    console.log('• Plan → Scaffold Tests → Implement → Prepare PR');
+    console.log('• Set SENTRY_DSN to enable error tracking (optional)');
+  } catch (_error) {
     console.warn('⚠️  Git operations failed, but app was created successfully');
     console.log('Manually commit when ready:');
     console.log(`git add . && git commit -m "feat: scaffold ${config.APP_NAME} app"`);

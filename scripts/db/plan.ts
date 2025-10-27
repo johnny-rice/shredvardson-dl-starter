@@ -1,8 +1,9 @@
 #!/usr/bin/env tsx
+
 // scripts/db/plan.ts - AI-assisted migration planning with security-first defaults
 
-import { writeFileSync, mkdirSync, existsSync } from 'fs';
-import { join } from 'path';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { Command } from 'commander';
 
 /**
@@ -151,7 +152,7 @@ async function executeCommand(specification: string, options: { dryRun?: boolean
   console.log('\n✅ Migration plan generated:');
   console.log(`📄 File: ${options.dryRun ? '[dry-run]' : `supabase/migrations/${plan.filename}`}`);
   console.log(`📋 Description: ${plan.description}`);
-  console.log(`🛡️  RLS Considerations:`);
+  console.log('🛡️  RLS Considerations:');
   plan.rls_considerations.forEach((consideration) => {
     console.log(`   • ${consideration}`);
   });

@@ -11,9 +11,8 @@
  * Used in GitHub Actions to enforce database change policies
  */
 
-import { execSync } from 'child_process';
-import { existsSync, readFileSync, statSync } from 'fs';
-import { join } from 'path';
+import { execSync } from 'node:child_process';
+import { existsSync, readFileSync, statSync } from 'node:fs';
 
 interface ValidationResult {
   valid: boolean;
@@ -166,12 +165,12 @@ function validateSupabaseConfig(configFiles: string[]): ValidationResult {
 
       // Check for security settings
       if (content.includes('enable_signup = true') && !content.includes('# WARNING')) {
-        result.warnings.push(`Config allows public signup - ensure this is intentional`);
+        result.warnings.push('Config allows public signup - ensure this is intentional');
       }
 
       // Check for development vs production settings
       if (content.includes('localhost') || content.includes('127.0.0.1')) {
-        result.info.push(`Config contains local development URLs`);
+        result.info.push('Config contains local development URLs');
       }
     }
 
@@ -213,7 +212,7 @@ function printResults(results: ValidationResult[], title: string) {
   });
 }
 
-async function main() {
+async function _main() {
   console.log('🗄️  Database CI Validation');
   console.log('==========================');
 
@@ -231,7 +230,7 @@ async function main() {
     return;
   }
 
-  console.log(`📊 Database changes detected:`);
+  console.log('📊 Database changes detected:');
   console.log(`   Migrations: ${dbChanges.migrations.length}`);
   console.log(`   Type files: ${dbChanges.typeFiles.length}`);
   console.log(`   Schema files: ${dbChanges.schemaFiles.length}`);

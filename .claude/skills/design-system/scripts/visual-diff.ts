@@ -28,6 +28,13 @@ interface VisualDiffOutput {
   componentsChecked?: number;
 }
 
+/**
+ * Produce visual diff results (Phase 0 stub implementation).
+ *
+ * Returns a placeholder VisualDiffOutput indicating no detected changes and that visual diffing is not yet implemented.
+ *
+ * @returns A VisualDiffOutput with placeholder values: `success: true`, `score: 1.0`, empty `changes`, `breaking: false`, `summary` stating the diff is not implemented, `tolerance: 0.05`, and `componentsChecked: 0`.
+ */
 async function runVisualDiff(): Promise<VisualDiffOutput> {
   // Phase 0: Stub implementation
   // Phase 3: Full Playwright screenshot comparison with pixelmatch

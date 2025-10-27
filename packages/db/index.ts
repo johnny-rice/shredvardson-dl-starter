@@ -17,5 +17,5 @@
  */
 
 // Database package exports
-export { DatabaseClient, createDatabaseClient, type DatabaseConfig } from './src/client';
+export { createDatabaseClient, DatabaseClient, type DatabaseConfig } from './src/client';
 export type { Database, Json } from './src/types';

@@ -2,7 +2,7 @@
  * Shared utilities for design system scripts
  */
 
-import * as path from 'path';
+import * as path from 'node:path';
 
 /**
  * Sanitize component name to safe kebab-case format
@@ -63,22 +63,14 @@ export function isPathContained(resolvedPath: string): boolean {
 }
 
 /**
- * Create a safe component path with validation
+ * Create a sanitized, validated component directory path.
  *
- * Combines sanitization and path containment checks to produce a safe directory path
- * for a new component.
+ * Produces a kebab-case component name and a corresponding base path under the UI components directory after validating the resolved path remains inside that directory.
  *
- * @param componentName - The component name (will be sanitized)
- * @returns Object with { kebabName, basePath } or throws error if unsafe
- * @throws Error if the resolved path escapes the UI components directory
- *
- * @example
- * ```ts
- * const { kebabName, basePath } = createSafeComponentPath('LineChart');
- * // { kebabName: 'line-chart', basePath: '/path/to/packages/ui/src/components/ui/line-chart' }
- *
- * createSafeComponentPath('../EvilPath'); // throws Error
- * ```
+ * @param componentName - The original component name to sanitize into kebab-case
+ * @returns An object with `kebabName` (the sanitized kebab-case name) and `basePath` (the computed path joined to the UI components directory)
+ * @throws Error if the sanitized kebab-case name is empty
+ * @throws Error if the resolved base path escapes the UI components directory
  */
 export function createSafeComponentPath(componentName: string): {
   kebabName: string;

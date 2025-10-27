@@ -1,15 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import {
   Button,
-  Input,
-  Label,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
   Card,
   CardContent,
   CardDescription,
@@ -21,7 +13,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  Input,
+  Label,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@ui/components';
+import { useState } from 'react';
 import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function ExamplePage() {

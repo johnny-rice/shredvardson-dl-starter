@@ -11,8 +11,8 @@
  *   tsx .claude/skills/verification/scripts/verify-completion.ts --context pr --spec specs/feature-123.md
  */
 
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 interface VerificationCommand {
   name: string;

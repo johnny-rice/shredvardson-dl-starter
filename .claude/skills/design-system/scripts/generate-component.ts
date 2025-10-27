@@ -6,11 +6,11 @@
  * Prevents unnecessary duplication of existing shadcn components
  */
 
-import * as fs from 'fs';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import Handlebars from 'handlebars';
-import * as path from 'path';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
 import { checkComponentExists } from './check-component-exists';
 import { createSafeComponentPath } from './utils.js';
 
@@ -118,7 +118,12 @@ interface ComponentGenerationOutput {
   };
 }
 
-// Load pattern configurations (keeping existing)
+/**
+ * Provide default component configuration values for a given pattern name.
+ *
+ * @param patternName - Identifier of the pattern (for example: `"button"`, `"input"`, `"card"`)
+ * @returns A partial ComponentConfig containing pattern-specific defaults; if the pattern is unknown, returns a generic fallback configuration
+ */
 function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
   const patterns: Record<string, Partial<ComponentConfig>> = {
     button: {
@@ -221,7 +226,16 @@ function generateFromTemplate(config: ComponentConfig, templateName: string): st
   return compiledTemplate(config);
 }
 
-// Validation functions (keeping existing)
+/**
+ * Evaluates a component file and produces validation scores and actionable suggestions.
+ *
+ * @param componentPath - Filesystem path to the component `.tsx` file to validate.
+ * @returns ValidationResult containing:
+ *  - `passed`: whether the overall score meets the pass threshold,
+ *  - `score`: the aggregated numeric score,
+ *  - `details`: per-category numeric scores (`tokenCompliance`, `patternAdherence`, `accessibility`, `testCoverage`),
+ *  - `suggestions`: an array of guidance strings to improve the component.
+ */
 async function validateComponent(componentPath: string): Promise<ValidationResult> {
   const content = fs.readFileSync(componentPath, 'utf-8');
 
@@ -303,7 +317,17 @@ function generateSuggestions(
   return suggestions;
 }
 
-// MAIN GENERATION FUNCTION WITH GUARDRAILS
+/**
+ * Generate a component and associated files from CLI-style arguments, enforcing guardrails and running validation.
+ *
+ * This function interprets CLI arguments (component name, optional variant, and flags such as
+ * `--force-new`, `--extend-from=...`, `--reason=...`), determines an appropriate pattern, applies
+ * existence/similarity guardrails, renders templates to produce component and test files, updates the
+ * component registry when applicable, and validates the generated output.
+ *
+ * @param args - Array of CLI-style arguments: [componentName, variant?, ...flags]. Flags supported include `--force-new`, `--extend-from=<name>`, and `--reason=<text>`.
+ * @returns A ComponentGenerationOutput describing success, generated files, validation results, guard check details, and recommended next steps.
+ */
 async function generateComponent(args: string[]): Promise<ComponentGenerationOutput> {
   const componentName = args[0];
   const variant = args[1];
@@ -458,7 +482,7 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
       const known = registry.shadcnComponents?.[normalized] ? normalized : undefined;
 
       pattern = aliased || known || 'button'; // Fallback to button pattern
-    } catch (e) {
+    } catch (_e) {
       // Fallback to substring matching if registry unavailable
       pattern = componentName.toLowerCase().includes('button')
         ? 'button'
@@ -526,7 +550,7 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
         content: testContent,
       });
       console.error(`  ✓ Created test: ${testPath}`);
-    } catch (e) {
+    } catch (_e) {
       console.error('  ⚠️  Test template not found, skipping test generation');
     }
 
@@ -584,7 +608,15 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
   }
 }
 
-// Update component registry when new component is created
+/**
+ * Adds a new entry for a custom component to the repository's component-registry.json if one does not already exist.
+ *
+ * Writes the updated registry to disk (atomic write) and records the creation date, reason, and optional `extendsFrom` metadata.
+ *
+ * @param componentName - The component name to register (case-insensitive key)
+ * @param reason - A brief justification for why the component is being added
+ * @param extendsFrom - Optional name of an existing component this one extends or is derived from
+ */
 function updateComponentRegistry(componentName: string, reason: string, extendsFrom?: string) {
   try {
     const registryPath = path.join(__dirname, '..', 'component-registry.json');
@@ -616,7 +648,7 @@ function updateComponentRegistry(componentName: string, reason: string, extendsF
       fs.renameSync(tmp, registryPath);
     }
     console.error('  ✓ Updated component registry');
-  } catch (e) {
+  } catch (_e) {
     console.error('  ⚠️  Failed to update component registry');
   }
 }

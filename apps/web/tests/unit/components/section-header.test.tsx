@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '../../helpers/test-utils';
 import { SectionHeader } from '@ui/components';
+import { describe, expect, it } from 'vitest';
+import { render, screen } from '../../helpers/test-utils';
 
 describe('SectionHeader Component', () => {
   it('renders with heading text', () => {

@@ -1,6 +1,6 @@
-import { readFileSync, existsSync, statSync, writeFileSync, mkdirSync, readdirSync } from 'fs';
-import { resolve, join, dirname, relative, sep, basename } from 'path';
-import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { basename, dirname, join, relative, resolve, sep } from 'node:path';
 import { resolveDoc } from './utils/resolveDoc';
 import { TraceabilityValidator } from './validate-traceability';
 
@@ -166,7 +166,7 @@ function checkDisplaySuites(): CheckResult {
       message: 'All @display suites properly isolated',
     };
   } catch (error: any) {
-    const output = error.stdout || error.message || 'Unknown error';
+    const _output = error.stdout || error.message || 'Unknown error';
     return {
       name: 'Display Suites',
       status: 'fail',
@@ -209,7 +209,7 @@ function checkPlaceholders(): CheckResult {
           filesToCheck.push(fullPath);
         }
       }
-    } catch (error) {
+    } catch (_error) {
       // Skip directories that can't be read
     }
   }
@@ -223,7 +223,7 @@ function checkPlaceholders(): CheckResult {
       if (placeholderPattern.test(content)) {
         filesWithPlaceholders.push(file);
       }
-    } catch (error) {
+    } catch (_error) {
       // Skip files that can't be read
     }
   }
@@ -257,7 +257,7 @@ function checkPRD(): CheckResult {
   }
 
   const content = readFileSync(prdPath, 'utf8');
-  const templateHashes = [
+  const _templateHashes = [
     // Add template hash here if we create a PRD template
   ];
 
@@ -329,7 +329,7 @@ function checkEnvironment(): CheckResult {
         fix: 'Add missing keys to .env.local or update Vercel Environment Variables',
       };
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       name: 'Environment Check',
       status: 'warn',
@@ -391,7 +391,7 @@ function checkConstitutionIntegrity(): CheckResult {
         fix: 'Checksum has been updated. Review changes and commit the updated CONSTITUTION.CHECKSUM',
       };
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       name: 'Constitution Integrity',
       status: 'fail',
@@ -505,7 +505,7 @@ function checkNewAppImports(): CheckResult[] {
             fix: `Update ${globalsCssPath} to use: @import '@ui/components/styles/tokens.css';`,
           });
         }
-      } catch (error) {
+      } catch (_error) {
         // Skip files that can't be read
       }
     }
@@ -522,7 +522,7 @@ function checkNewAppImports(): CheckResult[] {
             fix: `Remove experimental.turbopack from ${nextConfigPath}`,
           });
         }
-      } catch (error) {
+      } catch (_error) {
         // Skip files that can't be read
       }
     }
@@ -541,7 +541,7 @@ function checkNewAppImports(): CheckResult[] {
           });
         }
       }
-    } catch (error) {
+    } catch (_error) {
       // Skip if lockfile can't be read
     }
 
@@ -576,7 +576,7 @@ function checkNewAppImports(): CheckResult[] {
             });
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // Skip if package.json can't be parsed
       }
     }
@@ -686,7 +686,7 @@ function generateLearningStatsJSON(): string {
     };
 
     return `LEARNINGS_STATS=${JSON.stringify(stats)}`;
-  } catch (error) {
+  } catch (_error) {
     // Don't fail on metrics - return a safe fallback
     const fallbackStats = {
       micro_lessons_total: 0,
@@ -861,7 +861,7 @@ function generateCommandInventory(): any {
         const cleanPaths = pathMatches
           .map((match) => {
             // Remove backticks
-            let path = match.replace(/`/g, '');
+            const path = match.replace(/`/g, '');
 
             // Skip if it looks like a command (starts with /)
             if (path.startsWith('/')) {
@@ -875,14 +875,14 @@ function generateCommandInventory(): any {
 
             // Extract just the path part if it's mixed with prose
             const pathRegex =
-              /(?:^|\s)((?:apps|packages|scripts|docs|src|\.)[\/\w.-]*[\/\w.-]+)(?:\s|$)/;
+              /(?:^|\s)((?:apps|packages|scripts|docs|src|\.)[/\w.-]*[/\w.-]+)(?:\s|$)/;
             const pathMatch = path.match(pathRegex);
             if (pathMatch) {
               return pathMatch[1].trim();
             }
 
             // If it's a clean simple path, use it
-            if (/^[a-zA-Z0-9\/._-]+$/.test(path.trim()) && path.length < 100) {
+            if (/^[a-zA-Z0-9/._-]+$/.test(path.trim()) && path.length < 100) {
               return path.trim();
             }
 
@@ -1064,7 +1064,7 @@ function checkMicroLessonRetention(): CheckResult {
 
         // Check if UsedBy is 0 or missing
         const usedByMatch = content.match(/UsedBy:\s*(\d+)/);
-        const usedBy = usedByMatch ? parseInt(usedByMatch[1]) : 0;
+        const usedBy = usedByMatch ? parseInt(usedByMatch[1], 10) : 0;
 
         if (lastModified < ninetyDaysAgo && usedBy === 0) {
           const fileName = basename(filePath);
@@ -1212,7 +1212,7 @@ function checkEnvExampleSafety(): CheckResult {
         fix: 'Remove real secrets from .env.example - use empty values or placeholders only',
       };
     }
-  } catch (error) {
+  } catch (_error) {
     return {
       name: 'Env Example Safety',
       status: 'warn',
@@ -1319,7 +1319,7 @@ function checkAILabelHygiene(): CheckResult {
       message: `🤖 Bot branch AI artifacts detected - verify PR has labels: ${missingLabels.join(', ')}`,
       fix: 'Ensure workflows apply correct labels when AI reviews complete',
     };
-  } catch (error: any) {
+  } catch (_error: any) {
     return {
       name: 'AI Label Hygiene',
       status: 'warn',
@@ -1708,7 +1708,7 @@ function checkPromptStructure(): CheckResult[] {
             promptFiles.push(fullPath);
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // Directory doesn't exist or can't be read
       }
     }
@@ -1720,7 +1720,7 @@ function checkPromptStructure(): CheckResult[] {
     for (const file of promptFiles) {
       try {
         const content = readFileSync(file, 'utf8');
-        const lines = content.split('\n');
+        const _lines = content.split('\n');
 
         // Check for required header format
         const hasIntent = content.includes('**Intent:**');
@@ -1731,7 +1731,7 @@ function checkPromptStructure(): CheckResult[] {
         if (!hasIntent || !hasInputs || !hasOutput || !hasRisks) {
           headerViolations.push(file.replace(promptsPath + '/', ''));
         }
-      } catch (error) {
+      } catch (_error) {
         headerViolations.push(file.replace(promptsPath + '/', '') + ' (unreadable)');
       }
     }
@@ -1800,7 +1800,7 @@ function checkDocLinks(): CheckResult[] {
             docFiles.push(fullPath);
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // Directory doesn't exist or can't be read
       }
     }
@@ -1845,7 +1845,7 @@ function checkDocLinks(): CheckResult[] {
             }
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // File can't be read
       }
     }
@@ -1959,7 +1959,7 @@ function checkWikiPRDSync(): CheckResult {
   }
 }
 
-function checkForOverrideLabel(): boolean {
+function _checkForOverrideLabel(): boolean {
   const prNumber =
     process.env.GITHUB_PR_NUMBER ||
     (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
@@ -1996,7 +1996,7 @@ function checkForOverrideLabel(): boolean {
 
       // Labels exist but no override found, or this is the last attempt
       return false;
-    } catch (error) {
+    } catch (_error) {
       // On last attempt, return false
       if (delay === delays[delays.length - 1]) {
         return false;
@@ -2050,14 +2050,14 @@ function checkForOverrideLabelWithAudit(): {
             env,
           });
           console.log('   ✅ Added override:adr label to dependabot PR');
-        } catch (labelError) {
+        } catch (_labelError) {
           console.log('   ⚠️ Could not auto-add label, but proceeding with automatic override');
         }
 
         const auditInfo = {
           rule: 'ADR',
           status: 'OVERRIDDEN',
-          prNumber: parseInt(prNumber),
+          prNumber: parseInt(prNumber, 10),
           prUrl: prData.url,
           usedLabel: 'override:adr (auto-applied)',
           prAuthor: prAuthor,
@@ -2086,7 +2086,7 @@ function checkForOverrideLabelWithAudit(): {
         const auditInfo = {
           rule: 'ADR',
           status: 'OVERRIDDEN',
-          prNumber: parseInt(prNumber),
+          prNumber: parseInt(prNumber, 10),
           prUrl: prData.url,
           usedLabel: foundLabel.name,
           prAuthor: prAuthor,
@@ -2110,7 +2110,7 @@ function checkForOverrideLabelWithAudit(): {
 
       // Labels exist but no override found, or this is the last attempt
       return { hasOverride: false };
-    } catch (error) {
+    } catch (_error) {
       // On last attempt, return false
       if (delay === delays[delays.length - 1]) {
         return { hasOverride: false };
@@ -2140,7 +2140,7 @@ function checkForADRReference(): { hasReference: boolean; adrIds: string[] } {
       prBody = eventData.pull_request?.body || '';
     } else {
       // Fallback to gh CLI if available
-      let prNumber =
+      const prNumber =
         process.env.GITHUB_PR_NUMBER ||
         (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? '');
       if (!prNumber) return { hasReference: false, adrIds: [] };
@@ -2180,7 +2180,7 @@ function checkForADRReference(): { hasReference: boolean; adrIds: string[] } {
     const adrIds = [...new Set(matches.map((m) => m.toUpperCase()))];
 
     return { hasReference: adrIds.length > 0, adrIds };
-  } catch (error) {
+  } catch (_error) {
     return { hasReference: false, adrIds: [] };
   }
 }
@@ -2220,7 +2220,7 @@ function checkADRCompliance(): CheckResult {
         .trim()
         .split('\n')
         .filter((f) => f.length > 0);
-    } catch (error) {
+    } catch (_error) {
       // Fallback to HEAD~1 if merge-base fails
       changedFiles = execSync('git diff --name-only HEAD~1', {
         encoding: 'utf8',
@@ -2255,7 +2255,7 @@ function checkADRCompliance(): CheckResult {
       process.env.GITHUB_PR_NUMBER ||
       (process.env.GITHUB_REF?.match(/refs\/pull\/(\d+)\/merge/)?.[1] ?? 'unknown');
 
-    console.log(`🔍 ADR Compliance Diagnostics:`);
+    console.log('🔍 ADR Compliance Diagnostics:');
     console.log(`   PR Number: ${prNumber}`);
     console.log(`   Changed files requiring ADR: ${triggeredPaths.length}`);
     console.log(`   Files: ${triggeredPaths.join(', ')}`);
@@ -2320,7 +2320,7 @@ function checkADRCompliance(): CheckResult {
       status: 'pass',
       message: `ADR references found and validated: ${adrCheck.adrIds.join(', ')}`,
     };
-  } catch (error) {
+  } catch (_error) {
     return {
       name: 'ADR Compliance',
       status: 'warn',
@@ -2357,7 +2357,7 @@ function checkMainBranchUsage(): CheckResult {
       status: 'pass',
       message: `Working on feature branch: ${currentBranch}`,
     };
-  } catch (error) {
+  } catch (_error) {
     return {
       name: 'Branch Protection Advisory',
       status: 'warn',

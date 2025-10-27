@@ -7,7 +7,7 @@
  * Example: tsx generate-tasks.ts docs/specs/user-auth.md
  */
 
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { parse as parseYaml } from 'yaml';
 
 const specFile = process.argv[2];
@@ -37,7 +37,7 @@ if (!match) {
 let frontmatter: Record<string, unknown>;
 try {
   frontmatter = parseYaml(match[1]);
-} catch (error) {
+} catch (_error) {
   console.error('Error: Invalid YAML syntax');
   process.exit(1);
 }
@@ -180,7 +180,7 @@ console.log(
 
           // Convert to hours
           const hours = unit.startsWith('m') ? value / 60 : value;
-          return sum + (isNaN(hours) ? 0 : hours);
+          return sum + (Number.isNaN(hours) ? 0 : hours);
         }, 0),
         highRiskTasks: tasks.filter((t) => t.risk === 'high').length,
       },

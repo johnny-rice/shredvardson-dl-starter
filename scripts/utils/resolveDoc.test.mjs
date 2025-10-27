@@ -1,4 +1,4 @@
-import { resolveDoc, docExists } from './resolveDoc.mjs';
+import { docExists, resolveDoc } from './resolveDoc.mjs';
 
 // Simple test runner
 function test(name, fn) {

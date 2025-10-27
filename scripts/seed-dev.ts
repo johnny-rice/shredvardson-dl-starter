@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
 import { createClient } from '@supabase/supabase-js';
-import { SeedConfig, SeedResult } from './types/seed-data';
+import type { SeedConfig, SeedResult } from './types/seed-data';
 
 /**
  * Seeds the database with realistic development data using Faker.js.
@@ -108,7 +108,7 @@ export async function seedDev(config: SeedConfig = {}): Promise<SeedResult> {
 // CLI entry point
 if (require.main === module) {
   seedDev({
-    userCount: parseInt(process.env.USER_COUNT || '50'),
+    userCount: parseInt(process.env.USER_COUNT || '50', 10),
     deterministic: process.env.DETERMINISTIC === 'true',
   }).catch(console.error);
 }

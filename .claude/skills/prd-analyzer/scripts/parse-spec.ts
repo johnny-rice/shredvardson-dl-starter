@@ -7,9 +7,9 @@
  * Example: tsx parse-spec.ts docs/specs/user-auth.md
  */
 
-import { readFileSync, existsSync } from 'fs';
+import { existsSync, readFileSync } from 'node:fs';
+import { relative, resolve } from 'node:path';
 import { parse as parseYaml } from 'yaml';
-import { resolve, relative } from 'path';
 
 const specFile = process.argv[2];
 

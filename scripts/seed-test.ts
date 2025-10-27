@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { SeedConfig, SeedResult } from './types/seed-data';
+import type { SeedConfig, SeedResult } from './types/seed-data';
 
 /**
  * Seeds the database with deterministic test data.

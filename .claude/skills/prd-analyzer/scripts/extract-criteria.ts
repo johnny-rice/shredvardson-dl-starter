@@ -7,7 +7,7 @@
  * Example: tsx extract-criteria.ts docs/specs/user-auth.md
  */
 
-import { readFileSync, existsSync } from 'fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 const specFile = process.argv[2];
 

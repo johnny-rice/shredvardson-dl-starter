@@ -7,8 +7,8 @@
  * Example: tsx validate-code.ts src/components/UserProfile.tsx
  */
 
-import { readFileSync, existsSync } from 'fs';
-import { resolve, relative } from 'path';
+import { existsSync, readFileSync } from 'node:fs';
+import { relative, resolve } from 'node:path';
 
 const filePath = process.argv[2];
 

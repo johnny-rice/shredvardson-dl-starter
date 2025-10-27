@@ -12,7 +12,7 @@ const ALLOW_PREFIXES = (
   .filter(Boolean);
 
 const out = execSync(
-  `git rev-list --objects --all | ` +
+  'git rev-list --objects --all | ' +
     `git cat-file --batch-check='%(objecttype) %(objectname) %(objectsize) %(rest)' | ` +
     `awk '$1=="blob"{path=substr($0, index($0, $4)); print $3 "\\t" path}' | LC_ALL=C sort -nr | head -50`,
   { stdio: ['ignore', 'pipe', 'inherit'] }
@@ -26,7 +26,7 @@ const rows = out
     return { size: Number(size), path: pathParts.join('\t') };
   });
 
-let bad = [];
+const bad = [];
 for (const r of rows) {
   const allow = ALLOW_PREFIXES.some((p) => r.path.startsWith(p));
   const isBackup = r.path.includes('backup-') || r.path.endsWith('.bundle');
@@ -34,7 +34,7 @@ for (const r of rows) {
   // Allow files in approved prefixes, but warn about backup files
   if (isBackup) {
     console.warn(`⚠️ Backup file found in git history: ${r.path} (${r.size} bytes)`);
-    console.warn(`   Consider using: git filter-branch or BFG to remove from history`);
+    console.warn('   Consider using: git filter-branch or BFG to remove from history');
   } else if (!allow && r.size > BAD_LIMIT) {
     bad.push(r);
   }

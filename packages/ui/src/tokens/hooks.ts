@@ -8,16 +8,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import type {
-  AnimationDurationToken,
-  AnimationEasingToken,
-  BorderRadiusToken,
-  BreakpointToken,
-  ColorToken,
-  FontSizeToken,
-  ShadowToken,
-  SpacingToken,
-} from './index';
+import type { BreakpointToken, SpacingToken } from './index';
 import { tokens } from './index';
 
 /**
@@ -82,11 +73,11 @@ export function useThemeTokens() {
  * Calculate current breakpoint from window width
  */
 function getBreakpointFromWidth(width: number): BreakpointToken | 'xs' {
-  if (width >= parseInt(tokens.breakpoints['2xl'])) return '2xl';
-  if (width >= parseInt(tokens.breakpoints.xl)) return 'xl';
-  if (width >= parseInt(tokens.breakpoints.lg)) return 'lg';
-  if (width >= parseInt(tokens.breakpoints.md)) return 'md';
-  if (width >= parseInt(tokens.breakpoints.sm)) return 'sm';
+  if (width >= parseInt(tokens.breakpoints['2xl'], 10)) return '2xl';
+  if (width >= parseInt(tokens.breakpoints.xl, 10)) return 'xl';
+  if (width >= parseInt(tokens.breakpoints.lg, 10)) return 'lg';
+  if (width >= parseInt(tokens.breakpoints.md, 10)) return 'md';
+  if (width >= parseInt(tokens.breakpoints.sm, 10)) return 'sm';
   return 'xs';
 }
 

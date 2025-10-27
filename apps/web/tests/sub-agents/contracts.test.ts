@@ -10,7 +10,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { describe, test, expect } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
 // Mock agent invocation function (will be implemented later)
 const invokeAgent = async <T, R>(

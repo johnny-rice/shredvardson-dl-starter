@@ -7,7 +7,7 @@
  * Example: tsx validate-spec.ts docs/specs/user-auth.md
  */
 
-import { existsSync, readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { parse as parseYaml } from 'yaml';
 
 const specFile = process.argv[2];

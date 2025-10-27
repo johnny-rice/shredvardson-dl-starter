@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 /**
  * Generate command index from .claude/commands directory structure
@@ -106,7 +106,7 @@ function parseSimpleYAML(yamlContent) {
     if (isMultiline) {
       if (line.startsWith('  ') || line.startsWith('\t')) {
         // Indented line - part of multiline value
-        multilineValue.push(line.replace(/^  /, '').trim());
+        multilineValue.push(line.replace(/^ {2}/, '').trim());
       } else {
         // End of multiline value
         result[currentKey] = multilineValue.join(' ').trim();
@@ -115,7 +115,6 @@ function parseSimpleYAML(yamlContent) {
         currentKey = null;
         // Process current line as new key-value pair
         i--; // Reprocess this line
-        continue;
       }
     } else {
       // Handle key: value pairs
@@ -174,7 +173,7 @@ function parseSimpleYAML(yamlContent) {
 /**
  * Parse a command markdown file to extract metadata
  */
-function parseCommandFile(filePath, relativePath, category) {
+function parseCommandFile(filePath, relativePath, _category) {
   try {
     const content = fs.readFileSync(filePath, 'utf8');
     const lines = content.split('\n');
@@ -243,10 +242,10 @@ function parseCommandFile(filePath, relativePath, category) {
     }
 
     // Extract when to use from metadata or fallback to heuristics
-    let when = metadata.when || determineWhenToUse(content, tags, commandCategory);
+    const when = metadata.when || determineWhenToUse(content, tags, commandCategory);
 
     // Extract example
-    let example = determineExample(content, commandCategory, name);
+    const example = determineExample(content, commandCategory, name);
 
     // Determine risk level from metadata or content
     const riskLevel = metadata.riskLevel || determineRiskLevel(content, tags, name);
@@ -299,7 +298,7 @@ function extractTags(content, pathParts) {
   return Array.from(tags);
 }
 
-function determineWhenToUse(content, tags, category) {
+function determineWhenToUse(_content, tags, category) {
   if (category === 'Spec-Driven Development') {
     return 'Complex features requiring structured approach';
   }
@@ -323,7 +322,7 @@ function determineWhenToUse(content, tags, category) {
   return 'General development tasks';
 }
 
-function determineExample(content, category, name) {
+function determineExample(_content, category, name) {
   if (category === 'Spec-Driven Development') {
     if (name.includes('specify')) {
       return 'Define requirements for user authentication system';
@@ -355,7 +354,7 @@ function determineExample(content, category, name) {
   return 'Standard development workflow';
 }
 
-function determineRiskLevel(content, tags, name) {
+function determineRiskLevel(_content, tags, name) {
   // HIGH risk indicators
   if (tags.includes('implementation') && name.includes('tasks')) return 'HIGH';
   if (name.includes('implement') && !name.includes('plan')) return 'HIGH';
@@ -369,7 +368,7 @@ function determineRiskLevel(content, tags, name) {
   return 'LOW';
 }
 
-function determineRequiresHITL(content, tags, riskLevel) {
+function determineRequiresHITL(_content, tags, riskLevel) {
   // Always require HITL for HIGH risk
   if (riskLevel === 'HIGH') return true;
 

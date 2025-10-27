@@ -5,8 +5,8 @@
  * Creates specs/, plans/, tasks/ files and updates GitHub issue
  */
 
-import fs from 'fs';
-import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
+import fs from 'node:fs';
 
 // Get command line arguments
 const args = process.argv.slice(2);
@@ -46,7 +46,7 @@ function extractIssueNumber() {
     if (branchMatch) {
       return branchMatch[1];
     }
-  } catch (error) {
+  } catch (_error) {
     // Not in git repo
   }
 
@@ -57,7 +57,7 @@ function extractIssueNumber() {
     if (commitMatch) {
       return commitMatch[1];
     }
-  } catch (error) {
+  } catch (_error) {
     // Not in git repo or no commits
   }
 
@@ -71,7 +71,7 @@ function extractIssueNumber() {
           return prMatch[1];
         }
       }
-    } catch (error) {
+    } catch (_error) {
       // Event file not found or invalid
     }
   }
@@ -98,7 +98,7 @@ function inferLane() {
     const branchName = execSync('git branch --show-current', { encoding: 'utf8' }).trim();
     if (branchName.startsWith('feature/spec-')) return 'spec';
     if (branchName.startsWith('feature/simple-')) return 'simple';
-  } catch (error) {
+  } catch (_error) {
     // Not in a git repo or other error
   }
 
@@ -388,6 +388,6 @@ console.log(`
 try {
   execSync('git add ' + [specPath, planPath, taskPath].join(' '), { stdio: 'pipe' });
   console.log('✅ Files added to git staging');
-} catch (error) {
+} catch (_error) {
   console.log('ℹ️ Files created but not added to git (not in git repository)');
 }

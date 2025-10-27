@@ -287,40 +287,40 @@ class AIReviewAnalyzer {
   generateReport(): string {
     const analysis = this.analyzeReports();
 
-    let report = `# AI Review Pattern Analysis\n\n`;
+    let report = '# AI Review Pattern Analysis\n\n';
     report += `**Total AI reviews analyzed:** ${analysis.totalReviews}\n`;
     report += `**Unique patterns found:** ${analysis.patterns.length}\n\n`;
 
     if (analysis.patterns.length > 0) {
-      report += `## Top Patterns\n\n`;
+      report += '## Top Patterns\n\n';
       for (const pattern of analysis.patterns.slice(0, 10)) {
         report += `### ${pattern.pattern} (${pattern.category})\n`;
         report += `- **Occurrences:** ${pattern.count}\n`;
-        report += `- **Recent examples:**\n`;
+        report += '- **Recent examples:**\n';
         for (const example of pattern.examples) {
           report += `  - ${example}\n`;
         }
-        report += `\n`;
+        report += '\n';
       }
     }
 
     if (analysis.suggestedLessons.length > 0) {
-      report += `## Suggested Micro-Lessons\n\n`;
+      report += '## Suggested Micro-Lessons\n\n';
       for (const suggestion of analysis.suggestedLessons) {
         report += `- ${suggestion}\n`;
       }
-      report += `\n`;
+      report += '\n';
     }
 
     if (analysis.suggestedADRs.length > 0) {
-      report += `## Suggested ADRs\n\n`;
+      report += '## Suggested ADRs\n\n';
       for (const suggestion of analysis.suggestedADRs) {
         report += `- ${suggestion}\n`;
       }
-      report += `\n`;
+      report += '\n';
     }
 
-    report += `## Pattern Breakdown by Category\n\n`;
+    report += '## Pattern Breakdown by Category\n\n';
     const categoryStats = this.getCategoryStats(analysis.patterns);
     for (const [category, count] of Object.entries(categoryStats)) {
       report += `- **${category}:** ${count} occurrences\n`;
@@ -348,7 +348,7 @@ function main() {
     console.log(analyzer.generateReport());
   } else {
     const analysis = analyzer.analyzeReports();
-    console.log(`📊 AI Review Analysis Complete`);
+    console.log('📊 AI Review Analysis Complete');
     console.log(`Total reviews: ${analysis.totalReviews}`);
     console.log(`Patterns found: ${analysis.patterns.length}`);
     console.log(`Lesson suggestions: ${analysis.suggestedLessons.length}`);

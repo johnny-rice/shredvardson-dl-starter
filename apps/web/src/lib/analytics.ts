@@ -1,4 +1,4 @@
-import { AnalyticsEvent, AnalyticsData, AnalyticsMetrics } from '@shared/types';
+import type { AnalyticsData, AnalyticsEvent, AnalyticsMetrics } from '@shared/types';
 import { monitoring } from '@/lib/adapters/sentry';
 
 const STORAGE_KEY = 'dl-analytics';

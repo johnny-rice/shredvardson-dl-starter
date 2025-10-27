@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const MICRO_LESSONS_DIR = path.join(__dirname, '..', 'docs', 'micro-lessons');
 const INDEX_FILE = path.join(MICRO_LESSONS_DIR, 'INDEX.md');
@@ -36,7 +36,7 @@ function getMicroLessons() {
 
         // Extract UsedBy and Severity for heat scoring
         const usedByMatch = content.match(/^\s*\*\*UsedBy[:.]\*\*\s*(\d+)/im);
-        const usedBy = usedByMatch ? parseInt(usedByMatch[1]) : 0;
+        const usedBy = usedByMatch ? parseInt(usedByMatch[1], 10) : 0;
 
         const severityMatch = content.match(/^\s*\*\*Severity[:.]\*\*\s*(low|medium|high)/im);
         const severity = severityMatch ? severityMatch[1].toLowerCase() : 'low';

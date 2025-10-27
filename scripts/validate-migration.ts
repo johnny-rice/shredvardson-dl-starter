@@ -1,10 +1,10 @@
-import fs from 'fs';
-import path from 'path';
-import { ValidationResult, MigrationFile } from './types/migration-validation';
+import fs from 'node:fs';
+import path from 'node:path';
+import type { MigrationFile, ValidationResult } from './types/migration-validation';
 import {
   detectDestructiveOperations,
-  detectMissingRLS,
   detectMissingIndexOnFK,
+  detectMissingRLS,
   detectTypeChanges,
 } from './validators';
 

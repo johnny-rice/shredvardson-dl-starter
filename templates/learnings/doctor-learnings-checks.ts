@@ -1,9 +1,9 @@
 // Learning Loop: Doctor check functions for micro-lessons
 // Extract these functions into your existing doctor script
 
-import { readFileSync, existsSync, readdirSync, statSync } from 'fs';
-import { resolve, join } from 'path';
-import { execSync } from 'child_process';
+import { execSync } from 'node:child_process';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 
 interface CheckResult {
   name: string;
@@ -159,10 +159,10 @@ function checkMicroLessonRetention(): CheckResult {
 
         const lastModified = stats.mtime.getTime();
         const usedByMatch = content.match(/UsedBy:\s*(\d+)/);
-        const usedBy = usedByMatch ? parseInt(usedByMatch[1]) : 0;
+        const usedBy = usedByMatch ? parseInt(usedByMatch[1], 10) : 0;
 
         if (lastModified < ninetyDaysAgo && usedBy === 0) {
-          const fileName = require('path').basename(filePath);
+          const fileName = require('node:path').basename(filePath);
           staleFiles.push(fileName);
         }
       } catch {
@@ -228,7 +228,7 @@ function generateLearningStatsJSON(): string {
     };
 
     return `LEARNINGS_STATS=${JSON.stringify(stats)}`;
-  } catch (error) {
+  } catch (_error) {
     const fallbackStats = {
       micro_lessons_total: 0,
       top10_updated_at: null,

@@ -12,10 +12,9 @@
  *   npx tsx scripts/pretest-env-check.ts [--fix] [--verbose]
  */
 
-import { promises as fs } from 'fs';
-import { join } from 'path';
-import { spawn } from 'child_process';
-import { existsSync } from 'fs';
+import { spawn } from 'node:child_process';
+import { existsSync, promises as fs } from 'node:fs';
+import { join } from 'node:path';
 
 // Types
 interface CheckResult {
@@ -144,7 +143,7 @@ async function checkNodeVersion(): Promise<CheckResult> {
             'Visit https://nodejs.org/ for the latest version',
           ],
     };
-  } catch (error) {
+  } catch (_error) {
     return {
       name: 'Node.js Version',
       status: 'fail',
@@ -173,7 +172,7 @@ async function checkPnpmVersion(): Promise<CheckResult> {
             'Or follow instructions at https://pnpm.io/installation',
           ],
     };
-  } catch (error) {
+  } catch (_error) {
     return {
       name: 'pnpm Version',
       status: 'fail',
@@ -337,7 +336,7 @@ async function checkConstitutionalCompliance(): Promise<CheckResult> {
           issues.push(`Constitution missing ${section} section`);
         }
       }
-    } catch (error) {
+    } catch (_error) {
       issues.push('Could not read constitution file');
     }
   } else {
@@ -360,7 +359,7 @@ async function checkConstitutionalCompliance(): Promise<CheckResult> {
           issues.push(`Risk policy missing ${key}`);
         }
       }
-    } catch (error) {
+    } catch (_error) {
       issues.push('Could not parse risk policy JSON');
     }
   } else {
@@ -408,7 +407,7 @@ async function checkDependencies(): Promise<CheckResult> {
     }
 
     // Check package.json vs pnpm-lock.yaml
-    const packageJsonPath = join(PROJECT_ROOT, 'package.json');
+    const _packageJsonPath = join(PROJECT_ROOT, 'package.json');
     const lockfilePath = join(PROJECT_ROOT, 'pnpm-lock.yaml');
 
     if (!existsSync(lockfilePath)) {
@@ -498,7 +497,7 @@ async function checkGitConfiguration(): Promise<CheckResult> {
           : `${issues.length} git configuration issues`,
       details: [...successes, ...issues.map((i) => `⚠️ ${i}`)],
     };
-  } catch (error) {
+  } catch (_error) {
     return {
       name: 'Git Configuration',
       status: 'fail',
@@ -640,4 +639,4 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   });
 }
 
-export { runChecks, CheckResult, EnvironmentConfig };
+export { runChecks, type CheckResult, type EnvironmentConfig };

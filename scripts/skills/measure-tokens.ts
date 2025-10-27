@@ -8,8 +8,8 @@
  * Usage: pnpm skill:measure <skill-name> [--iterations=3]
  */
 
-import { existsSync, writeFileSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { countWorkflowTokens, extractFrontmatter, type WorkflowTokens } from './token-counter.js';
 
 interface ComparisonResult {
@@ -198,18 +198,18 @@ Examples:
   const oldCommandName =
     args.find((arg) => arg.startsWith('--old-command='))?.split('=')[1] || 'migrate';
 
-  console.log(`\n📊 Measuring token consumption...\n`);
+  console.log('\n📊 Measuring token consumption...\n');
   console.log(`Skill: ${skillName}`);
   console.log(`Old command: ${oldCommandName}\n`);
 
   try {
     // Measure old command
-    console.log(`📝 Measuring old command workflow...`);
+    console.log('📝 Measuring old command workflow...');
     const oldTokens = measureCommandWorkflow(oldCommandName);
     console.log(`✅ Old command: ${oldTokens.total} tokens\n`);
 
     // Measure new Skill
-    console.log(`📝 Measuring new Skill workflow...`);
+    console.log('📝 Measuring new Skill workflow...');
     const newTokens = measureSkillWorkflow(skillName);
     console.log(`✅ New Skill: ${newTokens.total} tokens\n`);
 
@@ -255,7 +255,7 @@ Examples:
     // Exit with appropriate code
     process.exit(pass ? 0 : 1);
   } catch (error) {
-    console.error(`\n❌ Error:`, error instanceof Error ? error.message : error);
+    console.error('\n❌ Error:', error instanceof Error ? error.message : error);
     process.exit(1);
   }
 }

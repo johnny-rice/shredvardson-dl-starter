@@ -7,7 +7,7 @@
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { describe, test, expect, beforeEach, vi } from 'vitest';
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 
 // Mock types for delegation framework
 interface DelegationInput<T = unknown> {
@@ -31,7 +31,7 @@ interface DelegationOutput<T = unknown> {
 
 // Mock delegation function (implementation will come later)
 const delegateToAgent = vi.fn(
-  async <T, R>(input: DelegationInput<T>): Promise<DelegationOutput<R>> => {
+  async <T, R>(_input: DelegationInput<T>): Promise<DelegationOutput<R>> => {
     // Default mock implementation
     return {
       success: true,

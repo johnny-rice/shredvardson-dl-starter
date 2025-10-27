@@ -22,6 +22,12 @@ interface PerformanceCheckOutput {
   component?: string;
 }
 
+/**
+ * Performs a performance check for an optional component (Phase 0 stub).
+ *
+ * @param component - Optional component identifier to include in the resulting report
+ * @returns A PerformanceCheckOutput with `success: true`, `score: 1.0`, an empty `metrics` array, a summary indicating the Phase 0 stub, and the provided `component`
+ */
 async function checkPerformance(component?: string): Promise<PerformanceCheckOutput> {
   // Phase 0: Stub implementation
   // Phase 2-3: Full CDP integration for performance profiling

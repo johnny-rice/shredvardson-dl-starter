@@ -1,8 +1,9 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
-import { trackPageView, startSession, endSession } from '@/lib/analytics';
+import type React from 'react';
+import { createContext, useContext, useEffect, useRef } from 'react';
+import { endSession, startSession, trackPageView } from '@/lib/analytics';
 
 interface AnalyticsContextType {
   trackClick: (component: string) => void;

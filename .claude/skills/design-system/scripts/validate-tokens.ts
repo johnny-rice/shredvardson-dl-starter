@@ -27,6 +27,15 @@ interface TokenValidationOutput {
   filesScanned?: number;
 }
 
+/**
+ * Validate token usage across project files (Phase 0 stub).
+ *
+ * This is a placeholder implementation that logs validation progress and returns
+ * a default successful result. Future phases will perform full AST parsing
+ * (e.g., with @babel/parser) and produce real violations and metrics.
+ *
+ * @returns A TokenValidationOutput summarizing validation results; in this phase the output indicates success with an empty violations list and zero files scanned.
+ */
 async function validateTokens(): Promise<TokenValidationOutput> {
   // Phase 0: Stub implementation
   // Phase 2: Full AST parsing with @babel/parser

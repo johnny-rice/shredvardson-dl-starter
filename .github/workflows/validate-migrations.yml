@@ -43,21 +43,20 @@ jobs:
         run: pnpm db:migrate:validate
 
       - name: Run Supabase advisors
-        run: supabase db advisor --local
+        run: supabase db lint --level warning
 
       - name: Check RLS policies
         id: rls_check
         run: |
           echo "Checking for tables without RLS..."
-          TABLES_WITHOUT_RLS=$(supabase db execute --local "
+          TABLES_WITHOUT_RLS=$(psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -t -c "
             SELECT tablename FROM pg_tables
             WHERE schemaname = 'public'
             AND rowsecurity = false
-          ")
+          " | xargs)
 
-          if echo "$TABLES_WITHOUT_RLS" | grep -v "(0 rows)"; then
-            echo "::error::Tables without RLS enabled found"
-            echo "$TABLES_WITHOUT_RLS"
+          if [ -n "$TABLES_WITHOUT_RLS" ]; then
+            echo "::error::Tables without RLS enabled found: $TABLES_WITHOUT_RLS"
             exit 1
           else
             echo "✅ All public tables have RLS enabled"

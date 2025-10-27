@@ -6,11 +6,11 @@
  * Handles dependency installation and template generation
  */
 
-import { execSync } from 'child_process';
-import * as fs from 'fs';
-import * as path from 'path';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+import { execSync } from 'node:child_process';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createSafeComponentPath } from './utils.js';
 
 // ESM-compatible __dirname
@@ -712,7 +712,7 @@ async function main() {
   try {
     execSync(`pnpm add ${deps.join(' ')} --filter=@ui/components`, { stdio: 'inherit' });
     console.log('✅ Dependencies installed');
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Failed to install dependencies');
     process.exit(1);
   }

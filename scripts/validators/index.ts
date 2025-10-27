@@ -1,4 +1,8 @@
-import { ValidationError, ValidationWarning, ValidationCode } from '../types/migration-validation';
+import {
+  ValidationCode,
+  type ValidationError,
+  type ValidationWarning,
+} from '../types/migration-validation';
 
 /**
  * Detects destructive SQL operations that could cause data loss.

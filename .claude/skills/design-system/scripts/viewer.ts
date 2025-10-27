@@ -5,8 +5,8 @@
  * Opens the /design route in the browser
  */
 
-import { type ChildProcess, exec } from 'child_process';
-import { promisify } from 'util';
+import { type ChildProcess, exec } from 'node:child_process';
+import { promisify } from 'node:util';
 
 const execAsync = promisify(exec);
 
@@ -51,6 +51,17 @@ function getOpenCommand(url: string): string {
   }
 }
 
+/**
+ * Opens the design system viewer at http://localhost:3000/design, starting a local dev server if necessary.
+ *
+ * This function will attempt to open the viewer URL in the platform's default browser. If no server is running, it starts the development server, waits for it to become reachable, and then opens the URL. On failure it performs cleanup of any started server process and returns a failure result.
+ *
+ * @returns An object describing the outcome:
+ * - `success`: `true` if the viewer was opened, `false` otherwise.
+ * - `url`: The viewer URL attempted.
+ * - `message`: A human-readable status message.
+ * - `error` (optional): Error message when `success` is `false`.
+ */
 async function openViewer(): Promise<ViewerOutput> {
   const url = 'http://localhost:3000/design';
 

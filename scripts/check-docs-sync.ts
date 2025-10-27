@@ -6,9 +6,9 @@
  * Used by /git:prepare-pr to suggest documentation updates.
  */
 
-import { execSync } from 'child_process';
-import { readFileSync, existsSync } from 'fs';
-import { resolve } from 'path';
+import { execSync } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 interface DocGap {
   type: 'slash-command' | 'script' | 'env-var' | 'api-route' | 'config';

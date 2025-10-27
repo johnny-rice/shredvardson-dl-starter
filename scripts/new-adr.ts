@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
-import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs';
-import { resolve } from 'path';
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 function getNextADRNumber(): string {
   const decisionsDir = resolve('docs/decisions');
@@ -17,7 +17,7 @@ function getNextADRNumber(): string {
     .filter((file) => file.match(/^ADR-\d{3,}-.*\.md$/))
     .map((file) => {
       const match = file.match(/^ADR-(\d{3,})-/);
-      return match ? parseInt(match[1]) : 0;
+      return match ? parseInt(match[1], 10) : 0;
     })
     .filter((num) => num > 0);
 
@@ -25,7 +25,7 @@ function getNextADRNumber(): string {
   const nextNumber = maxNumber + 1;
 
   // Add current timestamp to reduce collision risk
-  const timestamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '');
+  const _timestamp = new Date().toISOString().slice(0, 16).replace(/[-:T]/g, '');
   console.log(
     `📝 Suggested number: ADR-${nextNumber.toString().padStart(3, '0')} (if collision occurs, manually increment)`
   );
@@ -89,7 +89,7 @@ adjust the number to avoid conflicts. The script will warn about this.
 
   try {
     template = readFileSync(templatePath, 'utf8');
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ Could not read ADR template at docs/decisions/0001-template.md');
     process.exit(1);
   }

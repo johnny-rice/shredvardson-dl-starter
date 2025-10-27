@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 // Learnings Loop: unit test for doctor metrics JSON parsing
 describe('Doctor Metrics JSON', () => {

@@ -6,8 +6,8 @@
  * Part of Phase 4 guardrails
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 interface ComponentRegistry {
   shadcnComponents: Record<string, any>;
@@ -67,6 +67,13 @@ function stringSimilarity(str1: string, str2: string): number {
   return Math.round(((maxLen - editDistance) / maxLen) * 100);
 }
 
+/**
+ * Compute the Levenshtein edit distance between two strings.
+ *
+ * @param s1 - The source string
+ * @param s2 - The target string
+ * @returns The number of single-character edits (insertions, deletions, or substitutions) required to transform `s1` into `s2`
+ */
 function levenshteinDistance(s1: string, s2: string): number {
   const dp: number[][] = Array(s1.length + 1)
     .fill(null)
@@ -88,7 +95,12 @@ function levenshteinDistance(s1: string, s2: string): number {
   return dp[s1.length][s2.length];
 }
 
-// Check if component name suggests a specific use case
+/**
+ * Detects domain use cases implied by a component name.
+ *
+ * @param name - The component name to analyze for use-case keywords
+ * @returns An array of detected use case identifiers (e.g., `form`, `navigation`); empty array if none are found
+ */
 function detectUseCase(name: string): string[] {
   const useCases: Record<string, string[]> = {
     form: ['form', 'input', 'field', 'submit', 'validation'],
@@ -112,7 +124,13 @@ function detectUseCase(name: string): string[] {
   return detectedCases;
 }
 
-// Find similar components
+/**
+ * Identifies up to three registry components similar to the given component name.
+ *
+ * @param componentName - The component name to compare against the registry
+ * @param registry - The component registry to search for similar entries
+ * @returns An array (up to three) of similar components, each with `name`, numeric `similarity` (0–100), and a concise `reason` explaining the suggestion
+ */
 function findSimilarComponents(
   componentName: string,
   registry: ComponentRegistry
@@ -121,7 +139,7 @@ function findSimilarComponents(
   const similar: CheckResult['similarComponents'] = [];
 
   // Check direct name similarity
-  for (const [name, config] of Object.entries(registry.shadcnComponents)) {
+  for (const [name, _config] of Object.entries(registry.shadcnComponents)) {
     const similarity = stringSimilarity(normalized, name);
     if (similarity > 60 && similarity < 100) {
       similar.push({
@@ -169,7 +187,15 @@ function findSimilarComponents(
   return similar.sort((a, b) => b.similarity - a.similarity).slice(0, 3); // Return top 3
 }
 
-// Check if component is domain-specific
+/**
+ * Determines whether a component name matches any domain-specific pattern from the registry.
+ *
+ * The component name is normalized before matching, and patterns are matched using a case-insensitive substring check.
+ *
+ * @param componentName - The component name to test (will be normalized before matching)
+ * @param registry - The component registry that provides `domainSpecific.patterns` to match against
+ * @returns `true` if the normalized component name contains any pattern from `registry.domainSpecific.patterns` (case-insensitive), `false` otherwise
+ */
 function isDomainSpecific(componentName: string, registry: ComponentRegistry): boolean {
   const normalized = normalizeComponentName(componentName);
 
@@ -178,7 +204,16 @@ function isDomainSpecific(componentName: string, registry: ComponentRegistry): b
   );
 }
 
-// Main check function
+/**
+ * Check whether a component exists in the loaded registry and return match details and guidance.
+ *
+ * @returns A CheckResult describing:
+ * - `exists`: whether a matching component was found.
+ * - `type`: `'shadcn' | 'custom' | 'none'` indicating the source.
+ * - For shadcn matches: `componentName`, `importPath`, `variants`, and a usage `suggestion`.
+ * - For custom matches: `componentName` and a `suggestion` with creation metadata.
+ * - For no exact match: `similarComponents` (when available), `isDomainSpecific` flag, and a `suggestion` recommending a similar component, domain-specific creation, or composing existing components.
+ */
 export function checkComponentExists(componentName: string): CheckResult {
   const registry = loadRegistry();
   const normalized = normalizeComponentName(componentName);

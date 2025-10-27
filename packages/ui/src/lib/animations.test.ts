@@ -1,13 +1,12 @@
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
+  type AnimationCustomProps,
   fadeIn,
-  slideUp,
+  getReducedMotionVariants,
   scale,
   slideInRight,
-  getReducedMotionVariants,
-  type AnimationCustomProps,
+  slideUp,
 } from './animations';
-import type { Variants } from 'framer-motion';
 
 describe('Animation Variants', () => {
   describe('fadeIn', () => {

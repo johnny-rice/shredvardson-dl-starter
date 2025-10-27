@@ -7,7 +7,7 @@
  * Status: Example code - not used in production starter template
  */
 
-import type { AnalyticsEvent, AnalyticsData } from '@shared/types';
+import type { AnalyticsData, AnalyticsEvent } from '@shared/types';
 
 // --- Secure random helpers (browser + Node/SSR) -----------------------------
 
@@ -17,7 +17,7 @@ function getCrypto() {
   try {
     // Node >=16
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const nodeCrypto = require('crypto');
+    const nodeCrypto = require('node:crypto');
     return nodeCrypto;
   } catch {
     return undefined;
@@ -54,7 +54,7 @@ function secureRandomString(len = 12): string {
   try {
     // Node path
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { Buffer } = require('buffer');
+    const { Buffer } = require('node:buffer');
     b64 = Buffer.from(bytes).toString('base64');
   } catch {
     // Browser path

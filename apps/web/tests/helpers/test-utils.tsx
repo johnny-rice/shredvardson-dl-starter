@@ -1,6 +1,6 @@
-import { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import { type RenderOptions, render } from '@testing-library/react';
 import { ThemeProvider } from 'next-themes';
+import type { ReactElement } from 'react';
 
 // Wrapper with common providers
 function AllTheProviders({

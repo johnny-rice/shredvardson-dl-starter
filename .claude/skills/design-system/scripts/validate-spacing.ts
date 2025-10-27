@@ -23,6 +23,13 @@ interface SpacingValidationOutput {
   componentsScanned?: number;
 }
 
+/**
+ * Perform spacing validation for the project layout (Phase 0 stub).
+ *
+ * Currently returns a default SpacingValidationOutput indicating no detected violations and a perfect density score; full CDP-based analysis is planned for later phases.
+ *
+ * @returns A SpacingValidationOutput with `success: true`, `densityScore: 1.0`, an empty `violations` array, `componentsScanned: 0`, and a `summary` that notes the Phase 0 stub status.
+ */
 async function validateSpacing(): Promise<SpacingValidationOutput> {
   // Phase 0: Stub implementation
   // Phase 2-3: Full CDP integration via Playwright MCP

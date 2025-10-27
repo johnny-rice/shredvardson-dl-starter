@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 const MICRO_LESSONS_DIR = path.join(__dirname, '..', 'docs', 'micro-lessons');
 const ARCHIVE_DIR = path.join(MICRO_LESSONS_DIR, 'archive');
@@ -30,7 +30,7 @@ function archiveOldLessons(olderThanDays = 90, unusedOnly = true) {
 
       const lastModified = stats.mtime.getTime();
       const usedByMatch = content.match(/UsedBy:\s*(\d+)/);
-      const usedBy = usedByMatch ? parseInt(usedByMatch[1]) : 0;
+      const usedBy = usedByMatch ? parseInt(usedByMatch[1], 10) : 0;
 
       const isOld = lastModified < cutoffDate;
       const isUnused = usedBy === 0;
@@ -79,7 +79,7 @@ const args = process.argv.slice(2);
 const olderThanIndex = args.indexOf('--older-than');
 const unusedFlag = args.includes('--unused');
 
-const olderThanDays = olderThanIndex >= 0 ? parseInt(args[olderThanIndex + 1]) : 90;
+const olderThanDays = olderThanIndex >= 0 ? parseInt(args[olderThanIndex + 1], 10) : 90;
 
 if (require.main === module) {
   archiveOldLessons(olderThanDays, unusedFlag);

@@ -7,8 +7,8 @@
  * Example: tsx scaffold-e2e.ts auth-signup
  */
 
-import { existsSync, mkdirSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 const userFlow = process.argv[2];
 

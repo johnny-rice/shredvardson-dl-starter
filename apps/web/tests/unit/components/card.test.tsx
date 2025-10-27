@@ -1,13 +1,13 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '../../helpers/test-utils';
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from '@ui/components';
+import { describe, expect, it } from 'vitest';
+import { render, screen } from '../../helpers/test-utils';
 
 describe('Card Component', () => {
   it('renders with all subcomponents', () => {

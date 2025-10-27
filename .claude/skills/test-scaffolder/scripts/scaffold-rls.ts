@@ -7,8 +7,8 @@
  * Example: tsx scaffold-rls.ts user_profiles
  */
 
-import { writeFileSync, existsSync, mkdirSync } from 'fs';
-import { join } from 'path';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
 
 const tableName = process.argv[2];
 

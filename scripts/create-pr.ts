@@ -1,9 +1,9 @@
 #!/usr/bin/env tsx
-import { execSync, execFileSync } from 'node:child_process';
-import { readFileSync, writeFileSync, unlinkSync } from 'node:fs';
-import { Command } from 'commander';
+import { execFileSync, execSync } from 'node:child_process';
+import { readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { Command } from 'commander';
 
 const run = (command: string): string => {
   try {
@@ -41,7 +41,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log(`📋 Running quality checks...`);
+  console.log('📋 Running quality checks...');
 
   // Run verification commands
   const results = {
@@ -140,9 +140,9 @@ async function main() {
   const title = options.title || `${conventionalType}: ${defaultSummary}`;
 
   if (options.dryRun) {
-    console.log(`\n🔍 DRY RUN - Would create PR:`);
+    console.log('\n🔍 DRY RUN - Would create PR:');
     console.log(`Title: ${title}`);
-    console.log(`\nBody preview (first 500 chars):`);
+    console.log('\nBody preview (first 500 chars):');
     console.log(filledBody.slice(0, 500) + '...');
     return;
   }

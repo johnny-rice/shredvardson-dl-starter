@@ -27,6 +27,13 @@ interface ContrastCheckOutput {
   elementsChecked?: number;
 }
 
+/**
+ * Performs a WCAG contrast check (Phase 0 stub) and returns placeholder results.
+ *
+ * This Phase 0 implementation does not perform real contrast analysis; it logs two error messages indicating the stub status.
+ *
+ * @returns A ContrastCheckOutput with a successful placeholder result: `success: true`, `score: 1.0`, `violations: []`, `wcagCompliance: 'FULL_AA'`, `summary: 'Contrast check not yet implemented (Phase 0 stub)'`, and `elementsChecked: 0`.
+ */
 async function checkContrast(): Promise<ContrastCheckOutput> {
   // Phase 0: Stub implementation
   // Phase 2-3: Full CDP integration via Playwright MCP

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
 test('home loads and title comes from env', async ({ page }) => {
   const res = await page.goto('/');

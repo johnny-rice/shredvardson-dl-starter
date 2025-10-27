@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 // Directories to scan for test files
 const TEST_DIRS = [
@@ -14,7 +14,7 @@ const TEST_DIRS = [
   'apps/web/__tests__',
 ];
 
-let violatingFiles = [];
+const violatingFiles = [];
 
 function scanDirectory(dir) {
   if (!fs.existsSync(dir)) {
@@ -59,7 +59,7 @@ function checkTestFile(filePath) {
         issue: 'UI display suite contains state-mutating beforeEach hooks',
       });
     }
-  } catch (error) {
+  } catch (_error) {
     // Skip files that can't be read
   }
 }

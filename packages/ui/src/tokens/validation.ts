@@ -214,7 +214,7 @@ export function getTokenSuggestion(property: string, value: string): string | un
   // For spacing
   if (property.match(/padding|margin|gap|width|height/i)) {
     const numericValue = parseFloat(value);
-    if (!isNaN(numericValue)) {
+    if (!Number.isNaN(numericValue)) {
       // Convert px to rem
       const remValue = numericValue / 16;
       const closestToken = Object.entries(tokens.spacing).find(
@@ -229,7 +229,7 @@ export function getTokenSuggestion(property: string, value: string): string | un
   // For font sizes
   if (property === 'fontSize') {
     const numericValue = parseFloat(value);
-    if (!isNaN(numericValue)) {
+    if (!Number.isNaN(numericValue)) {
       const remValue = numericValue / 16;
       const closestToken = Object.entries(tokens.typography.fontSize).find(
         ([, tokenValue]) => parseFloat(tokenValue) === remValue

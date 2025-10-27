@@ -11,10 +11,10 @@
  *   tsx scripts/db/migrate.ts rollback
  */
 
-import { execSync } from 'child_process';
-import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'fs';
-import { join } from 'path';
-import * as readline from 'readline';
+import { execSync } from 'node:child_process';
+import { mkdirSync, readdirSync, writeFileSync } from 'node:fs';
+import { join } from 'node:path';
+import * as readline from 'node:readline';
 
 type Action = 'create' | 'validate' | 'apply' | 'rollback';
 
@@ -107,7 +107,7 @@ async function validateMigrations(): Promise<void> {
     console.log('⚠️  Local Supabase not running. Starting...\n');
     try {
       execSync('supabase start', { stdio: 'inherit' });
-    } catch (error) {
+    } catch (_error) {
       console.error('❌ Failed to start Supabase. Please run: supabase start');
       process.exit(1);
     }
@@ -118,7 +118,7 @@ async function validateMigrations(): Promise<void> {
   try {
     execSync('supabase db lint', { stdio: 'inherit' });
     console.log('✅ SQL syntax valid\n');
-  } catch (error) {
+  } catch (_error) {
     console.error('❌ SQL syntax errors detected\n');
     process.exit(1);
   }
@@ -128,7 +128,7 @@ async function validateMigrations(): Promise<void> {
   try {
     const advisorOutput = execSync('supabase db advisor --local', { encoding: 'utf-8' });
     console.log(advisorOutput);
-  } catch (error) {
+  } catch (_error) {
     console.log('⚠️  Advisor warnings detected (non-blocking)\n');
   }
 
@@ -142,9 +142,12 @@ async function validateMigrations(): Promise<void> {
       AND rowsecurity = false
     `;
 
-    const tablesWithoutRLS = execSync(`supabase db execute --local "${rlsCheckQuery}"`, {
-      encoding: 'utf-8',
-    });
+    const tablesWithoutRLS = execSync(
+      `psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -c "${rlsCheckQuery}"`,
+      {
+        encoding: 'utf-8',
+      }
+    );
 
     if (tablesWithoutRLS.includes('(0 rows)')) {
       console.log('✅ All public tables have RLS enabled\n');
@@ -165,9 +168,12 @@ async function validateMigrations(): Promise<void> {
       GROUP BY t.tablename
     `;
 
-    const tablesWithoutPolicies = execSync(`supabase db execute --local "${policyCheckQuery}"`, {
-      encoding: 'utf-8',
-    });
+    const tablesWithoutPolicies = execSync(
+      `psql postgresql://postgres:postgres@127.0.0.1:54322/postgres -c "${policyCheckQuery}"`,
+      {
+        encoding: 'utf-8',
+      }
+    );
 
     if (tablesWithoutPolicies.includes('(0 rows)')) {
       console.log('✅ All RLS-enabled tables have policies\n');

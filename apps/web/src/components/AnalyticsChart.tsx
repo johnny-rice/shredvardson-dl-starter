@@ -1,6 +1,6 @@
 'use client';
 
-import { ChartData } from '@shared/types';
+import type { ChartData } from '@shared/types';
 
 interface AnalyticsChartProps {
   data: ChartData;

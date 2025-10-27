@@ -1,4 +1,4 @@
-import { resolveDoc, docExists } from './resolveDoc';
+import { docExists, resolveDoc } from './resolveDoc';
 
 describe('resolveDoc', () => {
   it('resolves CLAUDE.md to docs/ai/CLAUDE.md', () => {

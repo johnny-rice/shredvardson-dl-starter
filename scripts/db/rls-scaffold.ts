@@ -1,8 +1,8 @@
 #!/usr/bin/env tsx
+
 // scripts/db/rls-scaffold.ts - Generate Row Level Security policies with auth.uid() patterns
 
-import { writeFileSync, mkdirSync, existsSync } from 'fs';
-import { join } from 'path';
+import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { Command } from 'commander';
 
 /**
@@ -160,11 +160,11 @@ function generateCompleteRLSScript(options: ScaffoldOptions): string {
     `-- Generated: ${new Date().toISOString()}`,
     '-- Review and customize before applying\n',
 
-    `-- Enable RLS on the table`,
+    '-- Enable RLS on the table',
     `ALTER TABLE public.${table} ENABLE ROW LEVEL SECURITY;`,
     `ALTER TABLE public.${table} FORCE ROW LEVEL SECURITY;\n`,
 
-    `-- Drop existing policies (uncomment if recreating)`,
+    '-- Drop existing policies (uncomment if recreating)',
     `-- DROP POLICY IF EXISTS "${table}_select_own" ON public.${table};`,
     `-- DROP POLICY IF EXISTS "${table}_insert_own" ON public.${table};`,
     `-- DROP POLICY IF EXISTS "${table}_update_own" ON public.${table};`,

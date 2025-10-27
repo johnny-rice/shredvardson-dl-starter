@@ -1,6 +1,6 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '../../helpers/test-utils';
+import { describe, expect, it, vi } from 'vitest';
 import { Header } from '@/components/Header';
+import { render, screen } from '../../helpers/test-utils';
 
 // Mock the analytics provider hook
 vi.mock('@/components/AnalyticsProvider', () => ({

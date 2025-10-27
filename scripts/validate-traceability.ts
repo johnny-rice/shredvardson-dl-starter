@@ -203,6 +203,7 @@ class TraceabilityValidator {
 }
 
 import { pathToFileURL } from 'node:url';
+
 const isDirectRun = import.meta.url === pathToFileURL(process.argv[1] || '').href;
 if (isDirectRun) {
   const validator = new TraceabilityValidator();

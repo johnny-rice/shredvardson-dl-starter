@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
-const fs = require('fs');
-const path = require('path');
+const fs = require('node:fs');
+const path = require('node:path');
 
 /**
  * Generate wiki content from project files
  */
-function generateWiki(scrubSecrets = false) {
+function generateWiki(_scrubSecrets = false) {
   const outputDir = path.join(process.cwd(), 'wiki-content/generated');
 
   // Ensure output directory exists

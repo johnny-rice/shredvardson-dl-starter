@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { test as base } from '@playwright/test';
+
 import type { Page } from '@playwright/test';
+import { test as base } from '@playwright/test';
 
 export type TestUser = {
   email: string;

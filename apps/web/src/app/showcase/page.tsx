@@ -3,14 +3,14 @@
 import {
   Button,
   Card,
+  fadeIn,
+  getReducedMotionVariants,
   Input,
   Label,
-  fadeIn,
-  slideUp,
   scale,
   slideInRight,
+  slideUp,
   useReducedMotion,
-  getReducedMotionVariants,
 } from '@ui/components';
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';

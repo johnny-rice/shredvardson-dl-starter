@@ -3,4 +3,4 @@
 @tailwind utilities;
 
 /* Import design tokens */
-@import '../../styles/tokens.css';
+@import "../../styles/tokens.css";

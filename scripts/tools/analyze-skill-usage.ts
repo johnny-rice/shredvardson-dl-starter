@@ -13,8 +13,8 @@
  * @example pnpm exec tsx scripts/tools/analyze-skill-usage.ts --7d
  */
 
-import { existsSync, readFileSync } from 'fs';
-import { resolve } from 'path';
+import { existsSync, readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 
 /**
  * Represents a single log entry from the CSV file
@@ -53,7 +53,7 @@ interface SkillStats {
 }
 
 const LOG_FILE = resolve(process.cwd(), '.logs/skill-usage.csv');
-const DAYS_30 = 30 * 24 * 60 * 60; // 30 days in seconds
+const _DAYS_30 = 30 * 24 * 60 * 60; // 30 days in seconds
 
 /**
  * Parses the CSV log file and returns an array of log entries
@@ -82,7 +82,10 @@ function parseCSV(filePath: string): SkillLogEntry[] {
       };
     })
     .filter(
-      (entry) => !isNaN(entry.timestamp) && !isNaN(entry.exitCode) && !isNaN(entry.durationMs)
+      (entry) =>
+        !Number.isNaN(entry.timestamp) &&
+        !Number.isNaN(entry.exitCode) &&
+        !Number.isNaN(entry.durationMs)
     ); // Filter out malformed entries
 }
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-import { exit } from 'process';
+import { exit } from 'node:process';
 
 function validateEnvironment() {
   console.log('🔍 Validating environment variables...');
