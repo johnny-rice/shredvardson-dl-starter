@@ -5,6 +5,7 @@ TDD workflow automation with Test Generator sub-agent integration.
 ## Purpose
 
 Automates test scaffolding for:
+
 - Unit tests (via Test Generator sub-agent)
 - E2E tests (Playwright)
 - RLS security tests
@@ -33,12 +34,14 @@ Via `/test` discovery command:
 ### unit
 
 Delegates to Test Generator sub-agent with project-specific context:
+
 - Coverage contract requirements
 - Test utilities (render helpers, mocks)
 - Existing test patterns
 - DL Starter conventions
 
 **Benefits**:
+
 - Automatic test generation following project standards
 - Integrated with coverage requirements
 - Uses project-specific test utilities
@@ -46,6 +49,7 @@ Delegates to Test Generator sub-agent with project-specific context:
 ### e2e
 
 Scaffolds Playwright E2E tests with:
+
 - Auth fixtures
 - Page object patterns
 - Loading state handling
@@ -56,6 +60,7 @@ Scaffolds Playwright E2E tests with:
 ### rls
 
 Scaffolds RLS security tests with:
+
 - User isolation tests
 - Anonymous access denial
 - Admin bypass verification
@@ -66,6 +71,7 @@ Scaffolds RLS security tests with:
 ### coverage
 
 Validates coverage against contract:
+
 - Checks all thresholds (70% lines/functions, 65% branches)
 - Identifies gaps
 - Provides recommendations
@@ -96,12 +102,14 @@ The `unit` action integrates with Claude's Test Generator sub-agent:
 This Skill enforces the coverage contract defined in `docs/testing/coverage-contract.md`:
 
 **Thresholds**:
+
 - Lines: 70%
 - Functions: 70%
 - Branches: 65%
 - Statements: 70%
 
 **Focus Areas** (80/20 rule):
+
 - Auth flows (90%+ coverage)
 - RLS policies (85%+ coverage)
 - Core workflows (70%+ coverage)
@@ -109,9 +117,11 @@ This Skill enforces the coverage contract defined in `docs/testing/coverage-cont
 ## Token Savings
 
 **Old `/test:scaffold` command**:
+
 - Full prompt: ~121 tokens per invocation
 
 **New test-scaffolder Skill**:
+
 - Metadata only: ~20 tokens (typical)
 - With full context: ~220 tokens (rare)
 - **Savings: 66% average, 83% for delegations**

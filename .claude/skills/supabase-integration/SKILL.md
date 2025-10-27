@@ -11,16 +11,19 @@ create → validate → apply → types
 ## Actions
 
 ### create <migration_name>
+
 Creates a new migration file with RLS template.
 
 **Script**: `scripts/create-migration.ts`
 **Output**: Migration file path, next steps
 
 ### validate
+
 Validates migrations for SQL syntax, RLS policies, and security.
 
 **Script**: `scripts/validate-migration.ts`
 **Checks**:
+
 - SQL syntax (via Supabase lint)
 - RLS enabled on public tables
 - RLS policies exist for all tables
@@ -29,10 +32,12 @@ Validates migrations for SQL syntax, RLS policies, and security.
 **Output**: Validation report, warnings, blockers
 
 ### apply
+
 Applies pending migrations to local database.
 
 **Script**: `scripts/apply-migration.ts`
 **Flow**:
+
 1. Run validation first
 2. Confirm with user
 3. Apply via `supabase db push`
@@ -41,6 +46,7 @@ Applies pending migrations to local database.
 **Output**: Success/failure, type generation status
 
 ### rollback
+
 Resets database to previous migration state.
 
 **Script**: `scripts/rollback-migration.ts`
@@ -49,6 +55,7 @@ Resets database to previous migration state.
 **Output**: Reset status, type regeneration
 
 ### types
+
 Regenerates TypeScript types from current schema.
 
 **Script**: `scripts/generate-types.ts`
@@ -67,6 +74,7 @@ Scripts are never loaded into context - they execute and return structured outpu
 **Default**: All new tables must have RLS enabled.
 
 **Common Patterns**:
+
 - User isolation: `auth.uid() = user_id`
 - Tenant isolation: `tenant_id = current_tenant()`
 - Admin bypass: `is_admin(auth.uid())`
@@ -91,11 +99,13 @@ Scripts are never loaded into context - they execute and return structured outpu
 ## Token Efficiency
 
 **Old command** (`/db:migrate`):
+
 - YAML frontmatter: ~50 tokens
 - Full prompt: ~435 tokens
 - **Total: 485 tokens** per invocation
 
 **New Skill**:
+
 - Metadata: 20 tokens
 - SKILL.md: 250 tokens (progressive)
 - Scripts: 0 tokens (executed, not loaded)

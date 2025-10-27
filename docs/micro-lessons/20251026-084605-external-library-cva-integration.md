@@ -5,6 +5,7 @@
 **Rule:** External library components MUST use CVA variants and our Select/Input components, not native HTML elements, to maintain design system consistency.
 
 **Example:**
+
 ```tsx
 // ❌ BAD - Native select breaks design system
 <select className="h-8 w-[70px] rounded-md border">
@@ -23,6 +24,7 @@
 ```
 
 **Guardrails:**
+
 - Always use CVA for variants (size, density, etc.)
 - Replace hardcoded values (h-12, w-[70px]) with responsive token-based sizing
 - Use existing UI components (Select, Input) instead of native HTML

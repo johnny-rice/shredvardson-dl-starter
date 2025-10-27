@@ -22,6 +22,7 @@ pnpm exec tsx scripts/tools/analyze-skill-usage.ts
 ## Output Format
 
 Present statistics in a clear, readable format showing:
+
 - Total invocations by Skill
 - Success/failure rates
 - Average execution time
@@ -31,6 +32,7 @@ Present statistics in a clear, readable format showing:
 ## Time Range
 
 Default to last 30 days. Support filtering by:
+
 - Last 7 days
 - Last 30 days
 - Last 90 days

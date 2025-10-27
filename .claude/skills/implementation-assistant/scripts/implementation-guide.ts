@@ -181,13 +181,19 @@ if (!(featureType in guides)) {
   process.exit(1);
 }
 
-console.log(JSON.stringify({
-  success: true,
-  featureType,
-  guide: guides[featureType],
-  nextSteps: [
-    'Follow steps in order',
-    'Check off each task as completed',
-    'Verify quality gates before moving on',
-  ],
-}, null, 2));
+console.log(
+  JSON.stringify(
+    {
+      success: true,
+      featureType,
+      guide: guides[featureType],
+      nextSteps: [
+        'Follow steps in order',
+        'Check off each task as completed',
+        'Verify quality gates before moving on',
+      ],
+    },
+    null,
+    2
+  )
+);

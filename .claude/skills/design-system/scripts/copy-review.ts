@@ -40,20 +40,26 @@ async function reviewCopy(): Promise<CopyReviewOutput> {
     summary: 'Copy review not yet implemented (Phase 0 stub)',
     averageClarity: 0,
     averageEmpathy: 0,
-    textsReviewed: 0
+    textsReviewed: 0,
   };
 }
 
 // Execute and output JSON
 reviewCopy()
-  .then(result => console.log(JSON.stringify(result, null, 2)))
-  .catch(error => {
-    console.error(JSON.stringify({
-      success: false,
-      score: 0,
-      reviews: [],
-      summary: 'Script execution failed',
-      error: error.message
-    }, null, 2));
+  .then((result) => console.log(JSON.stringify(result, null, 2)))
+  .catch((error) => {
+    console.error(
+      JSON.stringify(
+        {
+          success: false,
+          score: 0,
+          reviews: [],
+          summary: 'Script execution failed',
+          error: error.message,
+        },
+        null,
+        2
+      )
+    );
     process.exit(1);
   });

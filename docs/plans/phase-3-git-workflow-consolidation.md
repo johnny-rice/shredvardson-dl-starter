@@ -1,6 +1,6 @@
 ---
 id: 170-phase-3-plan
-title: "Phase 3 Implementation Plan: Git Workflow Consolidation"
+title: 'Phase 3 Implementation Plan: Git Workflow Consolidation'
 created: 2025-01-21
 status: active
 phase: 3
@@ -18,9 +18,10 @@ Consolidate 5+ git commands into unified `/git` Skill and implement `code-review
 ### Step 1: Git Skill Consolidation (3.1)
 
 #### 1.1 Create Master Git Skill
+
 **File:** `.claude/commands/git.md`
 
-```markdown
+````markdown
 ---
 skill: git
 version: 1.0.0
@@ -33,11 +34,13 @@ token_cost: 500
 **Purpose:** Consolidated git operations with intelligent routing
 
 **Usage:**
+
 ```bash
 /git <action> [args]
 ```
 
 **Actions:**
+
 - `branch <issue>` - Create feature branch from issue
 - `commit [message]` - Smart commit with conventions
 - `pr prepare` - Prepare pull request
@@ -48,7 +51,6 @@ token_cost: 500
 **Token Cost:** ~500 tokens (vs 5,000+ for separate commands)
 
 Execute: `scripts/skills/git.sh "$@"`
-```
 
 #### 1.2 Create Git Router Script
 **File:** `scripts/skills/git.sh`
@@ -93,11 +95,12 @@ case "$ACTION" in
     exit 1
     ;;
 esac
-```
+````
 
 #### 1.3 Refactor Existing Commands to Sub-Scripts
 
 **Create:** `scripts/skills/git/` directory structure:
+
 ```
 scripts/skills/git/
 ├── branch.sh      # From /git:branch
@@ -108,12 +111,14 @@ scripts/skills/git/
 ```
 
 **Migration Strategy:**
+
 1. Extract core logic from existing slash commands
 2. Wrap in JSON output format
 3. Add progressive disclosure
-4. Keep original commands as deprecated aliases
+4. Keep original commands as deprecated aliases (to be removed in Phase 4)
 
 #### 1.4 Implement PR Sub-Router
+
 **File:** `scripts/skills/git/pr.sh`
 
 ```bash
@@ -152,9 +157,10 @@ esac
 ### Step 2: Code Reviewer Skill (3.2)
 
 #### 2.1 Create Code Reviewer Skill
+
 **File:** `.claude/commands/code.md`
 
-```markdown
+````markdown
 ---
 skill: code
 version: 1.0.0
@@ -170,11 +176,13 @@ triggers:
 **Purpose:** Automated code quality checks and review
 
 **Usage:**
+
 ```bash
 /code review [--fix]
 ```
 
 **Checks:**
+
 - TypeScript compilation
 - ESLint violations
 - Test coverage
@@ -182,10 +190,10 @@ triggers:
 - Best practices
 
 **Flags:**
+
 - `--fix` - Auto-fix issues where possible
 
 Execute: `scripts/skills/code-reviewer.sh "$@"`
-```
 
 #### 2.2 Implement Code Reviewer Script
 **File:** `scripts/skills/code-reviewer.sh`
@@ -253,14 +261,15 @@ fi
 # TODO: Integrate with /security:scan
 
 echo "$RESULTS" | jq '.'
-```
+````
 
 ### Step 3: Documentation Sync Skill (3.3)
 
 #### 3.1 Create Documentation Sync Skill
+
 **File:** `.claude/commands/docs.md`
 
-```markdown
+````markdown
 ---
 skill: docs
 version: 1.0.0
@@ -273,11 +282,13 @@ token_cost: 400
 **Purpose:** Sync documentation between repo and GitHub wiki
 
 **Usage:**
+
 ```bash
 /docs sync [--dry-run]
 ```
 
 **Actions:**
+
 - Detect changed documentation files
 - Sync to GitHub wiki
 - Update cross-references
@@ -285,10 +296,10 @@ token_cost: 400
 - Generate table of contents
 
 **Flags:**
+
 - `--dry-run` - Preview changes without syncing
 
 Execute: `scripts/skills/documentation-sync.sh "$@"`
-```
 
 #### 3.2 Implement Documentation Sync Script
 **File:** `scripts/skills/documentation-sync.sh`
@@ -343,13 +354,14 @@ jq -n --argjson count "$FILES_COUNT" '{
     }
   ]
 }'
-```
+````
 
 ### Step 4: Token Measurement & Validation (3.4)
 
 #### 4.1 Measure Token Savings
 
 Test scenarios:
+
 1. **Branch creation:** `/git branch Issue #123`
 2. **Commit workflow:** `/git commit "feat: add feature"`
 3. **PR preparation:** `/git pr prepare`
@@ -359,14 +371,15 @@ Test scenarios:
 7. **Docs sync:** `/docs sync`
 
 For each scenario:
-```bash
-# Before (old commands)
-pnpm measure-tokens "/git:branch Issue #123"
 
-# After (new Skill)
+```bash
+# Before (Phase 2 Skills)
 pnpm measure-tokens "/git branch Issue #123"
 
-# Calculate savings
+# After (Phase 3 consolidated Skills)
+pnpm measure-tokens "/git branch Issue #123"
+
+# Calculate savings (expect 30-50% reduction via lazy loading)
 ```
 
 #### 4.2 Create Validation Report
@@ -374,6 +387,7 @@ pnpm measure-tokens "/git branch Issue #123"
 **File:** `docs/validation/phase-3-token-savings.md`
 
 Document:
+
 - Token costs per workflow (before/after)
 - Savings percentage
 - Performance metrics
@@ -385,6 +399,7 @@ Document:
 #### 5.1 Update SKILLS.md
 
 Add:
+
 - Section on command consolidation pattern
 - Documentation for `/git`, `/code`, `/docs`
 - Migration guide from old commands
@@ -393,6 +408,7 @@ Add:
 #### 5.2 Update Roadmap
 
 Mark Phase 3 complete, prepare Phase 4:
+
 - [ ] Advanced Skills (testing, deployment)
 - [ ] Cross-skill orchestration
 - [ ] Custom Skill generator
@@ -403,6 +419,7 @@ Mark Phase 3 complete, prepare Phase 4:
 **File:** `docs/guides/migrating-to-git-skill.md`
 
 Document:
+
 - Old command → new command mapping
 - Deprecation timeline
 - Breaking changes (if any)
@@ -411,16 +428,19 @@ Document:
 ## Testing Strategy
 
 ### Unit Tests
+
 - [ ] Router logic tests
 - [ ] Each sub-script in isolation
 - [ ] Error handling paths
 
 ### Integration Tests
+
 - [ ] Full git workflow with new commands
 - [ ] Code review integration
 - [ ] Docs sync workflow
 
 ### Token Tests
+
 - [ ] Measure all workflows
 - [ ] Validate 80% savings target
 - [ ] Check context pollution
@@ -439,6 +459,7 @@ Document:
 ## Implementation Checklist
 
 ### Phase 3.1: Git Consolidation
+
 - [ ] Create `.claude/commands/git.md`
 - [ ] Create `scripts/skills/git.sh` router
 - [ ] Create `scripts/skills/git/` directory
@@ -447,10 +468,12 @@ Document:
 - [ ] Migrate PR logic to `git/pr.sh`
 - [ ] Migrate workflow logic to `git/workflow.sh`
 - [ ] Migrate tag logic to `git/tag.sh`
+- [ ] Add deprecation notices to original commands (`/git:branch`, `/git:commit`, `/git:prepare-pr`, `/git:fix-pr`, `/git:workflow`, `/git:tag-release`)
 - [ ] Test all git workflows
 - [ ] Make scripts executable
 
 ### Phase 3.2: Code Reviewer
+
 - [ ] Create `.claude/commands/code.md`
 - [ ] Create `scripts/skills/code-reviewer.sh`
 - [ ] Implement TypeScript check
@@ -461,6 +484,7 @@ Document:
 - [ ] Make script executable
 
 ### Phase 3.3: Documentation Sync
+
 - [ ] Create `.claude/commands/docs.md`
 - [ ] Create `scripts/skills/documentation-sync.sh`
 - [ ] Implement change detection
@@ -470,20 +494,26 @@ Document:
 - [ ] Make script executable
 
 ### Phase 3.4: Validation
+
 - [ ] Measure tokens for all workflows
 - [ ] Create validation report
 - [ ] Verify 80% savings target
 - [ ] Document lessons learned
 
 ### Phase 3.5: Documentation
+
 - [ ] Update SKILLS.md
 - [ ] Update roadmap
-- [ ] Create migration guide
+- [ ] Create migration guide (include deprecation timeline)
+- [ ] Document which commands remain functional as aliases
 - [ ] Update README if needed
 
 ## Timeline
 
-**Estimated:** 4-6 hours
+### Estimated Effort
+
+4-6 hours
+
 - 3.1: 2 hours (git consolidation)
 - 3.2: 1 hour (code reviewer)
 - 3.3: 1 hour (docs sync)

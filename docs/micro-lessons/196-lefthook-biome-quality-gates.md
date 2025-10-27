@@ -25,6 +25,7 @@ The analysis recommended **Lefthook** (auto-installing parallel hooks) and **Bio
 ## Problem
 
 **Before**: Slow, manual hook setup
+
 ```bash
 # Contributor workflow (OLD)
 git clone repo
@@ -34,6 +35,7 @@ git push   # ❌ No validation! Manual setup needed
 ```
 
 **Sequential pre-push** (15-30s):
+
 ```text
 1. Lockfile check    (~0.5s)
 2. Typecheck         (~8-12s)  ← Sequential
@@ -60,7 +62,7 @@ pre-commit:
   parallel: true
   commands:
     biome-check:
-      glob: "*.{js,ts,jsx,tsx,json}"
+      glob: '*.{js,ts,jsx,tsx,json}'
       run: |
         echo "⚡ Running Biome checks..."
         pnpm biome check --write --no-errors-on-unmatched {staged_files}
@@ -132,6 +134,7 @@ pnpm biome init
 ```
 
 **Workflow**:
+
 - **Pre-commit**: Biome (fast syntax checks, <1s)
 - **Pre-push**: ESLint (deep type-aware rules, 2-5s)
 - **CI**: Full validation
@@ -149,6 +152,7 @@ pnpm add -D -w lefthook @biomejs/biome
 Create `lefthook.yml` (see full config in repo).
 
 Key features:
+
 - ✅ Parallel typecheck + lint
 - ✅ Named pipes for collecting results
 - ✅ Clear error messages with fix instructions
@@ -185,16 +189,17 @@ pnpm lefthook run pre-push
 
 ### Before vs After
 
-| Metric | Before (Manual) | After (Lefthook + Biome) | Improvement |
-|--------|-----------------|--------------------------|-------------|
-| **Setup** | Manual `cp .githooks/...` | Auto on `pnpm install` | ✅ Zero friction |
-| **Pre-commit** | None | Biome <1s | ✅ Instant feedback |
-| **Pre-push** | 15-30s sequential | 8-15s parallel | ✅ 2x faster |
-| **New contributor** | 3 manual steps | 0 steps | ✅ Automatic |
+| Metric              | Before (Manual)           | After (Lefthook + Biome) | Improvement         |
+| ------------------- | ------------------------- | ------------------------ | ------------------- |
+| **Setup**           | Manual `cp .githooks/...` | Auto on `pnpm install`   | ✅ Zero friction    |
+| **Pre-commit**      | None                      | Biome <1s                | ✅ Instant feedback |
+| **Pre-push**        | 15-30s sequential         | 8-15s parallel           | ✅ 2x faster        |
+| **New contributor** | 3 manual steps            | 0 steps                  | ✅ Automatic        |
 
 ### Performance Breakdown
 
 **Pre-push parallelization savings**:
+
 ```text
 Before (sequential):
   Typecheck: 8s
@@ -214,6 +219,7 @@ Savings: 5s (38% faster)
 ### Developer Experience
 
 **Contributor onboarding**:
+
 ```bash
 git clone repo
 pnpm install  # ✅ Hooks auto-installed!
@@ -226,20 +232,22 @@ git push      # ✅ Parallel validation (2x faster)
 
 ### Why Lefthook over Husky?
 
-| Feature | Husky | Lefthook |
-|---------|-------|----------|
-| **Performance** | Sequential | **Parallel** |
-| **Language** | Node.js required | Go binary (any language) |
-| **Monorepo** | Basic | Built-in support |
-| **Config** | .husky/ folder | YAML file |
+| Feature         | Husky            | Lefthook                 |
+| --------------- | ---------------- | ------------------------ |
+| **Performance** | Sequential       | **Parallel**             |
+| **Language**    | Node.js required | Go binary (any language) |
+| **Monorepo**    | Basic            | Built-in support         |
+| **Config**      | .husky/ folder   | YAML file                |
 
 ### Why Biome alongside ESLint?
 
 **Two-layer strategy**:
+
 1. **Biome (pre-commit)**: Fast syntax checks, catches 80% of issues instantly
 2. **ESLint (pre-push)**: Deep type-aware analysis, catches complex issues
 
 **Why not replace ESLint entirely?**
+
 - Biome's type-aware rules are still experimental (Biotype)
 - ESLint has more rules (2000+ vs Biome's 280+)
 - Best of both worlds: speed + correctness
@@ -312,10 +320,12 @@ LEFTHOOK=0 git push
 ### Time Savings
 
 **Per development cycle**:
+
 - Commit: 15-30s saved (no more "oops forgot to format")
 - Push: 7-15s saved (parallel execution)
 
 **Annual (assumes 20 pushes/week, 10 format commits/week, 50 weeks)**:
+
 - Push time: 7-15s × 20 × 50 = **2-4 hours/year**
 - Commit time: 15-30s × 10 × 50 = **2-4 hours/year**
 - **Total: 4-8 hours/year saved**
@@ -334,13 +344,15 @@ LEFTHOOK=0 git push
 ### Optional Enhancements
 
 1. **Add staged file tests** (pre-commit):
+
    ```yaml
    staged-tests:
-     glob: "*.test.{ts,tsx}"
+     glob: '*.test.{ts,tsx}'
      run: pnpm vitest --run {staged_files}
    ```
 
 2. **Add commit message linting**:
+
    ```yaml
    commit-msg:
      commands:
@@ -351,7 +363,7 @@ LEFTHOOK=0 git push
 3. **Add custom validations**:
    ```yaml
    no-todos:
-     glob: "src/**/*.{ts,tsx}"
+     glob: 'src/**/*.{ts,tsx}'
      run: "! grep -n 'TODO' {staged_files}"
    ```
 
@@ -411,6 +423,7 @@ LEFTHOOK=0 git commit
 ### Team Adoption
 
 Track after implementation:
+
 - % of commits with `--no-verify` (target: <5%)
 - Time to first commit after clone (target: <5 min)
 - Number of "forgot to format" commits (target: near 0)
@@ -418,6 +431,7 @@ Track after implementation:
 ## Conclusion
 
 Upgrading to Lefthook + Biome delivers:
+
 - **2x faster validation** (parallel execution)
 - **Instant commit feedback** (Biome <1s)
 - **Zero setup friction** (auto-installing hooks)

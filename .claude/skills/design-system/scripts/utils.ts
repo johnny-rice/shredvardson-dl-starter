@@ -80,7 +80,10 @@ export function isPathContained(resolvedPath: string): boolean {
  * createSafeComponentPath('../EvilPath'); // throws Error
  * ```
  */
-export function createSafeComponentPath(componentName: string): { kebabName: string; basePath: string } {
+export function createSafeComponentPath(componentName: string): {
+  kebabName: string;
+  basePath: string;
+} {
   const kebabName = toKebabCase(componentName);
 
   if (!kebabName) {
@@ -92,7 +95,9 @@ export function createSafeComponentPath(componentName: string): { kebabName: str
   const resolvedPath = path.resolve(basePath);
 
   if (!isPathContained(resolvedPath)) {
-    throw new Error(`Unsafe component path: "${componentName}" resolves outside UI components directory`);
+    throw new Error(
+      `Unsafe component path: "${componentName}" resolves outside UI components directory`
+    );
   }
 
   return { kebabName, basePath };

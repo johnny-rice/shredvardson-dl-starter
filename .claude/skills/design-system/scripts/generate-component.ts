@@ -7,10 +7,10 @@
  */
 
 import * as fs from 'fs';
-import * as path from 'path';
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
 import Handlebars from 'handlebars';
+import * as path from 'path';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
 import { checkComponentExists } from './check-component-exists';
 import { createSafeComponentPath } from './utils.js';
 
@@ -129,14 +129,16 @@ function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
       hasChildren: true,
       hasInteractions: true,
       hasDisabledState: true,
-      baseClasses: 'inline-flex items-center justify-center rounded-[var(--radius)] text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      baseClasses:
+        'inline-flex items-center justify-center rounded-[var(--radius)] text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
       variants: [
         {
           name: 'variant',
           options: {
             default: 'bg-primary text-primary-foreground hover:bg-primary/90',
             destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-            outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+            outline:
+              'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
             secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
             ghost: 'hover:bg-accent hover:text-accent-foreground',
             link: 'text-primary underline-offset-4 hover:underline',
@@ -155,7 +157,8 @@ function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
         },
       ],
       componentDescription: 'A flexible button component with multiple variants and sizes',
-      accessibilityNotes: 'Ensures proper focus management and keyboard navigation. Uses semantic button element.',
+      accessibilityNotes:
+        'Ensures proper focus management and keyboard navigation. Uses semantic button element.',
       role: 'button',
       needsContrastTest: true,
       patternFile: 'buttons.md',
@@ -167,9 +170,11 @@ function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
       isForwardRef: true,
       hasChildren: false,
       hasDisabledState: true,
-      baseClasses: 'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+      baseClasses:
+        'flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
       componentDescription: 'A styled input component for forms',
-      accessibilityNotes: 'Should be paired with a Label component. Supports all standard input attributes.',
+      accessibilityNotes:
+        'Should be paired with a Label component. Supports all standard input attributes.',
       patternFile: 'forms.md',
     },
     card: {
@@ -180,7 +185,8 @@ function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
       hasChildren: true,
       baseClasses: 'rounded-lg border bg-card text-card-foreground shadow-sm',
       componentDescription: 'A card container component',
-      accessibilityNotes: 'Consider adding role="article" or role="region" with aria-label for semantic grouping.',
+      accessibilityNotes:
+        'Consider adding role="article" or role="region" with aria-label for semantic grouping.',
       patternFile: 'layout.md',
     },
   };
@@ -236,7 +242,12 @@ async function validateComponent(componentPath: string): Promise<ValidationResul
       accessibility,
       testCoverage,
     },
-    suggestions: generateSuggestions(tokenCompliance, patternAdherence, accessibility, testCoverage),
+    suggestions: generateSuggestions(
+      tokenCompliance,
+      patternAdherence,
+      accessibility,
+      testCoverage
+    ),
   };
 }
 
@@ -311,8 +322,8 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
 
   // Check if forcing new component creation
   const forceNew = args.includes('--force-new');
-  const extendFrom = args.find(arg => arg.startsWith('--extend-from='))?.split('=')[1];
-  const reason = args.find(arg => arg.startsWith('--reason='))?.split('=')[1];
+  const extendFrom = args.find((arg) => arg.startsWith('--extend-from='))?.split('=')[1];
+  const reason = args.find((arg) => arg.startsWith('--reason='))?.split('=')[1];
 
   // Check if component exists
   const checkResult = checkComponentExists(componentName);
@@ -341,33 +352,40 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
         blocked: true,
         reason: checkResult.suggestion,
         alternatives: [
-          `Import and use the existing component`,
-          `Extend with a variant if needed`,
-          `Use --force-new --reason="..." if truly necessary`
-        ]
+          'Import and use the existing component',
+          'Extend with a variant if needed',
+          `Use --force-new --reason="..." if truly necessary`,
+        ],
       },
       nextSteps: [
         ...(checkResult.importPath
           ? [`import { ${componentName} } from "${checkResult.importPath}"`]
           : ['Use the existing custom component (no import path available)']),
-        'Or extend the existing component with new variants'
-      ]
+        'Or extend the existing component with new variants',
+      ],
     };
   }
 
   // Warn about similar components (unless forced or domain-specific)
-  if (!checkResult.exists && checkResult.similarComponents &&
-      checkResult.similarComponents.length > 0 &&
-      !forceNew && !checkResult.isDomainSpecific) {
-
-    console.error(`\n🤔 Similar components found:`);
-    checkResult.similarComponents.forEach(similar => {
+  if (
+    !checkResult.exists &&
+    checkResult.similarComponents &&
+    checkResult.similarComponents.length > 0 &&
+    !forceNew &&
+    !checkResult.isDomainSpecific
+  ) {
+    console.error('\n🤔 Similar components found:');
+    checkResult.similarComponents.forEach((similar) => {
       console.error(`  - ${similar.name} (${similar.similarity}% similar - ${similar.reason})`);
     });
 
-    console.error(`\n💡 Consider:`);
-    console.error(`  1. Use existing: import { ${checkResult.similarComponents[0].name} } from "@ui/components/ui/${checkResult.similarComponents[0].name}"`);
-    console.error(`  2. Extend existing: /design generate ${componentName} --extend-from=${checkResult.similarComponents[0].name}`);
+    console.error('\n💡 Consider:');
+    console.error(
+      `  1. Use existing: import { ${checkResult.similarComponents[0].name} } from "@ui/components/ui/${checkResult.similarComponents[0].name}"`
+    );
+    console.error(
+      `  2. Extend existing: /design generate ${componentName} --extend-from=${checkResult.similarComponents[0].name}`
+    );
     console.error(`  3. Force new: /design generate ${componentName} --force-new --reason="..."`);
 
     // If not forced, require confirmation
@@ -381,22 +399,22 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
           blocked: true,
           reason: `Similar to existing: ${checkResult.similarComponents[0].name}`,
           suggestion: checkResult.suggestion,
-          alternatives: checkResult.similarComponents.map(s =>
-            `Use or extend ${s.name} (${s.reason})`
-          )
+          alternatives: checkResult.similarComponents.map(
+            (s) => `Use or extend ${s.name} (${s.reason})`
+          ),
         },
         nextSteps: [
           'Review similar components',
           'Add --extend-from=<component> to extend',
-          'Add --force-new --reason="..." to create new'
-        ]
+          'Add --force-new --reason="..." to create new',
+        ],
       };
     }
   }
 
   // If forcing new, require a reason
   if (forceNew && !reason) {
-    console.error(`\n⚠️  Creating new component requires justification`);
+    console.error('\n⚠️  Creating new component requires justification');
     console.error(`📝 Please explain why existing components won't work`);
     console.error(`\nUsage: /design generate ${componentName} --force-new --reason="..."`);
 
@@ -407,9 +425,9 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
       summary: 'Justification required for new component',
       guardCheck: {
         blocked: true,
-        reason: 'Missing justification for new component'
+        reason: 'Missing justification for new component',
       },
-      nextSteps: ['Add --reason="..." to explain why this component is needed']
+      nextSteps: ['Add --reason="..." to explain why this component is needed'],
     };
   }
 
@@ -442,10 +460,15 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
       pattern = aliased || known || 'button'; // Fallback to button pattern
     } catch (e) {
       // Fallback to substring matching if registry unavailable
-      pattern = componentName.toLowerCase().includes('button') ? 'button' :
-               componentName.toLowerCase().includes('input') ? 'input' :
-               componentName.toLowerCase().includes('card') ? 'card' :
-               componentName.toLowerCase().includes('dialog') ? 'dialog' : 'button';
+      pattern = componentName.toLowerCase().includes('button')
+        ? 'button'
+        : componentName.toLowerCase().includes('input')
+          ? 'input'
+          : componentName.toLowerCase().includes('card')
+            ? 'card'
+            : componentName.toLowerCase().includes('dialog')
+              ? 'dialog'
+              : 'button';
     }
   }
 
@@ -504,7 +527,7 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
       });
       console.error(`  ✓ Created test: ${testPath}`);
     } catch (e) {
-      console.error(`  ⚠️  Test template not found, skipping test generation`);
+      console.error('  ⚠️  Test template not found, skipping test generation');
     }
 
     // Note: Storybook removed in favor of /design viewer
@@ -527,7 +550,7 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
 
     if (validation.suggestions.length > 0) {
       console.error('\n💡 Suggestions:');
-      validation.suggestions.forEach(s => console.error(`  - ${s}`));
+      validation.suggestions.forEach((s) => console.error(`  - ${s}`));
     }
 
     const firstPassAccuracy = validation.score;
@@ -542,13 +565,12 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
       summary: `Generated ${componentName} component with ${Math.round(firstPassAccuracy)}% first-pass accuracy`,
       guardCheck: {
         blocked: false,
-        reason: forceNew ? `Created with justification: ${reason}` : undefined
+        reason: forceNew ? `Created with justification: ${reason}` : undefined,
       },
-      nextSteps: validation.passed ?
-        ['Component is production-ready'] :
-        ['Apply suggested improvements', 'Run validation again'],
+      nextSteps: validation.passed
+        ? ['Component is production-ready']
+        : ['Apply suggested improvements', 'Run validation again'],
     };
-
   } catch (error: any) {
     console.error(`  ✗ Error: ${error.message}`);
     return {
@@ -585,7 +607,7 @@ function updateComponentRegistry(componentName: string, reason: string, extendsF
       registry.customComponents[normalized] = {
         createdAt: new Date().toISOString().split('T')[0],
         reason,
-        extendsFrom
+        extendsFrom,
       };
 
       // Atomic write: write to temp file, then rename
@@ -593,23 +615,29 @@ function updateComponentRegistry(componentName: string, reason: string, extendsF
       fs.writeFileSync(tmp, JSON.stringify(registry, null, 2));
       fs.renameSync(tmp, registryPath);
     }
-    console.error(`  ✓ Updated component registry`);
+    console.error('  ✓ Updated component registry');
   } catch (e) {
-    console.error(`  ⚠️  Failed to update component registry`);
+    console.error('  ⚠️  Failed to update component registry');
   }
 }
 
 // Execute and output JSON
 const args = process.argv.slice(2);
 generateComponent(args)
-  .then(result => console.log(JSON.stringify(result, null, 2)))
-  .catch(error => {
-    console.error(JSON.stringify({
-      success: false,
-      componentName: 'Unknown',
-      files: [],
-      summary: 'Script execution failed',
-      error: error.message
-    }, null, 2));
+  .then((result) => console.log(JSON.stringify(result, null, 2)))
+  .catch((error) => {
+    console.error(
+      JSON.stringify(
+        {
+          success: false,
+          componentName: 'Unknown',
+          files: [],
+          summary: 'Script execution failed',
+          error: error.message,
+        },
+        null,
+        2
+      )
+    );
     process.exit(1);
   });

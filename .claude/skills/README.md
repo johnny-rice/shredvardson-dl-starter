@@ -156,6 +156,40 @@ Skills are the successor to slash commands, offering:
 /code implement feature_type
 ```
 
+### verification (Phase 0 ✓)
+
+**Command**: Automatic (no manual trigger)
+**Purpose**: "Evidence Before Claims" protocol preventing false completions
+**Token Savings**: 57% average (75% for prevented rework cycles)
+**Source**: Adapted from [obra/superpowers:verification-before-completion](https://github.com/obra/superpowers)
+
+**Capabilities**:
+
+- Enforces fresh verification before completion claims
+- Integrates automatically with git, test, db, review Skills
+- Prevents "tests pass" claims without running tests
+- Eliminates ~40% of rework cycles
+
+**Integration**:
+
+- `/git:prepare-pr` - Verifies tests/build before PR
+- `/test` - Verifies test output before claiming pass
+- `/db` - Verifies migration before claiming applied
+- `/review` - Verifies lint/type before claiming clean
+
+**Usage**: Automatic (no command needed)
+
+**Example**:
+```bash
+# Before (without verification):
+Claude: "All tests pass, ready to commit!"
+[Human runs tests → 3 failures]
+
+# After (with verification):
+Claude: [Runs pnpm test]
+Claude: "Tests show 3 failures: ..."
+```
+
 ### design-system (Phase 0 ✓)
 
 **Command**: Invoked via `/design` discovery command

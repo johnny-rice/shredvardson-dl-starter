@@ -57,6 +57,7 @@ This is a lightweight discovery command that delegates to the `test-scaffolder` 
 **Implementation:**
 
 The Skill system handles:
+
 1. Loading metadata (skill.json)
 2. Progressive disclosure (SKILL.md only if needed)
 3. Sub-agent delegation (Test Generator with project context)

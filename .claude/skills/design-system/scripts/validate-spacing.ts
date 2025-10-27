@@ -35,20 +35,26 @@ async function validateSpacing(): Promise<SpacingValidationOutput> {
     densityScore: 1.0,
     violations: [],
     summary: 'Spacing validation not yet implemented (Phase 0 stub)',
-    componentsScanned: 0
+    componentsScanned: 0,
   };
 }
 
 // Execute and output JSON
 validateSpacing()
-  .then(result => console.log(JSON.stringify(result, null, 2)))
-  .catch(error => {
-    console.error(JSON.stringify({
-      success: false,
-      densityScore: 0,
-      violations: [],
-      summary: 'Script execution failed',
-      error: error.message
-    }, null, 2));
+  .then((result) => console.log(JSON.stringify(result, null, 2)))
+  .catch((error) => {
+    console.error(
+      JSON.stringify(
+        {
+          success: false,
+          densityScore: 0,
+          violations: [],
+          summary: 'Script execution failed',
+          error: error.message,
+        },
+        null,
+        2
+      )
+    );
     process.exit(1);
   });

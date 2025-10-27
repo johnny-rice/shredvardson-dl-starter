@@ -7,6 +7,7 @@
 ## Results
 
 ### Old Command: `db/migrate`
+
 - Metadata: 3179 tokens
 - Prompts: 10465 tokens
 - Scripts: 0 tokens
@@ -14,6 +15,7 @@
 - **Total: 12613 tokens**
 
 ### New Skill: `supabase-integration`
+
 - Metadata (skill.json): 274 tokens
 - SKILL.md: 709 tokens
 - Scripts: 0 tokens (executed, not loaded)
@@ -31,6 +33,7 @@
 ✅ **Excellent!** Savings exceed 50%. Proceed confidently with Phase 2.
 
 **Next Steps**:
+
 1. Use this tool for each new Skill
 2. Document success in ADR addendum
 3. Proceed with Phase 2 implementation

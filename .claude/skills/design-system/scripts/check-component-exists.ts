@@ -80,11 +80,7 @@ function levenshteinDistance(s1: string, s2: string): number {
       if (s1[i - 1] === s2[j - 1]) {
         dp[i][j] = dp[i - 1][j - 1];
       } else {
-        dp[i][j] = Math.min(
-          dp[i - 1][j] + 1,
-          dp[i][j - 1] + 1,
-          dp[i - 1][j - 1] + 1
-        );
+        dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + 1);
       }
     }
   }
@@ -108,7 +104,7 @@ function detectUseCase(name: string): string[] {
   const detectedCases: string[] = [];
 
   for (const [useCase, keywords] of Object.entries(useCases)) {
-    if (keywords.some(keyword => normalized.includes(keyword))) {
+    if (keywords.some((keyword) => normalized.includes(keyword))) {
       detectedCases.push(useCase);
     }
   }
@@ -131,7 +127,7 @@ function findSimilarComponents(
       similar.push({
         name,
         similarity,
-        reason: 'Name similarity'
+        reason: 'Name similarity',
       });
     }
   }
@@ -141,14 +137,12 @@ function findSimilarComponents(
   if (useCases.length > 0) {
     for (const [name, config] of Object.entries(registry.shadcnComponents)) {
       if (config.useCases) {
-        const overlap = useCases.filter(uc =>
-          config.useCases.includes(uc)
-        );
-        if (overlap.length > 0 && !similar.find(s => s.name === name)) {
+        const overlap = useCases.filter((uc) => config.useCases.includes(uc));
+        if (overlap.length > 0 && !similar.find((s) => s.name === name)) {
           similar.push({
             name,
             similarity: 70,
-            reason: `Similar use case: ${overlap.join(', ')}`
+            reason: `Similar use case: ${overlap.join(', ')}`,
           });
         }
       }
@@ -157,17 +151,14 @@ function findSimilarComponents(
 
   // Check similarity groups
   for (const [group, components] of Object.entries(registry.similarityGroups)) {
-    const inGroup = components.some(c =>
-      stringSimilarity(normalized, c) > 70
-    );
+    const inGroup = components.some((c) => stringSimilarity(normalized, c) > 70);
     if (inGroup) {
-      components.forEach(comp => {
-        if (!similar.find(s => s.name === comp) &&
-            registry.shadcnComponents[comp]) {
+      components.forEach((comp) => {
+        if (!similar.find((s) => s.name === comp) && registry.shadcnComponents[comp]) {
           similar.push({
             name: comp,
             similarity: 60,
-            reason: `Same category: ${group}`
+            reason: `Same category: ${group}`,
           });
         }
       });
@@ -175,16 +166,14 @@ function findSimilarComponents(
   }
 
   // Sort by similarity
-  return similar
-    .sort((a, b) => b.similarity - a.similarity)
-    .slice(0, 3); // Return top 3
+  return similar.sort((a, b) => b.similarity - a.similarity).slice(0, 3); // Return top 3
 }
 
 // Check if component is domain-specific
 function isDomainSpecific(componentName: string, registry: ComponentRegistry): boolean {
   const normalized = normalizeComponentName(componentName);
 
-  return registry.domainSpecific.patterns.some(pattern =>
+  return registry.domainSpecific.patterns.some((pattern) =>
     normalized.includes(pattern.toLowerCase())
   );
 }
@@ -204,7 +193,7 @@ export function checkComponentExists(componentName: string): CheckResult {
       componentName: aliasedTo,
       importPath: component.path,
       variants: component.variants,
-      suggestion: `"${componentName}" is an alias for "${aliasedTo}". Use: import { ${pascalCase(aliasedTo)} } from "${component.path}"`
+      suggestion: `"${componentName}" is an alias for "${aliasedTo}". Use: import { ${pascalCase(aliasedTo)} } from "${component.path}"`,
     };
   }
 
@@ -217,7 +206,7 @@ export function checkComponentExists(componentName: string): CheckResult {
       componentName: normalized,
       importPath: exactMatch.path,
       variants: exactMatch.variants,
-      suggestion: `Component already exists in shadcn/ui. Use: import { ${pascalCase(normalized)} } from "${exactMatch.path}"`
+      suggestion: `Component already exists in shadcn/ui. Use: import { ${pascalCase(normalized)} } from "${exactMatch.path}"`,
     };
   }
 
@@ -228,7 +217,7 @@ export function checkComponentExists(componentName: string): CheckResult {
       exists: true,
       type: 'custom',
       componentName: normalized,
-      suggestion: `Custom component already exists (created: ${customMatch.createdAt}). Reason: ${customMatch.reason}`
+      suggestion: `Custom component already exists (created: ${customMatch.createdAt}). Reason: ${customMatch.reason}`,
     };
   }
 
@@ -244,11 +233,12 @@ export function checkComponentExists(componentName: string): CheckResult {
     type: 'none',
     similarComponents: similarComponents.length > 0 ? similarComponents : undefined,
     isDomainSpecific: domainSpecific,
-    suggestion: similarComponents.length > 0
-      ? `Consider using or extending: ${similarComponents[0].name} (${similarComponents[0].similarity}% similar - ${similarComponents[0].reason})`
-      : domainSpecific
-      ? `"${componentName}" appears to be domain-specific. Proceed with creation.`
-      : `No existing component found. Consider if this functionality could be achieved by composing existing shadcn components.`
+    suggestion:
+      similarComponents.length > 0
+        ? `Consider using or extending: ${similarComponents[0].name} (${similarComponents[0].similarity}% similar - ${similarComponents[0].reason})`
+        : domainSpecific
+          ? `"${componentName}" appears to be domain-specific. Proceed with creation.`
+          : 'No existing component found. Consider if this functionality could be achieved by composing existing shadcn components.',
   };
 }
 
@@ -273,9 +263,15 @@ if (require.main === module) {
     const result = checkComponentExists(componentName);
     console.log(JSON.stringify(result, null, 2));
   } catch (error: any) {
-    console.error(JSON.stringify({
-      error: error.message
-    }, null, 2));
+    console.error(
+      JSON.stringify(
+        {
+          error: error.message,
+        },
+        null,
+        2
+      )
+    );
     process.exit(1);
   }
 }

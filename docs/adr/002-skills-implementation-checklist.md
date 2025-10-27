@@ -182,6 +182,7 @@
 
 **Completed**: 2025-10-22
 **Deliverables**:
+
 - [docs/specs/phase-4b-learning-capture-enhancement.md](../specs/phase-4b-learning-capture-enhancement.md)
 - [.claude/commands/ops/learning-capture.md](../../.claude/commands/ops/learning-capture.md) (v2.0)
 - [.claude/commands/ops/learn-search.md](../../.claude/commands/ops/learn-search.md) (new)
@@ -193,12 +194,14 @@
 **Data Review Date**: ~2025-11-05
 
 **Decision Criteria (defined now for rapid execution):**
+
 - **Proceed if:** `/learn` search used >5 times/week OR `/ops:learning-capture` shows >50% tag suggestion acceptance
 - **Prioritize:** Commands/workflows with >10 manual invocations in 2-week window
 - **Success threshold:** New Skills reduce manual steps by >60%
 - **Quality gate:** Error rate <5% in production usage
 
 **Phase 4C: High-Confidence Skills** (TBD based on data)
+
 - [ ] `/github` - Issue/PR management expansion
   - Create issues from conversation
   - Link PRs to issues automatically
@@ -208,17 +211,20 @@
   - Suggest updates based on code changes
 
 **Validation Criteria for Phase 4C:**
+
 - [ ] Observability shows >10 GitHub CLI invocations/week
 - [ ] Documentation drift detected in >3 PRs
 - [ ] Token savings >60% vs manual workflow
 - [ ] Error rate <5% in production
 
 **Phase 4D: Behavioral-Driven Skills** (TBD based on data)
+
 - [ ] Identify high-frequency manual workflows from skill-usage.csv
 - [ ] Build Skills for top 3 pain points (sorted by invocation count)
 - [ ] Validate with usage metrics (before/after comparison)
 
 **Validation Criteria for Phase 4D:**
+
 - [ ] Top 3 workflows have >15 invocations each in 2-week window
 - [ ] New Skills reduce invocations by >50%
 - [ ] User feedback positive (friction reduced)

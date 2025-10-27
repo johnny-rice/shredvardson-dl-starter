@@ -6,11 +6,11 @@
  * Handles dependency installation and template generation
  */
 
+import { execSync } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
-import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { execSync } from 'child_process';
+import { fileURLToPath } from 'url';
 import { createSafeComponentPath } from './utils.js';
 
 // ESM-compatible __dirname
@@ -29,7 +29,9 @@ let registry;
 try {
   registry = JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
 } catch (error) {
-  console.error(`❌ Failed to parse registry: ${error instanceof Error ? error.message : String(error)}`);
+  console.error(
+    `❌ Failed to parse registry: ${error instanceof Error ? error.message : String(error)}`
+  );
   process.exit(1);
 }
 
@@ -50,9 +52,7 @@ const templatesDir = path.join(__dirname, '../templates');
  * ```
  */
 function loadTemplate(source: string, componentName: string) {
-  const kebabName = componentName
-    .replace(/([a-z])([A-Z])/g, '$1-$2')
-    .toLowerCase();
+  const kebabName = componentName.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
   const templatePath = path.join(templatesDir, source, `${kebabName}.json`);
 
   if (!fs.existsSync(templatePath)) {
@@ -86,9 +86,10 @@ function getAvailableTemplates(source: string): string[] {
     return [];
   }
 
-  return fs.readdirSync(sourceDir)
-    .filter(f => f.endsWith('.json'))
-    .map(f => {
+  return fs
+    .readdirSync(sourceDir)
+    .filter((f) => f.endsWith('.json'))
+    .map((f) => {
       const kebab = f.replace('.json', '');
       return kebab.replace(/(-|_|^)(\w)/g, (_, __, c) => c.toUpperCase());
     });
@@ -742,7 +743,9 @@ async function main() {
       fs.writeFileSync(file.path, file.content);
       console.log(`✅ Created ${file.path}`);
     } catch (error) {
-      console.error(`❌ Failed to write ${file.name} file: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(
+        `❌ Failed to write ${file.name} file: ${error instanceof Error ? error.message : String(error)}`
+      );
       console.error(`Path: ${file.path}`);
       process.exit(1);
     }
@@ -753,7 +756,8 @@ async function main() {
     const readmePath = path.join(basePath, 'VIEWER_EXAMPLES.md');
     try {
       let readmeContent = `# ${componentName} - Design Viewer Examples\n\n`;
-      readmeContent += `Add these examples to \`apps/web/src/app/design/page.tsx\` to showcase this component.\n\n`;
+      readmeContent +=
+        'Add these examples to `apps/web/src/app/design/page.tsx` to showcase this component.\n\n';
       readmeContent += `## Import\n\n\`\`\`tsx\nimport { ${componentName} } from '@ui/components';\n\`\`\`\n\n`;
 
       templates.viewerExamples.forEach((example: any, idx: number) => {
@@ -765,7 +769,9 @@ async function main() {
       fs.writeFileSync(readmePath, readmeContent);
       console.log(`✅ Created ${readmePath}`);
     } catch (error) {
-      console.error(`❌ Failed to write viewer examples: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(
+        `❌ Failed to write viewer examples: ${error instanceof Error ? error.message : String(error)}`
+      );
       console.error(`Path: ${readmePath}`);
       process.exit(1);
     }
@@ -792,8 +798,12 @@ async function main() {
     fs.renameSync(tempPath, registryPath);
     console.log('\n✅ Updated component registry');
   } catch (error) {
-    console.error(`\n❌ Failed to update registry: ${error instanceof Error ? error.message : String(error)}`);
-    console.error('⚠️  Component files created but not registered. Manual registry update required.');
+    console.error(
+      `\n❌ Failed to update registry: ${error instanceof Error ? error.message : String(error)}`
+    );
+    console.error(
+      '⚠️  Component files created but not registered. Manual registry update required.'
+    );
     process.exit(1);
   }
 
@@ -803,11 +813,11 @@ async function main() {
   if (templates.viewerExamples) {
     console.log(`Viewer examples: ${path.join(basePath, 'VIEWER_EXAMPLES.md')}`);
   }
-  console.log(`\nNext steps:`);
+  console.log('\nNext steps:');
   console.log(`1. Import and use: import { ${componentName} } from "@ui/components"`);
-  console.log(`2. Add examples to /design viewer: apps/web/src/app/design/page.tsx`);
-  console.log(`3. View in browser: /design viewer`);
-  console.log(`4. Run tests: pnpm test`);
+  console.log('2. Add examples to /design viewer: apps/web/src/app/design/page.tsx');
+  console.log('3. View in browser: /design viewer');
+  console.log('4. Run tests: pnpm test');
 }
 
 main().catch(console.error);

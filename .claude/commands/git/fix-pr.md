@@ -119,24 +119,71 @@ Automatically fetch PR feedback from all sources (CI, CodeRabbit, doctor) and fi
    - If checks pending, wait up to 5 minutes (poll every 30s)
    - Use retry/timeout patterns from `error-handling.md`
 
-3. **Fetch all feedback:**
-   - **CI checks:** `gh pr checks [PR_NUMBER]`
-   - **PR comments:** `gh pr view [PR_NUMBER] --comments`
+3. **EVIDENCE GATHERING** (Phase 1: Multi-layer diagnostics - Issue #209 Phase 3):
+
+   **Source:** Adapted from [obra/superpowers:systematic-debugging](https://github.com/obra/superpowers)
+
+   **Protocol:** Gather diagnostic evidence BEFORE proposing fixes
+
+   For multi-component CI failures, add diagnostic logging at each boundary:
+
+   ```bash
+   # Layer 1: CI Workflow Environment
+   echo "=== CI Environment Variables ===" && env | grep -E "(NODE_|NPM_|GITHUB_|VERCEL_)"
+
+   # Layer 2: Build Script Environment
+   echo "=== Build Environment ===" && pnpm run check-env
+
+   # Layer 3: Operation Execution
+   echo "=== Running Operation ===" && pnpm build --verbose
+   ```
+
+   **Analysis Steps:**
+   1. Identify which layer fails (don't guess)
+   2. Focus investigation on specific failing component
+   3. Understand WHY it failed (not just what)
+   4. ONLY THEN propose fix
+
+   **Evidence to Collect:**
+   - **CI checks:** `gh pr checks [PR_NUMBER]` (status, failures)
+   - **Workflow logs:** `gh run view [RUN_ID] --log-failed` (full output)
+   - **PR comments:** `gh pr view [PR_NUMBER] --comments` (CodeRabbit, reviewers)
    - **Doctor artifacts:** Check for `doctor-report.json` in CI artifacts
-   - **Failed workflow details:** `gh run view [RUN_ID]` for failed checks
+   - **Environment state:** Variables, dependencies, file presence
+   - **Layer boundaries:** Where does the failure originate?
 
 4. **Categorize issues:**
    - **Auto-fixable:** CLAUDE.md line count, constitution checksum, ADR compliance, formatting, simple type errors
    - **Pre-existing:** Check if error exists on base branch, skip with note
    - **Manual:** Complex logic errors, architecture decisions, report with guidance
 
-5. **Fix iteratively:**
+5. **Fix iteratively with Circuit Breaker** (Issue #209 Phase 4):
+
+   **Circuit Breaker Rule:** Stop after 3 failed fix attempts
+
+   ```text
+   Fix #1 fails → Try Fix #2
+   Fix #2 fails → Try Fix #3
+   Fix #3 fails → STOP
+
+   Question: "Is this architecture fundamentally sound?"
+   Discuss with human before attempting Fix #4
+   ```
+
+   **Fix Process:**
+   - Track fix attempts per issue (max 3)
    - Fix issues one at a time
    - Create separate commits using format from `commit-formatting.md`
    - Re-validate after each fix
    - If fix breaks something, revert and mark as manual
    - Use error recovery patterns from `error-handling.md`
    - Push all commits together at the end
+
+   **After 3rd Failed Fix:**
+   - STOP attempting more fixes
+   - Report pattern: "Each fix reveals new coupling in different files"
+   - Ask: "Should we refactor the architecture instead of Fix #4?"
+   - Require human decision before proceeding
 
 6. **Capture micro-lessons:**
    - After fixing, analyze if pattern is reusable

@@ -25,7 +25,9 @@ Forms collect user input for data submission, account creation, settings, and tr
 
   {/* Actions */}
   <div className="flex gap-2 justify-end">
-    <Button variant="outline" type="button">Cancel</Button>
+    <Button variant="outline" type="button">
+      Cancel
+    </Button>
     <Button type="submit">Submit</Button>
   </div>
 </form>
@@ -34,18 +36,14 @@ Forms collect user input for data submission, account creation, settings, and tr
 ## Field Components
 
 ### Text Input
+
 **Purpose**: Single-line text entry
 **Token**: Uses `border-input`, `bg-background`, `text-foreground`
 
 ```tsx
 <div className="space-y-2">
   <Label htmlFor="email">Email</Label>
-  <Input
-    id="email"
-    type="email"
-    placeholder="you@example.com"
-    aria-describedby="email-hint"
-  />
+  <Input id="email" type="email" placeholder="you@example.com" aria-describedby="email-hint" />
   <p id="email-hint" className="text-sm text-muted-foreground">
     We'll never share your email
   </p>
@@ -53,6 +51,7 @@ Forms collect user input for data submission, account creation, settings, and tr
 ```
 
 ### Required Fields
+
 Mark with asterisk AND use `aria-required`:
 
 ```tsx
@@ -63,17 +62,13 @@ Mark with asterisk AND use `aria-required`:
 ```
 
 ### Disabled Fields
+
 Use sparingly - explain WHY disabled:
 
 ```tsx
 <div className="space-y-2">
   <Label htmlFor="username">Username</Label>
-  <Input
-    id="username"
-    disabled
-    value="john_doe"
-    aria-describedby="username-disabled"
-  />
+  <Input id="username" disabled value="john_doe" aria-describedby="username-disabled" />
   <p id="username-disabled" className="text-sm text-muted-foreground">
     Username cannot be changed after account creation
   </p>
@@ -84,13 +79,13 @@ Use sparingly - explain WHY disabled:
 
 ### Validation Timing
 
-| Field Type | Validation Timing |
-|------------|------------------|
-| Email | On blur (after leaving field) |
-| Password | On blur |
-| Username | On blur + debounced (for availability) |
-| Text fields | On blur |
-| Required fields | On submit |
+| Field Type      | Validation Timing                      |
+| --------------- | -------------------------------------- |
+| Email           | On blur (after leaving field)          |
+| Password        | On blur                                |
+| Username        | On blur + debounced (for availability) |
+| Text fields     | On blur                                |
+| Required fields | On submit                              |
 
 ### Error States
 
@@ -132,31 +127,36 @@ Use sparingly - explain WHY disabled:
 ## Error Messages
 
 ### Be Specific
+
 ❌ "Invalid input"
 ✅ "Email must be in format: you@example.com"
 
 ### Be Actionable
+
 ❌ "Username taken"
 ✅ "This username is taken. Try: john_doe_2025"
 
 ### Be Empathetic
+
 ❌ "Wrong password"
 ✅ "Password doesn't match. Try again or reset your password"
 
 ### Error Message Structure
 
 ```tsx
-{error && (
-  <div className="p-4 rounded bg-destructive/10 border border-destructive">
-    <p className="font-semibold text-destructive">{error.title}</p>
-    <p className="text-sm text-destructive/90">{error.message}</p>
-    {error.action && (
-      <Button variant="link" className="text-destructive mt-2">
-        {error.action}
-      </Button>
-    )}
-  </div>
-)}
+{
+  error && (
+    <div className="p-4 rounded bg-destructive/10 border border-destructive">
+      <p className="font-semibold text-destructive">{error.title}</p>
+      <p className="text-sm text-destructive/90">{error.message}</p>
+      {error.action && (
+        <Button variant="link" className="text-destructive mt-2">
+          {error.action}
+        </Button>
+      )}
+    </div>
+  );
+}
 ```
 
 ## Form Types
@@ -169,24 +169,14 @@ Use sparingly - explain WHY disabled:
     <Label htmlFor="email">
       Email <span className="text-destructive">*</span>
     </Label>
-    <Input
-      id="email"
-      type="email"
-      required
-      placeholder="you@example.com"
-    />
+    <Input id="email" type="email" required placeholder="you@example.com" />
   </div>
 
   <div className="space-y-2">
     <Label htmlFor="password">
       Password <span className="text-destructive">*</span>
     </Label>
-    <Input
-      id="password"
-      type="password"
-      required
-      aria-describedby="password-hint"
-    />
+    <Input id="password" type="password" required aria-describedby="password-hint" />
     <p id="password-hint" className="text-sm text-muted-foreground">
       At least 8 characters with a mix of letters and numbers
     </p>
@@ -197,8 +187,7 @@ Use sparingly - explain WHY disabled:
   </Button>
 
   <p className="text-sm text-center text-muted-foreground">
-    Already have an account?{' '}
-    <Link href="/sign-in">Sign in</Link>
+    Already have an account? <Link href="/sign-in">Sign in</Link>
   </p>
 </form>
 ```
@@ -222,14 +211,14 @@ Use sparingly - explain WHY disabled:
         className="w-full min-h-[100px] p-3 rounded-md border border-input bg-background"
         placeholder="Tell us about yourself"
       />
-      <p className="text-sm text-muted-foreground text-right">
-        250 characters remaining
-      </p>
+      <p className="text-sm text-muted-foreground text-right">250 characters remaining</p>
     </div>
   </div>
 
   <div className="flex gap-2 justify-end border-t pt-4">
-    <Button variant="outline" type="button">Cancel</Button>
+    <Button variant="outline" type="button">
+      Cancel
+    </Button>
     <Button type="submit">Save Changes</Button>
   </div>
 </form>
@@ -239,12 +228,7 @@ Use sparingly - explain WHY disabled:
 
 ```tsx
 <form onSubmit={handleSearch} className="flex gap-2">
-  <Input
-    type="search"
-    placeholder="Search..."
-    className="flex-1"
-    aria-label="Search"
-  />
+  <Input type="search" placeholder="Search..." className="flex-1" aria-label="Search" />
   <Button type="submit">Search</Button>
 </form>
 ```
@@ -252,6 +236,7 @@ Use sparingly - explain WHY disabled:
 ## Accessibility Requirements
 
 ### Minimum (WCAG AA)
+
 - ✅ All inputs have associated `<Label>` (via `htmlFor`)
 - ✅ Focus rings visible on all interactive elements
 - ✅ Error messages linked via `aria-describedby`
@@ -260,12 +245,14 @@ Use sparingly - explain WHY disabled:
 - ✅ Contrast ratio ≥ 4.5:1 for all text
 
 ### Keyboard Navigation
+
 - Tab: Move between fields
 - Shift+Tab: Move backward
 - Enter: Submit form (when focused on submit button)
 - Esc: Cancel (in dialogs)
 
 ### Screen Readers
+
 Use `aria-describedby` to link hints and errors:
 
 ```tsx
@@ -280,6 +267,7 @@ Use `aria-describedby` to link hints and errors:
 ## Loading States
 
 ### Inline Loading (Small Forms)
+
 ```tsx
 <Button type="submit" disabled={isLoading}>
   {isLoading ? 'Saving...' : 'Save'}
@@ -287,12 +275,15 @@ Use `aria-describedby` to link hints and errors:
 ```
 
 ### Full Form Loading (Large Forms)
+
 ```tsx
-{isLoading && (
-  <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
-    <p className="text-muted-foreground">Saving your changes...</p>
-  </div>
-)}
+{
+  isLoading && (
+    <div className="absolute inset-0 bg-background/80 flex items-center justify-center">
+      <p className="text-muted-foreground">Saving your changes...</p>
+    </div>
+  );
+}
 ```
 
 ## Multi-Step Forms
@@ -304,10 +295,7 @@ Use `aria-describedby` to link hints and errors:
     {steps.map((step, index) => (
       <div
         key={step}
-        className={cn(
-          "h-2 flex-1 rounded",
-          index <= currentStep ? "bg-primary" : "bg-muted"
-        )}
+        className={cn('h-2 flex-1 rounded', index <= currentStep ? 'bg-primary' : 'bg-muted')}
       />
     ))}
   </div>
@@ -322,9 +310,7 @@ Use `aria-describedby` to link hints and errors:
           Back
         </Button>
       )}
-      <Button type="submit">
-        {currentStep === steps.length - 1 ? 'Submit' : 'Next'}
-      </Button>
+      <Button type="submit">{currentStep === steps.length - 1 ? 'Submit' : 'Next'}</Button>
     </div>
   </form>
 </div>

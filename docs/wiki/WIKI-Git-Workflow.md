@@ -84,6 +84,7 @@ The repository includes automated workflows to handle dependency updates efficie
 **Trigger:** Any Dependabot PR that modifies `**/package.json`
 
 **Behavior:**
+
 1. Detects Dependabot PRs changing package.json
 2. Runs `pnpm install` to update pnpm-lock.yaml
 3. Commits and pushes the lockfile update automatically
@@ -96,6 +97,7 @@ The repository includes automated workflows to handle dependency updates efficie
 **Trigger:** Dependabot PRs for minor or patch version updates
 
 **Behavior:**
+
 1. Fetches Dependabot metadata to determine update type
 2. For workflow file changes (`.github/workflows/`):
    - Automatically adds `override:adr` label
@@ -104,6 +106,7 @@ The repository includes automated workflows to handle dependency updates efficie
 4. Uses squash merge to maintain clean commit history
 
 **Success Rate:**
+
 - **Before:** 100% of Dependabot PRs required manual intervention
 - **After:** 80-90% of minor/patch PRs auto-merge without intervention
 - **Manual Review:** Only major version updates and breaking changes

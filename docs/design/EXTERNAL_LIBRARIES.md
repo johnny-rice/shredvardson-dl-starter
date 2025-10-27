@@ -5,6 +5,7 @@ This document lists approved external component libraries and how to use them in
 ## Philosophy
 
 We follow a **component selection priority**:
+
 1. Check existing components in `packages/ui/src/components/ui/`
 2. Check [shadcn/ui](https://ui.shadcn.com) library
 3. Check approved external libraries (this document)
@@ -19,6 +20,7 @@ See [COMPONENT_WORKFLOW.md](../COMPONENT_WORKFLOW.md) for complete workflow.
 **When to use:** Charts, graphs, KPI cards, dashboards
 
 **Why approved:**
+
 - Tailwind-native (matches our design system)
 - Copy-paste model (like shadcn/ui)
 - Small bundle impact (+15kb gzipped)
@@ -26,6 +28,7 @@ See [COMPONENT_WORKFLOW.md](../COMPONENT_WORKFLOW.md) for complete workflow.
 - RSC compatible
 
 **Available components:**
+
 - `LineChart` - Time series and trend visualization
 - `BarChart` - Categorical comparisons
 - `AreaChart` - Cumulative trends
@@ -54,6 +57,7 @@ See [COMPONENT_WORKFLOW.md](../COMPONENT_WORKFLOW.md) for complete workflow.
 **When to use:** Sortable/filterable tables, pagination, virtualization, 10k+ rows
 
 **Why approved:**
+
 - Headless (perfect for theming with our design tokens)
 - Handles large datasets efficiently
 - MIT license
@@ -61,6 +65,7 @@ See [COMPONENT_WORKFLOW.md](../COMPONENT_WORKFLOW.md) for complete workflow.
 - RSC compatible
 
 **Available components:**
+
 - `DataTable` - Headless table with sorting, filtering, pagination, and row selection
 
 **How to use:**
@@ -87,13 +92,7 @@ const columns: ColumnDef<User>[] = [
   { accessorKey: 'email', header: 'Email' },
 ];
 
-<DataTable
-  columns={columns}
-  data={users}
-  enableSorting
-  enablePagination
-  pageSize={20}
-/>
+<DataTable columns={columns} data={users} enableSorting enablePagination pageSize={20} />;
 ```
 
 **Note:** For simple tables, use shadcn/ui Table component first.
@@ -107,6 +106,7 @@ const columns: ColumnDef<User>[] = [
 **When to use:** Kanban boards, sortable lists, reorderable grids
 
 **Why approved:**
+
 - Headless (full styling control)
 - Modern, accessible
 - Touch-friendly
@@ -114,6 +114,7 @@ const columns: ColumnDef<User>[] = [
 - Well-documented
 
 **Available templates:**
+
 - `kanban-board` - Multi-column drag-and-drop
 - `sortable-list` - Vertical/horizontal reordering
 - `reorderable-grid` - 2D grid reordering
@@ -134,6 +135,7 @@ const columns: ColumnDef<User>[] = [
 **When to use:** Custom components with complex interactions that don't fit shadcn/ui
 
 **Why approved:**
+
 - Adobe-maintained
 - WCAG AA compliant out of the box
 - Headless hooks (perfect for custom styling)
@@ -141,6 +143,7 @@ const columns: ColumnDef<User>[] = [
 - Comprehensive primitives
 
 **Use cases:**
+
 - Custom date pickers
 - Complex form controls
 - Accessible menus with keyboard navigation
@@ -189,6 +192,7 @@ To propose a new external library, it must meet these criteria:
 - ✅ Aligns with "code ownership" philosophy (copy-paste or headless preferred)
 
 Create an issue with:
+
 - Library name and purpose
 - Why existing solutions don't work
 - Bundle impact analysis

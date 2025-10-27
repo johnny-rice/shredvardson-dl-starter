@@ -7,10 +7,12 @@
 ## Problem
 
 When implementing bash logging utilities, common ShellCheck warnings can appear:
+
 - **SC2155**: Declare and assign separately to avoid masking return values
 - **SC2064**: Use single quotes in traps to delay variable expansion
 
 These violations can cause:
+
 - Lost error detection (SC2155)
 - Incorrect variable capture in traps (SC2064)
 - Subtle bugs that only manifest at runtime
@@ -20,6 +22,7 @@ These violations can cause:
 ### Pattern 1: Separate Declare and Assign (SC2155)
 
 **❌ Bad:**
+
 ```bash
 local end_time=$(python3 -c 'import time; print(int(time.time() * 1000))')
 ```
@@ -27,6 +30,7 @@ local end_time=$(python3 -c 'import time; print(int(time.time() * 1000))')
 **Problem:** If the Python command fails, the error is masked and `end_time` is set to empty string silently.
 
 **✅ Good:**
+
 ```bash
 # Declare and assign separately to catch failures
 local end_time
@@ -38,6 +42,7 @@ end_time=$(python3 -c 'import time; print(int(time.time() * 1000))')
 ### Pattern 2: Delay Variable Expansion in Traps (SC2064)
 
 **❌ Bad:**
+
 ```bash
 trap "log_skill_invocation $skill $action" EXIT
 ```
@@ -45,6 +50,7 @@ trap "log_skill_invocation $skill $action" EXIT
 **Problem:** Variables are expanded when trap is **set**, not when it **fires**. This captures the wrong values (often empty strings).
 
 **✅ Good:**
+
 ```bash
 trap 'log_skill_invocation "$skill" "$action"' EXIT
 ```
@@ -54,6 +60,7 @@ trap 'log_skill_invocation "$skill" "$action"' EXIT
 ## Real-World Example
 
 **Before (has bugs):**
+
 ```bash
 #!/bin/bash
 set -euo pipefail
@@ -77,6 +84,7 @@ setup_logging "git"
 ```
 
 **After (ShellCheck compliant):**
+
 ```bash
 #!/bin/bash
 set -euo pipefail
@@ -109,11 +117,13 @@ setup_logging "git"
 ## When to Apply
 
 ✅ **Always:**
+
 - Use separate declare/assign for any command that might fail
 - Use single quotes in traps when referencing variables
 - Enable ShellCheck in CI/pre-commit hooks
 
 ⚠️ **Optional:**
+
 - Simple variable assignments with no command substitution can use combined form
 - Static strings in traps can use double quotes (no variables to expand)
 
@@ -133,10 +143,12 @@ setup_logging "git"
 ## Impact
 
 **Before fix:**
+
 - 2 ShellCheck warnings (SC2155, SC2064)
 - Potential runtime bugs (masked errors, wrong variables in traps)
 
 **After fix:**
+
 - ✅ Zero ShellCheck warnings
 - ✅ Errors properly propagated
 - ✅ Trap captures correct runtime values

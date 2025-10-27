@@ -37,7 +37,7 @@ export function isValidColorToken(value: string): boolean {
     ...Object.values(tokens.colors.info),
   ];
 
-  return allColors.some(color => color === value);
+  return allColors.some((color) => color === value);
 }
 
 /**
@@ -49,7 +49,7 @@ export function isValidSpacingToken(value: string): boolean {
     return true;
   }
 
-  return Object.values(tokens.spacing).some(spacing => spacing === value);
+  return Object.values(tokens.spacing).some((spacing) => spacing === value);
 }
 
 /**
@@ -61,7 +61,7 @@ export function isValidFontSizeToken(value: string): boolean {
     return true;
   }
 
-  return Object.values(tokens.typography.fontSize).some(fontSize => fontSize === value);
+  return Object.values(tokens.typography.fontSize).some((fontSize) => fontSize === value);
 }
 
 /**
@@ -73,14 +73,14 @@ export function isValidBorderRadiusToken(value: string): boolean {
     return true;
   }
 
-  return Object.values(tokens.borderRadius).some(radius => radius === value);
+  return Object.values(tokens.borderRadius).some((radius) => radius === value);
 }
 
 /**
  * Check if a shadow is a valid token
  */
 export function isValidShadowToken(value: string): boolean {
-  return Object.values(tokens.shadows).some(shadow => shadow === value);
+  return Object.values(tokens.shadows).some((shadow) => shadow === value);
 }
 
 /**
@@ -110,26 +110,20 @@ export function validateClassName(className: string): TokenValidationResult {
         // Check if it's a spacing value
         if (cls.match(/^(p|m|gap|space|top|right|bottom|left|inset)-\[/)) {
           if (!arbitraryValue.includes('var(--')) {
-            warnings.push(
-              `Arbitrary spacing value: ${cls}. Consider using spacing tokens.`
-            );
+            warnings.push(`Arbitrary spacing value: ${cls}. Consider using spacing tokens.`);
           }
         }
 
         // Check if it's a color value
         if (cls.match(/^(text|bg|border|ring)-\[/)) {
           if (!arbitraryValue.includes('var(--')) {
-            errors.push(
-              `Arbitrary color value: ${cls}. Use color tokens instead.`
-            );
+            errors.push(`Arbitrary color value: ${cls}. Use color tokens instead.`);
           }
         }
 
         // Check if it's a font size
         if (cls.match(/^text-\[.*px\]/)) {
-          warnings.push(
-            `Arbitrary font size: ${cls}. Use typography tokens instead.`
-          );
+          warnings.push(`Arbitrary font size: ${cls}. Use typography tokens instead.`);
         }
       }
     }
@@ -138,9 +132,7 @@ export function validateClassName(className: string): TokenValidationResult {
     if (cls.match(/^(p|m|gap|space)-((?!0|px|0\.5|1|2|3|4|5|6|8|10|12|16|20|24).+)$/)) {
       const match = cls.match(/^(p|m|gap|space)-(.+)$/);
       if (match && !Object.keys(tokens.spacing).includes(match[2])) {
-        warnings.push(
-          `Non-standard spacing value: ${cls}. Use spacing tokens.`
-        );
+        warnings.push(`Non-standard spacing value: ${cls}. Use spacing tokens.`);
       }
     }
   }
@@ -155,9 +147,7 @@ export function validateClassName(className: string): TokenValidationResult {
 /**
  * Extract non-compliant values from a style object
  */
-export function extractNonCompliantStyles(
-  styles: Record<string, string>
-): string[] {
+export function extractNonCompliantStyles(styles: Record<string, string>): string[] {
   const nonCompliant: string[] = [];
 
   for (const [property, value] of Object.entries(styles)) {
@@ -212,10 +202,7 @@ export function extractNonCompliantStyles(
 /**
  * Get token suggestion for a non-compliant value
  */
-export function getTokenSuggestion(
-  property: string,
-  value: string
-): string | undefined {
+export function getTokenSuggestion(property: string, value: string): string | undefined {
   // For colors
   if (property.match(/color|background|border/i)) {
     // Try to find a similar color
@@ -280,9 +267,7 @@ export function validateComponentProps(
       const [property, value] = style.split(': ');
       const suggestion = getTokenSuggestion(property, value);
       errors.push(
-        `Non-compliant style in ${componentName}: ${style}${
-          suggestion ? `. ${suggestion}` : ''
-        }`
+        `Non-compliant style in ${componentName}: ${style}${suggestion ? `. ${suggestion}` : ''}`
       );
     }
   }
@@ -340,8 +325,7 @@ export function generateComplianceReport(
     }
   }
 
-  report.compliancePercentage =
-    (report.compliantComponents / report.totalComponents) * 100;
+  report.compliancePercentage = (report.compliantComponents / report.totalComponents) * 100;
 
   return report;
 }

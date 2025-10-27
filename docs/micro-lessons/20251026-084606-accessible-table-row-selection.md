@@ -5,6 +5,7 @@
 **Rule:** Row selection requires explicit checkbox column with proper ARIA labels and scope attributes, not just background color changes.
 
 **Example:**
+
 ```tsx
 // ❌ BAD - No visual selection mechanism
 <tr className={row.getIsSelected() && 'bg-muted'}>
@@ -33,6 +34,7 @@
 ```
 
 **Guardrails:**
+
 - Always provide visual selection UI (checkboxes), not just state changes
 - Add aria-label to all checkboxes (select-all, select-row)
 - Add aria-sort to sortable headers (ascending/descending/none)

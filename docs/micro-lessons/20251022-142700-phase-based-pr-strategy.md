@@ -39,6 +39,7 @@ PR #N: Phase 4C-D (planned ~2025-11-05)
 ```
 
 **Guardrails.**
+
 - Define decision criteria upfront (e.g., ">10 invocations/week")
 - Set explicit data review dates
 - Merge independent phases immediately

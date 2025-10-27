@@ -8,12 +8,7 @@
     "validate_spec_structure",
     "generate_task_breakdown"
   ],
-  "triggers": [
-    "spec",
-    "prd",
-    "requirements",
-    "acceptance"
-  ],
+  "triggers": ["spec", "prd", "requirements", "acceptance"],
   "priority": "p0",
   "tokenSavings": {
     "old": 105,

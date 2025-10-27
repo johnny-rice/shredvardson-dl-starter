@@ -14,12 +14,14 @@ This document captures the proven integration pattern from Issue #191 (Tremor) t
 Before marking any external library integration as complete, verify ALL of these:
 
 ### 1. ✅ Design Token Integration
+
 - [ ] Library colors mapped to CSS variables in `tailwind.config.ts`
 - [ ] Border radius tokens configured (if applicable)
 - [ ] Components automatically adapt to light/dark mode
 - [ ] NO hardcoded colors in component implementations
 
 ### 2. ✅ Component Implementation
+
 - [ ] Working example component imported via `/design import <library> <Component>`
 - [ ] Component lives in `packages/ui/src/components/ui/`
 - [ ] Test file generated (`*.test.tsx`)
@@ -27,6 +29,7 @@ Before marking any external library integration as complete, verify ALL of these
 - [ ] Component registry updated
 
 ### 3. ✅ Examples Route
+
 - [ ] Dedicated route created: `/design/external/<library>`
 - [ ] Live example with actual component (not placeholder)
 - [ ] Visual callout explaining design token integration
@@ -34,18 +37,21 @@ Before marking any external library integration as complete, verify ALL of these
 - [ ] Placeholder cards for remaining components
 
 ### 4. ✅ Documentation
+
 - [ ] Library documented in `docs/design/EXTERNAL_LIBRARIES.md`
 - [ ] Usage examples with design tokens
 - [ ] Decision tree updated
 - [ ] Available components listed
 
 ### 5. ✅ Main Design Viewer Integration
+
 - [ ] Library card in `/design` page
 - [ ] Clickable link to `/design/external/<library>`
 - [ ] "View examples →" affordance
 - [ ] Available component count shown
 
 ### 6. ✅ Research Alignment
+
 - [ ] Implementation matches research document recommendations
 - [ ] Conversion feasibility rating justified
 - [ ] Architectural compatibility verified
@@ -75,6 +81,7 @@ Before marking any external library integration as complete, verify ALL of these
 ```
 
 **Tremor Example:**
+
 ```typescript
 colors: {
   'tremor-brand': 'hsl(var(--primary))',
@@ -86,17 +93,20 @@ colors: {
 ### Phase 2: Import Example Component
 
 **Command:**
+
 ```bash
 /design import <library> <ComponentName>
 ```
 
 **Outcome:**
+
 - Component created in `packages/ui/src/components/ui/<component-name>/`
 - Test file auto-generated
 - VIEWER_EXAMPLES.md created
 - Component registry updated
 
 **Validate:**
+
 - Component uses token-mapped colors (NOT hardcoded)
 - JSDoc explains token integration
 - Example shows design system usage
@@ -106,6 +116,7 @@ colors: {
 **Location:** `apps/web/src/app/design/external/<library>/page.tsx`
 
 **Template Structure:**
+
 ```tsx
 'use client';
 
@@ -193,11 +204,13 @@ export default function LibraryExamplesPage() {
 **When to use:** Specific scenarios
 
 **Why approved:**
+
 - Reason 1 (matches research)
 - Reason 2
 - License, maintenance status
 
 **Available components:**
+
 - Component1 - Description
 - Component2 - Description
 
@@ -216,12 +229,14 @@ export default function LibraryExamplesPage() {
 ### Tremor (Data Visualization)
 
 **Token Strategy:** Map Tremor's semantic colors
+
 ```typescript
 'tremor-brand': 'hsl(var(--primary))',
 'tremor-brand-subtle': 'hsl(var(--primary) / 0.1)',
 ```
 
 **Component Usage:**
+
 ```tsx
 <LineChart
   data={data}
@@ -236,19 +251,19 @@ export default function LibraryExamplesPage() {
 ### TanStack Table (Advanced Data Grids)
 
 **Token Strategy:** Headless - NO color mapping needed
+
 - Render custom markup using shadcn components
 - Apply CSS variables directly to rendered elements
 
 **Component Pattern:**
+
 ```tsx
 <Table>
   <TableHeader>
     {table.getHeaderGroups().map((headerGroup) => (
       <TableRow key={headerGroup.id}>
         {headerGroup.headers.map((header) => (
-          <TableHead key={header.id}>
-            {/* Use shadcn TableHead component */}
-          </TableHead>
+          <TableHead key={header.id}>{/* Use shadcn TableHead component */}</TableHead>
         ))}
       </TableRow>
     ))}
@@ -263,16 +278,18 @@ export default function LibraryExamplesPage() {
 ### dnd-kit (Drag & Drop)
 
 **Token Strategy:** Headless - NO color mapping needed
+
 - Apply design tokens to draggable elements
 - Use shadcn Card/Button components as drag handles
 
 **Component Pattern:**
+
 ```tsx
-const {attributes, listeners, setNodeRef} = useDraggable({id: 'item'});
+const { attributes, listeners, setNodeRef } = useDraggable({ id: 'item' });
 
 <Card ref={setNodeRef} {...attributes} {...listeners}>
   {/* shadcn Card styled with our tokens */}
-</Card>
+</Card>;
 ```
 
 **Key Learning:** dnd-kit provides hooks. We render our own components.
@@ -284,12 +301,14 @@ const {attributes, listeners, setNodeRef} = useDraggable({id: 'item'});
 Before closing any library integration issue:
 
 ### Functionality
+
 - [ ] `/design import <library> <Component>` command works
 - [ ] Component renders correctly in example route
 - [ ] Component uses design tokens (verified via DevTools)
 - [ ] Light/dark mode toggle works
 
 ### Code Quality
+
 - [ ] TypeScript types are correct
 - [ ] No `any` types (except documented exceptions)
 - [ ] ESLint passes
@@ -297,12 +316,14 @@ Before closing any library integration issue:
 - [ ] Tests exist and pass
 
 ### Documentation
+
 - [ ] JSDoc on component interfaces
 - [ ] Token integration explained
 - [ ] Import examples provided
 - [ ] Research alignment verified
 
 ### User Experience
+
 - [ ] Example route loads without errors
 - [ ] Navigation back to /design works
 - [ ] Placeholder cards show for unimported components
@@ -313,6 +334,7 @@ Before closing any library integration issue:
 ## Anti-Patterns (Avoid These)
 
 ❌ **Hardcoded Colors**
+
 ```tsx
 // BAD
 colors={['#3B82F6', '#EF4444']}
@@ -322,6 +344,7 @@ colors={['blue', 'red']} // Themed via tailwind.config.ts
 ```
 
 ❌ **Pre-importing All Components**
+
 ```bash
 # BAD - Don't import everything upfront
 /design import tremor LineChart
@@ -335,6 +358,7 @@ colors={['blue', 'red']} // Themed via tailwind.config.ts
 ```
 
 ❌ **Missing Token Integration Callout**
+
 ```tsx
 // BAD - User doesn't understand theming
 <Component data={data} />
@@ -348,6 +372,7 @@ colors={['blue', 'red']} // Themed via tailwind.config.ts
 ```
 
 ❌ **Library-Specific Styling Systems**
+
 ```tsx
 // BAD - Using library's proprietary theming
 <MantineProvider theme={customTheme}>
@@ -393,16 +418,19 @@ pnpm typecheck
 ## Decision Matrix: When to Use Which Approach
 
 ### Styled Library (Tremor, NextUI)
+
 ✅ **Use when:** Library is Tailwind-native
 📋 **Approach:** Token mapping in `tailwind.config.ts`
 ⚠️ **Effort:** Low (one-time config)
 
 ### Headless Library (TanStack Table, dnd-kit, React Aria)
+
 ✅ **Use when:** Library provides logic only
 📋 **Approach:** Compose with shadcn components
 ⚠️ **Effort:** Medium (build custom UI)
 
 ### Opinionated Library (Mantine, Ant Design)
+
 ❌ **Avoid:** Incompatible styling system
 📋 **Alternative:** Use headless library instead
 ⚠️ **Effort:** High (maintenance burden)
@@ -424,17 +452,20 @@ Track these for each library integration:
 ## Lessons Learned (Tremor Integration)
 
 ### What Went Well ✅
+
 1. **Token mapping was straightforward** - Research document provided exact pattern
 2. **`/design import` command worked perfectly** - Infrastructure already existed
 3. **Example route template was clear** - Easy to replicate for other libraries
 4. **Visual callout about tokens** - Helped users understand theming
 
 ### What Could Be Better 🔄
+
 1. **Initial PR missing token integration** - Should be done upfront, not as followup
 2. **Doctor check failed** - Need to validate before pushing
 3. **Research document wasn't referenced initially** - Should read research FIRST
 
 ### For Next Libraries 📝
+
 1. **Start with research document** - Read relevant section BEFORE implementation
 2. **Token mapping FIRST** - Add to tailwind.config.ts before importing components
 3. **Validate with visual test** - Actually toggle light/dark mode to verify
@@ -445,6 +476,7 @@ Track these for each library integration:
 ## Merge Criteria
 
 ✅ **Ready to merge when:**
+
 - All 6 success criteria met (see top of document)
 - CI checks pass (including doctor)
 - Visual testing complete (light/dark mode verified)
@@ -452,6 +484,7 @@ Track these for each library integration:
 - Integration pattern followed exactly
 
 🔄 **Not ready if:**
+
 - Hardcoded colors found
 - Token mapping missing
 - Example route not functional

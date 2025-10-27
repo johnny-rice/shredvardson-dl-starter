@@ -12,6 +12,7 @@ ls packages/ui/src/components/ui/
 ```
 
 **Current components:**
+
 - button
 - card
 - dialog
@@ -26,9 +27,11 @@ ls packages/ui/src/components/ui/
 Before creating a custom component, check if shadcn/ui has it:
 
 **Browse available components:**
-- https://ui.shadcn.com/docs/components
+
+- [ShadCN UI Components](https://ui.shadcn.com/docs/components)
 
 **Common components you might need:**
+
 - `navigation-menu` - For app navigation with active states
 - `dropdown-menu` - For dropdown menus
 - `tabs` - For tabbed interfaces
@@ -48,12 +51,14 @@ npx shadcn@latest add <component-name>
 ```
 
 **Example:**
+
 ```bash
 cd packages/ui
 npx shadcn@latest add navigation-menu
 ```
 
 This will:
+
 - Download the component to `packages/ui/src/components/ui/`
 - Set up all necessary dependencies
 - Configure TypeScript types
@@ -69,28 +74,28 @@ If shadcn/ui doesn't have what you need, we have **Tier 1 approved libraries** f
    - Why: Tailwind-native, copy-paste model (like shadcn)
    - Bundle: +15kb
    - License: Apache-2.0
-   - Docs: https://tremor.so
+   - Docs: [tremor.so](https://tremor.so)
 
 2. **TanStack Table** - Advanced data grids
    - Use for: Sortable/filterable tables, pagination, virtualization
    - Why: Headless (perfect for theming), handles 10k+ rows
    - Bundle: +45kb
    - License: MIT
-   - Docs: https://tanstack.com/table
+   - Docs: [tanstack.com/table](https://tanstack.com/table)
 
 3. **dnd-kit** - Drag-and-drop
    - Use for: Kanban boards, sortable lists, reorderable grids
    - Why: Headless, modern, accessible, touch-friendly
    - Bundle: +35kb
    - License: MIT
-   - Docs: https://dndkit.com
+   - Docs: [dndkit.com](https://dndkit.com)
 
 4. **React Aria** - Build-from-scratch toolkit
    - Use for: Custom components with complex interactions
    - Why: Adobe-maintained, WCAG AA compliant, headless hooks
    - Bundle: Varies
    - License: Apache-2.0
-   - Docs: https://react-spectrum.adobe.com/react-aria
+   - Docs: [react-spectrum.adobe.com/react-aria](https://react-spectrum.adobe.com/react-aria)
 
 **Decision Tree:**
 
@@ -113,6 +118,7 @@ Need a component?
 **⚠️ IMPORTANT: Always ask before importing external libraries!**
 
 These libraries were chosen because they:
+
 - ✅ Work with Tailwind CSS or are headless
 - ✅ Have MIT/Apache-2.0 licenses
 - ✅ Are actively maintained
@@ -123,11 +129,13 @@ These libraries were chosen because they:
 ### 4. Build Custom Component (Last Resort) 🔨
 
 **Only build custom when:**
+
 - No existing component fits the use case
 - The component is highly project-specific
 - Existing components would require too much modification
 
 **Before building custom, ask:**
+
 1. "Does shadcn/ui have this?" (Check docs)
 2. "Can I compose existing components?" (Combine button + card, etc.)
 3. "Is this truly unique to this project?"
@@ -161,12 +169,13 @@ Need a component?
 **When an AI agent needs a component, it should:**
 
 1. **First**: Check existing components in `packages/ui/src/components/ui/`
+
    ```bash
    ls packages/ui/src/components/ui/
    ```
 
 2. **Second**: Check shadcn/ui docs
-   - Browse: https://ui.shadcn.com/docs/components
+   - Browse: [ui.shadcn.com/docs/components](https://ui.shadcn.com/docs/components)
    - If found: Propose adding it
 
 3. **Third**: Check if it matches an approved external library category:
@@ -176,6 +185,7 @@ Need a component?
    - **Complex custom** → React Aria
 
 4. **Always ask before installing anything:**
+
    ```
    "I need a [component] for [use case].
 
@@ -338,6 +348,7 @@ pnpm add react-aria-components
 ## Design System Control
 
 **User maintains control by:**
+
 - Approving all new component additions
 - Reviewing shadcn components before installation
 - Deciding between shadcn vs custom solutions

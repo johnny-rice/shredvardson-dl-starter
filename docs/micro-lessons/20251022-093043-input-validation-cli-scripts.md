@@ -1,5 +1,5 @@
 ---
-title: "Always Validate CLI Arguments Before Shell Command Construction"
+title: 'Always Validate CLI Arguments Before Shell Command Construction'
 date: 2025-10-21
 category: security
 tags: [security, validation, command-injection, path-traversal]
@@ -60,11 +60,11 @@ const testFile = join(testDir, `${userFlow}.spec.ts`);
 
 ## Validation Patterns
 
-| Use Case | Regex Pattern | Rationale |
-|----------|---------------|-----------|
-| Database/migration names | `^[a-zA-Z0-9_]+$` | No path separators, no shell metacharacters |
-| File names (with hyphens) | `^[a-zA-Z0-9_-]+$` | Allows kebab-case, prevents traversal |
-| Strict identifiers | `^[a-zA-Z][a-zA-Z0-9_]*$` | Must start with letter (variable-like) |
+| Use Case                  | Regex Pattern             | Rationale                                   |
+| ------------------------- | ------------------------- | ------------------------------------------- |
+| Database/migration names  | `^[a-zA-Z0-9_]+$`         | No path separators, no shell metacharacters |
+| File names (with hyphens) | `^[a-zA-Z0-9_-]+$`        | Allows kebab-case, prevents traversal       |
+| Strict identifiers        | `^[a-zA-Z][a-zA-Z0-9_]*$` | Must start with letter (variable-like)      |
 
 ## Why This Matters
 
@@ -93,6 +93,7 @@ if (!resolved.startsWith(path.resolve(testDir))) {
 ## Detection Pattern
 
 Search for these dangerous patterns:
+
 - `process.argv[X]` used directly in `execSync()` string
 - `process.argv[X]` used in `path.join()` or template literals for file paths
 - Missing validation between input capture and usage

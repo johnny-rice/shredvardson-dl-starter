@@ -41,21 +41,27 @@ async function validateTokens(): Promise<TokenValidationOutput> {
     summary: 'Token validation not yet implemented (Phase 0 stub)',
     autoFixAvailable: 0,
     totalFiles: 0,
-    filesScanned: 0
+    filesScanned: 0,
   };
 }
 
 // Execute and output JSON
 validateTokens()
-  .then(result => console.log(JSON.stringify(result, null, 2)))
-  .catch(error => {
-    console.error(JSON.stringify({
-      success: false,
-      score: 0,
-      violations: [],
-      summary: 'Script execution failed',
-      autoFixAvailable: 0,
-      error: error.message
-    }, null, 2));
+  .then((result) => console.log(JSON.stringify(result, null, 2)))
+  .catch((error) => {
+    console.error(
+      JSON.stringify(
+        {
+          success: false,
+          score: 0,
+          violations: [],
+          summary: 'Script execution failed',
+          autoFixAvailable: 0,
+          error: error.message,
+        },
+        null,
+        2
+      )
+    );
     process.exit(1);
   });

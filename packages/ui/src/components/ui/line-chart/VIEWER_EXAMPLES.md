@@ -75,4 +75,3 @@ Hide the legend for simpler display
   {/* Add rendered example here */}
 </ComponentExample>
 ```
-

@@ -18,11 +18,12 @@ Both `generate-component.ts` and `import-external.ts` had identical filename san
 ```typescript
 // ❌ Before: Duplicated in 2+ files
 const toKebab = (s: string) =>
-  s.replace(/([a-z])([A-Z])/g, '$1-$2')
-   .toLowerCase()
-   .replace(/[^a-z0-9-]/g, '-')
-   .replace(/-+/g, '-')
-   .replace(/^-|-$/g, '');
+  s
+    .replace(/([a-z])([A-Z])/g, '$1-$2')
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
 const resolvedPath = path.resolve(targetPath);
 if (!resolvedPath.startsWith(baseDir + path.sep)) {
   throw new Error('Unsafe path');

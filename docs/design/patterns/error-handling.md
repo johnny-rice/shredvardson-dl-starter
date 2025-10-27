@@ -14,19 +14,20 @@ Error handling communicates failures gracefully and helps users recover. Good er
 
 ## Pattern Selection Guide
 
-| Scenario | Pattern | Component | When to Use |
-|----------|---------|-----------|-------------|
-| Field validation | Inline error | Input with error prop | Real-time form feedback |
-| Form submission | Form-level error | Alert banner | Multiple field errors |
-| Async action result | Toast notification | Toast | Save, delete, API calls |
-| Page-level failure | Error boundary | Error page | Component crashes |
-| Network failure | Retry UI | Error state + button | API timeouts, offline |
+| Scenario            | Pattern            | Component             | When to Use             |
+| ------------------- | ------------------ | --------------------- | ----------------------- |
+| Field validation    | Inline error       | Input with error prop | Real-time form feedback |
+| Form submission     | Form-level error   | Alert banner          | Multiple field errors   |
+| Async action result | Toast notification | Toast                 | Save, delete, API calls |
+| Page-level failure  | Error boundary     | Error page            | Component crashes       |
+| Network failure     | Retry UI           | Error state + button  | API timeouts, offline   |
 
 ## Inline Field Validation
 
 **Use for**: Real-time form field validation
 
 ### When to Show
+
 - **On blur**: After user leaves field (most common)
 - **On submit**: When form is submitted
 - **NOT on keystroke**: Too aggressive, frustrating
@@ -38,22 +39,22 @@ import { Input } from '@ui/src/components/ui/input';
 import { Label } from '@ui/src/components/ui/label';
 
 <div className="space-y-2">
-  <Label htmlFor="email" className={error ? "text-destructive" : ""}>
+  <Label htmlFor="email" className={error ? 'text-destructive' : ''}>
     Email {required && <span className="text-destructive">*</span>}
   </Label>
   <Input
     id="email"
     type="email"
-    className={error ? "border-destructive" : ""}
+    className={error ? 'border-destructive' : ''}
     aria-invalid={!!error}
-    aria-describedby={error ? "email-error" : undefined}
+    aria-describedby={error ? 'email-error' : undefined}
   />
   {error && (
     <p id="email-error" className="text-sm text-destructive" role="alert">
       {error}
     </p>
   )}
-</div>
+</div>;
 ```
 
 ### Error Message Examples
@@ -71,26 +72,28 @@ import { Label } from '@ui/src/components/ui/label';
 ### Implementation
 
 ```tsx
-{formError && (
-  <div className="p-4 rounded-lg bg-destructive/10 border border-destructive mb-4">
-    <div className="flex gap-2">
-      <span className="text-destructive font-semibold">⚠️</span>
-      <div className="flex-1">
-        <p className="font-semibold text-destructive">Unable to submit form</p>
-        <p className="text-sm text-destructive/90 mt-1">{formError}</p>
-        {fieldErrors.length > 0 && (
-          <ul className="mt-2 space-y-1">
-            {fieldErrors.map((error, i) => (
-              <li key={i} className="text-sm text-destructive/90">
-                • {error}
-              </li>
-            ))}
-          </ul>
-        )}
+{
+  formError && (
+    <div className="p-4 rounded-lg bg-destructive/10 border border-destructive mb-4">
+      <div className="flex gap-2">
+        <span className="text-destructive font-semibold">⚠️</span>
+        <div className="flex-1">
+          <p className="font-semibold text-destructive">Unable to submit form</p>
+          <p className="text-sm text-destructive/90 mt-1">{formError}</p>
+          {fieldErrors.length > 0 && (
+            <ul className="mt-2 space-y-1">
+              {fieldErrors.map((error, i) => (
+                <li key={i} className="text-sm text-destructive/90">
+                  • {error}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-)}
+  );
+}
 ```
 
 ## Toast Notifications
@@ -102,23 +105,23 @@ import { Label } from '@ui/src/components/ui/label';
 ```tsx
 import { toast } from '@/lib/toast';
 
-toast.success("Settings saved successfully");
+toast.success('Settings saved successfully');
 ```
 
 ### Error Toast
 
 ```tsx
-toast.error("Failed to save changes. Please try again.");
+toast.error('Failed to save changes. Please try again.');
 ```
 
 ### Error Toast with Action
 
 ```tsx
-toast.error("Failed to save changes", {
+toast.error('Failed to save changes', {
   action: {
-    label: "Retry",
-    onClick: () => handleSave()
-  }
+    label: 'Retry',
+    onClick: () => handleSave(),
+  },
 });
 ```
 
@@ -136,37 +139,39 @@ toast.error("Failed to save changes", {
 ### Retry Pattern
 
 ```tsx
-{error && (
-  <div className="flex flex-col items-center justify-center p-8 space-y-4">
-    <div className="text-4xl">😞</div>
-    <div className="text-center space-y-2">
-      <h3 className="text-xl font-semibold text-foreground">
-        Something went wrong
-      </h3>
-      <p className="text-muted-foreground max-w-md">
-        {error.message || "We couldn't load this content. Please try again."}
-      </p>
+{
+  error && (
+    <div className="flex flex-col items-center justify-center p-8 space-y-4">
+      <div className="text-4xl">😞</div>
+      <div className="text-center space-y-2">
+        <h3 className="text-xl font-semibold text-foreground">Something went wrong</h3>
+        <p className="text-muted-foreground max-w-md">
+          {error.message || "We couldn't load this content. Please try again."}
+        </p>
+      </div>
+      <Button onClick={handleRetry} disabled={isRetrying}>
+        {isRetrying ? 'Retrying...' : 'Try Again'}
+      </Button>
     </div>
-    <Button onClick={handleRetry} disabled={isRetrying}>
-      {isRetrying ? "Retrying..." : "Try Again"}
-    </Button>
-  </div>
-)}
+  );
+}
 ```
 
 ### Offline Detection
 
 ```tsx
-{isOffline && (
-  <div className="fixed bottom-4 left-4 right-4 p-4 rounded-lg bg-yellow-50 border border-yellow-200">
-    <div className="flex gap-2 items-center">
-      <span className="text-yellow-600">⚠️</span>
-      <p className="text-sm text-yellow-800">
-        You're offline. Changes will sync when connection is restored.
-      </p>
+{
+  isOffline && (
+    <div className="fixed bottom-4 left-4 right-4 p-4 rounded-lg bg-yellow-50 border border-yellow-200">
+      <div className="flex gap-2 items-center">
+        <span className="text-yellow-600">⚠️</span>
+        <p className="text-sm text-yellow-800">
+          You're offline. Changes will sync when connection is restored.
+        </p>
+      </div>
     </div>
-  </div>
-)}
+  );
+}
 ```
 
 ## Error Boundaries
@@ -179,22 +184,12 @@ toast.error("Failed to save changes", {
 // app/error.tsx (Next.js error boundary)
 'use client';
 
-export default function Error({
-  error,
-  reset,
-}: {
-  error: Error;
-  reset: () => void;
-}) {
+export default function Error({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-8">
       <div className="max-w-md space-y-4 text-center">
-        <h2 className="text-2xl font-bold text-foreground">
-          Something went wrong
-        </h2>
-        <p className="text-muted-foreground">
-          We've been notified and are looking into it.
-        </p>
+        <h2 className="text-2xl font-bold text-foreground">Something went wrong</h2>
+        <p className="text-muted-foreground">We've been notified and are looking into it.</p>
         <Button onClick={reset}>Try again</Button>
       </div>
     </div>
@@ -213,9 +208,7 @@ export default function NotFound() {
     <div className="flex flex-col items-center justify-center min-h-screen p-8">
       <div className="max-w-md space-y-4 text-center">
         <h1 className="text-6xl font-bold text-foreground">404</h1>
-        <h2 className="text-2xl font-semibold text-foreground">
-          Page not found
-        </h2>
+        <h2 className="text-2xl font-semibold text-foreground">Page not found</h2>
         <p className="text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
@@ -235,13 +228,13 @@ export default function NotFound() {
 
 ## Validation Timing
 
-| Field Type | Validation Timing | Reason |
-|------------|------------------|---------|
-| Email | On blur | Avoid interrupting typing |
-| Password | On blur | User may paste, let them finish |
-| Username | On blur + debounced | Check availability without spam |
-| Required fields | On submit | User may skip intentionally |
-| Text fields | On blur | Consistent with other fields |
+| Field Type      | Validation Timing   | Reason                          |
+| --------------- | ------------------- | ------------------------------- |
+| Email           | On blur             | Avoid interrupting typing       |
+| Password        | On blur             | User may paste, let them finish |
+| Username        | On blur + debounced | Check availability without spam |
+| Required fields | On submit           | User may skip intentionally     |
+| Text fields     | On blur             | Consistent with other fields    |
 
 ## Accessibility Requirements
 
@@ -281,6 +274,7 @@ export default function NotFound() {
 ```
 
 Examples:
+
 - "Email address is invalid. Check for typos or use format: `you@example.com`"
 - "Username is taken. Try adding numbers or your initials"
 - "File is too large (5.2 MB). Maximum size is 2 MB. Try compressing it"
@@ -321,7 +315,9 @@ Examples:
 ### ❌ Don't: Lose User Data on Error
 
 ```tsx
-{error && <form>{/* Empty form, data lost */}</form>}
+{
+  error && <form>{/* Empty form, data lost */}</form>;
+}
 ```
 
 **Why**: User has to re-enter everything

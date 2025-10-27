@@ -34,6 +34,34 @@
 
 ---
 
+#### code
+
+**Purpose**: Coding standards via implementation-assistant Skill
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: LOW
+
+**Tags**: implementation
+
+---
+
+#### db
+
+**Purpose**: Database workflow via supabase-integration Skill
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: LOW
+
+**Tags**: implementation
+
+---
+
 #### db:migrate
 
 **Purpose**: Streamline Supabase database migration workflow with validation and RLS policy checks.
@@ -45,6 +73,48 @@
 **Risk Level**: MEDIUM (Requires Human Approval)
 
 **Tags**: database, migration, supabase, schema, rls
+
+---
+
+#### design - Design System Management
+
+**Purpose**: Proactive UI generation and automated design system enforcement
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: LOW
+
+**Tags**: planning, requirements, quality
+
+---
+
+#### docs - Documentation Sync
+
+**Purpose**: Documentation synchronization and validation
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: LOW
+
+**Tags**: 
+
+---
+
+#### git - Unified Git Workflow
+
+**Purpose**: Unified git workflow automation with intelligent routing
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: LOW
+
+**Tags**: implementation
 
 ---
 
@@ -90,6 +160,20 @@
 
 ---
 
+#### review - Code Quality Review
+
+**Purpose**: Automated code quality checks and review
+
+**When to use**: Setting up tests and TDD workflows
+
+**Example**: Standard development workflow
+
+**Risk Level**: LOW
+
+**Tags**: testing, implementation, quality
+
+---
+
 #### security:scan
 
 **Purpose**: Scan codebase for security vulnerabilities including RLS policies, auth issues, and OWASP Top 10.
@@ -101,6 +185,34 @@
 **Risk Level**: LOW
 
 **Tags**: security, scanning, vulnerabilities, rls
+
+---
+
+#### spec
+
+**Purpose**: Spec analysis via prd-analyzer Skill
+
+**When to use**: Code quality and security improvements
+
+**Example**: Standard development workflow
+
+**Risk Level**: LOW
+
+**Tags**: security, planning, implementation, requirements
+
+---
+
+#### test
+
+**Purpose**: TDD workflow via test-scaffolder Skill
+
+**When to use**: Setting up tests and TDD workflows
+
+**Example**: Standard development workflow
+
+**Risk Level**: LOW
+
+**Tags**: testing, security, implementation
 
 ---
 
@@ -306,9 +418,9 @@
 
 ### Operations
 
-#### ops:learning-capture
+#### learn
 
-**Purpose**: Convert CodeRabbit feedback into micro-lessons or ADRs for pattern capture.
+**Purpose**: Search micro-lessons by tags, keywords, or patterns to find relevant learnings.
 
 **When to use**: General development tasks
 
@@ -316,7 +428,21 @@
 
 **Risk Level**: LOW
 
-**Tags**: learning, coderabbit, micro-lessons
+**Tags**: learning, search, knowledge-management, micro-lessons
+
+---
+
+#### ops:learning-capture
+
+**Purpose**: Capture development insights, patterns, or decisions as micro-lessons with intelligent context detection and automatic indexing.
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: LOW
+
+**Tags**: learning, automation, micro-lessons, knowledge-management
 
 ---
 
@@ -331,6 +457,20 @@
 **Risk Level**: LOW
 
 **Tags**: wiki, sync, maintenance
+
+---
+
+#### skills-stats
+
+**Purpose**: Display Skills usage statistics and analytics
+
+**When to use**: General development tasks
+
+**Example**: Standard development workflow
+
+**Risk Level**: LOW
+
+**Tags**: ops, analytics, skills, observability
 
 ---
 
@@ -368,20 +508,6 @@
 
 ### Simple Development
 
-#### dev:implement
-
-**Purpose**: Write minimal code to make failing tests pass during TDD implementation.
-
-**When to use**: Small changes and quick tasks
-
-**Example**: Build feature following established plan
-
-**Risk Level**: HIGH (Requires Human Approval)
-
-**Tags**: implementation, development, tdd
-
----
-
 #### dev:init-new-app
 
 **Purpose**: Initialize a new app from this starter with customized configuration.
@@ -393,20 +519,6 @@
 **Risk Level**: HIGH (Requires Human Approval)
 
 **Tags**: initialization, starter, scaffolding
-
----
-
-#### dev:plan-feature
-
-**Purpose**: Plan a small, safe feature with clear acceptance criteria.
-
-**When to use**: Small changes and quick tasks
-
-**Example**: Create technical plan for auth implementation
-
-**Risk Level**: LOW
-
-**Tags**: planning, features
 
 ---
 
@@ -437,64 +549,6 @@
 **Risk Level**: LOW (Requires Human Approval)
 
 **Tags**: adr, governance, documentation
-
----
-
-#### plan
-
-**Purpose**: Create technical implementation plan within constitutional constraints.
-
-**When to use**: Complex features requiring structured approach
-
-**Example**: Create technical plan for auth implementation
-
-**Risk Level**: MEDIUM (Requires Human Approval)
-
-**Tags**: spec-kit, planning, architecture
-
----
-
-#### specify
-
-**Purpose**: Define pure requirements - what and why only, no technical details.
-
-**When to use**: Complex features requiring structured approach
-
-**Example**: Define requirements for user authentication system
-
-**Risk Level**: LOW
-
-**Tags**: spec-kit, requirements, planning
-
----
-
-#### tasks
-
-**Purpose**: Break down technical plan into actionable implementation tasks with TDD focus.
-
-**When to use**: Complex features requiring structured approach
-
-**Example**: Break down auth feature into TDD tasks
-
-**Risk Level**: MEDIUM (Requires Human Approval)
-
-**Tags**: spec-kit, tasks, implementation
-
----
-
-### Testing
-
-#### test:scaffold
-
-**Purpose**: Write failing tests from approved plan before implementation.
-
-**When to use**: Setting up tests and TDD workflows
-
-**Example**: Standard development workflow
-
-**Risk Level**: LOW
-
-**Tags**: testing, tdd, scaffolding
 
 ---
 

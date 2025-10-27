@@ -25,12 +25,14 @@ Implement **lightweight CSV-based usage logging** with terminal-based analytics.
 **Storage:** `.logs/skill-usage.csv` (git-ignored, local-only)
 
 **Schema:**
+
 ```csv
 timestamp,skill,action,exit_code,duration_ms
 1761122800,git,branch,0,234
 ```
 
 **Fields:**
+
 - `timestamp` (int) - Unix timestamp in seconds (UTC)
 - `skill` (string) - Skill name (`git`, `review`, `docs`, etc.)
 - `action` (string) - Action within Skill (`branch`, `commit`, `auto`, etc.)
@@ -40,12 +42,14 @@ timestamp,skill,action,exit_code,duration_ms
 ### Implementation Approach
 
 **Logging Utility:** `scripts/utils/skill-logger.sh`
+
 - Reusable bash library sourced by all Skills
 - Automatic logging via EXIT trap
 - Cross-platform millisecond timestamps (Python 3 with bash fallback)
 - Zero configuration required
 
 **Integration Pattern:**
+
 ```bash
 #!/bin/bash
 # ADR: docs/adr/003-phase-4a-skills-observability.md
@@ -54,12 +58,14 @@ setup_skill_logging "SKILL_NAME" "ACTION"
 ```
 
 **Analytics:** `scripts/tools/analyze-skill-usage.ts`
+
 - TypeScript CLI tool (uses existing toolchain)
 - Generates formatted tables with recommendations
 - Supports time filtering (7d, 30d, 90d, all)
 - No external dependencies beyond TypeScript/Node
 
 **Command:** `.claude/commands/ops/skills-stats.md`
+
 - Routes `/skills stats` to analytics script
 - Integrates into existing command framework
 
@@ -68,6 +74,7 @@ setup_skill_logging "SKILL_NAME" "ACTION"
 **Current:** No rotation (manual cleanup if needed)
 
 **Future:** If `.logs/skill-usage.csv` grows >1MB, implement monthly rotation:
+
 ```
 .logs/skill-usage-2025-01.csv
 .logs/skill-usage-2025-02.csv
@@ -78,11 +85,13 @@ setup_skill_logging "SKILL_NAME" "ACTION"
 ### 1. External Telemetry (PostHog, Mixpanel, etc.)
 
 **Pros:**
+
 - Rich dashboards and visualizations
 - Time-series analysis
 - Real-time monitoring
 
 **Cons:**
+
 - External dependency
 - Data sovereignty concerns
 - Overkill for solo developer
@@ -93,11 +102,13 @@ setup_skill_logging "SKILL_NAME" "ACTION"
 ### 2. SQLite Database
 
 **Pros:**
+
 - Better query capabilities
 - Structured data model
 - Built-in aggregation
 
 **Cons:**
+
 - Requires SQLite tooling
 - More complex parsing logic
 - Binary format (not human-readable)
@@ -107,11 +118,13 @@ setup_skill_logging "SKILL_NAME" "ACTION"
 ### 3. JSON Lines (.jsonl)
 
 **Pros:**
+
 - Structured data
 - Easy to parse
 - Extensible
 
 **Cons:**
+
 - Larger file size
 - Requires JSON parsing library
 - Overkill for tabular data
@@ -121,10 +134,12 @@ setup_skill_logging "SKILL_NAME" "ACTION"
 ### 4. Real-Time Dashboards
 
 **Pros:**
+
 - Live monitoring
 - Immediate feedback
 
 **Cons:**
+
 - Complex infrastructure (web server, DB, UI)
 - Maintenance burden
 - Not needed for batch analysis

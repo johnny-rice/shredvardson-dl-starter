@@ -16,12 +16,14 @@ Handlebars templates using `../name` inside nested `{{#each}}` blocks resolved t
 ## Why It Breaks
 
 In Handlebars, `../` navigates UP the context stack. Inside nested loops:
+
 - `../name` = parent loop's `name` (e.g., variant name)
 - `@root.name` = template's root-level `name` (e.g., component name)
 
 ## Example
 
 ### ❌ Before (Broken)
+
 ```handlebars
 {{!-- test.hbs --}}
 {{#if variants}}
@@ -42,12 +44,14 @@ describe('{{name}} variants', () => {
 ```
 
 **Generated Output (WRONG):**
+
 ```tsx
 // If component is Button, variant.name is "variant"
 <variant variant="primary">  // ❌ Should be <Button variant="primary">
 ```
 
 ### ✅ After (Fixed)
+
 ```handlebars
 {{!-- test.hbs --}}
 {{#if variants}}
@@ -69,19 +73,20 @@ describe('{{name}} variants', () => {
 ```
 
 **Generated Output (CORRECT):**
+
 ```tsx
 <Button variant="primary">  // ✅ Correct component tag and prop
 ```
 
 ## When to Use Each
 
-| Reference | Use Case | Resolves To |
-|-----------|----------|-------------|
-| `{{name}}` | Current context | Loop item's `name` |
-| `{{../name}}` | Parent context | One level up in context stack |
-| `{{@root.name}}` | Top-level variable | Template root data's `name` |
-| `{{@index}}` | Loop index | Current iteration number |
-| `{{@key}}` | Object key | Current key in `{{#each obj}}` |
+| Reference        | Use Case           | Resolves To                    |
+| ---------------- | ------------------ | ------------------------------ |
+| `{{name}}`       | Current context    | Loop item's `name`             |
+| `{{../name}}`    | Parent context     | One level up in context stack  |
+| `{{@root.name}}` | Top-level variable | Template root data's `name`    |
+| `{{@index}}`     | Loop index         | Current iteration number       |
+| `{{@key}}`       | Object key         | Current key in `{{#each obj}}` |
 
 ## Guardrails
 

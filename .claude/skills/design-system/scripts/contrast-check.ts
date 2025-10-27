@@ -40,21 +40,27 @@ async function checkContrast(): Promise<ContrastCheckOutput> {
     violations: [],
     wcagCompliance: 'FULL_AA',
     summary: 'Contrast check not yet implemented (Phase 0 stub)',
-    elementsChecked: 0
+    elementsChecked: 0,
   };
 }
 
 // Execute and output JSON
 checkContrast()
-  .then(result => console.log(JSON.stringify(result, null, 2)))
-  .catch(error => {
-    console.error(JSON.stringify({
-      success: false,
-      score: 0,
-      violations: [],
-      wcagCompliance: 'FAIL',
-      summary: 'Script execution failed',
-      error: error.message
-    }, null, 2));
+  .then((result) => console.log(JSON.stringify(result, null, 2)))
+  .catch((error) => {
+    console.error(
+      JSON.stringify(
+        {
+          success: false,
+          score: 0,
+          violations: [],
+          wcagCompliance: 'FAIL',
+          summary: 'Script execution failed',
+          error: error.message,
+        },
+        null,
+        2
+      )
+    );
     process.exit(1);
   });

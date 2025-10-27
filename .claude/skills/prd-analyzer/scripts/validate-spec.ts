@@ -7,7 +7,7 @@
  * Example: tsx validate-spec.ts docs/specs/user-auth.md
  */
 
-import { readFileSync, existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { parse as parseYaml } from 'yaml';
 
 const specFile = process.argv[2];
@@ -64,7 +64,10 @@ if (!match) {
       );
     }
 
-    if (frontmatter.priority && !['p0', 'p1', 'p2', 'p3'].includes(frontmatter.priority as string)) {
+    if (
+      frontmatter.priority &&
+      !['p0', 'p1', 'p2', 'p3'].includes(frontmatter.priority as string)
+    ) {
       errors.push(`Invalid priority: ${frontmatter.priority}. Must be one of: p0, p1, p2, p3`);
     }
 

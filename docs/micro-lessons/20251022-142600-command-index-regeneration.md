@@ -25,6 +25,7 @@ git commit -m "Add learn search command"
 ```
 
 **Guardrails.**
+
 - Run `pnpm commands:generate` after any command file changes
 - The index is checked by CI in `commands:check` script
 - Pre-commit hooks don't auto-regenerate (manual step required)

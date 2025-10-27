@@ -226,13 +226,19 @@ if (!(category in patterns)) {
   process.exit(1);
 }
 
-console.log(JSON.stringify({
-  success: true,
-  category,
-  pattern: patterns[category],
-  nextSteps: [
-    'Copy pattern template',
-    'Adapt to your specific use case',
-    'Validate with: /code validate <file>',
-  ],
-}, null, 2));
+console.log(
+  JSON.stringify(
+    {
+      success: true,
+      category,
+      pattern: patterns[category],
+      nextSteps: [
+        'Copy pattern template',
+        'Adapt to your specific use case',
+        'Validate with: /code validate <file>',
+      ],
+    },
+    null,
+    2
+  )
+);

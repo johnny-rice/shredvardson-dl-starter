@@ -13,14 +13,14 @@ Progressive disclosure architecture that reduces LLM token usage by 60-80% while
 
 ## Available Skills
 
-| Command | Purpose | Token Savings |
-|---------|---------|---------------|
-| `/git` | Unified git workflow automation | 65% avg |
-| `/review` | Automated code quality checks | 73% avg |
-| `/docs` | Documentation synchronization | 67% avg |
-| `/spec` | PRD/spec analysis and validation | 71% avg |
-| `/test` | TDD workflow automation | 66% avg |
-| `/db` | Database migration workflow | 79% avg |
+| Command   | Purpose                          | Token Savings |
+| --------- | -------------------------------- | ------------- |
+| `/git`    | Unified git workflow automation  | 65% avg       |
+| `/review` | Automated code quality checks    | 73% avg       |
+| `/docs`   | Documentation synchronization    | 67% avg       |
+| `/spec`   | PRD/spec analysis and validation | 71% avg       |
+| `/test`   | TDD workflow automation          | 66% avg       |
+| `/db`     | Database migration workflow      | 79% avg       |
 
 ## Quick Start
 

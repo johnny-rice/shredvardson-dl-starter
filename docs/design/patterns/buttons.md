@@ -20,6 +20,7 @@ Buttons are the primary mechanism for user-initiated actions. Use buttons for ex
 ## Variants
 
 ### Default (Primary)
+
 **Purpose**: Primary call-to-action
 **Token**: `bg-primary`, `text-primary-foreground`
 **Usage**: Only one per screen to avoid user confusion
@@ -29,6 +30,7 @@ Buttons are the primary mechanism for user-initiated actions. Use buttons for ex
 ```
 
 ### Secondary
+
 **Purpose**: Alternative actions that need visual weight
 **Token**: `bg-secondary`, `text-secondary-foreground`
 **Usage**: Supporting actions alongside primary button
@@ -38,6 +40,7 @@ Buttons are the primary mechanism for user-initiated actions. Use buttons for ex
 ```
 
 ### Destructive
+
 **Purpose**: Irreversible or dangerous operations
 **Token**: `bg-destructive`, `text-destructive-foreground`
 **Usage**: Delete, remove, cancel subscription
@@ -50,6 +53,7 @@ Buttons are the primary mechanism for user-initiated actions. Use buttons for ex
 ```
 
 ### Outline
+
 **Purpose**: Secondary actions with clear boundaries
 **Token**: `border-input`, `bg-background`
 **Usage**: Forms, cards, less emphasized actions
@@ -59,6 +63,7 @@ Buttons are the primary mechanism for user-initiated actions. Use buttons for ex
 ```
 
 ### Ghost
+
 **Purpose**: Tertiary actions, minimal visual weight
 **Token**: Transparent background, hover state only
 **Usage**: Navigation, toolbars, less important actions
@@ -68,6 +73,7 @@ Buttons are the primary mechanism for user-initiated actions. Use buttons for ex
 ```
 
 ### Link
+
 **Purpose**: Text-based actions that appear inline
 **Token**: `text-primary`, underline on hover
 **Usage**: Inline actions within paragraphs
@@ -86,6 +92,7 @@ Buttons are the primary mechanism for user-initiated actions. Use buttons for ex
 ## Accessibility
 
 ### Minimum Requirements (WCAG AA)
+
 - ✅ Contrast ratio ≥ 4.5:1 for normal text
 - ✅ Contrast ratio ≥ 3:1 for large text (14pt bold, 18pt regular)
 - ✅ Focus ring with 2px outline and 2px offset
@@ -93,6 +100,7 @@ Buttons are the primary mechanism for user-initiated actions. Use buttons for ex
 - ✅ Screen reader compatible (semantic `<button>`)
 
 ### Icon-Only Buttons
+
 ```tsx
 <Button variant="ghost" size="icon" aria-label="Close dialog">
   <X className="h-4 w-4" />
@@ -100,6 +108,7 @@ Buttons are the primary mechanism for user-initiated actions. Use buttons for ex
 ```
 
 ### Disabled States
+
 - **Visual**: Reduced opacity, no hover effects
 - **Behavior**: `pointer-events-none` prevents accidental clicks
 - **UX**: MUST explain WHY disabled (tooltip or helper text)
@@ -116,38 +125,45 @@ Buttons are the primary mechanism for user-initiated actions. Use buttons for ex
 ## States
 
 ### Default
+
 Normal resting state
 
 ### Hover
+
 Visual feedback on mouse over
 
 ### Focus
+
 Keyboard focus with visible ring
 
 ### Active
+
 Pressed/clicked state
 
 ### Disabled
+
 Cannot be interacted with
 
 ### Loading
+
 Action in progress (spinner, disabled interaction)
 
 ```tsx
-<Button disabled={isLoading}>
-  {isLoading ? 'Saving...' : 'Save'}
-</Button>
+<Button disabled={isLoading}>{isLoading ? 'Saving...' : 'Save'}</Button>
 ```
 
 ## Spacing & Layout
 
 ### Single Button
+
 ```tsx
 <Button>Action</Button>
 ```
 
 ### Button Group (Horizontal)
+
 Use `gap-2` for related actions
+
 ```tsx
 <div className="flex gap-2">
   <Button variant="outline">Cancel</Button>
@@ -156,48 +172,61 @@ Use `gap-2` for related actions
 ```
 
 ### Button Group (Vertical)
+
 Use `space-y-2` for stacked actions
+
 ```tsx
 <div className="space-y-2">
   <Button className="w-full">Primary Action</Button>
-  <Button variant="outline" className="w-full">Secondary Action</Button>
+  <Button variant="outline" className="w-full">
+    Secondary Action
+  </Button>
 </div>
 ```
 
 ## Copy Guidelines
 
 ### Be Explicit
+
 ❌ "Submit"
 ✅ "Create Account"
 
 ### Be Action-Oriented
+
 ❌ "Deletion"
 ✅ "Delete Account"
 
 ### Be Concise
+
 ❌ "Click here to download your report"
 ✅ "Download Report"
 
 ### Destructive Actions
+
 MUST use clear, unambiguous language:
+
 - "Delete" not "Remove" (for permanent deletion)
 - "Cancel Subscription" not "Cancel" (for subscriptions)
 
 ## Examples
 
 ### Form Actions
+
 ```tsx
 <form className="space-y-4">
   <Input label="Email" />
   <Input label="Password" type="password" />
   <div className="flex gap-2 justify-end">
-    <Button variant="outline" type="button">Cancel</Button>
+    <Button variant="outline" type="button">
+      Cancel
+    </Button>
     <Button type="submit">Sign In</Button>
   </div>
 </form>
 ```
 
 ### Confirmation Dialog
+
 ```tsx
 <Dialog>
   <DialogContent>
@@ -216,13 +245,16 @@ MUST use clear, unambiguous language:
 ```
 
 ### Hero CTA
+
 ```tsx
 <div className="text-center space-y-4">
   <h1 className="text-5xl font-bold">Get Started Today</h1>
   <p className="text-xl text-muted-foreground">No credit card required</p>
   <div className="flex gap-2 justify-center">
     <Button size="lg">Start Free Trial</Button>
-    <Button size="lg" variant="outline">View Demo</Button>
+    <Button size="lg" variant="outline">
+      View Demo
+    </Button>
   </div>
 </div>
 ```

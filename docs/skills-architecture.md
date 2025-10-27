@@ -27,12 +27,14 @@ Tier 3: Implementation Guide (only if needed) → ~2,000 tokens
 **Pattern:** Bash scripts execute logic and return JSON.
 
 **Benefits:**
+
 - Fast validation (no LLM invocation)
 - Structured output (easy parsing)
 - Conditional LLM invocation (only when needed)
 - Child skills exposed via JSON
 
 **Example:**
+
 ```bash
 #!/bin/bash
 # Fast validation
@@ -51,11 +53,13 @@ jq -n --arg result "$RESULT" '{ status: "success", result: $result }'
 ### 3. Child Skills
 
 Skills can expose "child skills" via JSON output, enabling:
+
 - Deeper drill-down without loading context upfront
 - Conditional workflows based on runtime state
 - Guided user journeys
 
 **Example:**
+
 ```json
 {
   "status": "needs_review",
@@ -100,7 +104,7 @@ scripts/
 
 **File:** `.claude/commands/<skill>.md`
 
-```markdown
+````markdown
 ---
 skill: <name>
 version: 1.0.0
@@ -116,19 +120,24 @@ triggers:
 **Purpose:** Brief description
 
 **Usage:**
+
 ```bash
 /<skill> <action> [flags]
 ```
+````
 
 **Actions:**
+
 - `action1` - Description
 - `action2` - Description
 
 **Execution:**
+
 ```bash
 bash scripts/skills/<skill>.sh "$@"
 ```
-```
+
+````
 
 ### Script Implementation Pattern
 
@@ -175,7 +184,7 @@ case "$ACTION" in
     exit 1
     ;;
 esac
-```
+````
 
 ## Phase 3: Implemented Skills
 
@@ -184,6 +193,7 @@ esac
 **Consolidates:** 5+ separate git commands into one interface
 
 **Actions:**
+
 - `branch <issue>` - Create feature branch
 - `commit [message]` - Smart commit with conventions
 - `pr prepare` - Prepare and create PR
@@ -194,6 +204,7 @@ esac
 **Token Savings:** 65% average (80% for branch, 77% for workflow)
 
 **Example:**
+
 ```bash
 /git branch Issue #123: Add feature     # Creates feature/123-add-feature
 /git commit "feat: add component"        # Creates conventional commit
@@ -206,6 +217,7 @@ esac
 **Consolidates:** 5 quality checks into one command
 
 **Checks:**
+
 1. TypeScript compilation
 2. ESLint violations
 3. Test execution
@@ -213,11 +225,13 @@ esac
 5. Production build
 
 **Flags:**
+
 - `--fix` - Auto-fix ESLint issues
 
 **Token Savings:** 73% vs manual checks + LLM interpretation
 
 **Example:**
+
 ```bash
 /review              # Run all quality checks
 /review --fix        # Run checks and auto-fix
@@ -226,12 +240,14 @@ esac
 ### /docs - Documentation Sync
 
 **Actions:**
+
 - `sync [--dry-run]` - Sync docs to GitHub wiki
 - `validate` - Validate links and references
 
 **Token Savings:** 67% vs manual sync workflow
 
 **Example:**
+
 ```bash
 /docs sync              # Sync documentation
 /docs sync --dry-run    # Preview sync
@@ -242,20 +258,20 @@ esac
 
 ### Pure Automation Scenarios
 
-| Workflow | Old Tokens | New Tokens | Savings |
-|----------|-----------|-----------|---------|
-| Branch Creation | 2,500 | 500 | 80% ✅ |
-| Workflow Status | 2,200 | 500 | 77% ✅ |
-| Code Review | 1,500 | 400 | 73% ✅ |
+| Workflow        | Old Tokens | New Tokens | Savings |
+| --------------- | ---------- | ---------- | ------- |
+| Branch Creation | 2,500      | 500        | 80% ✅  |
+| Workflow Status | 2,200      | 500        | 77% ✅  |
+| Code Review     | 1,500      | 400        | 73% ✅  |
 
 **Average:** 77% savings
 
 ### LLM-Assisted Scenarios
 
-| Workflow | Old Tokens | New Tokens | Savings |
-|----------|-----------|-----------|---------|
-| Commit Workflow | 2,800 | 1,300 | 53% |
-| PR Preparation | 3,500 | 1,700 | 51% |
+| Workflow        | Old Tokens | New Tokens | Savings |
+| --------------- | ---------- | ---------- | ------- |
+| Commit Workflow | 2,800      | 1,300      | 53%     |
+| PR Preparation  | 3,500      | 1,700      | 51%     |
 
 **Average:** 52% savings
 
@@ -270,12 +286,14 @@ esac
 ### When to Create a Skill
 
 ✅ **Create Skill when:**
+
 - Workflow involves 3+ commands
 - Significant validation can be scripted
 - Common operation repeated frequently
 - Token savings potential > 50%
 
 ❌ **Don't create Skill when:**
+
 - One-time operation
 - Requires extensive LLM reasoning
 - Minimal token usage anyway
@@ -332,6 +350,7 @@ fi
 Phase 3 introduced **command consolidation** - merging related commands under a unified parent:
 
 **Before:**
+
 ```bash
 /git:branch
 /git:commit
@@ -342,6 +361,7 @@ Phase 3 introduced **command consolidation** - merging related commands under a 
 ```
 
 **After:**
+
 ```bash
 /git branch
 /git commit
@@ -352,6 +372,7 @@ Phase 3 introduced **command consolidation** - merging related commands under a 
 ```
 
 **Benefits:**
+
 - Single entry point (easier discovery)
 - Consistent interface
 - Better routing (script-based)
@@ -375,7 +396,7 @@ jq -n '{ status: "success" }'
 
 **2. Create skill definition**
 
-```markdown
+````markdown
 ---
 skill: my-skill
 version: 1.0.0
@@ -384,10 +405,13 @@ version: 1.0.0
 # /my-skill
 
 **Execution:**
+
 ```bash
 bash scripts/skills/my-skill.sh "$@"
 ```
-```
+````
+
+````
 
 **3. Update references**
 
@@ -395,7 +419,7 @@ Replace command usage:
 ```bash
 # Old: /traditional:command arg1 arg2
 # New: /skill action arg1 arg2
-```
+````
 
 ## Troubleshooting
 
@@ -404,6 +428,7 @@ Replace command usage:
 **Error:** `Skill 'foo' not found`
 
 **Solution:**
+
 1. Check `.claude/commands/foo.md` exists
 2. Verify skill name in frontmatter matches filename
 3. Re-index commands: `pnpm learn:index-commands`
@@ -413,6 +438,7 @@ Replace command usage:
 **Error:** `Permission denied`
 
 **Solution:**
+
 ```bash
 chmod +x scripts/skills/my-skill.sh
 ```
@@ -422,6 +448,7 @@ chmod +x scripts/skills/my-skill.sh
 **Error:** `Failed to parse skill output`
 
 **Solution:**
+
 1. Test script directly: `bash scripts/skills/my-skill.sh`
 2. Validate JSON: `bash scripts/skills/my-skill.sh | jq '.'`
 3. Check for extra output (use `>&2` for logs)
@@ -433,12 +460,14 @@ chmod +x scripts/skills/my-skill.sh
 **Focus:** Advanced Skills and orchestration
 
 **Planned Skills:**
+
 - `/deploy` - Deployment automation
 - `/monitor` - System monitoring
 - `/optimize` - Performance optimization
 - `/security` - Security scanning
 
 **New Patterns:**
+
 - Cross-skill orchestration (chain Skills)
 - Skill templates (generate custom Skills)
 - Skill marketplace (share Skills)
@@ -487,4 +516,4 @@ MIT - See [LICENSE](LICENSE)
 
 **Skills Architecture** - Intelligent token optimization through progressive disclosure
 
-*Last Updated: 2025-01-21 (Phase 3)*
+_Last Updated: 2025-01-21 (Phase 3)_

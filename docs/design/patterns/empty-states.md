@@ -30,16 +30,12 @@ Empty states appear when there's no content to display. They guide users toward 
 <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
   <div className="text-6xl">📝</div>
   <div className="space-y-2">
-    <h3 className="text-xl font-semibold text-foreground">
-      No projects yet
-    </h3>
+    <h3 className="text-xl font-semibold text-foreground">No projects yet</h3>
     <p className="text-muted-foreground max-w-sm">
       Get started by creating your first project. You can add team members and tasks later.
     </p>
   </div>
-  <Button size="lg">
-    Create Project
-  </Button>
+  <Button size="lg">Create Project</Button>
 </div>
 ```
 
@@ -51,20 +47,16 @@ Empty states appear when there's no content to display. They guide users toward 
 <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
   <div className="text-5xl">🔍</div>
   <div className="space-y-2">
-    <h3 className="text-xl font-semibold text-foreground">
-      No results for "{searchQuery}"
-    </h3>
+    <h3 className="text-xl font-semibold text-foreground">No results for "{searchQuery}"</h3>
     <p className="text-muted-foreground max-w-sm">
       Try adjusting your search or filter to find what you're looking for.
     </p>
   </div>
   <div className="flex gap-2">
-    <Button variant="outline" onClick={() => setSearchQuery("")}>
+    <Button variant="outline" onClick={() => setSearchQuery('')}>
       Clear Search
     </Button>
-    <Button onClick={handleCreateNew}>
-      Create New
-    </Button>
+    <Button onClick={handleCreateNew}>Create New</Button>
   </div>
 </div>
 ```
@@ -77,14 +69,10 @@ Empty states appear when there's no content to display. They guide users toward 
 <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
   <div className="text-5xl">🎯</div>
   <div className="space-y-2">
-    <h3 className="text-xl font-semibold text-foreground">
-      No items match your filters
-    </h3>
-    <p className="text-muted-foreground max-w-sm">
-      Try removing some filters to see more results.
-    </p>
+    <h3 className="text-xl font-semibold text-foreground">No items match your filters</h3>
+    <p className="text-muted-foreground max-w-sm">Try removing some filters to see more results.</p>
     <p className="text-sm text-muted-foreground">
-      Active filters: {activeFilters.map(f => f.label).join(", ")}
+      Active filters: {activeFilters.map((f) => f.label).join(', ')}
     </p>
   </div>
   <Button variant="outline" onClick={clearFilters}>
@@ -101,20 +89,16 @@ Empty states appear when there's no content to display. They guide users toward 
 <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
   <div className="text-5xl">🗑️</div>
   <div className="space-y-2">
-    <h3 className="text-xl font-semibold text-foreground">
-      All items archived
-    </h3>
+    <h3 className="text-xl font-semibold text-foreground">All items archived</h3>
     <p className="text-muted-foreground max-w-sm">
       You've archived all your items. Create new ones or restore from archive.
     </p>
   </div>
   <div className="flex gap-2">
-    <Button variant="outline" onClick={() => navigate("/archive")}>
+    <Button variant="outline" onClick={() => navigate('/archive')}>
       View Archive
     </Button>
-    <Button onClick={handleCreateNew}>
-      Create New
-    </Button>
+    <Button onClick={handleCreateNew}>Create New</Button>
   </div>
 </div>
 ```
@@ -127,17 +111,13 @@ Empty states appear when there's no content to display. They guide users toward 
 <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
   <div className="text-5xl">🔒</div>
   <div className="space-y-2">
-    <h3 className="text-xl font-semibold text-foreground">
-      Access restricted
-    </h3>
+    <h3 className="text-xl font-semibold text-foreground">Access restricted</h3>
     <p className="text-muted-foreground max-w-sm">
       You don't have permission to view this content. Contact your team admin for access.
     </p>
   </div>
   <Button variant="outline" asChild>
-    <Link href="/settings/team">
-      Manage Permissions
-    </Link>
+    <Link href="/settings/team">Manage Permissions</Link>
   </Button>
 </div>
 ```
@@ -161,13 +141,7 @@ interface EmptyStateProps {
   };
 }
 
-export function EmptyState({
-  icon,
-  title,
-  description,
-  action,
-  secondaryAction
-}: EmptyStateProps) {
+export function EmptyState({ icon, title, description, action, secondaryAction }: EmptyStateProps) {
   return (
     <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
       <div className="text-6xl">{icon}</div>
@@ -182,11 +156,7 @@ export function EmptyState({
               {secondaryAction.label}
             </Button>
           )}
-          {action && (
-            <Button onClick={action.onClick}>
-              {action.label}
-            </Button>
-          )}
+          {action && <Button onClick={action.onClick}>{action.label}</Button>}
         </div>
       )}
     </div>
@@ -202,12 +172,12 @@ export function EmptyState({
   title="No projects yet"
   description="Get started by creating your first project"
   action={{
-    label: "Create Project",
-    onClick: handleCreate
+    label: 'Create Project',
+    onClick: handleCreate,
   }}
   secondaryAction={{
-    label: "Import Projects",
-    onClick: handleImport
+    label: 'Import Projects',
+    onClick: handleImport,
   }}
 />
 ```
@@ -217,6 +187,7 @@ export function EmptyState({
 ### Emoji Selection
 
 **Good choices**:
+
 - 📝 Documents, notes, content creation
 - 🔍 Search results
 - 📊 Charts, analytics, data
@@ -229,6 +200,7 @@ export function EmptyState({
 - 🔒 Permissions, security
 
 **Avoid**:
+
 - Complex multi-emoji combinations
 - Obscure emojis with unclear meaning
 - Platform-specific emojis (look different across devices)
@@ -242,7 +214,7 @@ import { FileText } from 'lucide-react';
 
 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
   <FileText className="w-8 h-8 text-primary" />
-</div>
+</div>;
 ```
 
 ## Copy Guidelines
@@ -252,11 +224,13 @@ import { FileText } from 'lucide-react';
 **Structure**: `[State] + [Entity]`
 
 ✅ Good:
+
 - "No projects yet"
 - "No results found"
 - "All tasks complete"
 
 ❌ Bad:
+
 - "Empty" (too vague)
 - "There are no items in this list" (too wordy)
 - "404 Not Found" (for content, not pages)
@@ -266,10 +240,12 @@ import { FileText } from 'lucide-react';
 **Structure**: `[Explanation] + [Action]`
 
 ✅ Good:
+
 - "Get started by creating your first project. You can add team members later."
 - "Try adjusting your search or filter to find what you're looking for."
 
 ❌ Bad:
+
 - "No data" (not helpful)
 - "The system has not found any matching records in the database" (too technical)
 
@@ -294,7 +270,9 @@ Be specific about what happens:
   </div>
   <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
     <Button className="w-full sm:w-auto">{primaryAction}</Button>
-    <Button variant="outline" className="w-full sm:w-auto">{secondaryAction}</Button>
+    <Button variant="outline" className="w-full sm:w-auto">
+      {secondaryAction}
+    </Button>
   </div>
 </div>
 ```
@@ -312,19 +290,13 @@ Be specific about what happens:
 ### Screen Readers
 
 ```tsx
-<div
-  role="status"
-  aria-live="polite"
-  className="flex flex-col items-center justify-center p-12"
->
-  <div aria-hidden="true" className="text-6xl">📝</div>
+<div role="status" aria-live="polite" className="flex flex-col items-center justify-center p-12">
+  <div aria-hidden="true" className="text-6xl">
+    📝
+  </div>
   <h3 className="text-xl font-semibold">No projects yet</h3>
-  <p className="text-muted-foreground">
-    Get started by creating your first project
-  </p>
-  <Button onClick={handleCreate}>
-    Create Project
-  </Button>
+  <p className="text-muted-foreground">Get started by creating your first project</p>
+  <Button onClick={handleCreate}>Create Project</Button>
 </div>
 ```
 
@@ -333,13 +305,15 @@ Be specific about what happens:
 **Don't confuse loading with empty states:**
 
 ```tsx
-{isLoading ? (
-  <LoadingSpinner />
-) : items.length === 0 ? (
-  <EmptyState {...props} />
-) : (
-  <ItemList items={items} />
-)}
+{
+  isLoading ? (
+    <LoadingSpinner />
+  ) : items.length === 0 ? (
+    <EmptyState {...props} />
+  ) : (
+    <ItemList items={items} />
+  );
+}
 ```
 
 ## Error vs Empty States
@@ -347,17 +321,19 @@ Be specific about what happens:
 **Use error state when data fails to load:**
 
 ```tsx
-{error ? (
-  <ErrorState
-    title="Failed to load projects"
-    description="Please try again or contact support"
-    action={{ label: "Retry", onClick: handleRetry }}
-  />
-) : items.length === 0 ? (
-  <EmptyState {...props} />
-) : (
-  <ItemList items={items} />
-)}
+{
+  error ? (
+    <ErrorState
+      title="Failed to load projects"
+      description="Please try again or contact support"
+      action={{ label: 'Retry', onClick: handleRetry }}
+    />
+  ) : items.length === 0 ? (
+    <EmptyState {...props} />
+  ) : (
+    <ItemList items={items} />
+  );
+}
 ```
 
 ## Examples by Context
@@ -369,9 +345,7 @@ Be specific about what happens:
   <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
   {activity.length === 0 ? (
     <div className="text-center py-8 space-y-2">
-      <p className="text-sm text-muted-foreground">
-        No recent activity
-      </p>
+      <p className="text-sm text-muted-foreground">No recent activity</p>
       <Button variant="link" size="sm">
         View All Activity
       </Button>
@@ -399,7 +373,7 @@ Be specific about what happens:
         </td>
       </tr>
     ) : (
-      data.map(row => <tr key={row.id}>{/* cells */}</tr>)
+      data.map((row) => <tr key={row.id}>{/* cells */}</tr>)
     )}
   </tbody>
 </table>

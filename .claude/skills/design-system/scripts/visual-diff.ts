@@ -42,21 +42,27 @@ async function runVisualDiff(): Promise<VisualDiffOutput> {
     breaking: false,
     summary: 'Visual diff not yet implemented (Phase 0 stub)',
     tolerance: 0.05,
-    componentsChecked: 0
+    componentsChecked: 0,
   };
 }
 
 // Execute and output JSON
 runVisualDiff()
-  .then(result => console.log(JSON.stringify(result, null, 2)))
-  .catch(error => {
-    console.error(JSON.stringify({
-      success: false,
-      score: 0,
-      changes: [],
-      breaking: false,
-      summary: 'Script execution failed',
-      error: error.message
-    }, null, 2));
+  .then((result) => console.log(JSON.stringify(result, null, 2)))
+  .catch((error) => {
+    console.error(
+      JSON.stringify(
+        {
+          success: false,
+          score: 0,
+          changes: [],
+          breaking: false,
+          summary: 'Script execution failed',
+          error: error.message,
+        },
+        null,
+        2
+      )
+    );
     process.exit(1);
   });

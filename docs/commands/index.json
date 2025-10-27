@@ -6,12 +6,7 @@
       "name": "_shared/branch-validation",
       "path": ".claude/commands/git/shared/branch-validation.md",
       "category": "Git Workflow",
-      "tags": [
-        "git",
-        "testing",
-        "security",
-        "implementation"
-      ],
+      "tags": ["git", "testing", "security", "implementation"],
       "when": "Validating branch names and git state in /git:branch and /git:fix-pr",
       "purpose": "Reusable validation patterns for branch creation, name compliance, and git state checks",
       "example": "Standard development workflow",
@@ -22,13 +17,7 @@
       "name": "_shared/commit-formatting",
       "path": ".claude/commands/git/shared/commit-formatting.md",
       "category": "Git Workflow",
-      "tags": [
-        "git",
-        "testing",
-        "security",
-        "planning",
-        "implementation"
-      ],
+      "tags": ["git", "testing", "security", "planning", "implementation"],
       "when": "Creating conventional commits in /git:commit, /git:branch, and /git:fix-pr",
       "purpose": "Shared commit message formatting standards and conventional commit patterns",
       "example": "Create conventional commit for completed feature",
@@ -39,11 +28,7 @@
       "name": "_shared/common-git-workflow",
       "path": ".claude/commands/git/shared/common-git-workflow.md",
       "category": "Git Workflow",
-      "tags": [
-        "git",
-        "testing",
-        "planning"
-      ],
+      "tags": ["git", "testing", "planning"],
       "when": "Following git best practices across all git commands",
       "purpose": "Git workflow best practices including branch protection, commit hygiene, and push/pull patterns",
       "example": "Standard development workflow",
@@ -54,12 +39,7 @@
       "name": "_shared/error-handling",
       "path": ".claude/commands/git/shared/error-handling.md",
       "category": "Git Workflow",
-      "tags": [
-        "git",
-        "testing",
-        "security",
-        "planning"
-      ],
+      "tags": ["git", "testing", "security", "planning"],
       "when": "Handling git errors and recovery in /git:branch, /git:fix-pr, and other git commands",
       "purpose": "Comprehensive error detection, messaging, and recovery patterns for common git failure modes",
       "example": "Standard development workflow",
@@ -70,13 +50,7 @@
       "name": "accessibility:audit",
       "path": ".claude/commands/accessibility/audit.md",
       "category": "General",
-      "tags": [
-        "accessibility",
-        "a11y",
-        "wcag",
-        "audit",
-        "compliance"
-      ],
+      "tags": ["accessibility", "a11y", "wcag", "audit", "compliance"],
       "when": "General development tasks",
       "purpose": "Run accessibility audit using axe-core to validate WCAG 2.1 AA compliance.",
       "example": "Standard development workflow",
@@ -87,11 +61,7 @@
       "name": "adr:draft",
       "path": ".claude/commands/spec/adr-draft.md",
       "category": "Spec-Driven Development",
-      "tags": [
-        "adr",
-        "governance",
-        "documentation"
-      ],
+      "tags": ["adr", "governance", "documentation"],
       "when": "Complex features requiring structured approach",
       "purpose": "Draft ADR when governance triggers occur (prompts, workflows, security, compliance changes).",
       "example": "Standard development workflow",
@@ -102,9 +72,7 @@
       "name": "code",
       "path": ".claude/commands/code.md",
       "category": "General",
-      "tags": [
-        "implementation"
-      ],
+      "tags": ["implementation"],
       "when": "General development tasks",
       "purpose": "Coding standards via implementation-assistant Skill",
       "example": "Standard development workflow",
@@ -115,9 +83,7 @@
       "name": "db",
       "path": ".claude/commands/db.md",
       "category": "General",
-      "tags": [
-        "implementation"
-      ],
+      "tags": ["implementation"],
       "when": "General development tasks",
       "purpose": "Database workflow via supabase-integration Skill",
       "example": "Standard development workflow",
@@ -128,13 +94,7 @@
       "name": "db:migrate",
       "path": ".claude/commands/db/migrate.md",
       "category": "General",
-      "tags": [
-        "database",
-        "migration",
-        "supabase",
-        "schema",
-        "rls"
-      ],
+      "tags": ["database", "migration", "supabase", "schema", "rls"],
       "when": "General development tasks",
       "purpose": "Streamline Supabase database migration workflow with validation and RLS policy checks.",
       "example": "Standard development workflow",
@@ -145,11 +105,7 @@
       "name": "design - Design System Management",
       "path": ".claude/commands/design.md",
       "category": "General",
-      "tags": [
-        "planning",
-        "requirements",
-        "quality"
-      ],
+      "tags": ["planning", "requirements", "quality"],
       "when": "General development tasks",
       "purpose": "Proactive UI generation and automated design system enforcement",
       "example": "Standard development workflow",
@@ -160,11 +116,7 @@
       "name": "dev:init-new-app",
       "path": ".claude/commands/dev/init-new-app.md",
       "category": "Simple Development",
-      "tags": [
-        "initialization",
-        "starter",
-        "scaffolding"
-      ],
+      "tags": ["initialization", "starter", "scaffolding"],
       "when": "Small changes and quick tasks",
       "purpose": "Initialize a new app from this starter with customized configuration.",
       "example": "Standard development workflow",
@@ -175,11 +127,7 @@
       "name": "dev:refactor-secure",
       "path": ".claude/commands/dev/refactor-secure.md",
       "category": "Simple Development",
-      "tags": [
-        "security",
-        "refactoring",
-        "owasp"
-      ],
+      "tags": ["security", "refactoring", "owasp"],
       "when": "Small changes and quick tasks",
       "purpose": "Improve code clarity and performance while checking OWASP Top 10 security risks.",
       "example": "Add security improvements to API endpoints",
@@ -201,10 +149,7 @@
       "name": "docs:generate",
       "path": ".claude/commands/docs/generate.md",
       "category": "Documentation",
-      "tags": [
-        "documentation",
-        "automation"
-      ],
+      "tags": ["documentation", "automation"],
       "when": "General development tasks",
       "purpose": "Update documentation from code and tests when docs are outdated.",
       "example": "Standard development workflow",
@@ -215,9 +160,7 @@
       "name": "git - Unified Git Workflow",
       "path": ".claude/commands/git.md",
       "category": "General",
-      "tags": [
-        "implementation"
-      ],
+      "tags": ["implementation"],
       "when": "General development tasks",
       "purpose": "Unified git workflow automation with intelligent routing",
       "example": "Standard development workflow",
@@ -228,11 +171,7 @@
       "name": "git:branch",
       "path": ".claude/commands/git/branch.md",
       "category": "Git Workflow",
-      "tags": [
-        "git",
-        "branch-management",
-        "workflow"
-      ],
+      "tags": ["git", "branch-management", "workflow"],
       "when": "General development tasks",
       "purpose": "Create a new git branch following standardized naming conventions.",
       "example": "Standard development workflow",
@@ -243,10 +182,7 @@
       "name": "git:commit",
       "path": ".claude/commands/git/commit.md",
       "category": "Git Workflow",
-      "tags": [
-        "git",
-        "conventional-commits"
-      ],
+      "tags": ["git", "conventional-commits"],
       "when": "General development tasks",
       "purpose": "Generate a Conventional Commit message for staged changes.",
       "example": "Create conventional commit for completed feature",
@@ -257,13 +193,7 @@
       "name": "git:fix-pr",
       "path": ".claude/commands/git/fix-pr.md",
       "category": "Git Workflow",
-      "tags": [
-        "git",
-        "pr",
-        "ci",
-        "automation",
-        "feedback"
-      ],
+      "tags": ["git", "pr", "ci", "automation", "feedback"],
       "when": "General development tasks",
       "purpose": "Automatically address PR feedback from CI checks, CodeRabbit, and doctor failures.",
       "example": "Standard development workflow",
@@ -274,11 +204,7 @@
       "name": "git:prepare-pr",
       "path": ".claude/commands/git/prepare-pr.md",
       "category": "Git Workflow",
-      "tags": [
-        "git",
-        "pr",
-        "workflow"
-      ],
+      "tags": ["git", "pr", "workflow"],
       "when": "General development tasks",
       "purpose": "Create conventional commit and PR body when ready to submit changes.",
       "example": "Standard development workflow",
@@ -289,11 +215,7 @@
       "name": "git:tag-release",
       "path": ".claude/commands/git/tag-release.md",
       "category": "Git Workflow",
-      "tags": [
-        "git",
-        "release",
-        "semver"
-      ],
+      "tags": ["git", "release", "semver"],
       "when": "General development tasks",
       "purpose": "Create semantic version from conventional commits when ready to release.",
       "example": "Standard development workflow",
@@ -304,11 +226,7 @@
       "name": "git:workflow",
       "path": ".claude/commands/git/workflow.md",
       "category": "Git Workflow",
-      "tags": [
-        "git",
-        "workflow",
-        "branch-management"
-      ],
+      "tags": ["git", "workflow", "branch-management"],
       "when": "General development tasks",
       "purpose": "Manage git branch lifecycle using consolidated workflow operations.",
       "example": "Standard development workflow",
@@ -319,11 +237,7 @@
       "name": "github:create-issue",
       "path": ".claude/commands/github/create-issue.md",
       "category": "GitHub Integration",
-      "tags": [
-        "github",
-        "issues",
-        "planning"
-      ],
+      "tags": ["github", "issues", "planning"],
       "when": "GitHub workflow and project management",
       "purpose": "Create a GitHub issue from current planning discussion with proper template.",
       "example": "Create GitHub issue with proper templates",
@@ -334,11 +248,7 @@
       "name": "github:github-learning-capture",
       "path": ".claude/commands/github/capture-learning.md",
       "category": "GitHub Integration",
-      "tags": [
-        "github",
-        "learning",
-        "documentation"
-      ],
+      "tags": ["github", "learning", "documentation"],
       "when": "GitHub workflow and project management",
       "purpose": "Update an existing issue with implementation outcomes and learnings.",
       "example": "Create GitHub issue with proper templates",
@@ -349,11 +259,7 @@
       "name": "github:update-wiki",
       "path": ".claude/commands/github/update-wiki.md",
       "category": "GitHub Integration",
-      "tags": [
-        "github",
-        "wiki",
-        "documentation"
-      ],
+      "tags": ["github", "wiki", "documentation"],
       "when": "GitHub workflow and project management",
       "purpose": "Generated wiki content updates",
       "example": "Create GitHub issue with proper templates",
@@ -364,12 +270,7 @@
       "name": "learn",
       "path": ".claude/commands/ops/learn-search.md",
       "category": "Operations",
-      "tags": [
-        "learning",
-        "search",
-        "knowledge-management",
-        "micro-lessons"
-      ],
+      "tags": ["learning", "search", "knowledge-management", "micro-lessons"],
       "when": "General development tasks",
       "purpose": "Search micro-lessons by tags, keywords, or patterns to find relevant learnings.",
       "example": "Standard development workflow",
@@ -380,12 +281,7 @@
       "name": "ops:learning-capture",
       "path": ".claude/commands/ops/learning-capture.md",
       "category": "Operations",
-      "tags": [
-        "learning",
-        "automation",
-        "micro-lessons",
-        "knowledge-management"
-      ],
+      "tags": ["learning", "automation", "micro-lessons", "knowledge-management"],
       "when": "General development tasks",
       "purpose": "Capture development insights, patterns, or decisions as micro-lessons with intelligent context detection and automatic indexing.",
       "example": "Standard development workflow",
@@ -396,11 +292,7 @@
       "name": "ops:wiki-sync",
       "path": ".claude/commands/ops/wiki-sync.md",
       "category": "Operations",
-      "tags": [
-        "wiki",
-        "sync",
-        "maintenance"
-      ],
+      "tags": ["wiki", "sync", "maintenance"],
       "when": "General development tasks",
       "purpose": "Verify docs/PRD.md and docs/wiki/WIKI-PRD.md are in sync, auto-fix if needed.",
       "example": "Standard development workflow",
@@ -411,11 +303,7 @@
       "name": "pr:assist",
       "path": ".claude/commands/git/pr-assistant.md",
       "category": "Git Workflow",
-      "tags": [
-        "pr",
-        "traceability",
-        "automation"
-      ],
+      "tags": ["pr", "traceability", "automation"],
       "when": "General development tasks",
       "purpose": "Auto-fill PR template with traceability IDs and metadata before opening PR.",
       "example": "Standard development workflow",
@@ -426,11 +314,7 @@
       "name": "quality:run-linter",
       "path": ".claude/commands/quality/run-linter.md",
       "category": "Quality Assurance",
-      "tags": [
-        "quality",
-        "linting",
-        "formatting"
-      ],
+      "tags": ["quality", "linting", "formatting"],
       "when": "General development tasks",
       "purpose": "Execute linting and fix all quality issues before commits.",
       "example": "Standard development workflow",
@@ -441,14 +325,7 @@
       "name": "QUICK_REFERENCE",
       "path": ".claude/commands/QUICK_REFERENCE.md",
       "category": "General",
-      "tags": [
-        "testing",
-        "security",
-        "planning",
-        "implementation",
-        "requirements",
-        "quality"
-      ],
+      "tags": ["testing", "security", "planning", "implementation", "requirements", "quality"],
       "when": "Fast command discovery and lookup without reading full documentation",
       "purpose": "Consolidated quick reference guide for 5 discovery commands and Skills catalog with progressive disclosure architecture",
       "example": "Standard development workflow",
@@ -459,13 +336,7 @@
       "name": "README",
       "path": ".claude/commands/README.md",
       "category": "General",
-      "tags": [
-        "testing",
-        "planning",
-        "implementation",
-        "requirements",
-        "quality"
-      ],
+      "tags": ["testing", "planning", "implementation", "requirements", "quality"],
       "when": "Understanding slash command system and available commands",
       "purpose": "Overview of slash command architecture, usage patterns, and command catalog",
       "example": "Standard development workflow",
@@ -476,11 +347,7 @@
       "name": "research:explore",
       "path": ".claude/commands/research/explore.md",
       "category": "General",
-      "tags": [
-        "research",
-        "exploration",
-        "codebase"
-      ],
+      "tags": ["research", "exploration", "codebase"],
       "when": "General development tasks",
       "purpose": "Deep codebase exploration to answer questions about architecture, patterns, or implementation details.",
       "example": "Standard development workflow",
@@ -491,11 +358,7 @@
       "name": "review - Code Quality Review",
       "path": ".claude/commands/review.md",
       "category": "General",
-      "tags": [
-        "testing",
-        "implementation",
-        "quality"
-      ],
+      "tags": ["testing", "implementation", "quality"],
       "when": "Setting up tests and TDD workflows",
       "purpose": "Automated code quality checks and review",
       "example": "Standard development workflow",
@@ -506,11 +369,7 @@
       "name": "review:self-critique",
       "path": ".claude/commands/review/self-critique.md",
       "category": "Review & Quality",
-      "tags": [
-        "review",
-        "quality",
-        "validation"
-      ],
+      "tags": ["review", "quality", "validation"],
       "when": "General development tasks",
       "purpose": "Start fresh session and skeptically review recent changes for quality.",
       "example": "Standard development workflow",
@@ -521,12 +380,7 @@
       "name": "security:scan",
       "path": ".claude/commands/security/scan.md",
       "category": "General",
-      "tags": [
-        "security",
-        "scanning",
-        "vulnerabilities",
-        "rls"
-      ],
+      "tags": ["security", "scanning", "vulnerabilities", "rls"],
       "when": "Code quality and security improvements",
       "purpose": "Scan codebase for security vulnerabilities including RLS policies, auth issues, and OWASP Top 10.",
       "example": "Standard development workflow",
@@ -537,12 +391,7 @@
       "name": "skills-stats",
       "path": ".claude/commands/ops/skills-stats.md",
       "category": "Operations",
-      "tags": [
-        "ops",
-        "analytics",
-        "skills",
-        "observability"
-      ],
+      "tags": ["ops", "analytics", "skills", "observability"],
       "when": "General development tasks",
       "purpose": "Display Skills usage statistics and analytics",
       "example": "Standard development workflow",
@@ -553,12 +402,7 @@
       "name": "spec",
       "path": ".claude/commands/spec.md",
       "category": "General",
-      "tags": [
-        "security",
-        "planning",
-        "implementation",
-        "requirements"
-      ],
+      "tags": ["security", "planning", "implementation", "requirements"],
       "when": "Code quality and security improvements",
       "purpose": "Spec analysis via prd-analyzer Skill",
       "example": "Standard development workflow",
@@ -569,11 +413,7 @@
       "name": "test",
       "path": ".claude/commands/test.md",
       "category": "General",
-      "tags": [
-        "testing",
-        "security",
-        "implementation"
-      ],
+      "tags": ["testing", "security", "implementation"],
       "when": "Setting up tests and TDD workflows",
       "purpose": "TDD workflow via test-scaffolder Skill",
       "example": "Standard development workflow",
@@ -582,32 +422,10 @@
     }
   ],
   "routing_rules": {
-    "complex_features": [
-      "authentication",
-      "database",
-      "payments",
-      "api",
-      "infra"
-    ],
-    "simple_tasks": [
-      "styling",
-      "copy",
-      "props",
-      "refactor",
-      "docs"
-    ],
-    "security_sensitive": [
-      "auth",
-      "payments",
-      "user-data",
-      "api-keys",
-      "validation"
-    ],
-    "multi_component": [
-      "cross-cutting",
-      "breaking-changes",
-      "new-dependencies"
-    ]
+    "complex_features": ["authentication", "database", "payments", "api", "infra"],
+    "simple_tasks": ["styling", "copy", "props", "refactor", "docs"],
+    "security_sensitive": ["auth", "payments", "user-data", "api-keys", "validation"],
+    "multi_component": ["cross-cutting", "breaking-changes", "new-dependencies"]
   },
   "decision_framework": {
     "spec_driven_triggers": [

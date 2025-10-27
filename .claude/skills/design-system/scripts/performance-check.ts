@@ -34,21 +34,27 @@ async function checkPerformance(component?: string): Promise<PerformanceCheckOut
     score: 1.0,
     metrics: [],
     summary: 'Performance check not yet implemented (Phase 0 stub)',
-    component
+    component,
   };
 }
 
 // Execute and output JSON
 const component = process.argv[2];
 checkPerformance(component)
-  .then(result => console.log(JSON.stringify(result, null, 2)))
-  .catch(error => {
-    console.error(JSON.stringify({
-      success: false,
-      score: 0,
-      metrics: [],
-      summary: 'Script execution failed',
-      error: error.message
-    }, null, 2));
+  .then((result) => console.log(JSON.stringify(result, null, 2)))
+  .catch((error) => {
+    console.error(
+      JSON.stringify(
+        {
+          success: false,
+          score: 0,
+          metrics: [],
+          summary: 'Script execution failed',
+          error: error.message,
+        },
+        null,
+        2
+      )
+    );
     process.exit(1);
   });

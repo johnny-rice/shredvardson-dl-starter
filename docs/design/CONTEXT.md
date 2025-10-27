@@ -49,6 +49,7 @@ Use semantic color tokens that adapt to theme:
 ### Spacing Scale
 
 Use Tailwind spacing utilities:
+
 - `space-y-2`: Vertical spacing between related elements
 - `space-y-4`: Section spacing
 - `gap-4`: Grid/flex gaps
@@ -129,6 +130,7 @@ Use Tailwind spacing utilities:
 ### When to Use Each Component
 
 **Button Variants**:
+
 - `default`: Primary CTA (one per view)
 - `secondary`: Alternative actions
 - `destructive`: Delete, remove, cancel
@@ -137,6 +139,7 @@ Use Tailwind spacing utilities:
 - `link`: Inline text actions
 
 **Form Controls**:
+
 - `Input`: Text, email, password, numbers
 - `Select`: 5+ options
 - `RadioGroup`: 2-4 options (not shown, use when needed)
@@ -144,6 +147,7 @@ Use Tailwind spacing utilities:
 - `Switch`: Instant on/off settings
 
 **Layout Components**:
+
 - `Card`: Group related content
 - `Dialog`: Focus user attention
 - `Sheet`: Slide-out panels (not shown, use when needed)
@@ -161,6 +165,7 @@ apps/web/src/app/design/page.tsx  # Visual component viewer
 ## Testing Requirements
 
 All components must have:
+
 1. Unit tests for logic
 2. Accessibility tests (axe-core)
 3. Visual regression tests (Playwright)
@@ -170,6 +175,7 @@ All components must have:
 ## Token Compliance
 
 When building UI:
+
 1. Never use hex colors directly - use token classes
 2. Use spacing scale (2, 4, 6, 8) not arbitrary values
 3. Follow typography scale for consistency
@@ -178,16 +184,19 @@ When building UI:
 ## Progressive Disclosure for LLMs
 
 ### Tier 1 (Always Load)
+
 - Component names and basic props
 - Import patterns
 - Primary design tokens
 
 ### Tier 2 (Load on Request)
+
 - Detailed usage examples
 - Accessibility guidelines
 - Complex patterns
 
 ### Tier 3 (Deep Context)
+
 - Full pattern documentation
 - Edge cases and warnings
 - Performance considerations
@@ -195,6 +204,7 @@ When building UI:
 ## Quick Reference
 
 ### Most Used Components
+
 ```tsx
 // Buttons
 <Button variant="default">Primary Action</Button>
@@ -215,6 +225,7 @@ When building UI:
 ```
 
 ### CSS Classes Quick Reference
+
 - Container: `max-w-7xl mx-auto`
 - Section spacing: `space-y-8` or `space-y-16`
 - Responsive grid: `grid md:grid-cols-2 lg:grid-cols-3 gap-4`

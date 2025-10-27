@@ -15,6 +15,7 @@ Enhance the existing learning capture system (`/ops:learning-capture`) with inte
 ### Current State
 
 **Strengths:**
+
 - 74 micro-lessons captured (proof of active learning culture)
 - Automatic INDEX.md generation via `pnpm learn:index`
 - Heat-based ranking system (recency + reuse + severity)
@@ -22,6 +23,7 @@ Enhance the existing learning capture system (`/ops:learning-capture`) with inte
 - Integration with git pre-push hooks
 
 **Pain Points:**
+
 - Manual context extraction (user must describe session)
 - Manual tag selection (no suggestions)
 - Manual INDEX.md regeneration (separate command)
@@ -41,6 +43,7 @@ Enhance the existing learning capture system (`/ops:learning-capture`) with inte
 **Deliverable:** Enhanced `/ops:learning-capture` with automatic context extraction
 
 **Implementation:**
+
 - Extract context from:
   - Current git branch name
   - Last 3 commit messages
@@ -50,6 +53,7 @@ Enhance the existing learning capture system (`/ops:learning-capture`) with inte
 - Allow manual override/refinement
 
 **Example Output:**
+
 ```markdown
 # [Auto-detected Title from Issue #170: Learning Capture]
 
@@ -57,6 +61,7 @@ Enhance the existing learning capture system (`/ops:learning-capture`) with inte
 **Branch:** feature/170-phase-4b-learning-capture
 **Related Issues:** #170
 **Changed Files:**
+
 - docs/specs/phase-4b-learning-capture-enhancement.md
 - .claude/commands/ops/learning-capture.md
 ```
@@ -66,6 +71,7 @@ Enhance the existing learning capture system (`/ops:learning-capture`) with inte
 **Deliverable:** Intelligent tag suggestions based on session data
 
 **Implementation:**
+
 - Analyze corpus of existing tags from 74 lessons
 - Extract tags from:
   - File paths (e.g., `scripts/` → `bash`, `scripts/skills/` → `skills`)
@@ -75,6 +81,7 @@ Enhance the existing learning capture system (`/ops:learning-capture`) with inte
 - Present top 5-8 tags as suggestions
 
 **Example:**
+
 ```bash
 Suggested tags: #skills #learning #automation #phase-4b #170
 Other common tags: #git #bash #typescript #testing
@@ -85,11 +92,13 @@ Other common tags: #git #bash #typescript #testing
 **Deliverable:** INDEX.md regenerates automatically after lesson creation
 
 **Implementation:**
+
 - Call `pnpm learn:index` after successful lesson creation
 - Show updated INDEX.md ranking in output
 - Commit INDEX.md changes along with new lesson
 
 **Changes:**
+
 - Modify `/ops:learning-capture` command to add hook
 - Update git staging to include INDEX.md
 
@@ -98,6 +107,7 @@ Other common tags: #git #bash #typescript #testing
 **Deliverable:** New `/learn search <query>` command
 
 **Implementation:**
+
 - Create `.claude/commands/ops/learn-search.md`
 - Search by:
   - Tags (exact or partial match)
@@ -107,6 +117,7 @@ Other common tags: #git #bash #typescript #testing
 - Support filters: `--tag`, `--recent`, `--high-usage`
 
 **Example Usage:**
+
 ```bash
 /learn search git merge
 # Returns:
@@ -114,7 +125,11 @@ Other common tags: #git #bash #typescript #testing
 # 2. Constitution Checksum After Merge (git, merge, ci)
 
 /learn search --tag skills --recent 7d
-# Returns recent lessons tagged with 'skills'
+# Returns recent lessons tagged with 'skills' from last 7 days
+
+/learn search --high-usage skills
+# Returns lessons tagged with 'skills' ranked by reuse frequency
+# Most-referenced lessons appear first
 ```
 
 ## Success Criteria
@@ -125,17 +140,19 @@ Other common tags: #git #bash #typescript #testing
 - [ ] `/learn search` command functional with multiple query modes
 - [ ] Documentation updated in ROADMAP.md and checklist
 - [ ] Zero regression in existing learning capture workflow
-- [ ] User feedback positive (reduced friction)
+- [ ] User feedback positive (minimum 3 user surveys with ≥4/5 satisfaction rating on learning capture workflow)
 
 ## Architecture Changes
 
 ### File Changes
 
 **New Files:**
+
 - `.claude/commands/ops/learn-search.md` (new search command)
 - `scripts/tools/search-lessons.ts` (search implementation)
 
 **Modified Files:**
+
 - `.claude/commands/ops/learning-capture.md` (enhanced with auto-features)
 - `scripts/generate-learnings-index.js` (if hooks needed)
 - `docs/adr/002-skills-implementation-checklist.md` (Phase 4B complete)
@@ -151,13 +168,27 @@ Other common tags: #git #bash #typescript #testing
 ## Testing Strategy
 
 ### Manual Testing
+
 1. Create new learning with auto-context → verify context detected
 2. Check tag suggestions → verify relevance to session
 3. Create lesson → verify INDEX.md updates automatically
 4. Search for existing lesson → verify found correctly
 5. Search with filters → verify filtering works
 
+### Automated Testing (Required)
+
+Implement before merge:
+- Automated tests for context extraction (mock git commands)
+- Regression tests for existing learning capture functionality
+- Tag suggestion accuracy tests (compare against corpus)
+
+**Acceptance Criteria:**
+- Test files added to `tests/specs/phase-4b/` directory
+- All tests passing in CI pipeline (`pnpm test`)
+- Coverage for critical paths: auto-context, tag suggestions, INDEX regeneration
+
 ### Validation Commands
+
 ```bash
 # Test auto-context detection
 /ops:learning-capture
@@ -173,12 +204,12 @@ pnpm learn:index
 
 ## Risk Mitigation
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|------------|--------|------------|
-| Auto-context too noisy | Medium | Low | Allow manual override/edit |
-| Tag suggestions irrelevant | Medium | Low | Show full tag list as fallback |
-| Search too slow (74+ files) | Low | Low | Simple grep-based search sufficient |
-| INDEX.md conflicts | Low | Medium | Auto-stage in pre-push hook (existing) |
+| Risk                        | Likelihood | Impact | Mitigation                             |
+| --------------------------- | ---------- | ------ | -------------------------------------- |
+| Auto-context too noisy      | Medium     | Low    | Allow manual override/edit             |
+| Tag suggestions irrelevant  | Medium     | Low    | Show full tag list as fallback         |
+| Search too slow (74+ files) | Low        | Low    | Simple grep-based search sufficient    |
+| INDEX.md conflicts          | Low        | Medium | Auto-stage in pre-push hook (existing) |
 
 ## Rollout Plan
 

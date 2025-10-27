@@ -11,16 +11,19 @@ analyze → scaffold → validate → coverage
 ## Actions
 
 ### unit <component_path>
+
 Scaffolds unit tests for a component or function using Test Generator sub-agent.
 
 **Delegation**: Test Generator sub-agent with project context
 **Output**: Test file path, coverage baseline
 
 ### e2e <user_flow>
+
 Scaffolds E2E tests for critical user flows.
 
 **Script**: `scripts/scaffold-e2e.ts`
 **Includes**:
+
 - Playwright setup
 - Auth fixtures
 - Page object patterns
@@ -28,10 +31,12 @@ Scaffolds E2E tests for critical user flows.
 **Output**: Test file path, test commands
 
 ### rls <table_name>
+
 Scaffolds RLS security tests for database tables.
 
 **Script**: `scripts/scaffold-rls.ts`
 **Includes**:
+
 - User isolation tests
 - Admin bypass tests
 - Anonymous access tests
@@ -39,10 +44,12 @@ Scaffolds RLS security tests for database tables.
 **Output**: Test file path, security checklist
 
 ### coverage
+
 Validates current coverage against coverage contract.
 
 **Script**: `scripts/validate-coverage.ts`
 **Checks**:
+
 - Coverage thresholds (70% lines/functions, 65% branches)
 - Critical paths coverage (80/20 rule)
 - Exclusions properly configured
@@ -58,6 +65,7 @@ Validates current coverage against coverage contract.
 ## Test Patterns
 
 **Unit Tests**:
+
 - Component rendering
 - User interactions
 - Props validation
@@ -65,6 +73,7 @@ Validates current coverage against coverage contract.
 - Custom hooks
 
 **E2E Tests**:
+
 - Authentication flows
 - CRUD operations
 - Form submissions
@@ -72,6 +81,7 @@ Validates current coverage against coverage contract.
 - Error handling
 
 **RLS Tests**:
+
 - User data isolation
 - Role-based access
 - Anonymous denial
@@ -80,6 +90,7 @@ Validates current coverage against coverage contract.
 ## Template-Based Scaffolding
 
 Test scaffolding uses template-based generation with:
+
 - Project-specific patterns (coverage-contract.md)
 - Test utilities (render helpers, mocks)
 - Coverage requirements
@@ -90,12 +101,14 @@ This ensures tests follow DL Starter conventions automatically.
 ## Coverage Contract
 
 **Thresholds**:
+
 - Lines: 70%
 - Functions: 70%
 - Branches: 65%
 - Statements: 70%
 
 **Focus Areas** (80% effort):
+
 - Auth flows (90%+ coverage)
 - RLS policies (85%+ coverage)
 - Core workflows (70%+ coverage)
@@ -118,11 +131,13 @@ This ensures tests follow DL Starter conventions automatically.
 ## Token Efficiency
 
 **Old command** (`/test:scaffold`):
+
 - YAML frontmatter: ~40 tokens
 - Full prompt: ~81 tokens
 - **Total: 121 tokens** per invocation
 
 **New Skill**:
+
 - Metadata: 20 tokens
 - SKILL.md: 200 tokens (progressive)
 - Sub-agent: 0 tokens (executed separately)

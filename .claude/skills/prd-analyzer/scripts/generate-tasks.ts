@@ -7,7 +7,7 @@
  * Example: tsx generate-tasks.ts docs/specs/user-auth.md
  */
 
-import { readFileSync, existsSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { parse as parseYaml } from 'yaml';
 
 const specFile = process.argv[2];
@@ -58,12 +58,14 @@ if (criteriaMatch) {
 
 // Validate required frontmatter fields
 if (!frontmatter.type || typeof frontmatter.type !== 'string') {
-  console.error(JSON.stringify({
-    success: false,
-    error: 'Missing or invalid "type" field in frontmatter',
-    expected: 'type must be one of: feature, bugfix, refactor, docs',
-    specFile
-  }));
+  console.error(
+    JSON.stringify({
+      success: false,
+      error: 'Missing or invalid "type" field in frontmatter',
+      expected: 'type must be one of: feature, bugfix, refactor, docs',
+      specFile,
+    })
+  );
   process.exit(1);
 }
 
@@ -168,7 +170,9 @@ console.log(
         totalTasks: tasks.length,
         estimatedHours: tasks.reduce((sum, task) => {
           // Parse time with units (handles "30 minutes", "2h", "90m", etc.)
-          const match = task.estimate.match(/(\d+(?:\.\d+)?)\s*(h|hour|hours|m|min|minute|minutes)?/i);
+          const match = task.estimate.match(
+            /(\d+(?:\.\d+)?)\s*(h|hour|hours|m|min|minute|minutes)?/i
+          );
           if (!match) return sum;
 
           const value = parseFloat(match[1]);

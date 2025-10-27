@@ -1,6 +1,6 @@
 ---
 id: phase-3-validation
-title: "Phase 3: Git Workflow Consolidation - Token Savings Validation"
+title: 'Phase 3: Git Workflow Consolidation - Token Savings Validation'
 created: 2025-01-21
 status: draft
 phase: 3
@@ -19,6 +19,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ### Scenario 1: Branch Creation
 
 **Old Approach (Traditional):**
+
 ```bash
 # User invokes /git:branch
 # System loads full prompt template (2,500 tokens)
@@ -27,6 +28,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ```
 
 **New Approach (Skills):**
+
 ```bash
 # User invokes /git branch Issue #123: Add feature
 # System loads /git.md (500 tokens)
@@ -39,6 +41,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ### Scenario 2: Commit Workflow
 
 **Old Approach:**
+
 ```bash
 # User invokes /git:commit
 # System loads full prompt template (2,800 tokens)
@@ -47,6 +50,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ```
 
 **New Approach:**
+
 ```bash
 # User invokes /git commit
 # System loads /git.md (500 tokens)
@@ -60,6 +64,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ### Scenario 3: PR Preparation
 
 **Old Approach:**
+
 ```bash
 # User invokes /git:prepare-pr
 # System loads full prompt template (3,500 tokens)
@@ -68,6 +73,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ```
 
 **New Approach:**
+
 ```bash
 # User invokes /git pr prepare
 # System loads /git.md (500 tokens)
@@ -81,6 +87,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ### Scenario 4: Full Workflow Status
 
 **Old Approach:**
+
 ```bash
 # User invokes /git:workflow
 # System loads full prompt template (2,200 tokens)
@@ -89,6 +96,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ```
 
 **New Approach:**
+
 ```bash
 # User invokes /git workflow
 # System loads /git.md (500 tokens)
@@ -101,6 +109,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ### Scenario 5: Code Review
 
 **Old Approach:**
+
 ```bash
 # User manually runs multiple commands
 # pnpm typecheck (manual)
@@ -112,6 +121,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ```
 
 **New Approach:**
+
 ```bash
 # User invokes /review
 # System loads /review.md (400 tokens)
@@ -124,6 +134,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ### Scenario 6: Documentation Sync
 
 **Old Approach:**
+
 ```bash
 # Manual git diff, file identification
 # Manual wiki sync commands
@@ -132,6 +143,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ```
 
 **New Approach:**
+
 ```bash
 # User invokes /docs sync
 # System loads /docs.md (400 tokens)
@@ -143,15 +155,15 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 
 ## Aggregate Results
 
-| Scenario | Old Tokens | New Tokens | Savings | Savings % |
-|----------|-----------|-----------|---------|-----------|
-| Branch Creation | 2,500 | 500 | 2,000 | 80% |
-| Commit Workflow | 2,800 | 1,300 | 1,500 | 53% |
-| PR Preparation | 3,500 | 1,700 | 1,800 | 51% |
-| Workflow Status | 2,200 | 500 | 1,700 | 77% |
-| Code Review | 1,500 | 400 | 1,100 | 73% |
-| Docs Sync | 1,200 | 400 | 800 | 67% |
-| **Total** | **13,700** | **4,800** | **8,900** | **65%** |
+| Scenario        | Old Tokens | New Tokens | Savings   | Savings % |
+| --------------- | ---------- | ---------- | --------- | --------- |
+| Branch Creation | 2,500      | 500        | 2,000     | 80%       |
+| Commit Workflow | 2,800      | 1,300      | 1,500     | 53%       |
+| PR Preparation  | 3,500      | 1,700      | 1,800     | 51%       |
+| Workflow Status | 2,200      | 500        | 1,700     | 77%       |
+| Code Review     | 1,500      | 400        | 1,100     | 73%       |
+| Docs Sync       | 1,200      | 400        | 800       | 67%       |
+| **Total**       | **13,700** | **4,800**  | **8,900** | **65%**   |
 
 ## Analysis
 
@@ -185,6 +197,7 @@ Validation of token savings achieved by consolidating 5+ git commands into unifi
 ### 1. Zero Context Pollution
 
 All Skills use progressive disclosure:
+
 - Fast validation scripts (0 LLM tokens)
 - Minimal JSON responses
 - LLM invoked only when needed
@@ -193,6 +206,7 @@ All Skills use progressive disclosure:
 ### 2. Command Consolidation
 
 5+ separate git commands → 1 unified `/git` Skill:
+
 - Consistent interface
 - Easier discovery
 - Better routing
@@ -201,6 +215,7 @@ All Skills use progressive disclosure:
 ### 3. Quality Automation
 
 `/review` Skill consolidates 5 quality checks:
+
 - TypeScript
 - ESLint
 - Tests
@@ -213,6 +228,7 @@ Now: 1 command + automated execution
 ### 4. Documentation Automation
 
 `/docs` Skill automates sync workflow:
+
 - Change detection
 - Dry-run preview
 - Wiki sync (when configured)
@@ -236,11 +252,13 @@ Now: 1 command + automated execution
 ### Realistic Expectations
 
 Not all workflows can achieve 80% savings:
+
 - Content generation tasks inherently need LLM
 - Semantic analysis can't be scripted
 - Balance between automation and quality
 
 **Revised target framework:**
+
 - Pure automation: 75-80% savings ✅
 - LLM-assisted: 50-60% savings ✅
 - Mixed workflows: 60-70% savings ✅

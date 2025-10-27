@@ -7,18 +7,18 @@
  * @module tokens/hooks
  */
 
-import { useState, useEffect, useMemo } from 'react';
-import { tokens } from './index';
+import { useEffect, useMemo, useState } from 'react';
 import type {
-  ColorToken,
-  SpacingToken,
-  FontSizeToken,
-  BorderRadiusToken,
-  ShadowToken,
   AnimationDurationToken,
   AnimationEasingToken,
+  BorderRadiusToken,
   BreakpointToken,
+  ColorToken,
+  FontSizeToken,
+  ShadowToken,
+  SpacingToken,
 } from './index';
+import { tokens } from './index';
 
 /**
  * Hook to access color tokens
@@ -286,16 +286,11 @@ export function useTokenValidation(
 
       // Check for hardcoded colors
       const colorProps = ['color', 'background-color', 'border-color'];
-      colorProps.forEach(prop => {
+      colorProps.forEach((prop) => {
         const value = styles.getPropertyValue(prop);
         if (value && !value.startsWith('var(--') && !value.includes('transparent')) {
           if (value.match(/#|rgb|hsl/)) {
-            console.warn(
-              `Non-token color detected on ${element.tagName}:`,
-              prop,
-              value,
-              element
-            );
+            console.warn(`Non-token color detected on ${element.tagName}:`, prop, value, element);
           }
         }
       });
@@ -306,7 +301,7 @@ export function useTokenValidation(
       const targetRoot = root || document;
       const elements = targetRoot.querySelectorAll('*');
 
-      elements.forEach(el => {
+      elements.forEach((el) => {
         if (el instanceof HTMLElement) {
           checkElement(el);
         }

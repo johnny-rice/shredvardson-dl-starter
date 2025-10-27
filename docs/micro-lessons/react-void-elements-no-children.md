@@ -15,22 +15,25 @@ Severity: normal
 // ❌ BAD: All components rendered with children
 <Component {...props}>
   {component.name === 'button' && 'Click me'}
-  {component.name === 'input' && 'Placeholder'}  // Error! input is void
-</Component>
+  {component.name === 'input' && 'Placeholder'} // Error! input is void
+</Component>;
 
 // ✅ GOOD: Only void elements rendered without children
-{component.name === 'input' || component.name === 'img' ? (
-  <Component {...props} />
-) : (
-  <Component {...props}>
-    {component.name === 'button' && 'Click me'}
-    {component.name === 'select' && <option>Choose</option>}
-    {component.name === 'label' && 'Label Text'}
-  </Component>
-)}
+{
+  component.name === 'input' || component.name === 'img' ? (
+    <Component {...props} />
+  ) : (
+    <Component {...props}>
+      {component.name === 'button' && 'Click me'}
+      {component.name === 'select' && <option>Choose</option>}
+      {component.name === 'label' && 'Label Text'}
+    </Component>
+  );
+}
 ```
 
 **Guardrails.**
+
 - Create a constant for void element names: `const VOID_ELEMENTS = ['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr']`
 - Check `VOID_ELEMENTS.includes(componentName)` before rendering children
 - In component galleries/playgrounds, handle void elements as a special case

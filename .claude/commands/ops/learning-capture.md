@@ -75,6 +75,7 @@ references:
 
 **Goal:**
 Capture development insights as micro-lessons with intelligent automation:
+
 - Auto-detect session context from git and files
 - Suggest relevant tags from existing corpus
 - Auto-regenerate INDEX.md after creation
@@ -84,6 +85,7 @@ Capture development insights as micro-lessons with intelligent automation:
 ### Phase 1: Auto-Context Detection (New in v2.0)
 
 1. **Extract session context automatically:**
+
    ```bash
    # Get current branch and detect issue/feature
    git branch --show-current
@@ -122,6 +124,7 @@ Capture development insights as micro-lessons with intelligent automation:
    - Keep only generic technical keywords (languages, tools, concepts)
 
 4. **Present suggestions:**
+
    ```text
    Suggested tags (from session): #learning #automation #phase-4b #170
    Common tags (from corpus): #git #bash #typescript #testing #skills
@@ -149,6 +152,7 @@ Capture development insights as micro-lessons with intelligent automation:
 ### Phase 4: Auto-Update INDEX (New in v2.0)
 
 7. **Regenerate INDEX.md automatically:**
+
    ```bash
    pnpm learn:index
    ```
@@ -194,9 +198,9 @@ Claude:
 
 **Failure & Recovery:**
 
-- If git not available → Fall back to manual context entry
+- If git not available → Fall back to manual context entry (user will be prompted to describe the context)
 - If no changed files → Use conversation context instead
-- If INDEX.md update fails → Warn user to run `pnpm learn:index` manually
+- If INDEX.md update fails → Warn user to run `pnpm learn:index` manually (lesson is still persisted; INDEX can be regenerated without data loss)
 - If tag corpus empty → Use generic tags (git, typescript, bash)
 
 **Migration Notes (v1.0 → v2.0):**

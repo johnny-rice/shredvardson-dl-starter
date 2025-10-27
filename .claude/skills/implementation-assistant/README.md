@@ -5,6 +5,7 @@ Coding standards, error handling patterns, and DL Starter conventions.
 ## Purpose
 
 Provides guidance for:
+
 - Coding standards enforcement
 - Implementation patterns
 - Code validation
@@ -33,6 +34,7 @@ Via `/code` discovery command:
 ### standards
 
 Shows DL Starter coding standards:
+
 - TypeScript patterns
 - React component structure
 - Naming conventions
@@ -44,6 +46,7 @@ Shows DL Starter coding standards:
 ### patterns
 
 Shows implementation patterns:
+
 - `component`: React component template
 - `api`: Next.js API route template
 - `database`: Supabase query patterns
@@ -54,6 +57,7 @@ Shows implementation patterns:
 ### validate
 
 Validates code against standards:
+
 - No `any` types
 - Proper error handling
 - Naming conventions
@@ -65,6 +69,7 @@ Validates code against standards:
 ### implement
 
 Provides step-by-step implementation guide:
+
 - `feature`: TDD workflow for features
 - `bugfix`: Systematic bug fixing
 - `refactor`: Safe refactoring approach
@@ -74,18 +79,21 @@ Provides step-by-step implementation guide:
 ## Coding Standards Summary
 
 **TypeScript**:
+
 - No `any` types
 - Explicit return types
 - Strict null checks
 - Type imports
 
 **React**:
+
 - Function components
 - PascalCase naming
 - Props interface
 - Named exports
 
 **Error Handling**:
+
 - Always explicit
 - Structured returns
 - User-friendly messages
@@ -94,9 +102,11 @@ Provides step-by-step implementation guide:
 ## Token Savings
 
 **Old `/dev:implement` command**:
+
 - Full prompt: ~88 tokens per invocation
 
 **New implementation-assistant Skill**:
+
 - Metadata only: ~20 tokens (typical)
 - With full context: ~200 tokens (rare)
 - **Savings: 60% average, 77% for lookups**

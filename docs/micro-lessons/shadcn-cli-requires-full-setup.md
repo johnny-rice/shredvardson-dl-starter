@@ -71,6 +71,7 @@ export default config;
 ```
 
 **Guardrails.**
+
 - Always create all three files when setting up shadcn CLI in a new package
 - The `tailwind.config.ts` can be minimal if your app handles the actual Tailwind build
 - The `globals.css` paths in `components.json` must match actual file locations

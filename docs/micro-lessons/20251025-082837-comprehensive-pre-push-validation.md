@@ -64,7 +64,10 @@ echo "✅ Lint check passed (${LINT_DURATION}s)"
 
 # 4. CI script tests (2s)
 echo "🔧 Running CI script tests..."
-if ! pnpm --silent test:ci-scripts 2>/dev/null; then
+CI_SCRIPTS_OUTPUT=$(pnpm --silent test:ci-scripts 2>&1)
+CI_SCRIPTS_EXIT=$?
+echo "$CI_SCRIPTS_OUTPUT"
+if [ $CI_SCRIPTS_EXIT -ne 0 ]; then
     echo "❌ CI script tests failed!"
     exit 1
 fi
@@ -84,6 +87,7 @@ echo "🎉 All quality checks passed!"
 ### 1. Clear Error Messages with Fix Instructions
 
 Each failure includes:
+
 - ❌ What failed
 - 💡 How to fix it locally
 - 🔓 Escape hatch reminder (`--no-verify`)
@@ -136,6 +140,7 @@ Still faster than waiting for CI (2-5 min) + fixing (15-30 min).
 ### Issues Prevented
 
 Based on 2-week analysis:
+
 - ✅ **Lockfile sync:** 100% (was 1-2 per week)
 - ✅ **Type errors:** 100% (was 2-3 per PR)
 - ✅ **Lint errors:** 100% (was 1-2 per PR)
@@ -144,10 +149,12 @@ Based on 2-week analysis:
 ### Time Savings
 
 **Before:**
+
 - Push → CI fails (5 min) → Fix → Push → Repeat
 - Average: 30-45 min per PR
 
 **After:**
+
 - Pre-push catches issues (20s) → Fix locally (5 min) → Push
 - Average: 10-15 min per PR
 
@@ -188,6 +195,7 @@ Consider migrating to [husky](https://typicode.github.io/husky/) for better vers
 ## Expected Impact
 
 After 2 weeks, should see:
+
 - "fix:" commits per PR: 1-2 → 0-1
 - CodeRabbit issues per PR: 8-10 → 3-5 (only AI-level suggestions remain)
 - Pre-push timing: <30s in 90% of cases
@@ -196,11 +204,13 @@ After 2 weeks, should see:
 ## What This Does NOT Prevent
 
 **CodeRabbit Pre-Merge Warnings:**
+
 - ⚠️ **PR Description Template Compliance** - Requires AI to analyze template structure
 - ⚠️ **Docstring Coverage** - Requires semantic code analysis (JSDoc/TSDoc comments)
 - ⚠️ **AI-Level Code Quality Suggestions** - Require LLM review of code patterns
 
 **Why these are acceptable:**
+
 1. CodeRabbit warnings are **advisory**, not blocking
 2. PR template compliance can be followed manually using [.github/pull_request_template.md](.github/pull_request_template.md)
 3. Docstring coverage is codebase-wide, not per-PR (incremental improvement)

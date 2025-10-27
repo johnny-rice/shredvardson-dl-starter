@@ -1,0 +1,20 @@
+{
+  "name": "verification",
+  "version": "1.0.0",
+  "description": "Systematic 'Evidence Before Claims' protocol preventing false completion claims",
+  "category": "quality",
+  "triggers": ["automatic"],
+  "tokenEstimate": {
+    "metadata": 20,
+    "skill": 180,
+    "average": 50
+  },
+  "integration": {
+    "skills": ["git-workflow", "test-scaffolder", "supabase-integration", "code-reviewer"],
+    "commands": ["/git:prepare-pr", "/test", "/db", "/review"],
+    "automatic": true
+  },
+  "source": "obra/superpowers:verification-before-completion",
+  "author": "dl-starter",
+  "tags": ["verification", "quality-gate", "evidence", "completion"]
+}

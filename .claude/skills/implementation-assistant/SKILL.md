@@ -11,16 +11,19 @@ standards → patterns → validate → implement
 ## Actions
 
 ### standards
+
 Shows DL Starter coding standards and conventions.
 
 **Script**: `scripts/show-standards.ts`
 **Output**: Coding standards reference, TypeScript patterns, naming conventions
 
 ### patterns <category>
+
 Shows implementation patterns for specific categories.
 
 **Script**: `scripts/show-patterns.ts`
 **Categories**:
+
 - `component`: React component patterns
 - `api`: API endpoint patterns
 - `database`: Database access patterns
@@ -29,10 +32,12 @@ Shows implementation patterns for specific categories.
 **Output**: Pattern examples, best practices
 
 ### validate <file_path>
+
 Validates file against coding standards.
 
 **Script**: `scripts/validate-code.ts`
 **Checks**:
+
 - TypeScript types (no `any`)
 - Error handling presence
 - Naming conventions
@@ -42,6 +47,7 @@ Validates file against coding standards.
 **Output**: Validation report, violations, suggestions
 
 ### implement <feature>
+
 Guides implementation with step-by-step checklist.
 
 **Script**: `scripts/implementation-guide.ts`
@@ -58,12 +64,14 @@ Guides implementation with step-by-step checklist.
 ### TypeScript
 
 **Type Safety**:
+
 - No `any` types (use `unknown` or specific types)
 - Explicit return types on functions
 - Strict null checks enabled
 - Proper generics usage
 
 **Example**:
+
 ```typescript
 // ✓ Good
 function getUser(id: string): Promise<User | null> {
@@ -79,11 +87,12 @@ function getUser(id: any): any {
 ### React Components
 
 **Structure**:
+
 ```typescript
 // Component file structure
-import { } from 'react';    // React imports first
-import { } from '@/lib';    // Internal imports
-import { } from './';       // Relative imports
+import {} from 'react'; // React imports first
+import {} from '@/lib'; // Internal imports
+import {} from './'; // Relative imports
 
 interface ComponentProps {
   // Props interface
@@ -95,6 +104,7 @@ export function Component({ props }: ComponentProps) {
 ```
 
 **Naming**:
+
 - Components: PascalCase
 - Hooks: camelCase starting with `use`
 - Props: `ComponentNameProps` interface
@@ -103,6 +113,7 @@ export function Component({ props }: ComponentProps) {
 ### Error Handling
 
 **Pattern**:
+
 ```typescript
 try {
   const result = await operation();
@@ -111,12 +122,13 @@ try {
   console.error('Operation failed:', error);
   return {
     success: false,
-    error: error instanceof Error ? error.message : 'Unknown error'
+    error: error instanceof Error ? error.message : 'Unknown error',
   };
 }
 ```
 
 **Never**:
+
 - Silent failures
 - Uncaught promises
 - Generic error messages
@@ -125,17 +137,16 @@ try {
 ### Database Patterns
 
 **RLS First**:
+
 ```typescript
 // Always use RLS-protected queries
-const { data, error } = await supabase
-  .from('table')
-  .select('*')
-  .eq('user_id', userId); // RLS enforces this
+const { data, error } = await supabase.from('table').select('*').eq('user_id', userId); // RLS enforces this
 
 // Never bypass RLS unless explicitly admin operation
 ```
 
 **Type Safety**:
+
 ```typescript
 import { Database } from '@/types/supabase';
 
@@ -182,6 +193,7 @@ When implementing a feature:
 ## Error Handling Patterns
 
 **API Endpoints**:
+
 ```typescript
 export async function POST(req: Request) {
   try {
@@ -199,6 +211,7 @@ export async function POST(req: Request) {
 ```
 
 **React Components**:
+
 ```typescript
 function Component() {
   const [error, setError] = useState<string | null>(null);
@@ -229,11 +242,13 @@ function Component() {
 ## Token Efficiency
 
 **Old command** (`/dev:implement`):
+
 - YAML frontmatter: ~30 tokens
 - Full prompt: ~58 tokens
 - **Total: 88 tokens** per invocation
 
 **New Skill**:
+
 - Metadata: 20 tokens
 - SKILL.md: 180 tokens (progressive)
 - Scripts: 0 tokens (executed, not loaded)

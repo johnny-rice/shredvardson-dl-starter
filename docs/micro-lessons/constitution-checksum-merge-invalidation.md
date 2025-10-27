@@ -34,6 +34,7 @@ git push  # ✅ CI passes
 **Why This Happens.** The constitution checksum hashes binding source files (commands, agents, docs). When main is merged in, it may bring new commands, updated agent contracts, or modified documentation that changes those source files. Your pre-merge checksum is now stale.
 
 **Guardrails.**
+
 - Add to PR merge workflow: always run `pnpm constitution:update && pnpm wiki:generate` after merging main
 - Run `pnpm doctor` locally after merge to catch this before pushing
 - Consider adding a git post-merge hook to remind about regenerating artifacts

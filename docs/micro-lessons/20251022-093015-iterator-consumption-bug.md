@@ -40,7 +40,8 @@ if (asyncFunctions.length > 0 && tryCatches.length === 0) {
 ## Detection Pattern
 
 Look for:
-1. `const x = content.matchAll(...)` 
+
+1. `const x = content.matchAll(...)`
 2. Multiple calls to `Array.from(x)` or iterations over `x`
 
 ## Related Concepts

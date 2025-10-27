@@ -22,7 +22,7 @@ function updateRegistry(registry: Registry) {
 function updateRegistry(registry: Registry) {
   const tmp = registryPath + '.tmp';
   fs.writeFileSync(tmp, JSON.stringify(registry, null, 2));
-  fs.renameSync(tmp, registryPath);  // Atomic operation
+  fs.renameSync(tmp, registryPath); // Atomic operation
   // If process crashes before rename, original file is intact
   // If process crashes during rename, either old or new file exists (never partial)
 }
@@ -31,17 +31,20 @@ function updateRegistry(registry: Registry) {
 **Why This Works:**
 
 1. **Filesystem atomicity:** `rename()` is an atomic operation at the OS level
-2. **All-or-nothing:** File is either fully old or fully new, never partial
-3. **Crash safety:** Original file stays intact until rename succeeds
-4. **Reader safety:** Other processes reading the file never see partial writes
+2. **All-or-nothing:** File is either fully old or fully new, never partial (during normal operation)
+3. **Operational atomicity:** Other processes see either old or new file, never both
+4. **Reader safety:** Other processes reading the file never see partial writes (if source was flushed)
+5. **Pre-requisite:** Temp file must be flushed to disk (via fsync/writeFileSync) before rename for crash safety
 
 **Rationale.**
+
 - Direct `writeFileSync` writes data incrementally (not atomic)
 - If interrupted (crash, SIGKILL, power loss), file contains partial data
 - For JSON files, partial writes → invalid JSON → script crashes
 - Temp + rename ensures readers always see valid, complete data
 
 **Guardrails:**
+
 - **Cleanup:** If temp file creation fails, ensure cleanup doesn't remove original
 - **Permissions:** Ensure temp file has same permissions as target
 - **Same filesystem:** Rename is only atomic within the same filesystem; temp file must be in same directory
@@ -86,15 +89,18 @@ function updateOrCreateRegistry(data: any) {
 ```
 
 **Related Patterns:**
+
 - [safe-file-writing-patterns.md](./safe-file-writing-patterns.md) - Using `{flag: 'wx'}` to prevent overwrites
 - Different focus: `wx` prevents accidental overwrites; temp+rename prevents partial writes
 
 **Real-World Impact:**
+
 - Applied to `updateComponentRegistry()` in generate-component.ts (PR #190)
 - Prevents registry corruption if script is interrupted during component generation
 - Critical for CI environments where processes can be killed abruptly
 
 **When to Use:**
+
 - ✅ Configuration files (JSON, YAML, TOML)
 - ✅ Registry/index files updated frequently
 - ✅ Database-like files (SQLite, etc.)

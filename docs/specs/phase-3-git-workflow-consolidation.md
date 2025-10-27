@@ -1,6 +1,6 @@
 ---
 id: 170-phase-3
-title: "Phase 3: Git Workflow Consolidation"
+title: 'Phase 3: Git Workflow Consolidation'
 created: 2025-01-21
 status: active
 phase: 3
@@ -25,6 +25,7 @@ Phase 2 achieved **92.2% token savings** (74% realized vs 60% target), validatin
 ## Git Commands to Consolidate
 
 Current separate commands to merge into `/git`:
+
 1. `/git:branch` - Branch management
 2. `/git:commit` - Smart commits with conventional format
 3. `/git:prepare-pr` - PR preparation
@@ -33,6 +34,7 @@ Current separate commands to merge into `/git`:
 6. `/git:tag-release` - Release tagging
 
 New unified interface:
+
 ```bash
 /git <action> [context]
 
@@ -54,11 +56,13 @@ New unified interface:
 **Script:** `scripts/skills/code-reviewer.sh`
 
 **Triggers:**
+
 - After completing significant code changes
 - Before PR creation
 - On explicit request: `/code review`
 
 **Checks:**
+
 - TypeScript errors
 - ESLint violations
 - Test coverage
@@ -67,6 +71,7 @@ New unified interface:
 - Performance implications
 
 **Output:** JSON report with:
+
 ```json
 {
   "status": "success|warning|error",
@@ -90,6 +95,7 @@ New unified interface:
 **Script:** `scripts/skills/documentation-sync.sh`
 
 **Actions:**
+
 - Detect documentation changes
 - Sync to GitHub wiki
 - Update cross-references
@@ -102,17 +108,20 @@ New unified interface:
 
 ### Command Consolidation Pattern
 
-```markdown
+````markdown
 # /git Skill
 
 **Purpose:** Unified git workflow automation
 
 **Usage:**
+
 ```bash
 /git <action> [args]
 ```
+````
 
 **Actions:**
+
 - `branch <issue>` - Create feature branch
 - `commit <message>` - Smart commit
 - `pr prepare` - Prepare PR
@@ -121,6 +130,7 @@ New unified interface:
 - `tag <version>` - Tag release
 
 **Script Routing:**
+
 ```bash
 #!/bin/bash
 ACTION=$1
@@ -139,6 +149,7 @@ esac
 ### Progressive Disclosure Pattern
 
 Each sub-action script:
+
 1. Validates inputs (fast, no token cost)
 2. Returns minimal JSON on success
 3. Returns detailed JSON only on errors
@@ -147,11 +158,13 @@ Each sub-action script:
 ### Token Optimization Strategy
 
 **Current State:**
+
 - 5+ separate slash commands
 - Each loads full prompt template
 - Estimated: 5,000+ tokens per workflow
 
 **Target State:**
+
 - Single `/git` entry point (500 tokens)
 - Script routes to specific action
 - Action script returns minimal JSON
@@ -161,6 +174,7 @@ Each sub-action script:
 ## Implementation Phases
 
 ### Phase 3.1: Git Consolidation
+
 1. Create `/git.md` master Skill
 2. Create routing script `scripts/skills/git.sh`
 3. Refactor existing git commands into sub-scripts
@@ -168,6 +182,7 @@ Each sub-action script:
 5. Update documentation
 
 ### Phase 3.2: Code Reviewer Skill
+
 1. Create `/code.md` Skill specification
 2. Implement `scripts/skills/code-reviewer.sh`
 3. Integrate with existing quality checks
@@ -175,6 +190,7 @@ Each sub-action script:
 5. Test with sample PRs
 
 ### Phase 3.3: Documentation Sync Skill
+
 1. Create `/docs.md` Skill specification
 2. Implement `scripts/skills/documentation-sync.sh`
 3. Add wiki sync automation
@@ -182,6 +198,7 @@ Each sub-action script:
 5. Test sync operations
 
 ### Phase 3.4: Validation & Documentation
+
 1. Run token measurement across all workflows
 2. Validate 80% savings target
 3. Update SKILLS.md with new patterns
@@ -191,6 +208,7 @@ Each sub-action script:
 ## Token Savings Validation
 
 Measure before/after for:
+
 - Branch creation workflow
 - Commit workflow
 - PR preparation workflow
@@ -224,6 +242,7 @@ Measure before/after for:
 ## Next Steps After Phase 3
 
 Phase 4 options:
+
 - Advanced Skills (testing, deployment, monitoring)
 - Cross-skill orchestration
 - Custom Skill generator

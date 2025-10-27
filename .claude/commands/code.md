@@ -63,6 +63,7 @@ This is a lightweight discovery command that delegates to the `implementation-as
 **Implementation:**
 
 The Skill system handles:
+
 1. Loading metadata (skill.json)
 2. Progressive disclosure (SKILL.md only if needed)
 3. Script execution (never in context)

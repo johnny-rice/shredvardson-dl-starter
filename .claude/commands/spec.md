@@ -68,6 +68,7 @@ status: draft | ready | in-progress | done
 **Implementation:**
 
 The Skill system handles:
+
 1. Loading metadata (skill.json)
 2. Progressive disclosure (SKILL.md only if needed)
 3. Script execution (never in context)

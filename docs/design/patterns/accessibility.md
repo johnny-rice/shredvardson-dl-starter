@@ -17,12 +17,12 @@ All components MUST meet these minimum standards:
 
 ### Color Contrast
 
-| Element | Minimum Ratio | WCAG Level |
-|---------|--------------|------------|
-| Normal text (<18px) | 4.5:1 | AA |
-| Large text (≥18px, ≥14px bold) | 3:1 | AA |
-| UI components | 3:1 | AA |
-| Icons (informational) | 3:1 | AA |
+| Element                        | Minimum Ratio | WCAG Level |
+| ------------------------------ | ------------- | ---------- |
+| Normal text (<18px)            | 4.5:1         | AA         |
+| Large text (≥18px, ≥14px bold) | 3:1           | AA         |
+| UI components                  | 3:1           | AA         |
+| Icons (informational)          | 3:1           | AA         |
 
 ### Text
 
@@ -42,15 +42,15 @@ All components MUST meet these minimum standards:
 
 ### Standard Keys
 
-| Key | Action |
-|-----|--------|
-| Tab | Move focus forward |
-| Shift+Tab | Move focus backward |
-| Enter | Activate button/link |
-| Space | Activate button, toggle checkbox |
-| Arrow keys | Navigate lists, menus, tabs |
-| Escape | Close modal/menu, cancel action |
-| Home/End | Jump to first/last item |
+| Key        | Action                           |
+| ---------- | -------------------------------- |
+| Tab        | Move focus forward               |
+| Shift+Tab  | Move focus backward              |
+| Enter      | Activate button/link             |
+| Space      | Activate button, toggle checkbox |
+| Arrow keys | Navigate lists, menus, tabs      |
+| Escape     | Close modal/menu, cancel action  |
+| Home/End   | Jump to first/last item          |
 
 ### Tab Order
 
@@ -123,12 +123,7 @@ function Modal({ isOpen, onClose, children }: ModalProps) {
   };
 
   return (
-    <div
-      ref={modalRef}
-      role="dialog"
-      aria-modal="true"
-      onKeyDown={handleKeyDown}
-    >
+    <div ref={modalRef} role="dialog" aria-modal="true" onKeyDown={handleKeyDown}>
       {children}
     </div>
   );
@@ -200,11 +195,7 @@ Link helper text to inputs:
 ```tsx
 <div className="space-y-2">
   <Label htmlFor="email">Email</Label>
-  <Input
-    id="email"
-    type="email"
-    aria-describedby="email-hint email-error"
-  />
+  <Input id="email" type="email" aria-describedby="email-hint email-error" />
   <p id="email-hint" className="text-sm text-muted-foreground">
     We'll never share your email
   </p>
@@ -296,13 +287,15 @@ Hide visually, show to screen readers:
   id="password"
   type="password"
   aria-invalid={!!error}
-  aria-describedby={error ? "password-error" : undefined}
-/>
-{error && (
-  <p id="password-error" className="text-sm text-destructive" role="alert">
-    {error}
-  </p>
-)}
+  aria-describedby={error ? 'password-error' : undefined}
+/>;
+{
+  error && (
+    <p id="password-error" className="text-sm text-destructive" role="alert">
+      {error}
+    </p>
+  );
+}
 ```
 
 ### Fieldsets
@@ -326,9 +319,9 @@ Group related fields:
 <Button
   disabled={isLoading}
   aria-busy={isLoading}
-  aria-label={isLoading ? "Saving changes, please wait" : undefined}
+  aria-label={isLoading ? 'Saving changes, please wait' : undefined}
 >
-  {isLoading ? "Saving..." : "Save"}
+  {isLoading ? 'Saving...' : 'Save'}
 </Button>
 ```
 
@@ -342,27 +335,20 @@ const [isLiked, setIsLiked] = useState(false);
   size="icon"
   onClick={() => setIsLiked(!isLiked)}
   aria-pressed={isLiked}
-  aria-label={isLiked ? "Unlike post" : "Like post"}
+  aria-label={isLiked ? 'Unlike post' : 'Like post'}
 >
-  <Heart className={isLiked ? "fill-current" : ""} />
-</Button>
+  <Heart className={isLiked ? 'fill-current' : ''} />
+</Button>;
 ```
 
 ### Disclosure (Accordion)
 
 ```tsx
 <div>
-  <button
-    onClick={() => setIsOpen(!isOpen)}
-    aria-expanded={isOpen}
-    aria-controls="content-1"
-  >
+  <button onClick={() => setIsOpen(!isOpen)} aria-expanded={isOpen} aria-controls="content-1">
     Section Title
   </button>
-  <div
-    id="content-1"
-    hidden={!isOpen}
-  >
+  <div id="content-1" hidden={!isOpen}>
     {content}
   </div>
 </div>
@@ -384,19 +370,21 @@ const [isLiked, setIsLiked] = useState(false);
       {tab.label}
     </button>
   ))}
-</div>
+</div>;
 
-{tabs.map((tab, i) => (
-  <div
-    key={tab.id}
-    role="tabpanel"
-    id={`panel-${i}`}
-    aria-labelledby={`tab-${i}`}
-    hidden={activeTab !== i}
-  >
-    {tab.content}
-  </div>
-))}
+{
+  tabs.map((tab, i) => (
+    <div
+      key={tab.id}
+      role="tabpanel"
+      id={`panel-${i}`}
+      aria-labelledby={`tab-${i}`}
+      hidden={activeTab !== i}
+    >
+      {tab.content}
+    </div>
+  ));
+}
 ```
 
 ### Dialog/Modal
@@ -410,9 +398,7 @@ const [isLiked, setIsLiked] = useState(false);
     aria-describedby="dialog-description"
   >
     <DialogHeader>
-      <DialogTitle id="dialog-title">
-        Confirm Delete
-      </DialogTitle>
+      <DialogTitle id="dialog-title">Confirm Delete</DialogTitle>
     </DialogHeader>
     <p id="dialog-description">
       Are you sure you want to delete this item? This action cannot be undone.
@@ -507,8 +493,14 @@ test('has no accessibility violations', async () => {
 ```tsx
 <nav aria-label="Main navigation">
   <ul>
-    <li><a href="/" aria-current={isHome ? "page" : undefined}>Home</a></li>
-    <li><a href="/about">About</a></li>
+    <li>
+      <a href="/" aria-current={isHome ? 'page' : undefined}>
+        Home
+      </a>
+    </li>
+    <li>
+      <a href="/about">About</a>
+    </li>
   </ul>
 </nav>
 ```
@@ -518,9 +510,13 @@ test('has no accessibility violations', async () => {
 ```tsx
 <nav aria-label="Breadcrumb">
   <ol className="flex gap-2">
-    <li><a href="/">Home</a></li>
+    <li>
+      <a href="/">Home</a>
+    </li>
     <li aria-hidden="true">/</li>
-    <li><a href="/products">Products</a></li>
+    <li>
+      <a href="/products">Products</a>
+    </li>
     <li aria-hidden="true">/</li>
     <li aria-current="page">Item Details</li>
   </ol>
@@ -533,29 +529,23 @@ test('has no accessibility violations', async () => {
 <nav aria-label="Pagination">
   <ul className="flex gap-2">
     <li>
-      <Button
-        disabled={page === 1}
-        aria-label="Go to previous page"
-      >
+      <Button disabled={page === 1} aria-label="Go to previous page">
         Previous
       </Button>
     </li>
-    {pages.map(p => (
+    {pages.map((p) => (
       <li key={p}>
         <Button
-          variant={p === page ? "default" : "outline"}
+          variant={p === page ? 'default' : 'outline'}
           aria-label={`Go to page ${p}`}
-          aria-current={p === page ? "page" : undefined}
+          aria-current={p === page ? 'page' : undefined}
         >
           {p}
         </Button>
       </li>
     ))}
     <li>
-      <Button
-        disabled={page === totalPages}
-        aria-label="Go to next page"
-      >
+      <Button disabled={page === totalPages} aria-label="Go to next page">
         Next
       </Button>
     </li>

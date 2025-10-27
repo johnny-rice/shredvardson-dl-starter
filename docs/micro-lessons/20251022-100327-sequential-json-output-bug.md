@@ -1,5 +1,5 @@
 ---
-title: "Never Output Multiple JSON Objects in Bash Scripts - Breaks Parsing"
+title: 'Never Output Multiple JSON Objects in Bash Scripts - Breaks Parsing'
 date: 2025-10-21
 category: shell-scripting
 tags: [json, bash, error-handling, structured-output]
@@ -14,7 +14,7 @@ Outputting multiple JSON objects in sequence breaks JSON parsers:
 # ❌ BUG: Outputs 2 JSON objects
 if git diff --cached --quiet; then
   jq -n '{ error: "No staged changes", unstaged_files: [] }'
-  
+
   if ! git diff --quiet; then
     UNSTAGED=$(git diff --name-only | jq -R . | jq -s .)
     jq -n --argjson files "$UNSTAGED" '{
@@ -36,7 +36,7 @@ fi
 ```javascript
 // JavaScript consumer
 const output = execSync('script.sh').toString();
-JSON.parse(output); 
+JSON.parse(output);
 // ❌ SyntaxError: Unexpected token { in JSON at position 50
 ```
 
@@ -55,7 +55,7 @@ if git diff --cached --quiet; then
   else
     UNSTAGED="[]"
   fi
-  
+
   # Single output at end
   jq -n --argjson files "$UNSTAGED" '{
     status: "error",
@@ -98,6 +98,7 @@ jq -n \
 ## Common Mistake Patterns
 
 ### Pattern 1: Output in Both Branches
+
 ```bash
 # ❌ BAD: Outputs twice
 if [[ condition ]]; then
@@ -107,11 +108,12 @@ fi
 ```
 
 ### Pattern 2: Overlapping Conditionals
+
 ```bash
 # ❌ BAD: Nested conditions both output
 if [[ condition1 ]]; then
   jq -n '{ error: "first" }'
-  
+
   if [[ condition2 ]]; then
     jq -n '{ error: "second" }'  # Second output!
   fi
@@ -119,6 +121,7 @@ fi
 ```
 
 ### Pattern 3: Output Before Exit
+
 ```bash
 # ❌ BAD: Outputs twice when unstaged changes exist
 jq -n '{ error: "no staged" }'

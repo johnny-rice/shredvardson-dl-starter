@@ -30,6 +30,7 @@ pnpm doctor:report
 ```
 
 **Guardrails.**
+
 - Command index (`docs/commands/index.json`) is a binding source in constitution
 - Checksum validates integrity of LLM configuration files
 - Run `pnpm constitution:update` after modifying any binding source

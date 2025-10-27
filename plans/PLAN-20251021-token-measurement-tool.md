@@ -12,6 +12,7 @@ source: https://github.com/Shredvardson/dl-starter/issues/177
 ## Architecture Decision
 
 **Stack Alignment**:
+
 - **Language**: TypeScript (consistency with existing scripts)
 - **Runtime**: tsx (existing dev dependency)
 - **Token Counting**: tiktoken library (industry standard for GPT token estimation)
@@ -19,6 +20,7 @@ source: https://github.com/Shredvardson/dl-starter/issues/177
 - **Integration**: pnpm script wrapper
 
 **Design Philosophy**:
+
 - Simple, focused CLI tool
 - Minimal dependencies
 - Clear, actionable output
@@ -50,6 +52,7 @@ source: https://github.com/Shredvardson/dl-starter/issues/177
 ### Modified Files
 
 1. **`package.json`** (Add scripts and dependency)
+
    ```json
    {
      "scripts": {
@@ -70,6 +73,7 @@ source: https://github.com/Shredvardson/dl-starter/issues/177
 ### Phase 1: Token Counting Infrastructure (30 min)
 
 **Tasks**:
+
 1. Install tiktoken dependency
 2. Create `scripts/skills/token-counter.ts`
 3. Implement token counting functions:
@@ -78,23 +82,26 @@ source: https://github.com/Shredvardson/dl-starter/issues/177
    - `countWorkflowTokens(files: string[]): WorkflowTokens`
 
 **Token Counting Strategy**:
+
 ```typescript
 interface WorkflowTokens {
-  metadata: number;      // YAML frontmatter
-  prompts: number;       // Slash command prompts
-  scripts: number;       // Executable scripts (should be 0 for Skills)
-  docs: number;          // Referenced documentation
-  total: number;         // Sum of all
+  metadata: number; // YAML frontmatter
+  prompts: number; // Slash command prompts
+  scripts: number; // Executable scripts (should be 0 for Skills)
+  docs: number; // Referenced documentation
+  total: number; // Sum of all
 }
 ```
 
 **Models**:
+
 - Use `cl100k_base` encoding (GPT-4/Claude-compatible)
 - Account for system prompts and formatting
 
 ### Phase 2: Workflow Execution (30 min)
 
 **Tasks**:
+
 1. Create `scripts/skills/measure-tokens.ts`
 2. Implement workflow runners:
    - `measureCommandWorkflow(commandName: string): WorkflowTokens`
@@ -103,6 +110,7 @@ interface WorkflowTokens {
 4. Parse Skill metadata and SKILL.md files
 
 **Command Workflow Measurement**:
+
 ```typescript
 // For /db:migrate command:
 // 1. Read .claude/commands/db/migrate.md
@@ -113,6 +121,7 @@ interface WorkflowTokens {
 ```
 
 **Skill Workflow Measurement**:
+
 ```typescript
 // For /db Skill:
 // 1. Read .claude/skills/supabase-integration/skill.json
@@ -127,7 +136,9 @@ interface WorkflowTokens {
 ### Phase 3: Comparison & Reporting (30 min)
 
 **Tasks**:
+
 1. Implement comparison logic:
+
    ```typescript
    interface ComparisonResult {
      oldWorkflow: WorkflowTokens;
@@ -150,6 +161,7 @@ interface WorkflowTokens {
    - Recommendation based on savings tier
 
 **Report Template**:
+
 ```markdown
 # Token Measurement Report
 
@@ -160,6 +172,7 @@ interface WorkflowTokens {
 ## Results
 
 ### Old Command: {oldCommand}
+
 - Metadata: {n} tokens
 - Prompts: {n} tokens
 - Scripts: {n} tokens
@@ -167,6 +180,7 @@ interface WorkflowTokens {
 - **Total: {n} tokens**
 
 ### New Skill: {newSkill}
+
 - Metadata: {n} tokens
 - SKILL.md: {n} tokens
 - Scripts: {n} tokens (should be 0)
@@ -191,7 +205,9 @@ interface WorkflowTokens {
 ### Phase 4: CLI & Integration (30 min)
 
 **Tasks**:
+
 1. Implement CLI argument parsing:
+
    ```bash
    pnpm skill:measure <skill-name> [options]
 
@@ -216,6 +232,7 @@ interface WorkflowTokens {
 ### Unit Tests (TDD Order)
 
 1. **Token Counter Tests**:
+
    ```typescript
    describe('TokenCounter', () => {
      it('counts tokens in simple text', () => {
@@ -235,6 +252,7 @@ interface WorkflowTokens {
    ```
 
 2. **Measurement Tests**:
+
    ```typescript
    describe('MeasureTokens', () => {
      it('measures command workflow tokens', () => {
@@ -255,6 +273,7 @@ interface WorkflowTokens {
    ```
 
 3. **Report Generation Tests**:
+
    ```typescript
    describe('ReportGenerator', () => {
      it('generates markdown report', () => {
@@ -302,12 +321,14 @@ interface WorkflowTokens {
 ## Security Considerations
 
 **Low Risk Assessment**:
+
 - Read-only file operations
 - No network calls
 - No user data processing
 - No secrets handling
 
 **Safeguards**:
+
 - Validate file paths (prevent directory traversal)
 - Limit file size for token counting (prevent DoS)
 - Sanitize user input (command/skill names)
@@ -315,6 +336,7 @@ interface WorkflowTokens {
 ## Dependencies
 
 **New Dependencies**:
+
 1. **tiktoken** (^1.0.17)
    - Industry standard for GPT token counting
    - MIT licensed
@@ -322,11 +344,13 @@ interface WorkflowTokens {
    - Alternative: Manual implementation (more complex, less accurate)
 
 **Existing Dependencies**:
+
 - tsx (already in devDependencies)
 - Node.js fs/path APIs (built-in)
 - commander (already available) for CLI parsing
 
 **Justification**:
+
 - tiktoken is the de facto standard for token counting
 - Used by OpenAI, Anthropic ecosystem tools
 - Accurate token counts are critical for validation
@@ -334,22 +358,24 @@ interface WorkflowTokens {
 
 ## Risks & Mitigation
 
-| Risk | Impact | Likelihood | Mitigation |
-|------|--------|------------|------------|
-| Token counting inaccurate | HIGH | MEDIUM | Use tiktoken (industry standard), validate against manual counts |
-| Skills not ready for measurement | HIGH | LOW | Check for Phase 1 completion, graceful error if missing |
-| Environmental variance in results | MEDIUM | HIGH | Run 3 iterations, document variance, average results |
-| Tool shows <30% savings | HIGH | MEDIUM | Document findings, analyze root cause, make informed go/no-go decision |
-| tiktoken dependency bloat | LOW | LOW | Dev dependency only, 1.2MB is acceptable |
+| Risk                              | Impact | Likelihood | Mitigation                                                             |
+| --------------------------------- | ------ | ---------- | ---------------------------------------------------------------------- |
+| Token counting inaccurate         | HIGH   | MEDIUM     | Use tiktoken (industry standard), validate against manual counts       |
+| Skills not ready for measurement  | HIGH   | LOW        | Check for Phase 1 completion, graceful error if missing                |
+| Environmental variance in results | MEDIUM | HIGH       | Run 3 iterations, document variance, average results                   |
+| Tool shows <30% savings           | HIGH   | MEDIUM     | Document findings, analyze root cause, make informed go/no-go decision |
+| tiktoken dependency bloat         | LOW    | LOW        | Dev dependency only, 1.2MB is acceptable                               |
 
 ## Implementation Checklist
 
 ### Setup
+
 - [ ] Install tiktoken dependency
 - [ ] Create directory `scripts/skills/`
 - [ ] Add pnpm script `skill:measure`
 
 ### Core Implementation
+
 - [ ] Implement `token-counter.ts` with tiktoken integration
 - [ ] Implement `measure-tokens.ts` CLI tool
 - [ ] Add command workflow measurement
@@ -358,6 +384,7 @@ interface WorkflowTokens {
 - [ ] Add report generation (console + markdown)
 
 ### Testing
+
 - [ ] Unit tests for token counting
 - [ ] Unit tests for measurement logic
 - [ ] Unit tests for report generation
@@ -365,12 +392,14 @@ interface WorkflowTokens {
 - [ ] Manual validation against Phase 1 Skill
 
 ### Documentation
+
 - [ ] Update package.json scripts
 - [ ] Add usage documentation to README
 - [ ] Document results in ADR-002 addendum
 - [ ] Update Phase 1 completion checklist
 
 ### Validation
+
 - [ ] Run against old `/db:migrate` command
 - [ ] Run against new `/db` Skill (when available)
 - [ ] Verify ≥30% savings or document findings

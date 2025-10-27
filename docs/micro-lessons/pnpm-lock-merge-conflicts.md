@@ -24,6 +24,7 @@ pnpm install --frozen-lockfile  # Verify integrity
 **Rationale.** The lockfile from main represents the latest validated dependency resolution. Your feature branch's package.json changes will be re-resolved automatically during install. If there are genuine incompatibilities, `pnpm install` will catch them.
 
 **Guardrails.**
+
 - After accepting main's lockfile, run `pnpm install --frozen-lockfile` to verify no integrity issues
 - If the install succeeds, your package.json changes are compatible with main's lockfile
 - If it fails, you have a genuine dependency conflict that needs package.json changes, not lockfile edits

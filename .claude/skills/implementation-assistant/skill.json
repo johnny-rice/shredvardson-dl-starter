@@ -8,12 +8,7 @@
     "check_error_handling",
     "verify_typescript_types"
   ],
-  "triggers": [
-    "code",
-    "implement",
-    "standards",
-    "patterns"
-  ],
+  "triggers": ["code", "implement", "standards", "patterns"],
   "priority": "p0",
   "tokenSavings": {
     "old": 88,

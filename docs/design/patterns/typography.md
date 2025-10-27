@@ -46,12 +46,12 @@ Typography establishes visual hierarchy, improves readability, and reinforces br
 
 ### Usage Guidelines
 
-| Token | Use Case | Contrast Ratio |
-|-------|----------|----------------|
-| `text-foreground` | Body text, headings | ≥ 4.5:1 (AA) |
-| `text-muted-foreground` | Helper text, captions | ≥ 4.5:1 (AA) |
-| `text-primary` | Links, brand elements | ≥ 4.5:1 (AA) |
-| `text-destructive` | Errors, warnings | ≥ 4.5:1 (AA) |
+| Token                   | Use Case              | Contrast Ratio |
+| ----------------------- | --------------------- | -------------- |
+| `text-foreground`       | Body text, headings   | ≥ 4.5:1 (AA)   |
+| `text-muted-foreground` | Helper text, captions | ≥ 4.5:1 (AA)   |
+| `text-primary`          | Links, brand elements | ≥ 4.5:1 (AA)   |
+| `text-destructive`      | Errors, warnings      | ≥ 4.5:1 (AA)   |
 
 ## Line Height
 
@@ -74,10 +74,7 @@ Optimal line length: 50-75 characters per line
 
 ```tsx
 <article className="max-w-prose">
-  <p>
-    This paragraph will maintain optimal line length
-    for comfortable reading across devices.
-  </p>
+  <p>This paragraph will maintain optimal line length for comfortable reading across devices.</p>
 </article>
 ```
 
@@ -87,12 +84,8 @@ Optimal line length: 50-75 characters per line
 
 ```tsx
 <header className="space-y-2 mb-8">
-  <h1 className="text-4xl font-bold text-foreground">
-    Page Title
-  </h1>
-  <p className="text-xl text-muted-foreground">
-    Brief description or subtitle
-  </p>
+  <h1 className="text-4xl font-bold text-foreground">Page Title</h1>
+  <p className="text-xl text-muted-foreground">Brief description or subtitle</p>
 </header>
 ```
 
@@ -100,12 +93,8 @@ Optimal line length: 50-75 characters per line
 
 ```tsx
 <div className="space-y-2 mb-6">
-  <h2 className="text-3xl font-semibold text-foreground">
-    Section Title
-  </h2>
-  <p className="text-muted-foreground">
-    Section description
-  </p>
+  <h2 className="text-3xl font-semibold text-foreground">Section Title</h2>
+  <p className="text-muted-foreground">Section description</p>
 </div>
 ```
 
@@ -113,12 +102,8 @@ Optimal line length: 50-75 characters per line
 
 ```tsx
 <div className="space-y-1">
-  <h3 className="text-xl font-semibold text-card-foreground">
-    Card Title
-  </h3>
-  <p className="text-sm text-muted-foreground">
-    Card subtitle or metadata
-  </p>
+  <h3 className="text-xl font-semibold text-card-foreground">Card Title</h3>
+  <p className="text-sm text-muted-foreground">Card subtitle or metadata</p>
 </div>
 ```
 
@@ -181,9 +166,7 @@ Optimal line length: 50-75 characters per line
 
 ```tsx
 <p>
-  Use the <code className="px-1 py-0.5 rounded bg-muted text-sm font-mono">
-    className
-  </code> prop.
+  Use the <code className="px-1 py-0.5 rounded bg-muted text-sm font-mono">className</code> prop.
 </p>
 ```
 
@@ -195,22 +178,14 @@ Optimal line length: 50-75 characters per line
 <article className="prose max-w-prose mx-auto">
   <h1 className="text-4xl font-bold mb-4">Article Title</h1>
 
-  <p className="text-lg text-muted-foreground mb-8">
-    Published on January 23, 2025
-  </p>
+  <p className="text-lg text-muted-foreground mb-8">Published on January 23, 2025</p>
 
   <div className="space-y-4 leading-relaxed">
-    <p className="text-foreground">
-      First paragraph with comfortable line height and spacing.
-    </p>
+    <p className="text-foreground">First paragraph with comfortable line height and spacing.</p>
 
-    <h2 className="text-2xl font-semibold mt-8 mb-4">
-      Section Heading
-    </h2>
+    <h2 className="text-2xl font-semibold mt-8 mb-4">Section Heading</h2>
 
-    <p className="text-foreground">
-      Paragraph after heading with proper spacing.
-    </p>
+    <p className="text-foreground">Paragraph after heading with proper spacing.</p>
 
     <blockquote className="border-l-4 border-primary pl-4 italic text-muted-foreground">
       This is a blockquote with visual emphasis.
@@ -222,15 +197,15 @@ Optimal line length: 50-75 characters per line
 ## Responsive Typography
 
 ```tsx
-{/* Mobile: 2xl, Desktop: 4xl */}
-<h1 className="text-2xl md:text-4xl font-bold">
-  Responsive Heading
-</h1>
+{
+  /* Mobile: 2xl, Desktop: 4xl */
+}
+<h1 className="text-2xl md:text-4xl font-bold">Responsive Heading</h1>;
 
-{/* Mobile: base, Desktop: lg */}
-<p className="text-base md:text-lg">
-  Responsive paragraph text
-</p>
+{
+  /* Mobile: base, Desktop: lg */
+}
+<p className="text-base md:text-lg">Responsive paragraph text</p>;
 ```
 
 ## Accessibility
@@ -246,28 +221,32 @@ Optimal line length: 50-75 characters per line
 
 ### Font Size Guidelines
 
-| Size | Use Case | Contrast Required |
-|------|----------|------------------|
-| 12px (text-xs) | Metadata only | 4.5:1 |
-| 14px (text-sm) | Captions, helpers | 4.5:1 |
-| 16px (text-base) | Body text | 4.5:1 |
-| 18px+ | Large text | 3:1 |
-| 14px+ bold | Large text | 3:1 |
+| Size             | Use Case          | Contrast Required |
+| ---------------- | ----------------- | ----------------- |
+| 12px (text-xs)   | Metadata only     | 4.5:1             |
+| 14px (text-sm)   | Captions, helpers | 4.5:1             |
+| 16px (text-base) | Body text         | 4.5:1             |
+| 18px+            | Large text        | 3:1               |
+| 14px+ bold       | Large text        | 3:1               |
 
 ## Copy Guidelines
 
 ### Concise
+
 ❌ "Click on this button to proceed to the next step"
 ✅ "Continue"
 
 ### Scannable
+
 Use headings, short paragraphs, bullet points
 
 ### Actionable
+
 ❌ "There was an error"
 ✅ "Email address is invalid. Check for typos."
 
 ### Empathetic
+
 ❌ "Invalid input"
 ✅ "We couldn't find that email. Try another."
 

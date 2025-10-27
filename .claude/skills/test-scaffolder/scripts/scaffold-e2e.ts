@@ -7,7 +7,7 @@
  * Example: tsx scaffold-e2e.ts auth-signup
  */
 
-import { writeFileSync, existsSync, mkdirSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
 const userFlow = process.argv[2];
@@ -20,7 +20,9 @@ if (!userFlow) {
 
 // Validate user flow name (alphanumeric, hyphens, underscores only)
 if (!/^[a-zA-Z0-9_-]+$/.test(userFlow)) {
-  console.error('Error: User flow name must contain only letters, numbers, hyphens, and underscores');
+  console.error(
+    'Error: User flow name must contain only letters, numbers, hyphens, and underscores'
+  );
   process.exit(1);
 }
 
@@ -84,16 +86,20 @@ test.describe('${userFlow}', () => {
 
 writeFileSync(testFile, template);
 
-console.log(JSON.stringify({
-  success: true,
-  testFile: testFile.replace(process.cwd(), '.'),
-  userFlow,
-  nextSteps: [
-    'Implement test scenarios in the scaffolded file',
-    'Run tests: pnpm --filter=web test:e2e',
-    'Add page objects if needed in tests/e2e/pages/',
-  ],
-  commands: [
-    'pnpm --filter=web test:e2e ' + testFile.replace(process.cwd(), '.'),
-  ]
-}, null, 2));
+console.log(
+  JSON.stringify(
+    {
+      success: true,
+      testFile: testFile.replace(process.cwd(), '.'),
+      userFlow,
+      nextSteps: [
+        'Implement test scenarios in the scaffolded file',
+        'Run tests: pnpm --filter=web test:e2e',
+        'Add page objects if needed in tests/e2e/pages/',
+      ],
+      commands: ['pnpm --filter=web test:e2e ' + testFile.replace(process.cwd(), '.')],
+    },
+    null,
+    2
+  )
+);

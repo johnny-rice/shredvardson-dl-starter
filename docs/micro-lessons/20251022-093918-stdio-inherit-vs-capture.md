@@ -12,10 +12,7 @@ Using `stdio: 'inherit'` forwards output directly to the parent process, making 
 
 ```typescript
 // ❌ BUG: output will be undefined/empty
-const output = execSync(
-  'tsx migrate.ts apply',
-  { encoding: 'utf-8', stdio: 'inherit' }
-);
+const output = execSync('tsx migrate.ts apply', { encoding: 'utf-8', stdio: 'inherit' });
 // output === undefined (or empty string)
 ```
 
@@ -29,10 +26,7 @@ Use when you want output to appear in the terminal immediately:
 
 ```typescript
 // ✅ Output streams to console, no capture
-execSync(
-  'tsx migrate.ts apply',
-  { encoding: 'utf-8', cwd: process.cwd(), stdio: 'inherit' }
-);
+execSync('tsx migrate.ts apply', { encoding: 'utf-8', cwd: process.cwd(), stdio: 'inherit' });
 // User sees output in real-time
 ```
 
@@ -42,21 +36,18 @@ Use when you need to process or validate the output:
 
 ```typescript
 // ✅ Capture output for processing
-const output = execSync(
-  'tsx migrate.ts apply',
-  { encoding: 'utf-8', cwd: process.cwd() }
-);
+const output = execSync('tsx migrate.ts apply', { encoding: 'utf-8', cwd: process.cwd() });
 // output contains command results as string
 ```
 
 ## stdio Options Explained
 
-| Option | Behavior | Use Case |
-|--------|----------|----------|
-| `'inherit'` | Forward to parent (no capture) | Interactive commands, progress indicators |
-| `'pipe'` (default) | Capture in variable | Parsing output, validation, conditional logic |
-| `'ignore'` | Discard output | Background tasks, silent operations |
-| `[0, 1, 2]` | Fine-grained control | Custom stdin/stdout/stderr routing |
+| Option             | Behavior                       | Use Case                                      |
+| ------------------ | ------------------------------ | --------------------------------------------- |
+| `'inherit'`        | Forward to parent (no capture) | Interactive commands, progress indicators     |
+| `'pipe'` (default) | Capture in variable            | Parsing output, validation, conditional logic |
+| `'ignore'`         | Discard output                 | Background tasks, silent operations           |
+| `[0, 1, 2]`        | Fine-grained control           | Custom stdin/stdout/stderr routing            |
 
 ## Why This Matters
 
@@ -67,6 +58,7 @@ const output = execSync(
 ## Detection Pattern
 
 Look for:
+
 ```typescript
 const x = execSync(..., { stdio: 'inherit' });
 // If x is never used, remove it
@@ -76,11 +68,13 @@ const x = execSync(..., { stdio: 'inherit' });
 ## When to Use Each
 
 **Use `stdio: 'inherit'`** when:
+
 - Showing progress to user (build steps, migrations)
 - Running interactive commands (prompts, TUIs)
 - Wrapper scripts that forward output
 
 **Capture output** when:
+
 - Parsing command results (JSON, exit codes)
 - Validating output format
 - Conditional logic based on output

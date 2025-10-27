@@ -39,6 +39,7 @@ Severity: normal
 ```
 
 **Guardrails.**
+
 - If SVG is next to visible text (button label, link text), use `aria-hidden="true"` with no title
 - If SVG is the only content (icon-only button), use `role="img"` + `<title>` OR `aria-label` on parent
 - Never combine `aria-hidden="true"` with `<title>` - the title will be ignored

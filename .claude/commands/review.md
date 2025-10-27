@@ -14,6 +14,7 @@ triggers:
 **Purpose:** Automated code quality checks following best practices
 
 **Usage:**
+
 ```bash
 /review [--fix]
 ```
@@ -43,6 +44,7 @@ triggers:
    - Blocking: Yes
 
 **Flags:**
+
 - `--fix` - Auto-fix issues where possible (ESLint)
 
 **Output:** JSON report with check results
@@ -50,18 +52,21 @@ triggers:
 **Token Cost:** ~400 tokens (progressive disclosure)
 
 **When to Use:**
+
 - Before creating PR
 - After significant code changes
 - When CI checks fail
 - Manual code quality verification
 
 **Examples:**
+
 ```bash
 /review              # Run all checks
 /review --fix        # Run checks and auto-fix
 ```
 
 **Execution:**
+
 ```bash
 bash scripts/skills/code-reviewer.sh "$@"
 ```

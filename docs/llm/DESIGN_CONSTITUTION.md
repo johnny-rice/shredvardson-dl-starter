@@ -38,8 +38,40 @@ This constitution is protected by a checksum system that hashes all binding sour
 **Checksum File:** `docs/llm/CONSTITUTION.CHECKSUM`
 **Update Command:** `pnpm tsx scripts/update-constitution-checksum.ts`
 
+## Debugging Circuit Breaker Rule
+
+**Source:** Adapted from [obra/superpowers:systematic-debugging](https://github.com/obra/superpowers)
+
+### The 3-Fix Rule
+
+If 3+ fix attempts fail without success:
+
+1. **STOP** - Do not attempt Fix #4
+2. **Question Architecture** - "Is this pattern fundamentally sound?"
+3. **Discuss with Human** - Get approval before continuing
+4. **Consider Refactoring** - Architecture problem vs bug
+
+### Pattern Indicating Architectural Problem
+
+- Each fix reveals new coupling in different files
+- Fixes require touching 5+ unrelated components
+- Each fix creates new symptoms elsewhere
+- Issue seems systemic, not local
+
+### When to Apply
+
+| Situation | Action |
+|-----------|--------|
+| Fix #1 fails | Continue with new hypothesis |
+| Fix #2 fails | Continue with new hypothesis |
+| Fix #3 fails | **STOP** - Question architecture |
+| Ready for Fix #4 | **BLOCKED** - Discuss with human first |
+
+This prevents infinite symptom-chasing and identifies when refactoring is needed vs repeated fixes.
+
 ## Enforcement
 
 - **CI Pipeline:** Fails if checksum is stale when binding sources change
 - **Starter Doctor:** Validates constitution integrity before allowing development
 - **Code Reviews:** Must reference this constitution for architecture decisions
+- **Debugging Workflows:** Enforces 3-fix circuit breaker rule

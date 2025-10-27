@@ -14,14 +14,14 @@ Loading states provide feedback during asynchronous operations. They prevent use
 
 ## Pattern Selection Guide
 
-| Scenario | Pattern | Duration | Component |
-|----------|---------|----------|-----------|
-| Button action | Button spinner | <3s | Disabled button with spinner |
-| Page navigation | Progress bar | <2s | Top-edge progress bar |
-| Data fetch (known) | Skeleton screen | <5s | Content-shaped placeholders |
-| Data fetch (unknown) | Spinner | <10s | Centered spinner |
-| File upload | Progress bar | Variable | Linear progress with % |
-| Background task | Toast + badge | Variable | Non-blocking indicator |
+| Scenario             | Pattern         | Duration | Component                    |
+| -------------------- | --------------- | -------- | ---------------------------- |
+| Button action        | Button spinner  | <3s      | Disabled button with spinner |
+| Page navigation      | Progress bar    | <2s      | Top-edge progress bar        |
+| Data fetch (known)   | Skeleton screen | <5s      | Content-shaped placeholders  |
+| Data fetch (unknown) | Spinner         | <10s     | Centered spinner             |
+| File upload          | Progress bar    | Variable | Linear progress with %       |
+| Background task      | Toast + badge   | Variable | Non-blocking indicator       |
 
 ## Button Loading States
 
@@ -30,9 +30,7 @@ Loading states provide feedback during asynchronous operations. They prevent use
 ### Inline Spinner
 
 ```tsx
-<Button disabled={isLoading}>
-  {isLoading ? "Saving..." : "Save Changes"}
-</Button>
+<Button disabled={isLoading}>{isLoading ? 'Saving...' : 'Save Changes'}</Button>
 ```
 
 ### With Icon
@@ -42,8 +40,8 @@ import { Loader2 } from 'lucide-react';
 
 <Button disabled={isLoading}>
   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-  {isLoading ? "Processing..." : "Submit"}
-</Button>
+  {isLoading ? 'Processing...' : 'Submit'}
+</Button>;
 ```
 
 ### Multiple States
@@ -52,7 +50,7 @@ import { Loader2 } from 'lucide-react';
 <Button disabled={isProcessing || isSuccess}>
   {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
   {isSuccess && <Check className="mr-2 h-4 w-4" />}
-  {isProcessing ? "Saving..." : isSuccess ? "Saved!" : "Save"}
+  {isProcessing ? 'Saving...' : isSuccess ? 'Saved!' : 'Save'}
 </Button>
 ```
 
@@ -64,9 +62,7 @@ import { Loader2 } from 'lucide-react';
 
 ```tsx
 export function Skeleton({ className }: { className?: string }) {
-  return (
-    <div className={cn("animate-pulse rounded-md bg-muted", className)} />
-  );
+  return <div className={cn('animate-pulse rounded-md bg-muted', className)} />;
 }
 ```
 
@@ -106,15 +102,19 @@ export function Skeleton({ className }: { className?: string }) {
 
 ```tsx
 <table>
-  <thead>
-    {/* Actual headers */}
-  </thead>
+  <thead>{/* Actual headers */}</thead>
   <tbody>
     {Array.from({ length: 10 }).map((_, i) => (
       <tr key={i}>
-        <td><Skeleton className="h-4 w-32" /></td>
-        <td><Skeleton className="h-4 w-48" /></td>
-        <td><Skeleton className="h-4 w-24" /></td>
+        <td>
+          <Skeleton className="h-4 w-32" />
+        </td>
+        <td>
+          <Skeleton className="h-4 w-48" />
+        </td>
+        <td>
+          <Skeleton className="h-4 w-24" />
+        </td>
       </tr>
     ))}
   </tbody>
@@ -132,7 +132,7 @@ import { Loader2 } from 'lucide-react';
 
 <div className="flex items-center justify-center p-12">
   <Loader2 className="h-8 w-8 animate-spin text-primary" />
-</div>
+</div>;
 ```
 
 ### With Message
@@ -140,9 +140,7 @@ import { Loader2 } from 'lucide-react';
 ```tsx
 <div className="flex flex-col items-center justify-center p-12 space-y-4">
   <Loader2 className="h-8 w-8 animate-spin text-primary" />
-  <p className="text-sm text-muted-foreground">
-    Loading your data...
-  </p>
+  <p className="text-sm text-muted-foreground">Loading your data...</p>
 </div>
 ```
 
@@ -193,13 +191,17 @@ export function Progress({ value }: { value: number }) {
   <div className="flex justify-between">
     {steps.map((step, i) => (
       <div key={i} className="flex flex-col items-center gap-2">
-        <div className={cn(
-          "w-8 h-8 rounded-full flex items-center justify-center",
-          i < currentStep ? "bg-primary text-primary-foreground" :
-          i === currentStep ? "bg-primary/20 text-primary" :
-          "bg-muted text-muted-foreground"
-        )}>
-          {i < currentStep ? "✓" : i + 1}
+        <div
+          className={cn(
+            'w-8 h-8 rounded-full flex items-center justify-center',
+            i < currentStep
+              ? 'bg-primary text-primary-foreground'
+              : i === currentStep
+                ? 'bg-primary/20 text-primary'
+                : 'bg-muted text-muted-foreground'
+          )}
+        >
+          {i < currentStep ? '✓' : i + 1}
         </div>
         <span className="text-xs text-muted-foreground">{step}</span>
       </div>
@@ -231,14 +233,16 @@ useEffect(() => {
 ### Full-Page Overlay
 
 ```tsx
-{isLoading && (
-  <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
-    <div className="flex flex-col items-center gap-4">
-      <Loader2 className="h-12 w-12 animate-spin text-primary" />
-      <p className="text-lg font-medium">Loading...</p>
+{
+  isLoading && (
+    <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
+      <div className="flex flex-col items-center gap-4">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="text-lg font-medium">Loading...</p>
+      </div>
     </div>
-  </div>
-)}
+  );
+}
 ```
 
 ## Lazy Loading
@@ -255,18 +259,13 @@ export function LazyImage({ src, alt, ...props }: ImageProps) {
 
   return (
     <div className="relative">
-      {isLoading && (
-        <Skeleton className="absolute inset-0" />
-      )}
+      {isLoading && <Skeleton className="absolute inset-0" />}
       <img
         src={src}
         alt={alt}
         loading="lazy"
         onLoad={() => setIsLoading(false)}
-        className={cn(
-          "transition-opacity duration-300",
-          isLoading ? "opacity-0" : "opacity-100"
-        )}
+        className={cn('transition-opacity duration-300', isLoading ? 'opacity-0' : 'opacity-100')}
         {...props}
       />
     </div>
@@ -278,7 +277,7 @@ export function LazyImage({ src, alt, ...props }: ImageProps) {
 
 ```tsx
 <div className="space-y-4">
-  {items.map(item => (
+  {items.map((item) => (
     <ItemCard key={item.id} item={item} />
   ))}
 
@@ -289,9 +288,7 @@ export function LazyImage({ src, alt, ...props }: ImageProps) {
   )}
 
   {!hasMore && items.length > 0 && (
-    <p className="text-center text-sm text-muted-foreground py-4">
-      No more items
-    </p>
+    <p className="text-center text-sm text-muted-foreground py-4">No more items</p>
   )}
 </div>
 ```
@@ -303,60 +300,62 @@ export function LazyImage({ src, alt, ...props }: ImageProps) {
 ### Non-Blocking Indicator
 
 ```tsx
-{isProcessing && (
-  <div className="fixed bottom-4 right-4 p-4 rounded-lg bg-card border shadow-lg">
-    <div className="flex items-center gap-3">
-      <Loader2 className="h-4 w-4 animate-spin" />
-      <div>
-        <p className="text-sm font-medium">Processing...</p>
-        <p className="text-xs text-muted-foreground">
-          This may take a few minutes
-        </p>
+{
+  isProcessing && (
+    <div className="fixed bottom-4 right-4 p-4 rounded-lg bg-card border shadow-lg">
+      <div className="flex items-center gap-3">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <div>
+          <p className="text-sm font-medium">Processing...</p>
+          <p className="text-xs text-muted-foreground">This may take a few minutes</p>
+        </div>
       </div>
     </div>
-  </div>
-)}
+  );
+}
 ```
 
 ### With Dismiss
 
 ```tsx
-{task && (
-  <div className="fixed bottom-4 right-4 p-4 rounded-lg bg-card border shadow-lg">
-    <div className="flex items-center gap-3">
-      <Loader2 className="h-4 w-4 animate-spin" />
-      <div className="flex-1">
-        <p className="text-sm font-medium">{task.title}</p>
-        <p className="text-xs text-muted-foreground">{task.status}</p>
+{
+  task && (
+    <div className="fixed bottom-4 right-4 p-4 rounded-lg bg-card border shadow-lg">
+      <div className="flex items-center gap-3">
+        <Loader2 className="h-4 w-4 animate-spin" />
+        <div className="flex-1">
+          <p className="text-sm font-medium">{task.title}</p>
+          <p className="text-xs text-muted-foreground">{task.status}</p>
+        </div>
+        <Button variant="ghost" size="icon" onClick={() => setTask(null)}>
+          ×
+        </Button>
       </div>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => setTask(null)}
-      >
-        ×
-      </Button>
     </div>
-  </div>
-)}
+  );
+}
 ```
 
 ## Loading State Timing
 
 ### Quick Actions (<1s)
+
 No loading state needed - feels instant
 
 ### Short Actions (1-3s)
+
 - Button spinner
 - Inline spinner
 - Skeleton for known layouts
 
 ### Medium Actions (3-10s)
+
 - Skeleton screens
 - Progress indicators
 - Cancellable operations
 
 ### Long Actions (>10s)
+
 - Background processing
 - Non-blocking indicators
 - Clear time estimates
@@ -378,17 +377,13 @@ const handleLike = async () => {
   } catch (error) {
     // Revert on error
     setIsLiked(isLiked);
-    toast.error("Failed to update. Please try again.");
+    toast.error('Failed to update. Please try again.');
   }
 };
 
-<Button
-  variant="ghost"
-  size="icon"
-  onClick={handleLike}
->
+<Button variant="ghost" size="icon" onClick={handleLike}>
   {isLiked ? <Heart className="fill-current" /> : <Heart />}
-</Button>
+</Button>;
 ```
 
 ## Accessibility
@@ -418,6 +413,7 @@ const handleLike = async () => {
 ## Animation Guidelines
 
 ### Duration
+
 - **Spinner**: Continuous (no duration)
 - **Skeleton**: Continuous pulse (1.5s intervals)
 - **Progress**: Smooth transitions (300ms)
@@ -426,12 +422,7 @@ const handleLike = async () => {
 ### Reduced Motion
 
 ```tsx
-<div className={cn(
-  "transition-opacity",
-  "motion-reduce:transition-none"
-)}>
-  {content}
-</div>
+<div className={cn('transition-opacity', 'motion-reduce:transition-none')}>{content}</div>
 ```
 
 ## Anti-Patterns
@@ -451,8 +442,12 @@ const handleLike = async () => {
 
 ```tsx
 // Bad - jarring experience
-{data && <Content />}
-{isLoading && <Spinner />}
+{
+  data && <Content />;
+}
+{
+  isLoading && <Spinner />;
+}
 ```
 
 **Use instead**: Replace content OR use skeleton before
@@ -461,9 +456,7 @@ const handleLike = async () => {
 
 ```tsx
 // Bad - user thinks it's broken
-<Button onClick={handleLongTask}>
-  Process
-</Button>
+<Button onClick={handleLongTask}>Process</Button>
 ```
 
 **Use instead**: Show progress or move to background

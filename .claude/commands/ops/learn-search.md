@@ -33,7 +33,7 @@ outputs:
 
 riskLevel: 'LOW'
 requiresHITL: false
-riskPolicyRef: 'docs/llm/risk-policy.json#readOnly'
+riskPolicyRef: 'docs/llm/risk-policy.json#/riskFramework/riskLevels/LOW'
 
 allowed-tools:
   - 'Read(*)'
@@ -84,6 +84,7 @@ Search micro-lessons to find relevant learnings quickly without browsing INDEX.m
    - Check for `--high-usage` filter
 
 2. **Search micro-lessons:**
+
    ```bash
    # Search by tags (exact or partial match)
    grep -l "Tags.*<query>" docs/micro-lessons/*.md
@@ -108,6 +109,7 @@ Search micro-lessons to find relevant learnings quickly without browsing INDEX.m
    - Apply `--high-usage` filter (UsedBy > 0)
 
 5. **Display top 10 results:**
+
    ```text
    🔍 Found 8 lessons matching "git merge":
 
@@ -143,6 +145,7 @@ Search micro-lessons to find relevant learnings quickly without browsing INDEX.m
 ### Output Format
 
 **Standard Output:**
+
 ```text
 🔍 Found N lessons matching "<query>":
 
@@ -154,6 +157,7 @@ Search micro-lessons to find relevant learnings quickly without browsing INDEX.m
 ```
 
 **No Results:**
+
 ```text
 ❌ No lessons found matching "<query>"
 
@@ -166,19 +170,22 @@ Search micro-lessons to find relevant learnings quickly without browsing INDEX.m
 ### Implementation Notes
 
 **Ranking Algorithm:**
+
 ```typescript
-score = 0
-if (exactTagMatch) score += 10
-if (titleMatch) score += 5
-if (contentMatch) score += 2
-if (recentFilter && withinRange) score += (30 - daysSince)
-if (usedBy > 0) score += Math.min(usedBy, 3) * 2
+score = 0;
+if (exactTagMatch) score += 10;
+if (titleMatch) score += 5;
+if (contentMatch) score += 2;
+if (recentFilter && withinRange) score += 30 - daysSince;
+if (usedBy > 0) score += Math.min(usedBy, 3) * 2;
 ```
 
 **Performance:**
-- ~74 micro-lessons: < 1 second
+
+- ~74 micro-lessons: < 1 second (bounded by O(n) file reads)
 - Simple grep-based search (no dependencies)
 - Cache parsed tags in memory (single run)
+- Note: Complex multi-filter queries may approach ~2s; performance scales linearly with lesson count
 
 ### Failure & Recovery
 
@@ -189,11 +196,13 @@ if (usedBy > 0) score += Math.min(usedBy, 3) * 2
 ### Integration
 
 **Used by:**
+
 - `/ops:learning-capture` (suggest similar lessons before creating)
 - Development workflow (quick reference lookup)
 - Onboarding (find relevant patterns)
 
 **Complements:**
+
 - `docs/micro-lessons/INDEX.md` (Top-10 by heat score)
 - `/learn` command (this - search by query)
 - `pnpm learn:index` (regenerate INDEX.md)

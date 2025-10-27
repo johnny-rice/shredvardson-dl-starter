@@ -13,10 +13,13 @@ Severity: normal
 
 ```markdown
 # ❌ Wrong: Update QUICK_REFERENCE.md purpose, commit without regenerating
+
 # .claude/commands/QUICK_REFERENCE.md
+
 ---
-purpose: "5 discovery commands + Skills catalog"  # Changed from "27 commands"
----
+
+## purpose: "5 discovery commands + Skills catalog" # Changed from "27 commands"
+
 # ... rest of file
 ```
 
@@ -35,6 +38,7 @@ git push  # ✅ CI passes
 ```
 
 **Why This Matters.** The command index (`docs/commands/index.json`) is used by:
+
 - `routing-contract` CI check to validate structure
 - LLM context routing to find relevant commands
 - Documentation generation scripts
@@ -42,6 +46,7 @@ git push  # ✅ CI passes
 Changes to command metadata must be reflected in the index for accurate routing.
 
 **Guardrails.**
+
 - Run `node scripts/generate-command-index.js` after editing any `.claude/commands/**/*.md` frontmatter
 - `routing-contract` CI check validates index is in sync (catches this pre-merge)
 - Consider adding a pre-commit hook to auto-regenerate index if command files changed

@@ -4,16 +4,16 @@ _Generated automatically. Run `pnpm learn:index` to update. Do not edit by hand.
 
 _📅 Recency ranking (0/8 usage events needed for heat ranking)_
 
-1. **[TanStack Table Selection State Management](20251026-084607-tanstack-table-selection-state.md)** `#tanstack-table #react #hooks #state-management #selection #bug-fix #issue-192`
-2. **[Accessible Table Row Selection Implementation](20251026-084606-accessible-table-row-selection.md)** `#accessibility #aria #wcag #tables #ui #tanstack-table #issue-192`
-3. **[External Library Design System Integration Pattern](20251026-084605-external-library-cva-integration.md)** `#design-system #external-libraries #cva #components #tanstack-table #issue-192`
-4. **[SVG Accessibility: Use aria-hidden NOT title for Decorative Icons](svg-accessibility-aria-hidden.md)** `svg,accessibility,aria-hidden,a11y,screen-reader,decorative-icons`
-5. **[React Void Elements Cannot Have Children](react-void-elements-no-children.md)** `react,void-elements,html,component-playground,dynamic-rendering`
-6. **[shadcn CLI Requires Full Tailwind Setup in Package](shadcn-cli-requires-full-setup.md)** `shadcn,cli,tailwind,setup,components,ui-library,configuration`
-7. **[Lefthook + Biome for Instant Feedback and 2x Faster Validation](196-lefthook-biome-quality-gates.md)**
-8. **[Comprehensive Pre-Push Validation Prevents CI Failures](20251025-082837-comprehensive-pre-push-validation.md)**
-9. **[20250124-193100-provenance-metadata-for-config](20250124-193100-provenance-metadata-for-config.md)** `#data-integrity #configuration #metadata #documentation #provenance #phase-4`
-10. **[20250124-193200-extract-security-utilities-proactively](20250124-193200-extract-security-utilities-proactively.md)** `#security #duplication #refactoring #utilities #sanitization #path-traversal #phase-4`
+1. **[Configurable execSync Timeouts for CI Reliability](20251027-083728-configurable-execsync-timeouts-for-ci.md)**
+2. **[Destructive Operation Confirmation Guards](20251027-083654-destructive-operation-confirmation-guards.md)**
+3. **[SKILL_VERBOSE Environment Pattern for Credential Protection](20251027-083626-skill-verbose-env-pattern.md)**
+4. **[Proper TypeScript Error Typing for execSync](20251027-081050-execsync-error-typing.md)** `typescript,error-handling,child-process,type-safety,biome,linting,node-js,execsync`
+5. **[JSON Pointer Syntax for Config File References](20251027-081022-json-pointer-config-references.md)** `json-pointer,config,metadata,validation,yaml,documentation,code-quality,rfc6901`
+6. **[Pre-Commit Markdown Linting Prevents Bulk Review Comments](20251027-080956-pre-commit-markdown-linting.md)** `markdown,linting,pre-commit,code-review,automation,pr-quality,coderabbit,documentation`
+7. **[Comprehensive Pre-Push Validation Prevents CI Failures](20251025-082837-comprehensive-pre-push-validation.md)**
+8. **[❌ BUG: JSON becomes a string](20251022-100250-jq-arg-vs-argjson.md)**
+9. **[Atomic File Writes: Use Temp + Rename to Prevent Partial Writes](20250124-192600-atomic-file-writes-temp-rename-pattern.md)** `#filesystem #atomic-writes #file-safety #error-handling #corruption-prevention #json #registry #phase-4 #coderabbit`
+10. **[SVG Accessibility: Use aria-hidden NOT title for Decorative Icons](svg-accessibility-aria-hidden.md)** `svg,accessibility,aria-hidden,a11y,screen-reader,decorative-icons`
 
 ---
 

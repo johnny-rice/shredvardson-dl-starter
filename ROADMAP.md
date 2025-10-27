@@ -11,6 +11,7 @@
 Build a production-ready, LLM-first Next.js monorepo starter with intelligent development workflows powered by the Skills architecture.
 
 **Planning Hierarchy:**
+
 - **This File (ROADMAP.md)** - Strategic phases and historical record
 - **GitHub Epics** - Phase-level tracking with milestones
 - **GitHub Issues** - Specific work items and tasks
@@ -24,6 +25,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 **Issue:** #170 (Phase 1)
 
 **Achievements:**
+
 - Established Skills architecture patterns
 - Implemented progressive disclosure model
 - Created initial Skills (`/test`, `/db`, `/spec`)
@@ -31,6 +33,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 - **Token Savings:** 60% average
 
 **Deliverables:**
+
 - [Phase 1 Spec](docs/specs/phase-1-skills-architecture-foundation.md)
 - [ADR 002](docs/adr/002-skills-architecture.md)
 - Initial Skills implementations
@@ -41,6 +44,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 **Issue:** #170 (Phase 2)
 
 **Achievements:**
+
 - Implemented `/test`, `/db`, `/spec` Skills
 - Created token measurement tool
 - Validated progressive disclosure
@@ -48,6 +52,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 - **Actual Savings:** 92.2% potential (74% realized)
 
 **Deliverables:**
+
 - [Phase 2 Plan](docs/plans/phase-2-core-workflow-implementation.md)
 - Token measurement tool (`scripts/tools/measure-tokens.ts`)
 - [Validation Report](docs/validation/phase-2-token-measurement.md)
@@ -58,6 +63,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 **Issue:** #170 (Phase 3)
 
 **Achievements:**
+
 - Consolidated 5+ git commands into `/git` Skill
 - Implemented `/review` code quality automation
 - Implemented `/docs` documentation sync
@@ -65,12 +71,14 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 - Zero context pollution maintained
 
 **Deliverables:**
+
 - [Phase 3 Spec](docs/specs/phase-3-git-workflow-consolidation.md)
 - [Phase 3 Plan](docs/plans/phase-3-git-workflow-consolidation.md)
 - [Skills Architecture Guide](docs/skills-architecture.md) ([Quick Ref](SKILLS.md))
 - [Validation Report](docs/validation/phase-3-token-savings.md)
 
 **New Skills:**
+
 - `/git` - Unified git workflow (branch, commit, pr, workflow, tag)
 - `/review` - Code quality automation (TypeScript, ESLint, tests, coverage, build)
 - `/docs` - Documentation sync (sync, validate)
@@ -84,6 +92,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 **Decision:** Rejected "Skills Factory" in favor of data-driven approach
 
 **Achievements:**
+
 - Lightweight CSV-based usage logging
 - `/skills stats` analytics command
 - Integrated logging into all 7 Skill scripts
@@ -91,6 +100,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 - Foundation for Phase 4B-D decisions
 
 **Deliverables:**
+
 - [Phase 4A Spec](docs/specs/phase-4a-skills-observability.md)
 - [Skills Factory Evaluation](docs/decisions/skills-factory-evaluation.md)
 - `scripts/utils/skill-logger.sh` - Logging utility
@@ -106,6 +116,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 **Priority:** P1 (HIGH)
 
 **Achievements:**
+
 - Enhanced `/ops:learning-capture` v2.0 with intelligent automation
   - Auto-detect session context from git (branch, commits, changed files)
   - Suggest tags from existing corpus (74 lessons analyzed)
@@ -117,6 +128,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 - Reduced friction in learning capture workflow
 
 **Deliverables:**
+
 - [Phase 4B Spec](docs/specs/phase-4b-learning-capture-enhancement.md)
 - [Enhanced Learning Capture Command](.claude/commands/ops/learning-capture.md) (v2.0)
 - [Learn Search Command](.claude/commands/ops/learn-search.md) (new)
@@ -130,6 +142,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 **Data Review Date:** ~2025-11-05
 
 **Decision Criteria (defined for rapid execution):**
+
 - **Proceed if:** `/learn` search used >5 times/week OR `/ops:learning-capture` shows >50% tag suggestion acceptance
 - **Prioritize:** Commands/workflows with >10 manual invocations in 2-week window
 - **Success threshold:** New Skills reduce manual steps by >60%
@@ -138,6 +151,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 #### Phase 4C: High-Confidence Skills (P2 - based on data)
 
 **Data-informed Skill expansion:**
+
 - `/github` - Issue/PR management expansion
   - Create issues from conversation
   - Link PRs to issues automatically
@@ -147,6 +161,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
   - Suggest updates based on code changes
 
 **Validation Criteria:**
+
 - Observability shows >10 GitHub CLI invocations/week
 - Documentation drift detected in >3 PRs
 - Token savings >60% vs manual workflow
@@ -155,11 +170,13 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 #### Phase 4D: Behavioral-Driven Skills (P3 - TBD)
 
 **Based on 2-week observability data:**
+
 - Identify high-frequency manual workflows from skill-usage.csv
 - Build Skills for top 3 pain points (sorted by invocation count)
 - Validate with usage metrics (before/after comparison)
 
 **Validation Criteria:**
+
 - Top 3 workflows have >15 invocations each in 2-week window
 - New Skills reduce invocations by >50%
 - User feedback positive (friction reduced)
@@ -180,12 +197,14 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 **Focus:** Production-ready AI capabilities
 
 **Planned Features:**
+
 - AI tool-use kernel (`packages/ai/`)
 - Model-agnostic provider infrastructure
 - Streaming chat endpoint
 - Example tools (supabase, http, datetime, calculator)
 
 **References:**
+
 - [AI Features Roadmap Draft](docs/scratch/roadmap-ai-features-draft-2025-10-14.md)
 
 ### Phase 6: Skills Marketplace (TBD)
@@ -193,6 +212,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 **Focus:** Community-driven Skills ecosystem
 
 **Planned Features:**
+
 - Skill discovery and sharing
 - Skill rating and reviews
 - Skill installation automation
@@ -202,14 +222,15 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 
 ### Token Savings Progression
 
-| Phase | Target | Achieved | Status |
-|-------|--------|----------|--------|
-| Phase 1 | 60% | 60% | ✅ Met |
-| Phase 2 | 60% | 74% (92.2% potential) | ✅ Exceeded |
-| Phase 3 | 80% | 65% avg (77% pure automation) | ⚠️ Adjusted |
-| Phase 4 | 75% | TBD | 🎯 Planned |
+| Phase   | Target | Achieved                      | Status      |
+| ------- | ------ | ----------------------------- | ----------- |
+| Phase 1 | 60%    | 60%                           | ✅ Met      |
+| Phase 2 | 60%    | 74% (92.2% potential)         | ✅ Exceeded |
+| Phase 3 | 80%    | 65% avg (77% pure automation) | ⚠️ Adjusted |
+| Phase 4 | 75%    | TBD                           | 🎯 Planned  |
 
 **Notes:**
+
 - Phase 3 target adjusted based on realistic expectations
 - LLM-assisted workflows (commit, PR) inherently need more tokens
 - Pure automation workflows consistently exceed 75% savings
@@ -245,6 +266,7 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 ## References
 
 ### Documentation
+
 - [SKILLS.md](SKILLS.md) - Skills architecture overview (see [full docs](docs/skills-architecture.md))
 - [docs/specs/](docs/specs/) - Feature specifications
 - [docs/plans/](docs/plans/) - Implementation plans
@@ -252,11 +274,13 @@ Build a production-ready, LLM-first Next.js monorepo starter with intelligent de
 - [docs/adr/](docs/adr/) - Architecture decision records
 
 ### Tools
+
 - [Token Measurement](scripts/tools/measure-tokens.ts) - Validate token usage
 - [Command Indexer](scripts/learn/index-commands.ts) - Index slash commands
 - [Doctor](scripts/doctor/) - System health checks
 
 ### Key Issues
+
 - [#170](https://github.com/DissonanceLabs/dl-starter/issues/170) - Skills Architecture (all phases)
 - [#108](https://github.com/DissonanceLabs/dl-starter/issues/108) - Testing Infrastructure
 
@@ -268,4 +292,4 @@ MIT - See [LICENSE](LICENSE)
 
 **DL Starter** - Production-ready, LLM-first Next.js monorepo
 
-*Updated: Phase 3 Complete - Git Workflow Consolidation*
+_Updated: Phase 3 Complete - Git Workflow Consolidation_

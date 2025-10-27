@@ -23,6 +23,7 @@ Component templates were using hardcoded Tailwind color names (`'blue'`, `'green
 ## Example
 
 ### ❌ Before (Hardcoded Colors)
+
 ```typescript
 // Tremor chart template - WRONG
 export function LineChart({
@@ -41,6 +42,7 @@ const changeTypeStyles = {
 ```
 
 ### ✅ After (Semantic Tokens)
+
 ```typescript
 // Tremor chart template - CORRECT
 export function LineChart({
@@ -66,16 +68,20 @@ const changeTypeStyles = {
 ## Semantic Token Strategies
 
 ### 1. Library-Native Tokens (Tremor, Recharts)
+
 Use semantic names the library understands: `'primary'`, `'secondary'`, `'accent'`, `'success'`, `'warning'`, `'error'`
 
 ### 2. CSS Custom Properties (Native Components)
+
 Use Tailwind's arbitrary value syntax with CSS variables: `text-[var(--color-primary)]`
 
 ### 3. Token Mapping Layer (Advanced)
+
 Create a mapping from semantic names to library-specific values:
+
 ```typescript
 const tokenMap = {
-  primary: 'blue',    // Maps to Tremor's 'blue'
+  primary: 'blue', // Maps to Tremor's 'blue'
   secondary: 'green', // Maps to Tremor's 'green'
   // ...
 };

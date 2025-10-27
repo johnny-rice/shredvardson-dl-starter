@@ -21,12 +21,14 @@
 ### Current State: Manual `.git/hooks/pre-push`
 
 **Pros:**
+
 - ✅ Zero dependencies
 - ✅ Works everywhere (no Node.js/Go/etc required)
 - ✅ Simple to understand
 - ✅ Full control over execution
 
 **Cons:**
+
 - ❌ Not version-controlled (requires manual `cp .githooks/pre-push .git/hooks/`)
 - ❌ Sequential execution only (5 checks run one-by-one: 15-30s total)
 - ❌ Every new contributor must manually sync hooks
@@ -37,17 +39,17 @@
 
 **Why Lefthook over Husky:**
 
-| Feature | Manual .git/hooks | Husky | Lefthook |
-|---------|-------------------|-------|----------|
-| **Performance** | Sequential | Sequential | **Parallel (2x faster)** |
-| **Auto-install** | ❌ Manual cp | ✅ On npm install | ✅ On pnpm install |
-| **Language** | Bash only | Node.js required | **Go binary (any language)** |
-| **Configuration** | Bash scripts | .husky/ folder | **YAML (lefthook.yml)** |
-| **Weekly downloads** | N/A | 15.3M | 555K |
-| **Monorepo support** | ❌ | ⚠️ Basic | ✅ **Built-in** |
-| **Parallel execution** | ❌ | ❌ | ✅ |
-| **Skip patterns** | Manual | Manual | **Built-in** |
-| **CI/Local toggle** | Manual | Manual | **Built-in** |
+| Feature                | Manual .git/hooks | Husky             | Lefthook                     |
+| ---------------------- | ----------------- | ----------------- | ---------------------------- |
+| **Performance**        | Sequential        | Sequential        | **Parallel (2x faster)**     |
+| **Auto-install**       | ❌ Manual cp      | ✅ On npm install | ✅ On pnpm install           |
+| **Language**           | Bash only         | Node.js required  | **Go binary (any language)** |
+| **Configuration**      | Bash scripts      | .husky/ folder    | **YAML (lefthook.yml)**      |
+| **Weekly downloads**   | N/A               | 15.3M             | 555K                         |
+| **Monorepo support**   | ❌                | ⚠️ Basic          | ✅ **Built-in**              |
+| **Parallel execution** | ❌                | ❌                | ✅                           |
+| **Skip patterns**      | Manual            | Manual            | **Built-in**                 |
+| **CI/Local toggle**    | Manual            | Manual            | **Built-in**                 |
 
 **Example lefthook.yml:**
 
@@ -56,7 +58,7 @@ pre-push:
   parallel: true
   commands:
     lockfile:
-      glob: "package.json"
+      glob: 'package.json'
       run: pnpm install --frozen-lockfile
 
     typecheck:
@@ -77,6 +79,7 @@ pre-push:
 ```
 
 **Performance gain:**
+
 - **Current (sequential):** 15-30s
 - **Lefthook (parallel):** **8-15s** (typecheck + lint run simultaneously)
 
@@ -89,11 +92,13 @@ pre-push:
 ### Current State: ESLint
 
 **Pros:**
+
 - ✅ Industry standard
 - ✅ Huge ecosystem (thousands of plugins)
 - ✅ Type-aware rules (typescript-eslint)
 
 **Cons:**
+
 - ❌ Slow (2-5s in Turbo cached, 10-30s cold)
 - ❌ Node.js runtime required
 - ❌ Single-threaded
@@ -102,11 +107,11 @@ pre-push:
 
 **Strategy**: Rust-based linter FIRST (pre-commit), ESLint SECOND (pre-push/CI)
 
-| Tool | Speed vs ESLint | Type-Aware | Rules | Use Case |
-|------|-----------------|------------|-------|----------|
-| **Biome** | **~15x faster** | ⚠️ Biotype (experimental) | 280+ | Instant pre-commit feedback |
-| **Oxlint** | **50-100x faster** (2x faster than Biome) | ❌ Not yet | 520+ | Fastest syntax-only checks |
-| **ESLint** | Baseline (slow) | ✅ Full support | 2000+ | Pre-push/CI deep analysis |
+| Tool       | Speed vs ESLint                           | Type-Aware                | Rules | Use Case                    |
+| ---------- | ----------------------------------------- | ------------------------- | ----- | --------------------------- |
+| **Biome**  | **~15x faster**                           | ⚠️ Biotype (experimental) | 280+  | Instant pre-commit feedback |
+| **Oxlint** | **50-100x faster** (2x faster than Biome) | ❌ Not yet                | 520+  | Fastest syntax-only checks  |
+| **ESLint** | Baseline (slow)                           | ✅ Full support           | 2000+ | Pre-push/CI deep analysis   |
 
 **Note:** Performance data from AppSignal May 2025 benchmarks. Biome lints 10k-line monorepo in ~200ms vs ESLint's 3-5s (15x faster). Oxlint achieves 50-100x speedup depending on CPU cores.
 
@@ -118,17 +123,18 @@ pre-commit:
   commands:
     format-lint:
       run: biome check --write {staged_files}
-      glob: "*.{js,ts,jsx,tsx}"
+      glob: '*.{js,ts,jsx,tsx}'
       # Runs in <1s even on large codebases
 
 pre-push:
   commands:
     deep-lint:
-      run: pnpm lint  # ESLint with type-aware rules
+      run: pnpm lint # ESLint with type-aware rules
       # Runs in 2-5s (Turbo cached)
 ```
 
 **Benefits:**
+
 - ✅ **Instant feedback** on commit (Biome <1s)
 - ✅ **Deep type analysis** before push (ESLint 2-5s)
 - ✅ **Best of both worlds** (speed + correctness)
@@ -149,14 +155,14 @@ pre-push:
 
 If this starter template expands to multi-language (Python, Go, Rust, etc.):
 
-| Feature | Trunk Check | Mega-Linter | Super-Linter |
-|---------|-------------|-------------|--------------|
-| **Speed** | **Blazingly fast** (daemon, cache) | Parallel (Python multiprocessing) | Sequential (Bash) |
-| **Local DX** | ✅ CLI + daemon + LSP | ✅ CLI | ❌ Docker only |
-| **Languages** | 30+ linters | 100+ linters | 50+ linters |
-| **Versioning** | ✅ .trunk/trunk.yaml | ⚠️ Docker tags | ⚠️ Docker tags |
-| **Cost** | Free (solo/OSS) | Free (OSS) | Free |
-| **Runtime** | Go binary | Python/Docker | Docker |
+| Feature        | Trunk Check                        | Mega-Linter                       | Super-Linter      |
+| -------------- | ---------------------------------- | --------------------------------- | ----------------- |
+| **Speed**      | **Blazingly fast** (daemon, cache) | Parallel (Python multiprocessing) | Sequential (Bash) |
+| **Local DX**   | ✅ CLI + daemon + LSP              | ✅ CLI                            | ❌ Docker only    |
+| **Languages**  | 30+ linters                        | 100+ linters                      | 50+ linters       |
+| **Versioning** | ✅ .trunk/trunk.yaml               | ⚠️ Docker tags                    | ⚠️ Docker tags    |
+| **Cost**       | Free (solo/OSS)                    | Free (OSS)                        | Free              |
+| **Runtime**    | Go binary                          | Python/Docker                     | Docker            |
 
 **Recommendation**: Only needed if expanding beyond JS/TS. **Skip for now.**
 
@@ -167,6 +173,7 @@ If this starter template expands to multi-language (Python, Go, Rust, etc.):
 ### Current State: CodeRabbit
 
 **Pros:**
+
 - ✅ **Best-in-class PR review** (76% precision)
 - ✅ Line-by-line analysis + summaries
 - ✅ Customizable rules
@@ -174,24 +181,27 @@ If this starter template expands to multi-language (Python, Go, Rust, etc.):
 - ✅ Catches bugs ESLint misses
 
 **Cons:**
+
 - ⚠️ Advisory warnings (docstring coverage, PR template) can't be validated locally
 
 ### Alternatives Considered
 
-| Tool | Precision | Cost | Strengths | Weaknesses |
-|------|-----------|------|-----------|------------|
-| **CodeRabbit** | **76%** | Free/OSS, $20/mo | **Best bug detection**, customizable | Advisory warnings not locally testable |
-| **GitHub Copilot** | 75% | $10/mo | Native GitHub, conversational fixes | **Weaker review quality** |
-| **Cursor Bugbot** | 80% | Free/$20mo | **Real-time editor integration** | Tied to Cursor IDE |
+| Tool               | Precision | Cost             | Strengths                            | Weaknesses                             |
+| ------------------ | --------- | ---------------- | ------------------------------------ | -------------------------------------- |
+| **CodeRabbit**     | **76%**   | Free/OSS, $20/mo | **Best bug detection**, customizable | Advisory warnings not locally testable |
+| **GitHub Copilot** | 75%       | $10/mo           | Native GitHub, conversational fixes  | **Weaker review quality**              |
+| **Cursor Bugbot**  | 80%       | Free/$20mo       | **Real-time editor integration**     | Tied to Cursor IDE                     |
 
 **Recommendation**: **Keep CodeRabbit** - Still best for dedicated PR review
 
 **Why not Copilot?**
+
 - Lower accuracy (75% vs 76%)
 - Reviews are "basic add-ons" vs CodeRabbit's dedicated analysis
 - "Notably weaker, missing complex issues CodeRabbit catches"
 
 **Why not Cursor?**
+
 - Excellent for real-time feedback in IDE
 - But CodeRabbit is better for PR-level holistic review
 - **Potential combo**: Cursor (local) + CodeRabbit (PR)
@@ -203,6 +213,7 @@ If this starter template expands to multi-language (Python, Go, Rust, etc.):
 ### Current State: Pre-push only
 
 **What we do:**
+
 - Pre-push: Lockfile, typecheck, lint, CI scripts, tests (15-30s)
 - Pre-commit: Micro-lesson index update only
 
@@ -212,21 +223,23 @@ If this starter template expands to multi-language (Python, Go, Rust, etc.):
 
 **Recommended split:**
 
-| Hook | Check | Time Budget | Purpose |
-|------|-------|-------------|---------|
-| **Pre-commit** | Biome format+lint | <1s | Instant feedback, prevent bad commits |
-| **Pre-commit** | Staged file tests | <3s | Immediate unit test feedback |
-| **Pre-push** | TypeScript typecheck | 2-5s | Deep type analysis |
-| **Pre-push** | ESLint (type-aware) | 2-5s | Complex rules |
-| **Pre-push** | Full test suite | 1-20s | Comprehensive validation |
-| **CI** | Build, E2E, doctor | 2-5min | Final enforcement |
+| Hook           | Check                | Time Budget | Purpose                               |
+| -------------- | -------------------- | ----------- | ------------------------------------- |
+| **Pre-commit** | Biome format+lint    | <1s         | Instant feedback, prevent bad commits |
+| **Pre-commit** | Staged file tests    | <3s         | Immediate unit test feedback          |
+| **Pre-push**   | TypeScript typecheck | 2-5s        | Deep type analysis                    |
+| **Pre-push**   | ESLint (type-aware)  | 2-5s        | Complex rules                         |
+| **Pre-push**   | Full test suite      | 1-20s       | Comprehensive validation              |
+| **CI**         | Build, E2E, doctor   | 2-5min      | Final enforcement                     |
 
 **Benefits:**
+
 - ✅ **Instant commit feedback** (<3s) prevents bad code from entering git history
 - ✅ **Comprehensive push validation** (8-15s) catches integration issues
 - ✅ **CI as enforcement** (cannot be bypassed)
 
 **Current state analysis:**
+
 - ⚠️ No pre-commit checks (except learning index)
 - ✅ Comprehensive pre-push (good!)
 - ❌ Pre-push is slow (15-30s could be 8-15s with Lefthook parallel)
@@ -242,12 +255,14 @@ If this starter template expands to multi-language (Python, Go, Rust, etc.):
 **Impact:** 2x faster pre-push (15-30s → 8-15s), auto-install for new contributors
 
 **Steps:**
+
 ```bash
 pnpm add -D lefthook
 echo "lefthook install" >> .husky/postinstall  # Or add to prepare script
 ```
 
 **Migration:**
+
 - Convert `.githooks/pre-push` to `lefthook.yml`
 - Enable parallel execution for typecheck + lint
 - Add skip patterns for WIP branches
@@ -261,22 +276,25 @@ echo "lefthook install" >> .husky/postinstall  # Or add to prepare script
 **Impact:** Instant commit feedback (<1s), catch 80% of lint issues before committing
 
 **Setup:**
+
 ```bash
 pnpm add -D @biomejs/biome
 ```
 
 **Configuration:**
+
 ```yaml
 # lefthook.yml
 pre-commit:
   commands:
     biome:
-      glob: "*.{js,ts,jsx,tsx}"
+      glob: '*.{js,ts,jsx,tsx}'
       run: biome check --write --staged --no-errors-on-unmatched {staged_files}
-      stage_fixed: true  # Auto-stage fixed files
+      stage_fixed: true # Auto-stage fixed files
 ```
 
 **Workflow:**
+
 - Pre-commit: Biome format+lint (<1s)
 - Pre-push: ESLint type-aware rules (2-5s)
 - CI: Full ESLint + build (2-5min)
@@ -298,6 +316,7 @@ pre-commit:
 #### 4. **Consider Cursor + CodeRabbit Combo** (Priority: Low, Effort: Low)
 
 **If you use Cursor IDE:**
+
 - Cursor Bugbot: Real-time feedback while coding (80% precision)
 - CodeRabbit: PR-level holistic review (76% precision)
 
@@ -328,6 +347,7 @@ CI runs → All checks + build + doctor (final enforcement)
 ```
 
 **Total time savings per development cycle:**
+
 - Commit feedback: **0s → <1s** (new capability)
 - Push validation: **15-30s → 8-15s** (2x faster)
 - **Net DX improvement:** Faster feedback + fewer "oops" commits
@@ -391,15 +411,18 @@ CI runs → All checks + build + doctor (final enforcement)
 ### Time Savings (Annual)
 
 **Per development cycle:**
+
 - Commit: Save 15-30s per "oops forgot to format" commit
 - Push: Save 7-15s per push (parallel execution)
 
 **Assumptions:**
+
 - 20 pushes/week
 - 10 "oops" commits/week
 - 50 work weeks/year
 
 **Annual savings:**
+
 - Push time: 7-15s × 20 × 50 = **117-250 minutes/year** (2-4 hours)
 - Commit time: 15-30s × 10 × 50 = **125-250 minutes/year** (2-4 hours)
 - **Total: 4-8 hours/year saved**
@@ -411,12 +434,14 @@ CI runs → All checks + build + doctor (final enforcement)
 ## 10. Decision Matrix
 
 ### Keep Current Approach If:
+
 - ✅ Team is already used to manual hook sync
 - ✅ Codebase is <10k LOC (speed not critical)
 - ✅ Solo developer (no onboarding friction)
 - ✅ Prefer zero dependencies
 
 ### Upgrade to Lefthook + Biome If:
+
 - ✅ Adding team members (auto-install critical)
 - ✅ Codebase is >10k LOC (speed matters)
 - ✅ Want instant commit feedback
@@ -431,12 +456,14 @@ CI runs → All checks + build + doctor (final enforcement)
 ### Current State Grade: **B** (Good, but can be better)
 
 **Strengths:**
+
 - ✅ Comprehensive pre-push validation
 - ✅ Best-in-class AI review (CodeRabbit)
 - ✅ Clear error messages with fix instructions
 - ✅ Escape hatch (`--no-verify`)
 
 **Gaps:**
+
 - ⚠️ Manual hook installation (friction for new contributors)
 - ⚠️ Sequential execution (2x slower than possible)
 - ⚠️ No pre-commit feedback (miss fast linting wins)
@@ -445,6 +472,7 @@ CI runs → All checks + build + doctor (final enforcement)
 ### Optimized State Grade: **A** (Best-in-class 2025)
 
 **Improvements:**
+
 - ✅ Auto-installing hooks (Lefthook)
 - ✅ Parallel execution (2x faster)
 - ✅ Instant commit feedback (Biome <1s)

@@ -11,6 +11,7 @@ description: Documentation synchronization and validation
 **Purpose:** Sync documentation between repo and GitHub wiki
 
 **Usage:**
+
 ```bash
 /docs sync [--dry-run]
 /docs validate
@@ -19,18 +20,21 @@ description: Documentation synchronization and validation
 **Actions:**
 
 **sync** - Synchronize documentation
+
 - Detect changed documentation files
 - Sync to GitHub wiki (if configured)
 - Update cross-references
 - Generate table of contents
 
 **validate** - Validate documentation
+
 - Check internal links
 - Verify cross-references
 - Validate markdown syntax
 - Check for broken links
 
 **Flags:**
+
 - `--dry-run` - Preview changes without syncing
 
 **Output:** JSON report with sync/validation results
@@ -38,11 +42,13 @@ description: Documentation synchronization and validation
 **Token Cost:** ~400 tokens (progressive disclosure)
 
 **When to Use:**
+
 - After updating documentation
 - Before creating PR with doc changes
 - Manual documentation validation
 
 **Examples:**
+
 ```bash
 /docs sync              # Sync documentation changes
 /docs sync --dry-run    # Preview sync operations
@@ -50,6 +56,7 @@ description: Documentation synchronization and validation
 ```
 
 **Execution:**
+
 ```bash
 bash scripts/skills/documentation-sync.sh "$@"
 ```

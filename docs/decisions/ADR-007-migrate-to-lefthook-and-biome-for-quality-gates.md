@@ -53,11 +53,13 @@ We will migrate from manual git hooks to **Lefthook + Biome** with a layered val
 ### Architecture
 
 **Pre-commit** (instant feedback <1s):
+
 - Biome: Format + lint staged files
 - Auto-stage fixed files
 - Micro-lessons index updates
 
 **Pre-push** (comprehensive validation 8-15s):
+
 - Lockfile sync check
 - **Parallel execution**: TypeScript typecheck + ESLint (saves 5-8s)
 - CI script validation
@@ -65,6 +67,7 @@ We will migrate from manual git hooks to **Lefthook + Biome** with a layered val
 - Main branch protection
 
 **CI** (final enforcement):
+
 - Full test suite
 - Build validation
 - Doctor checks
@@ -90,25 +93,30 @@ We will migrate from manual git hooks to **Lefthook + Biome** with a layered val
 ### Benefits
 
 ✅ **Zero-friction onboarding**
+
 - New contributors: `git clone` → `pnpm install` → hooks ready
 - No manual setup, no forgotten steps
 - Consistent experience across team
 
 ✅ **2x faster validation**
+
 - Pre-push: 15-30s → 8-15s (parallel execution)
 - Saves 7-15s per push × 20 pushes/week = 2-4 hours/year
 
 ✅ **Instant pre-commit feedback**
+
 - Biome catches format/lint issues in <1s
 - Prevents "oops forgot to format" commits
 - Saves 15-30s per mistake × 10/week = 2-4 hours/year
 
 ✅ **Better developer experience**
+
 - Clear error messages with fix instructions
 - Auto-staging of fixed files (zero friction)
 - Easy bypass with `--no-verify` when needed
 
 ✅ **Best-in-class tooling (2025)**
+
 - Modern YAML configuration (easy to read/modify)
 - Built-in parallelization (no custom bash complexity)
 - Maintained by active communities
@@ -116,21 +124,25 @@ We will migrate from manual git hooks to **Lefthook + Biome** with a layered val
 ### Tradeoffs
 
 ⚠️ **Additional dependencies** (low risk)
+
 - 2 new dev dependencies (+~10MB to node_modules)
 - Go binary (lefthook) and Rust tools (biome) downloaded once
 - Mitigation: Both are widely adopted, stable packages
 
 ⚠️ **Biome != ESLint replacement**
+
 - Biome has fewer rules (280 vs 2000+)
 - Type-aware rules still experimental (Biotype)
 - Mitigation: Keep ESLint for pre-push/CI, use Biome only for pre-commit speed
 
 ⚠️ **Learning curve for team**
+
 - New lefthook.yml syntax to learn
 - Biome configuration separate from ESLint
 - Mitigation: Comprehensive micro-lesson, similar concepts to existing hooks
 
 ⚠️ **Parallelization implementation** (mitigated)
+
 - Parallel execution requires careful bash scripting
 - Initial named pipe implementation had deadlock risks (since replaced)
 - Current wait-based pattern with trap cleanup is production-safe

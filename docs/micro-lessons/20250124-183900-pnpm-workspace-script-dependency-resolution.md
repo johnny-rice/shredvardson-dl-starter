@@ -26,6 +26,7 @@ Node resolves modules from the current working directory's `node_modules`, NOT f
 ## Example
 
 ### ❌ Before (Broken)
+
 ```json
 // packages/ui/package.json
 {
@@ -42,6 +43,7 @@ import Handlebars from 'handlebars'; // ❌ Error: Cannot find module 'handlebar
 ```
 
 ### ✅ After (Fixed)
+
 ```json
 // package.json (root)
 {

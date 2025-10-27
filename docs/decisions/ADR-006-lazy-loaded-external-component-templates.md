@@ -20,21 +20,25 @@ Additionally, the implementation used Storybook for component previews, which wo
 We will implement a **lazy-loaded template system** for external component libraries with the following characteristics:
 
 ### 1. Template Storage
+
 - Store component templates as JSON files in `.claude/skills/design-system/templates/<source>/`
 - Each template contains: component code, test code, viewer examples, and dependencies
 - Templates are version-controlled but not installed until explicitly imported
 
 ### 2. On-Demand Installation
+
 - Provide `/design import <source> <component>` command via design-system Skill
 - Dependencies are installed only when user explicitly imports a component
 - Component files are generated in `packages/@ui/components/ui/` at import time
 
 ### 3. Viewer Integration (Not Storybook)
+
 - Templates generate viewer examples for the existing `/design` route
 - Examples follow the `ComponentExample` pattern already used in the app
 - No Storybook dependency or separate preview environment
 
 ### 4. Supported Sources
+
 - **Tremor:** Data visualization (charts, KPI cards)
 - **TanStack Table:** Advanced table functionality
 - **dnd-kit:** Drag-and-drop interactions
@@ -42,6 +46,7 @@ We will implement a **lazy-loaded template system** for external component libra
 ## Consequences
 
 ### Benefits
+
 1. **Maintains Lightweight Starter:** Zero bundle impact until components are imported
 2. **Developer Autonomy:** Users decide which external components they actually need
 3. **No Vendor Lock-in:** Templates are just code; users can modify after import
@@ -50,6 +55,7 @@ We will implement a **lazy-loaded template system** for external component libra
 6. **Future-Proof:** New templates can be added without affecting existing projects
 
 ### Tradeoffs
+
 1. **Manual Integration:** Users must copy viewer examples to `/design/page.tsx` manually
 2. **Template Maintenance:** Templates need updates when source libraries change
 3. **No Auto-Updates:** Imported components don't auto-update with template changes
@@ -57,11 +63,15 @@ We will implement a **lazy-loaded template system** for external component libra
 5. **Fallback Complexity:** Script supports both JSON templates and inline fallbacks
 
 ### Monitoring
+
 - Track template usage via component registry
 - Monitor bundle size growth after imports
 - Collect feedback on developer experience
 - Measure time-to-import for common components
 - Monitor template maintenance burden (updates needed per quarter)
+- Track template staleness: frequency of upstream library updates to templates
+- Monitor auto-update feasibility: assess triggering conditions for template refresh (e.g., major version bumps, security patches)
+- Future consideration: Implement auto-update mechanism for templates based on monitoring data
 
 ## References
 

@@ -22,9 +22,7 @@ Cards are flexible containers that group related content and actions. They provi
 ```tsx
 <Card className="p-6">
   <h3 className="text-xl font-semibold mb-2">Card Title</h3>
-  <p className="text-muted-foreground">
-    Card content with proper spacing and typography.
-  </p>
+  <p className="text-muted-foreground">Card content with proper spacing and typography.</p>
 </Card>
 ```
 
@@ -35,20 +33,17 @@ Cards are flexible containers that group related content and actions. They provi
 ```tsx
 <Card className="p-6 space-y-4">
   <div className="space-y-2">
-    <h3 className="text-xl font-semibold text-card-foreground">
-      Content Title
-    </h3>
-    <p className="text-sm text-muted-foreground">
-      Subtitle or metadata
-    </p>
+    <h3 className="text-xl font-semibold text-card-foreground">Content Title</h3>
+    <p className="text-sm text-muted-foreground">Subtitle or metadata</p>
   </div>
   <p className="text-muted-foreground leading-relaxed">
-    Main content goes here with comfortable line height
-    and proper spacing between elements.
+    Main content goes here with comfortable line height and proper spacing between elements.
   </p>
   <div className="flex gap-2">
     <Button size="sm">Primary Action</Button>
-    <Button size="sm" variant="outline">Secondary</Button>
+    <Button size="sm" variant="outline">
+      Secondary
+    </Button>
   </div>
 </Card>
 ```
@@ -58,12 +53,8 @@ Cards are flexible containers that group related content and actions. They provi
 ```tsx
 <Card className="p-6 hover:border-primary transition-colors cursor-pointer">
   <div className="space-y-2">
-    <h3 className="text-lg font-semibold text-card-foreground">
-      Clickable Card
-    </h3>
-    <p className="text-sm text-muted-foreground">
-      Click anywhere to navigate
-    </p>
+    <h3 className="text-lg font-semibold text-card-foreground">Clickable Card</h3>
+    <p className="text-sm text-muted-foreground">Click anywhere to navigate</p>
   </div>
 </Card>
 ```
@@ -105,9 +96,7 @@ Cards are flexible containers that group related content and actions. They provi
 <Card className="p-6 space-y-2">
   <p className="text-sm text-muted-foreground">Total Users</p>
   <p className="text-3xl font-bold text-card-foreground">12,847</p>
-  <p className="text-sm text-green-600">
-    ↑ 12% from last month
-  </p>
+  <p className="text-sm text-green-600">↑ 12% from last month</p>
 </Card>
 ```
 
@@ -119,12 +108,8 @@ Cards are flexible containers that group related content and actions. They provi
     <span className="text-2xl">⚡</span>
   </div>
   <div className="space-y-2">
-    <h3 className="text-xl font-semibold text-card-foreground">
-      Lightning Fast
-    </h3>
-    <p className="text-muted-foreground">
-      Optimized performance for instant loading times.
-    </p>
+    <h3 className="text-xl font-semibold text-card-foreground">Lightning Fast</h3>
+    <p className="text-muted-foreground">Optimized performance for instant loading times.</p>
   </div>
 </Card>
 ```
@@ -135,9 +120,7 @@ Cards are flexible containers that group related content and actions. They provi
 
 ```tsx
 <div className="max-w-md mx-auto">
-  <Card className="p-6">
-    {/* Content */}
-  </Card>
+  <Card className="p-6">{/* Content */}</Card>
 </div>
 ```
 
@@ -173,69 +156,76 @@ Cards are flexible containers that group related content and actions. They provi
 ## Spacing
 
 ### Internal Spacing
+
 - **Padding**: Use `p-6` (24px) for standard cards
 - **Content spacing**: Use `space-y-4` (16px) for internal sections
 - **Small cards**: Use `p-4` (16px) for compact layouts
 
 ### External Spacing
+
 - **Gap in grids**: Use `gap-4` (16px) or `gap-6` (24px)
 - **Vertical spacing**: Use `space-y-4` (16px) for stacked cards
 
 ## Accessibility
 
 ### Minimum Requirements (WCAG AA)
+
 - ✅ Border contrast ≥ 3:1 against background
 - ✅ Text contrast ≥ 4.5:1 for normal text
 - ✅ Focus indicator for interactive cards
 - ✅ Semantic HTML structure
 
 ### Interactive Cards
+
 Use proper button/link semantics:
 
 ```tsx
-{/* Card as link */}
+{
+  /* Card as link */
+}
 <Link href="/details" className="block">
-  <Card className="p-6 hover:border-primary transition-colors">
-    {/* Content */}
-  </Card>
-</Link>
+  <Card className="p-6 hover:border-primary transition-colors">{/* Content */}</Card>
+</Link>;
 
-{/* Card with internal action */}
+{
+  /* Card with internal action */
+}
 <Card className="p-6">
   <h3>Title</h3>
   <p>Content</p>
   <Button>Action</Button>
-</Card>
+</Card>;
 ```
 
 ### Keyboard Navigation
+
 - Tab: Focus interactive elements within card
 - Enter/Space: Activate focused element
 
 ## States
 
 ### Default
+
 Normal resting state with border
 
 ### Hover (Interactive Cards)
+
 Highlight border color change
 
 ```tsx
-<Card className="hover:border-primary transition-colors">
-  {/* Content */}
-</Card>
+<Card className="hover:border-primary transition-colors">{/* Content */}</Card>
 ```
 
 ### Focus (Interactive Cards)
+
 Visible focus ring
 
 ```tsx
-<Card className="focus-within:ring-2 focus-within:ring-ring">
-  {/* Content */}
-</Card>
+<Card className="focus-within:ring-2 focus-within:ring-ring">{/* Content */}</Card>
 ```
 
 ### Loading
+
 Skeleton or spinner state
 
 ```tsx
@@ -259,10 +249,12 @@ Skeleton or spinner state
 <Card className="p-6 space-y-4">
   <div className="flex items-center justify-between">
     <h3 className="text-lg font-semibold">Recent Activity</h3>
-    <Button variant="ghost" size="sm">View All</Button>
+    <Button variant="ghost" size="sm">
+      View All
+    </Button>
   </div>
   <div className="space-y-2">
-    {activities.map(activity => (
+    {activities.map((activity) => (
       <div key={activity.id} className="flex gap-3">
         <div className="w-8 h-8 rounded-full bg-primary/10" />
         <div className="flex-1">
@@ -280,12 +272,8 @@ Skeleton or spinner state
 ```tsx
 <Card className="p-6 space-y-4">
   <div className="space-y-2">
-    <h3 className="text-lg font-semibold text-card-foreground">
-      Email Notifications
-    </h3>
-    <p className="text-sm text-muted-foreground">
-      Manage your email preferences
-    </p>
+    <h3 className="text-lg font-semibold text-card-foreground">Email Notifications</h3>
+    <p className="text-sm text-muted-foreground">Manage your email preferences</p>
   </div>
   <div className="space-y-3">
     <label className="flex items-center gap-2">
@@ -306,12 +294,8 @@ Skeleton or spinner state
 <Card className="p-12 text-center space-y-4">
   <div className="text-4xl">📭</div>
   <div className="space-y-2">
-    <h3 className="text-xl font-semibold text-card-foreground">
-      No items yet
-    </h3>
-    <p className="text-muted-foreground">
-      Get started by creating your first item
-    </p>
+    <h3 className="text-xl font-semibold text-card-foreground">No items yet</h3>
+    <p className="text-muted-foreground">Get started by creating your first item</p>
   </div>
   <Button>Create Item</Button>
 </Card>

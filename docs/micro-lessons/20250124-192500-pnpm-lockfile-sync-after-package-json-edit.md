@@ -37,22 +37,26 @@ specifiers in the lockfile ({...}) don't match specs in package.json ({...})
 ```
 
 **Rationale.**
+
 - CI environments use `--frozen-lockfile` by default to ensure reproducible builds
 - This flag prevents pnpm from modifying the lockfile, so any mismatch causes immediate failure
 - The lockfile encodes the full dependency resolution tree; package.json only lists direct dependencies
 - Forgetting to update the lockfile means CI can't install dependencies at all
 
 **Guardrails:**
+
 - **Pre-commit hook:** Consider adding a hook that verifies `pnpm install --frozen-lockfile` succeeds before allowing commits
 - **Local verification:** After editing package.json, run `pnpm install --frozen-lockfile` to simulate CI behavior
 - **Monorepo awareness:** Changes to workspace package.json files affect root lockfile too
 - **Diff check:** Before pushing, verify both package.json and pnpm-lock.yaml are staged together
 
 **Related Patterns:**
+
 - [pnpm-lock-merge-conflicts.md](./pnpm-lock-merge-conflicts.md) - For handling lockfile conflicts during merges
 - Different from merge conflicts: this is about sync, not conflict resolution
 
 **Real-World Impact:**
+
 - Blocked PR #190 with 3 failing CI checks (docs-link-check, doctor, setup/setup)
 - Root cause: Added `handlebars` and `@types/handlebars` to root package.json without running `pnpm install`
 - Fix: Simple `pnpm install` locally, commit lockfile, all checks passed

@@ -11,6 +11,7 @@ description: Unified git workflow automation with intelligent routing
 **Purpose:** Consolidated git operations replacing 5+ separate commands
 
 **Usage:**
+
 ```bash
 /git <action> [args]
 ```
@@ -41,11 +42,13 @@ description: Unified git workflow automation with intelligent routing
 **Token Cost:** ~500 tokens (vs 5,000+ for separate commands = **90% savings**)
 
 **Implementation:** Progressive disclosure via script routing
+
 - Fast validation (no token cost)
 - Minimal JSON on success
 - Detailed errors only when needed
 
 **Execution:**
+
 ```bash
 bash scripts/skills/git.sh "$@"
 ```

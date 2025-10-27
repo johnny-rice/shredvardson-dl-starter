@@ -6,10 +6,10 @@
  * Phase 4: Full implementation with Handlebars templates
  */
 
-import * as fs from 'fs';
-import * as path from 'path';
-import Handlebars from 'handlebars';
 import { execSync } from 'child_process';
+import * as fs from 'fs';
+import Handlebars from 'handlebars';
+import * as path from 'path';
 
 // Register Handlebars helpers
 Handlebars.registerHelper('pascalCase', (str: string) => {
@@ -113,14 +113,16 @@ function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
       hasChildren: true,
       hasInteractions: true,
       hasDisabledState: true,
-      baseClasses: 'inline-flex items-center justify-center rounded-[var(--radius)] text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      baseClasses:
+        'inline-flex items-center justify-center rounded-[var(--radius)] text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
       variants: [
         {
           name: 'variant',
           options: {
             default: 'bg-primary text-primary-foreground hover:bg-primary/90',
             destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90',
-            outline: 'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+            outline:
+              'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
             secondary: 'bg-secondary text-secondary-foreground hover:bg-secondary/80',
             ghost: 'hover:bg-accent hover:text-accent-foreground',
             link: 'text-primary underline-offset-4 hover:underline',
@@ -139,7 +141,8 @@ function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
         },
       ],
       componentDescription: 'A flexible button component with multiple variants and sizes',
-      accessibilityNotes: 'Ensures proper focus management and keyboard navigation. Uses semantic button element.',
+      accessibilityNotes:
+        'Ensures proper focus management and keyboard navigation. Uses semantic button element.',
       role: 'button',
       needsContrastTest: true,
       patternFile: 'buttons.md',
@@ -151,9 +154,11 @@ function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
       isForwardRef: true,
       hasChildren: false,
       hasDisabledState: true,
-      baseClasses: 'flex h-10 w-full rounded-[var(--radius)] border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+      baseClasses:
+        'flex h-10 w-full rounded-[var(--radius)] border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
       componentDescription: 'A form input component with consistent styling',
-      accessibilityNotes: 'Supports proper labeling and error states. Compatible with screen readers.',
+      accessibilityNotes:
+        'Supports proper labeling and error states. Compatible with screen readers.',
       hasAriaLabel: true,
       needsContrastTest: true,
       patternFile: 'forms.md',
@@ -176,7 +181,8 @@ function loadPatternConfig(patternName: string): Partial<ComponentConfig> {
       hasChildren: true,
       baseClasses: 'fixed inset-0 z-50 flex items-center justify-center',
       componentDescription: 'A modal dialog component for overlays',
-      accessibilityNotes: 'Manages focus trap and escape key handling. Announces to screen readers.',
+      accessibilityNotes:
+        'Manages focus trap and escape key handling. Announces to screen readers.',
       role: 'dialog',
       ariaLabel: 'Dialog',
       hasAriaLabel: true,
@@ -232,7 +238,12 @@ async function validateComponent(componentPath: string): Promise<ValidationResul
       accessibility,
       testCoverage,
     },
-    suggestions: generateSuggestions(tokenCompliance, patternAdherence, accessibility, testCoverage),
+    suggestions: generateSuggestions(
+      tokenCompliance,
+      patternAdherence,
+      accessibility,
+      testCoverage
+    ),
   };
 }
 
@@ -287,7 +298,9 @@ function generateSuggestions(
   const suggestions: string[] = [];
 
   if (tokenCompliance < 100) {
-    suggestions.push('Replace hardcoded colors with design tokens (e.g., use var(--color-primary))');
+    suggestions.push(
+      'Replace hardcoded colors with design tokens (e.g., use var(--color-primary))'
+    );
   }
 
   if (patternAdherence < 90) {
@@ -323,10 +336,15 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
   console.error(`✨ Generating ${componentName}${variant ? ` (${variant})` : ''}...`);
 
   // Determine pattern from component name
-  const pattern = componentName.toLowerCase().includes('button') ? 'button' :
-                  componentName.toLowerCase().includes('input') ? 'input' :
-                  componentName.toLowerCase().includes('card') ? 'card' :
-                  componentName.toLowerCase().includes('dialog') ? 'dialog' : 'button';
+  const pattern = componentName.toLowerCase().includes('button')
+    ? 'button'
+    : componentName.toLowerCase().includes('input')
+      ? 'input'
+      : componentName.toLowerCase().includes('card')
+        ? 'card'
+        : componentName.toLowerCase().includes('dialog')
+          ? 'dialog'
+          : 'button';
 
   // Load pattern configuration
   const patternConfig = loadPatternConfig(pattern);
@@ -411,7 +429,7 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
 
     if (validation.suggestions.length > 0) {
       console.error('\n💡 Suggestions:');
-      validation.suggestions.forEach(s => console.error(`  - ${s}`));
+      validation.suggestions.forEach((s) => console.error(`  - ${s}`));
     }
 
     // Run Sub-Agent validation if available
@@ -436,11 +454,10 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
       validation,
       firstPassAccuracy,
       summary: `Generated ${componentName} component with ${Math.round(firstPassAccuracy)}% first-pass accuracy`,
-      nextSteps: validation.passed ?
-        ['Component is production-ready'] :
-        ['Apply suggested improvements', 'Run validation again'],
+      nextSteps: validation.passed
+        ? ['Component is production-ready']
+        : ['Apply suggested improvements', 'Run validation again'],
     };
-
   } catch (error: any) {
     console.error(`  ✗ Error: ${error.message}`);
     return {
@@ -457,14 +474,20 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
 // Execute and output JSON
 const args = process.argv.slice(2);
 generateComponent(args)
-  .then(result => console.log(JSON.stringify(result, null, 2)))
-  .catch(error => {
-    console.error(JSON.stringify({
-      success: false,
-      componentName: 'Unknown',
-      files: [],
-      summary: 'Script execution failed',
-      error: error.message
-    }, null, 2));
+  .then((result) => console.log(JSON.stringify(result, null, 2)))
+  .catch((error) => {
+    console.error(
+      JSON.stringify(
+        {
+          success: false,
+          componentName: 'Unknown',
+          files: [],
+          summary: 'Script execution failed',
+          error: error.message,
+        },
+        null,
+        2
+      )
+    );
     process.exit(1);
   });

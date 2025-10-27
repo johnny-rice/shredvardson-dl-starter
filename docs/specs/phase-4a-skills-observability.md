@@ -37,6 +37,7 @@ We have 6 operational Skills (`/test`, `/db`, `/spec`, `/code`, `/git`, `/review
 **Location:** `.logs/skill-usage.csv`
 
 **Schema:**
+
 ```csv
 timestamp,skill,action,exit_code,duration_ms
 1705929600,git,branch,0,234
@@ -45,6 +46,7 @@ timestamp,skill,action,exit_code,duration_ms
 ```
 
 **Fields:**
+
 - `timestamp` - Unix timestamp (UTC)
 - `skill` - Skill name (git, test, db, spec, code, review, docs)
 - `action` - Action within Skill (branch, commit, pr, etc.)
@@ -56,6 +58,7 @@ timestamp,skill,action,exit_code,duration_ms
 **Approach:** Add logging to each Skill's bash script
 
 **Example (scripts/skills/git.sh):**
+
 ```bash
 #!/bin/bash
 
@@ -93,6 +96,7 @@ trap 'log_skill_invocation $skill $action $?' EXIT
 **New Command:** `.claude/commands/ops/skills-stats.md`
 
 **Functionality:**
+
 - Parse `.logs/skill-usage.csv`
 - Generate statistics:
   - Total invocations per Skill
@@ -102,6 +106,7 @@ trap 'log_skill_invocation $skill $action $?' EXIT
   - Recommendations (deprecate low-value Skills)
 
 **Output Example:**
+
 ```text
 Skills Usage Statistics (Last 30 Days)
 ======================================
@@ -133,6 +138,7 @@ Recommendations:
 ### 4. Integration Points
 
 **All Skill Scripts:**
+
 - `scripts/skills/git.sh` ✅
 - `scripts/skills/test.sh` ✅
 - `scripts/skills/db.sh` ✅
@@ -142,6 +148,7 @@ Recommendations:
 - `scripts/skills/docs.sh` ✅
 
 **New Command:**
+
 - `.claude/commands/ops/skills-stats.md` (analytics viewer)
 
 ## Implementation Plan
@@ -205,6 +212,7 @@ setup_skill_logging "SKILL_NAME" "$ACTION"
 **File:** `.claude/commands/ops/skills-stats.md`
 
 **Implementation:** TypeScript script that:
+
 1. Reads `.logs/skill-usage.csv`
 2. Filters by date range (default: last 30 days)
 3. Calculates statistics
@@ -236,12 +244,12 @@ setup_skill_logging "SKILL_NAME" "$ACTION"
 
 ## Risks & Mitigations
 
-| Risk | Mitigation |
-|------|------------|
-| Log file grows too large | Add log rotation (monthly archives) |
-| CSV parsing fails | Validate format, handle corrupt lines gracefully |
-| Performance impact | Keep logging async, minimal I/O |
-| Privacy concerns | Keep logs local, never commit to git |
+| Risk                     | Mitigation                                       |
+| ------------------------ | ------------------------------------------------ |
+| Log file grows too large | Add log rotation (monthly archives)              |
+| CSV parsing fails        | Validate format, handle corrupt lines gracefully |
+| Performance impact       | Keep logging async, minimal I/O                  |
+| Privacy concerns         | Keep logs local, never commit to git             |
 
 ## Future Enhancements (Not Phase 4A)
 

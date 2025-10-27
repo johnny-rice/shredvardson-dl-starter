@@ -14,10 +14,13 @@ This directory contains **lazy-loaded templates** for external component librari
 ## Available Sources
 
 ### Tremor (Data Visualization)
-**Bundle Impact:** 15kb gzipped (recharts + @tremor/react)
+
+**Bundle Impact:** ~12kb gzipped (recharts + @tremor/react core components)
 **License:** Apache-2.0
+**Status:** Available
 
 Components:
+
 - `LineChart` - Line charts with legend, formatters
 - `BarChart` - Vertical/horizontal bar charts
 - `AreaChart` - Area charts with curve types
@@ -29,19 +32,25 @@ Components:
 ```
 
 ### TanStack Table (Coming Soon)
-**Bundle Impact:** 45kb gzipped
+
+**Bundle Impact:** ~12-15kb gzipped (@tanstack/react-table)
 **License:** MIT
+**Status:** Template development in progress
 
 Templates:
+
 - `basic-table` - Sorting, filtering
 - `advanced-table` - Pagination, row selection
 - `server-table` - Server-side data
 
 ### dnd-kit (Coming Soon)
-**Bundle Impact:** 35kb gzipped
+
+**Bundle Impact:** ~19kb gzipped (@dnd-kit/core)
 **License:** MIT
+**Status:** Template development in progress
 
 Templates:
+
 - `kanban-board` - Drag-and-drop kanban
 - `sortable-list` - Reorderable lists
 - `reorderable-grid` - Grid layouts
@@ -85,9 +94,9 @@ Templates:
 
 ## Bundle Impact Comparison
 
-| Approach | Initial Bundle | After Import |
-|----------|---------------|--------------|
-| **Inline (❌)** | +15kb | +15kb |
-| **Template (✅)** | 0kb | +15kb |
+| Approach          | Initial Bundle | After Import |
+| ----------------- | -------------- | ------------ |
+| **Inline (❌)**   | +12-19kb       | +12-19kb     |
+| **Template (✅)** | 0kb            | +12-19kb     |
 
 The starter stays lightweight until you actually need the components.

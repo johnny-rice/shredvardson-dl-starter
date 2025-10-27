@@ -10,7 +10,7 @@ pre-commit:
   commands:
     # Biome format & lint for instant feedback (<1s)
     biome-check:
-      glob: "**/*.{js,ts,jsx,tsx,json}"
+      glob: '**/*.{js,ts,jsx,tsx,json}'
       run: |
         echo "⚡ Running Biome checks..."
         pnpm biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
@@ -19,7 +19,7 @@ pre-commit:
 
     # Update micro-lessons index when docs/micro-lessons/ files change
     micro-lessons-index:
-      glob: "docs/micro-lessons/**/*"
+      glob: 'docs/micro-lessons/**/*'
       run: |
         echo "📚 Micro-lessons changed, updating index..."
         pnpm learn:index
@@ -30,7 +30,7 @@ pre-commit:
 
 # Pre-push: Comprehensive validation (target: 8-15s with parallel execution)
 pre-push:
-  parallel: false  # Top-level sequential to control execution order
+  parallel: false # Top-level sequential to control execution order
   commands:
     # Block direct pushes to main branch
     protect-main:

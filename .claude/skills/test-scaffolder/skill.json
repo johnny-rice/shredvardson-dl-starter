@@ -9,12 +9,7 @@
     "validate_coverage",
     "integrate_test_generator_agent"
   ],
-  "triggers": [
-    "test",
-    "scaffold",
-    "coverage",
-    "tdd"
-  ],
+  "triggers": ["test", "scaffold", "coverage", "tdd"],
   "priority": "p0",
   "tokenSavings": {
     "old": 121,
