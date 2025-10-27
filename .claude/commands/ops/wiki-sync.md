@@ -18,7 +18,7 @@ outputs:
 
 riskLevel: 'LOW'
 requiresHITL: false
-riskPolicyRef: 'docs/llm/risk-policy.json#wikiSync'
+riskPolicyRef: 'docs/llm/risk-policy.json#/wikiSync'
 
 allowed-tools:
   - 'Read(*)'

@@ -16,7 +16,7 @@ outputs:
 
 riskLevel: 'HIGH'
 requiresHITL: true
-riskPolicyRef: 'docs/llm/risk-policy.json#securityRefactoring'
+riskPolicyRef: 'docs/llm/risk-policy.json#/securityRefactoring'
 
 allowed-tools:
   - 'Read(*)'

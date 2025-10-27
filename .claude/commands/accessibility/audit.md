@@ -23,7 +23,7 @@ outputs:
 
 riskLevel: 'LOW'
 requiresHITL: false
-riskPolicyRef: 'docs/llm/risk-policy.json#commandDefaults'
+riskPolicyRef: 'docs/llm/risk-policy.json#/commandDefaults'
 
 allowed-tools:
   - 'Bash(*)'

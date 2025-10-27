@@ -15,7 +15,7 @@ outputs:
 
 riskLevel: 'LOW'
 requiresHITL: true
-riskPolicyRef: 'docs/llm/risk-policy.json#commandDefaults'
+riskPolicyRef: 'docs/llm/risk-policy.json#/commandDefaults'
 
 allowed-tools:
   - 'Read(*.md)'

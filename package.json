@@ -101,14 +101,17 @@
     "commander": "^14.0.1",
     "eslint": "^9.38.0",
     "fast-glob": "^3.3.3",
+    "glob": "^11.0.3",
     "gray-matter": "^4.0.3",
     "handlebars": "^4.7.8",
     "lefthook": "^2.0.1",
+    "markdownlint-cli2": "^0.18.1",
     "prettier": "^3.6.2",
     "tiktoken": "^1.0.22",
     "tsx": "^4.20.6",
     "turbo": "^2.5.8",
-    "typescript": "^5"
+    "typescript": "^5",
+    "yaml": "^2.8.1"
   },
   "overrides": {
     "react": "19.1.1",

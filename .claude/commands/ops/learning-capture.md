@@ -24,7 +24,7 @@ outputs:
 
 riskLevel: 'LOW'
 requiresHITL: false
-riskPolicyRef: 'docs/llm/risk-policy.json#learningCapture'
+riskPolicyRef: 'docs/llm/risk-policy.json#/learningCapture'
 
 allowed-tools:
   - 'Read(*)'

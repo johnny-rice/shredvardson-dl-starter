@@ -21,7 +21,7 @@ outputs:
 
 riskLevel: 'LOW'
 requiresHITL: true
-riskPolicyRef: 'docs/llm/risk-policy.json#governanceChanges'
+riskPolicyRef: 'docs/llm/risk-policy.json#/governanceChanges'
 
 allowed-tools:
   - 'Read(*)'

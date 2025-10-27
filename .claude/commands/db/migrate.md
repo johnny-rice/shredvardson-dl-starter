@@ -29,7 +29,7 @@ outputs:
 
 riskLevel: 'MEDIUM'
 requiresHITL: true
-riskPolicyRef: 'docs/llm/risk-policy.json#databaseOperations'
+riskPolicyRef: 'docs/llm/risk-policy.json#/databaseOperations'
 
 allowed-tools:
   - 'Bash(*)'
@@ -161,9 +161,11 @@ Next steps:
    ```
 
 4. Run Supabase advisors:
+
    ```bash
    supabase db advisor --local
    ```
+
 5. Check for breaking changes:
    - Dropping columns
    - Changing column types

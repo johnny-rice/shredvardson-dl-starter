@@ -15,7 +15,7 @@ outputs:
 
 riskLevel: 'LOW'
 requiresHITL: false
-riskPolicyRef: 'docs/llm/risk-policy.json#commandDefaults'
+riskPolicyRef: 'docs/llm/risk-policy.json#/commandDefaults'
 
 allowed-tools:
   - 'Bash(pnpm lint:*)'
@@ -67,19 +67,23 @@ Execute linting and fix all quality issues before commits.
 
 1. Confirm lane (**lightweight**) against `CLAUDE.md` decision rules.
 2. **Check formatting scope first**:
+
    ```bash
    prettier --list-different . || echo "No formatting changes needed"
    ```
+
 3. **Ask user before wide formatting**: If many files need formatting, confirm with user whether to:
    - Apply formatting now (may affect many files)
    - Skip formatting for focused PR
    - Apply formatting in separate commit/PR
 4. Execute linting and conditional formatting:
+
    ```bash
    pnpm lint || echo "Linting failed - see errors above"
    # Only run pnpm format if approved by user or minimal changes
    pnpm format || echo "Formatting failed - check configuration"
    ```
+
 5. Check ESLint rules in `eslint.config.mjs` and Prettier config.
 6. Fix TypeScript errors, unused imports, and formatting issues.
 7. Verify all files pass quality gates.

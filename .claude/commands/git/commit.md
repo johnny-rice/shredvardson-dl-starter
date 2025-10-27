@@ -20,7 +20,7 @@ outputs:
 
 riskLevel: 'MEDIUM'
 requiresHITL: true
-riskPolicyRef: 'docs/llm/risk-policy.json#gitOperations'
+riskPolicyRef: 'docs/llm/risk-policy.json#/gitOperations'
 
 allowed-tools:
   - 'Bash(git status:*)'

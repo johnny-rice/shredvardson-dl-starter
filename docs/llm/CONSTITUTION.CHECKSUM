@@ -1,5 +1,5 @@
 {
-  "generated": "2025-10-26T21:16:33.057Z",
+  "generated": "2025-10-27T11:23:19.915Z",
   "version": "0.1.1",
   "algorithm": "sha256-trunc16",
   "checksums": {
@@ -11,7 +11,7 @@
     "docs/llm/CONTRIBUTING_LLMS.md": "0362984efe675fb0",
     "docs/llm/NEW_APP_KICKOFF.md": "076f42b2072c81fa",
     "docs/llm/QUALITY_PIPELINE.md": "fcd38bb6debbfba8",
-    "docs/llm/risk-policy.json": "dc250e91beb8827f",
+    "docs/llm/risk-policy.json": "3129cef919725277",
     "docs/llm/STARTER_MANIFEST.json": "6316b778a8dac713",
     "packages/config/eslint.config.mjs": "0e00fd4ad1caeff6",
     "packages/config/prettier.config.js": "397ba438d0c59e1a",

@@ -24,7 +24,7 @@ outputs:
 
 riskLevel: 'HIGH'
 requiresHITL: true
-riskPolicyRef: 'docs/llm/risk-policy.json#releaseOperations'
+riskPolicyRef: 'docs/llm/risk-policy.json#/releaseOperations'
 
 allowed-tools:
   - 'Bash(git log --pretty=*:*)'

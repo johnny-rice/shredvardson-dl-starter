@@ -234,5 +234,75 @@
       "overrideAuthority": "maintainer",
       "appealProcess": true
     }
+  },
+
+  "commandDefaults": {
+    "riskLevel": "LOW",
+    "requiresHITL": false,
+    "idempotent": true,
+    "timeoutSeconds": 60
+  },
+
+  "gitOperations": {
+    "riskLevel": "MEDIUM",
+    "requiresHITL": false,
+    "idempotent": false,
+    "timeoutSeconds": 120
+  },
+
+  "releaseOperations": {
+    "riskLevel": "HIGH",
+    "requiresHITL": true,
+    "idempotent": false,
+    "timeoutSeconds": 180
+  },
+
+  "prAutomation": {
+    "riskLevel": "MEDIUM",
+    "requiresHITL": false,
+    "idempotent": false,
+    "timeoutSeconds": 300
+  },
+
+  "databaseOperations": {
+    "riskLevel": "HIGH",
+    "requiresHITL": true,
+    "idempotent": false,
+    "timeoutSeconds": 120
+  },
+
+  "governanceChanges": {
+    "riskLevel": "CRITICAL",
+    "requiresHITL": true,
+    "idempotent": false,
+    "aiAutomationAllowed": false
+  },
+
+  "wikiSync": {
+    "riskLevel": "LOW",
+    "requiresHITL": false,
+    "idempotent": true,
+    "timeoutSeconds": 60
+  },
+
+  "learningCapture": {
+    "riskLevel": "LOW",
+    "requiresHITL": false,
+    "idempotent": true,
+    "timeoutSeconds": 30
+  },
+
+  "securityRefactoring": {
+    "riskLevel": "HIGH",
+    "requiresHITL": true,
+    "idempotent": false,
+    "timeoutSeconds": 180
+  },
+
+  "starterInitialization": {
+    "riskLevel": "MEDIUM",
+    "requiresHITL": false,
+    "idempotent": false,
+    "timeoutSeconds": 120
   }
 }

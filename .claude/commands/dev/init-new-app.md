@@ -24,7 +24,7 @@ outputs:
 
 riskLevel: 'HIGH'
 requiresHITL: true
-riskPolicyRef: 'docs/llm/risk-policy.json#starterInitialization'
+riskPolicyRef: 'docs/llm/risk-policy.json#/starterInitialization'
 
 allowed-tools:
   - 'Read(*)'

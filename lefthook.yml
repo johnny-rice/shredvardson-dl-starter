@@ -17,6 +17,22 @@ pre-commit:
         # Stage any files that Biome fixed
         git add {staged_files}
 
+    # Markdown linting for instant feedback (<1s)
+    markdown-lint:
+      glob: '{docs,specs,.claude}/**/*.md'
+      run: |
+        echo "📝 Linting markdown files..."
+        pnpm markdownlint-cli2 --fix {staged_files}
+        # Stage any files that markdownlint fixed
+        git add {staged_files}
+
+    # Config reference validation for slash commands
+    validate-config-refs:
+      glob: '.claude/commands/**/*.md'
+      run: |
+        echo "🔍 Validating config references..."
+        node scripts/validate-config-refs.js
+
     # Update micro-lessons index when docs/micro-lessons/ files change
     micro-lessons-index:
       glob: 'docs/micro-lessons/**/*'

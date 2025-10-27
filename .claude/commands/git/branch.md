@@ -32,7 +32,7 @@ outputs:
 
 riskLevel: 'LOW'
 requiresHITL: false
-riskPolicyRef: 'docs/llm/risk-policy.json#gitOperations'
+riskPolicyRef: 'docs/llm/risk-policy.json#/gitOperations'
 
 allowed-tools:
   - 'Bash(git branch:*)'

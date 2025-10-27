@@ -22,7 +22,7 @@ outputs:
 
 riskLevel: 'LOW'
 requiresHITL: false
-riskPolicyRef: 'docs/llm/risk-policy.json#prAutomation'
+riskPolicyRef: 'docs/llm/risk-policy.json#/prAutomation'
 
 allowed-tools:
   - 'Read(*)'
