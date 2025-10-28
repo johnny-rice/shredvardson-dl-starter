@@ -22,6 +22,7 @@ requiresHITL: false
 riskPolicyRef: 'docs/llm/risk-policy.json#/commandDefaults'
 
 allowed-tools:
+  - 'Task(Research Agent)'
   - 'Read(*)'
   - 'Glob(*)'
   - 'Grep(*)'
@@ -65,21 +66,42 @@ Deep codebase exploration using isolated Research Agent context to answer archit
 
 **Prompt:**
 
-1. Parse user's research query from arguments.
-2. **Delegate to Research Agent sub-agent** with JSON input:
+1. Parse user's research query from the `query` argument.
+
+2. **Delegate to Research Agent sub-agent:**
+
+   Invoke the Task tool to delegate research to the Research Agent sub-agent:
 
    ```json
-   {
-     "query": "user's natural language question",
-     "focus_areas": ["optional", "specific", "areas"],
-     "max_files": 50
-   }
+   Task(
+     subagent_type="Research Agent",
+     description="Researching [brief query summary]",
+     prompt='''
+     {
+       "query": "[user's natural language question]",
+       "focus_areas": ["[auto-extracted keywords from query if applicable]"],
+       "max_files": 50
+     }
+     '''
+   )
    ```
 
-3. Receive JSON output with `key_findings`, `architecture_patterns`, `recommendations`, `code_locations`, `confidence`.
-4. Present findings to user in clear, organized format with file:line references.
-5. Optionally save findings to `scratch/research-YYYY-MM-DD-topic.md` for future reference.
-6. Suggest follow-up questions if research was incomplete or confidence is low.
+   **Note:** Extract relevant keywords from the query to populate `focus_areas` when possible (e.g., "authentication" query → focus_areas: ["auth", "session", "login"]).
+
+   Wait for the sub-agent to complete its research and return the JSON response.
+
+3. **Parse and present the JSON response** containing:
+   - `key_findings`: 3-5 bullet points with file:line references
+   - `architecture_patterns`: Design patterns and architectural decisions
+   - `recommendations`: 2-4 actionable next steps
+   - `code_locations`: Array of {file, line, purpose} objects
+   - `confidence`: "high" | "medium" | "low"
+
+4. **Present findings** to user in clear, organized Markdown format with clickable file:line references.
+
+5. **Optionally save** findings to `scratch/research-YYYY-MM-DD-topic.md` for future reference if the research is substantial.
+
+6. **Suggest follow-up questions** if research was incomplete (confidence is "low" or "medium").
 
 **Examples:**
 

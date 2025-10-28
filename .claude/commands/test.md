@@ -25,7 +25,28 @@ This is a lightweight discovery command that delegates to the `test-scaffolder` 
 
 **Actions:**
 
-1. **unit**: Delegates to Test Generator sub-agent with project context
+1. **unit**: Delegate to Test Generator sub-agent:
+
+   ```json
+   Task(
+     subagent_type="Test Generator",
+     description="Generating tests for [component_path]",
+     prompt='''
+     {
+       "target": {
+         "type": "[inferred from path: component|function|api]",
+         "path": "[component_path]"
+       },
+       "test_types": ["unit"],
+       "coverage_goal": 80,
+       "focus_areas": ["[inferred from component type: e.g., happy_path, edge_cases, error_handling]"]
+     }
+     '''
+   )
+   ```
+
+   **Note:** The `coverage_goal` of 80% aligns with the project's coverage contract. `focus_areas` should be inferred from the component type (utility functions → error_handling, UI components → happy_path + edge_cases, etc.).
+
 2. **e2e**: Invokes Skill script `scaffold-e2e.ts` with user flow name
 3. **rls**: Invokes Skill script `scaffold-rls.ts` with table name
 4. **coverage**: Invokes Skill script `validate-coverage.ts`

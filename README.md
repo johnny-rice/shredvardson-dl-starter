@@ -272,23 +272,56 @@ See [Database Recipe](docs/recipes/db.md) for the complete workflow.
 
 ## Testing
 
-Comprehensive test infrastructure with unit, RLS, E2E, and CI script tests:
+Comprehensive test infrastructure with **4 test types** covering unit, RLS security, E2E, and CI validation:
 
 ```bash
 pnpm test            # Run all tests
-pnpm test:unit       # Run unit tests only
+pnpm test:unit       # Run unit tests only (pre-push hook)
 pnpm test:e2e        # Run E2E tests only
 pnpm test:coverage   # Generate coverage report
 pnpm test:ci-scripts # Run CI script integration tests
 ```
 
-**Coverage Target**: 70% minimum (see [Testing Guide](docs/testing/TESTING_GUIDE.md))
+### Test Types & What They Cover
 
-**Test Stack**: Vitest 3.2.4 + Playwright 1.55.1 + React Testing Library 16.3.0
+**Unit Tests** (Vitest 3.2.4 + React Testing Library 16.3.0)
+- Component rendering and interactions
+- Utility functions and business logic
+- Integration with mocked dependencies
+- **Coverage target**: 70% lines/functions/statements, 65% branches
 
-**CI Script Tests**: Integration tests for CI validation scripts (spec validation, lane detection, etc.)
+**RLS Security Tests** (Vitest + Supabase Test Client)
+- Row-Level Security policy validation
+- User isolation and data access boundaries
+- Multi-tenant security enforcement
+- **Templates ready** in `apps/web/tests/rls/` (requires tables)
 
-See [docs/testing/TESTING_GUIDE.md](docs/testing/TESTING_GUIDE.md) for complete documentation.
+**E2E Tests** (Playwright 1.56.1)
+- Critical user flows (auth, navigation, CRUD)
+- Accessibility validation (@axe-core/playwright)
+- Cross-browser testing (Chrome + Mobile Chrome)
+- **Smoke tests complete** (4 passing)
+
+**CI Script Tests** (Bash + Integration)
+- Spec validation (naming, structure, required files)
+- Lane detection (simple vs. spec-driven)
+- Pre-commit/pre-push hook validation
+- **6/6 tests passing**
+
+### TDD Workflow
+
+1. **Contracts First** → Define security boundaries and user flows
+2. **RLS Tests** → Security policy validation (templates ready)
+3. **E2E Tests** → Critical user flows (smoke tests complete)
+4. **Unit Tests** → Component and function testing
+
+Use `/test unit <path>` to scaffold tests with the Test Generator sub-agent.
+
+### Pre-Push Hook
+
+Unit tests run automatically on `git push` (target: 8-15s). Bypass with `--no-verify` if needed.
+
+See [Testing Guide](docs/testing/TESTING_GUIDE.md) for complete documentation, best practices, and troubleshooting.
 
 ## Scripts
 

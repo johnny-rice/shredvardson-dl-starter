@@ -26,6 +26,7 @@ requiresHITL: false
 riskPolicyRef: 'docs/llm/risk-policy.json#/commandDefaults'
 
 allowed-tools:
+  - 'Task(Security Scanner)'
   - 'Read(*)'
   - 'Glob(*)'
   - 'Grep(*)'
@@ -68,20 +69,59 @@ Scan codebase for security vulnerabilities using isolated Security Scanner conte
 **Prompt:**
 
 1. Parse scope and severity arguments (defaults: scope=full, severity=medium).
-2. **Delegate to Security Scanner sub-agent** with JSON input:
 
-   ```json
-   {
-     "scope": "full" | "auth" | "rls" | "api" | "secrets",
-     "focus_areas": ["optional", "specific", "areas"],
-     "severity_threshold": "critical" | "high" | "medium" | "low"
-   }
+2. **Delegate to Security Scanner sub-agent:**
+
+   Invoke the Task tool to delegate scanning to the Security Scanner sub-agent.
+
+   **Placeholder substitution:**
+   - `[scope]` → Replace with parsed scope argument or default to "full"
+   - `[severity]` → Replace with parsed severity argument or default to "medium"
+
+   **Scope → Focus Areas Mapping (runtime logic):**
+
+   Dynamically populate `focus_areas` based on the parsed `scope` argument:
+
+   - `"rls"` → `["rls", "policies", "row_security"]`
+   - `"auth"` → `["auth", "session", "authentication", "authorization"]`
+   - `"api"` → `["routes", "endpoints", "api", "request_handling"]`
+   - `"secrets"` → `["env", "credentials", "keys", "tokens"]`
+   - `"full"` → `["rls", "auth", "api", "secrets"]`
+
+   **Example Task invocation:**
+
+   ```python
+   Task(
+     subagent_type="Security Scanner",
+     description="Scanning [scope] for [severity]+ vulnerabilities",
+     prompt='''
+     Scan the codebase for security vulnerabilities with the following parameters:
+
+     {
+       "scope": "rls",
+       "focus_areas": ["rls", "policies", "row_security"],
+       "severity_threshold": "high"
+     }
+
+     Analyze all code related to the focus areas and identify vulnerabilities at or above the severity threshold.
+     Return findings as a structured JSON response with vulnerabilities, summary, recommendations, and confidence level.
+     '''
+   )
    ```
 
-3. Receive JSON output with `vulnerabilities`, `summary`, `recommendations`, `confidence`.
-4. Present findings organized by severity with actionable remediation steps.
-5. Save report to `scratch/security-scan-YYYY-MM-DD.md`.
-6. Suggest next steps based on findings (e.g., fix critical issues first).
+   Wait for the sub-agent to complete scanning and return the JSON response.
+
+3. **Parse and present the JSON response** containing:
+   - `vulnerabilities`: Array of vulnerability objects with severity, category, location, evidence, impact, remediation
+   - `summary`: Counts by severity (total, critical, high, medium, low)
+   - `recommendations`: High-level security improvements
+   - `confidence`: "high" | "medium" | "low"
+
+4. **Present findings** organized by severity with actionable remediation steps.
+
+5. **Save report** to `scratch/security-scan-YYYY-MM-DD.md` for future reference.
+
+6. **Suggest next steps** based on findings (e.g., address critical issues immediately, schedule high-priority issues).
 
 **Examples:**
 

@@ -19,6 +19,8 @@ requiresHITL: true
 riskPolicyRef: 'docs/llm/risk-policy.json#/securityRefactoring'
 
 allowed-tools:
+  - 'Task(Security Scanner)'
+  - 'Task(Refactor Analyzer)'
   - 'Read(*)'
   - 'Edit(*)'
   - 'MultiEdit(*)'
@@ -73,35 +75,66 @@ Improve code clarity and performance while checking OWASP Top 10 security risks.
 
 1. Confirm lane (**lightweight/spec**) against `CLAUDE.md` decision rules.
 2. If `requiresHITL` true, ask for human confirmation citing `riskPolicyRef`.
-3. **Delegate to Security Scanner sub-agent** with JSON input:
+
+3. **Delegate to Security Scanner sub-agent:**
+
+   Invoke the Task tool to scan for security vulnerabilities:
 
    ```json
-   {
-     "scope": "full",
-     "focus_areas": ["auth", "rls", "api", "secrets"],
-     "severity_threshold": "medium"
-   }
+   Task(
+     subagent_type="Security Scanner",
+     description="Scanning codebase for security vulnerabilities",
+     prompt='''
+     {
+       "scope": "full",
+       "focus_areas": ["auth", "rls", "api", "secrets"],
+       "severity_threshold": "medium"
+     }
+     '''
+   )
    ```
 
-4. Receive JSON output with `vulnerabilities`, `summary`, `recommendations`.
-5. **Delegate to Refactor Analyzer sub-agent** for code quality issues:
+   **Note:** This command always uses `"scope": "full"` to ensure comprehensive security + refactoring analysis. Unlike `/security:scan`, which supports targeted scans via the `scope` argument, this command prioritizes thoroughness since refactoring decisions require understanding cross-cutting concerns across the entire codebase.
+
+   Wait for security scan results.
+
+4. **Parse security findings:** Extract `vulnerabilities`, `summary`, `recommendations`, `confidence` from JSON response.
+
+5. **Delegate to Refactor Analyzer sub-agent:**
+
+   Invoke the Task tool to analyze code quality:
 
    ```json
-   {
-     "target": {
-       "type": "codebase"
-     },
-     "focus_areas": ["readability", "performance", "maintainability"],
-     "severity_threshold": "moderate"
-   }
+   Task(
+     subagent_type="Refactor Analyzer",
+     description="Analyzing code quality and refactoring opportunities",
+     prompt='''
+     {
+       "target": {
+         "type": "codebase"
+       },
+       "focus_areas": ["readability", "performance", "maintainability"],
+       "severity_threshold": "moderate"
+     }
+     '''
+   )
    ```
 
-6. Combine findings from both sub-agents and prioritize by severity and impact.
-7. Apply fixes for critical/high severity issues first, then moderate issues.
-8. Run tests after each refactoring to ensure no regression.
-9. Generate security analysis report combining findings from both sub-agents.
-10. Produce security analysis **report** and **link** results in related Issue/PR.
-11. Emit **Result**: security improvements made, refactorings applied, test status, and next suggested command.
+   Wait for refactoring analysis results.
+
+6. **Parse refactoring analysis:** Extract `issues`, `summary`, `architecture_insights`, `recommendations`, `confidence` from JSON response.
+
+7. **Combine findings** from both sub-agents and prioritize by severity and impact.
+
+8. **Apply fixes** for critical/high severity issues first, then moderate issues.
+
+9. **Run tests** after each refactoring to ensure no regression.
+
+10. **Generate security analysis report** combining findings from both sub-agents.
+
+11. **Produce security analysis report** and link results in related Issue/PR.
+
+12. **Emit Result:** security improvements made, refactorings applied, test status, and next suggested command.
 
 **Examples:**
 

@@ -18,6 +18,7 @@ requiresHITL: false
 riskPolicyRef: 'docs/llm/risk-policy.json#/commandDefaults'
 
 allowed-tools:
+  - 'Task(Documentation Writer)'
   - 'Read(*)'
   - 'Edit(*)'
   - 'MultiEdit(*)'
@@ -65,15 +66,49 @@ Update documentation from code and tests when docs are outdated.
 **Prompt:**
 
 1. Confirm lane (**lightweight**) against `CLAUDE.md` decision rules.
-2. Scan codebase and update documentation focusing on:
+
+2. **Delegate to Documentation Writer sub-agent:**
+
+   Invoke the Task tool to generate documentation:
+
+   ```json
+   Task(
+     subagent_type="Documentation Writer",
+     description="Generating documentation for [target]",
+     prompt='''
+     {
+       "doc_type": "[inferred from context: readme|api|guide]",
+       "target": {
+         "type": "[inferred: file|component|api]",
+         "path": "[path to target]"
+       },
+       "audience": "both",
+       "include_examples": true,
+       "style": "detailed"
+     }
+     '''
+   )
+   ```
+
+   **Note:** Default parameters (audience: "both", style: "detailed") are suitable for most documentation tasks. Future versions may add command arguments for customization.
+
+   Wait for documentation generation to complete.
+
+3. **Parse documentation output:** Extract `documentation`, `file_path`, `frontmatter`, `metadata`, `related_docs`, `confidence` from JSON response.
+
+4. **Focus areas** for documentation updates:
    - API routes in `src/app/api/`
    - Component props and usage
    - Installation/development setup
    - Available scripts in `package.json`
-3. Focus on README.md sections that are outdated.
-4. Use JSDoc comments and test files as source of truth.
-5. Produce updated documentation **artifacts** and **link** results in related Issue/PR.
-6. Emit **Result**: what documentation was updated and next suggested command.
+
+5. **Update README.md** sections that are outdated using Edit tool.
+
+6. **Use JSDoc comments and test files** as source of truth.
+
+7. **Produce updated documentation artifacts** and link results in related Issue/PR.
+
+8. **Emit Result:** what documentation was updated and next suggested command.
 
 **Examples:**
 
