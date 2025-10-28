@@ -59,13 +59,14 @@ function generateRLSPolicies(options: ScaffoldOptions): RLSPolicy[] {
   const policies: RLSPolicy[] = [];
 
   // Owner-based policies (most common pattern)
+  // Performance: Wrap auth.uid() in SELECT for caching (100x+ faster)
   if (ownerColumn) {
     policies.push({
       name: `${table}_select_own`,
       table,
       operation: 'SELECT',
       role: 'authenticated',
-      condition: `auth.uid() = ${ownerColumn}`,
+      condition: `(SELECT auth.uid()) = ${ownerColumn}`,
       description: 'Users can read their own records',
     });
 
@@ -74,7 +75,7 @@ function generateRLSPolicies(options: ScaffoldOptions): RLSPolicy[] {
       table,
       operation: 'INSERT',
       role: 'authenticated',
-      condition: `auth.uid() = ${ownerColumn}`,
+      condition: `(SELECT auth.uid()) = ${ownerColumn}`,
       description: 'Users can create records for themselves',
     });
 
@@ -83,7 +84,7 @@ function generateRLSPolicies(options: ScaffoldOptions): RLSPolicy[] {
       table,
       operation: 'UPDATE',
       role: 'authenticated',
-      condition: `auth.uid() = ${ownerColumn}`,
+      condition: `(SELECT auth.uid()) = ${ownerColumn}`,
       description: 'Users can update their own records',
     });
 
@@ -92,7 +93,7 @@ function generateRLSPolicies(options: ScaffoldOptions): RLSPolicy[] {
       table,
       operation: 'DELETE',
       role: 'authenticated',
-      condition: `auth.uid() = ${ownerColumn}`,
+      condition: `(SELECT auth.uid()) = ${ownerColumn}`,
       description: 'Users can delete their own records',
     });
   }
@@ -172,11 +173,15 @@ function generateCompleteRLSScript(options: ScaffoldOptions): string {
 
     ...policies.map((policy) => generatePolicySQL(policy)),
 
-    '\n-- Common additional considerations:',
+    '\n-- ⚡ PERFORMANCE: Index columns used in RLS policies (CRITICAL)',
+    `-- CREATE INDEX idx_${table}_${options.ownerColumn} ON public.${table}(${options.ownerColumn});`,
+    '',
+    '-- Common additional considerations:',
     '-- 1. Add admin override policies for service accounts',
     '-- 2. Consider time-based access restrictions',
     '-- 3. Add logging for policy violations',
     '-- 4. Test policies with different user roles',
+    '-- 5. Use EXPLAIN ANALYZE to verify query performance',
     '',
     '-- Example admin override (uncomment if needed):',
     `-- CREATE POLICY "${table}_admin_all" ON public.${table}`,

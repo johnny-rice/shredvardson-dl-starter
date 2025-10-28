@@ -150,6 +150,25 @@ describe('myFunction', () => {
 
 RLS tests live in `apps/web/tests/rls/` and verify database security policies.
 
+**Running RLS Validation**
+
+```bash
+# Validate all tables have RLS policies
+pnpm db:validate:rls
+
+# Verbose mode (show all tables)
+pnpm db:validate:rls --verbose
+
+# Generate RLS policies for a table
+pnpm db:rls:scaffold <table_name>
+```
+
+**RLS Validation runs automatically in CI** to prevent deploying tables without security policies. See:
+
+- [RLS Implementation Guide](../database/rls-implementation.md) - How to implement RLS
+- [RLS Contracts](../../apps/web/tests/rls/contracts.md) - Security boundaries
+- [Database Standards](../database/standards.md) - RLS requirements
+
 **Example: User Isolation Test**
 
 ```ts

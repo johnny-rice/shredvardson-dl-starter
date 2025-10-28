@@ -358,9 +358,13 @@ pnpm db:start         # Start local Supabase
 pnpm db:stop          # Stop local Supabase
 pnpm db:reset         # Reset database with migrations
 pnpm db:validate      # Validate migrations for safety
+pnpm db:validate:rls  # Validate Row-Level Security policies
+pnpm db:rls:scaffold  # Generate RLS policies for a table
 pnpm db:seed:dev      # Seed development data
 pnpm db:seed:test     # Seed deterministic test data
 ```
+
+**RLS Validation**: The `db:validate:rls` command checks that all tables have proper Row-Level Security policies. This runs automatically in CI to prevent deploying tables without security policies. See [RLS Implementation Guide](docs/database/rls-implementation.md) for details.
 
 See [docs/recipes/db.md](docs/recipes/db.md) for complete database workflow.
 

@@ -47,6 +47,7 @@
     "db:rls:scaffold": "tsx scripts/db/rls-scaffold.ts",
     "db:validate": "tsx scripts/validate-migration.ts",
     "db:validate:ci": "tsx scripts/db/ci-validate.ts",
+    "db:validate:rls": "tsx scripts/db/validate-rls.ts",
     "db:seed:dev": "tsx scripts/seed-dev.ts",
     "db:seed:test": "tsx scripts/seed-test.ts",
     "skill:measure": "tsx scripts/skills/measure-tokens.ts",
