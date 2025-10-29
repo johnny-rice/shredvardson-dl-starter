@@ -101,7 +101,7 @@ pnpm test && pnpm test:ci-scripts
 
 Unit tests live in `apps/web/tests/unit/` mirroring the `src/` structure.
 
-**Example: Component Test**
+#### Example: Component Test
 
 ```tsx
 import { describe, it, expect, vi } from 'vitest';
@@ -129,7 +129,7 @@ describe('MyComponent', () => {
 });
 ```
 
-**Example: Function Test**
+#### Example: Function Test
 
 ```ts
 import { describe, it, expect } from 'vitest';
@@ -150,7 +150,7 @@ describe('myFunction', () => {
 
 RLS tests live in `apps/web/tests/rls/` and verify database security policies.
 
-**Running RLS Validation**
+#### Running RLS Validation
 
 ```bash
 # Validate all tables have RLS policies
@@ -169,47 +169,102 @@ pnpm db:rls:scaffold <table_name>
 - [RLS Contracts](../../apps/web/tests/rls/contracts.md) - Security boundaries
 - [Database Standards](../database/standards.md) - RLS requirements
 
-**Example: User Isolation Test**
+#### RLS Test Helpers
+
+The project provides comprehensive helpers for RLS testing in [`apps/web/tests/helpers/rls-helpers.ts`](../../apps/web/tests/helpers/rls-helpers.ts):
+
+- `createAdminClient()` - Create admin client (bypasses RLS)
+- `createUserClient(userId)` - Create client impersonating a user
+- `createAnonymousClient()` - Create unauthenticated client
+- `seedRLSTestData(adminClient)` - Seed test users
+- `cleanupRLSTestData(adminClient, userId)` - Clean up test users
+- `createTestData(adminClient, userId, table, data)` - Insert test data
+- `cleanupTestData(adminClient, userId, table)` - Delete test data
+
+#### Example: User Isolation Test
 
 ```ts
-import { describe, it, expect } from 'vitest';
-import { createTestUser, createAdminClient } from './helpers';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import {
+  createAdminClient,
+  createUserClient,
+  createAnonymousClient,
+  seedRLSTestData,
+  cleanupRLSTestData,
+  createTestData,
+  cleanupTestData,
+} from '../helpers/rls-helpers';
 
 describe('RLS: User Data Isolation', () => {
-  it('user can only read their own data', async () => {
-    const adminClient = createAdminClient();
-    const userId = 'test-user-1';
+  let adminClient;
+  let user1, user2;
+  let user1Data, user2Data;
 
-    // Create test data as admin
-    await adminClient.from('posts').insert({
-      user_id: userId,
-      title: 'My Post',
+  beforeEach(async () => {
+    // Create admin client for test setup
+    adminClient = createAdminClient();
+
+    // Seed test users
+    const users = await seedRLSTestData(adminClient);
+    user1 = users.user1;
+    user2 = users.user2;
+
+    // Create test data for both users
+    user1Data = await createTestData(adminClient, user1.id, 'profiles', {
+      name: 'User 1',
+      email: user1.email,
     });
 
-    // Try to read as the user
-    const userClient = createTestUser(userId);
-    const { data, error } = await userClient.from('posts').select();
+    user2Data = await createTestData(adminClient, user2.id, 'profiles', {
+      name: 'User 2',
+      email: user2.email,
+    });
+  });
+
+  afterEach(async () => {
+    // Cleanup test data
+    await cleanupTestData(adminClient, user1.id, 'profiles');
+    await cleanupTestData(adminClient, user2.id, 'profiles');
+
+    // Cleanup test users
+    await cleanupRLSTestData(adminClient, user1.id);
+    await cleanupRLSTestData(adminClient, user2.id);
+  });
+
+  it('user can only read their own data', async () => {
+    const user1Client = await createUserClient(user1.id);
+
+    const { data, error } = await user1Client
+      .from('profiles')
+      .select()
+      .eq('id', user1Data.id)
+      .single();
 
     expect(error).toBeNull();
-    expect(data).toHaveLength(1);
-    expect(data[0].user_id).toBe(userId);
+    expect(data).toBeDefined();
+    expect(data.user_id).toBe(user1.id);
   });
 
   it('user cannot read other user data', async () => {
-    const adminClient = createAdminClient();
+    const user1Client = await createUserClient(user1.id);
 
-    // Create data for user1
-    await adminClient.from('posts').insert({
-      user_id: 'user-1',
-      title: 'User 1 Post',
-    });
+    const { data, error } = await user1Client
+      .from('profiles')
+      .select()
+      .eq('id', user2Data.id)
+      .single();
 
-    // Try to read as user2
-    const user2Client = createTestUser('user-2');
-    const { data } = await user2Client.from('posts').select();
+    // Should either return null or error (depending on RLS implementation)
+    expect(data).toBeNull();
+  });
 
-    // Should not see user-1's data
-    expect(data).toHaveLength(0);
+  it('anonymous users cannot access any data', async () => {
+    const anonClient = createAnonymousClient();
+
+    const { data } = await anonClient.from('profiles').select();
+
+    // Anonymous users should get empty results
+    expect(data).toEqual([]);
   });
 });
 ```
@@ -218,7 +273,7 @@ describe('RLS: User Data Isolation', () => {
 
 E2E tests live in `apps/web/tests/e2e/` and test complete user flows.
 
-**Example: Auth Flow Test**
+#### Example: Auth Flow Test
 
 ```ts
 import { test, expect } from '@playwright/test';
@@ -244,7 +299,7 @@ test.describe('Authentication', () => {
 });
 ```
 
-**Using Fixtures**
+#### Using Fixtures
 
 ```ts
 import { test } from '../fixtures/auth';
@@ -293,7 +348,7 @@ See [coverage-contract.md](./coverage-contract.md) for:
 
 ### 2. Test Organization
 
-```
+```text
 apps/web/tests/
 ├── e2e/                    # End-to-end tests
 │   ├── fixtures/          # Shared test fixtures
@@ -312,7 +367,7 @@ apps/web/tests/
 
 ### 3. Mocking
 
-**Mock Supabase Client**
+#### Mock Supabase Client
 
 ```ts
 import { createMockSupabaseClient } from '../helpers/mock-supabase';
@@ -324,7 +379,7 @@ mockSupabase.auth.getUser.mockResolvedValue({
 });
 ```
 
-**Mock Next.js Navigation**
+#### Mock Next.js Navigation
 
 ```ts
 // Already mocked in setup.ts
@@ -424,7 +479,7 @@ export default defineConfig({
 });
 ```
 
-**2. Module import errors**
+#### 2. Module import errors
 
 Use path aliases defined in `vitest.config.ts`:
 
@@ -433,7 +488,7 @@ import { MyComponent } from '@/components/MyComponent'; // ✅
 import { MyComponent } from '../../../src/components/MyComponent'; // ❌
 ```
 
-**3. E2E tests timing out**
+#### 3. E2E tests timing out
 
 Increase timeout in `playwright.config.ts`:
 

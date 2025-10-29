@@ -25,7 +25,7 @@ This document defines the standards and best practices for database schema desig
 
 ###
 
- ✅ Tables Requiring RLS
+✅ Tables Requiring RLS
 
 All tables with any of the following characteristics MUST have RLS:
 
@@ -58,10 +58,10 @@ When implementing RLS on a table:
 
 Tables that are explicitly exempt from RLS requirements:
 
-| Table | Reason | Security Measures |
-|-------|--------|------------------|
-| `_health_check` | Public health endpoint | Has policies for anonymous read only |
-| `_migrations` | Supabase internal | Managed by Supabase, not user-accessible |
+| Table           | Reason                 | Security Measures                        |
+| --------------- | ---------------------- | ---------------------------------------- |
+| `_health_check` | Public health endpoint | Has policies for anonymous read only     |
+| `_migrations`   | Supabase internal      | Managed by Supabase, not user-accessible |
 
 **Adding Exceptions**: To add a table to this list:
 
@@ -158,13 +158,13 @@ USING (auth.uid() = user_id AND deleted_at IS NULL)
 
 Migrations must follow this format:
 
-```
+```text
 YYYYMMDDHHMMSS_description.sql
 ```
 
 Example:
 
-```
+```text
 20250926120000_add_user_profiles_table.sql
 20250927140000_add_rls_to_posts.sql
 ```

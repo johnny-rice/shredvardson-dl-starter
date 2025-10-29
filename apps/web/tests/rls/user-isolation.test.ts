@@ -1,35 +1,49 @@
 import { describe, it } from 'vitest';
 
 describe('RLS: User Data Isolation', () => {
-  // TODO: implement when RLS tables and helpers are available
-
   // TODO: Uncomment and implement when tables with RLS policies exist
+  // This test suite validates RLS contracts defined in contracts.md
 
   /*
+  let adminClient: ReturnType<typeof createAdminClient>;
+  let user1: TestUser;
+  let user2: TestUser;
   let user1Data: any;
   let user2Data: any;
 
   beforeEach(async () => {
+    // Create admin client for test setup
+    adminClient = createAdminClient();
+
+    // Seed test users
+    const users = await seedRLSTestData(adminClient);
+    user1 = users.user1;
+    user2 = users.user2;
+
     // Create test data for both users using admin client
-    user1Data = await createTestData(adminClient, user1Id, 'profiles', {
+    user1Data = await createTestData(adminClient, user1.id, 'profiles', {
       name: 'User 1',
-      email: 'user1@test.com',
+      email: user1.email,
     });
 
-    user2Data = await createTestData(adminClient, user2Id, 'profiles', {
+    user2Data = await createTestData(adminClient, user2.id, 'profiles', {
       name: 'User 2',
-      email: 'user2@test.com',
+      email: user2.email,
     });
   });
 
   afterEach(async () => {
     // Cleanup test data
-    await cleanupTestData(adminClient, user1Id, 'profiles');
-    await cleanupTestData(adminClient, user2Id, 'profiles');
+    await cleanupTestData(adminClient, user1.id, 'profiles');
+    await cleanupTestData(adminClient, user2.id, 'profiles');
+
+    // Cleanup test users
+    await cleanupRLSTestData(adminClient, user1.id);
+    await cleanupRLSTestData(adminClient, user2.id);
   });
 
   it('user can only read their own data', async () => {
-    const user1Client = createTestUser(user1Id);
+    const user1Client = await createUserClient(user1.id);
 
     const { data, error } = await user1Client
       .from('profiles')
@@ -39,11 +53,11 @@ describe('RLS: User Data Isolation', () => {
 
     expect(error).toBeNull();
     expect(data).toBeDefined();
-    expect(data.user_id).toBe(user1Id);
+    expect(data.user_id).toBe(user1.id);
   });
 
   it('user cannot read other user data', async () => {
-    const user1Client = createTestUser(user1Id);
+    const user1Client = await createUserClient(user1.id);
 
     const { data, error } = await user1Client
       .from('profiles')
@@ -56,7 +70,7 @@ describe('RLS: User Data Isolation', () => {
   });
 
   it('user cannot update other user data', async () => {
-    const user1Client = createTestUser(user1Id);
+    const user1Client = await createUserClient(user1.id);
 
     const { error } = await user1Client
       .from('profiles')
@@ -68,7 +82,7 @@ describe('RLS: User Data Isolation', () => {
   });
 
   it('user cannot delete other user data', async () => {
-    const user1Client = createTestUser(user1Id);
+    const user1Client = await createUserClient(user1.id);
 
     const { error } = await user1Client
       .from('profiles')
@@ -80,16 +94,13 @@ describe('RLS: User Data Isolation', () => {
   });
 
   it('anonymous users cannot access any data', async () => {
-    // Create anonymous client (no auth)
-    const anonClient = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
+    const anonClient = createAnonymousClient();
 
     const { data, error } = await anonClient
       .from('profiles')
       .select();
 
+    // Anonymous users should get empty results or error
     expect(data).toEqual([]);
   });
   */

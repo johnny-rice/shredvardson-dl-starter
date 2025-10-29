@@ -41,6 +41,14 @@ const config = [
       curly: ['error', 'all'],
     },
   },
+  // Exception for RLS test helpers: intentional 'any' usage for flexible testing
+  // See apps/web/tests/helpers/rls-helpers.ts file header for rationale
+  {
+    files: ['tests/helpers/rls-helpers.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
 ];
 
 export default config;

@@ -336,9 +336,7 @@ describe('user_profiles RLS', () => {
   it('should only allow users to read their own profile', async () => {
     const client = await impersonateUser(user1.id);
 
-    const { data, error } = await client
-      .from('user_profiles')
-      .select('*');
+    const { data, error } = await client.from('user_profiles').select('*');
 
     expect(error).toBeNull();
     expect(data).toHaveLength(1);
@@ -348,10 +346,7 @@ describe('user_profiles RLS', () => {
   it('should not allow users to read other profiles', async () => {
     const client = await impersonateUser(user1.id);
 
-    const { data } = await client
-      .from('user_profiles')
-      .select('*')
-      .eq('user_id', user2.id);
+    const { data } = await client.from('user_profiles').select('*').eq('user_id', user2.id);
 
     expect(data).toHaveLength(0); // RLS blocks access
   });
@@ -475,15 +470,10 @@ Even though RLS policies act as implicit WHERE clauses, **always add explicit fi
 
 ```typescript
 // ❌ SLOW: Relies only on RLS (implicit filter)
-const { data } = await supabase
-  .from('posts')
-  .select('*');
+const { data } = await supabase.from('posts').select('*');
 
 // ✅ FAST: Explicit filter helps query planner
-const { data } = await supabase
-  .from('posts')
-  .select('*')
-  .eq('user_id', userId);  // Duplicate the RLS condition
+const { data } = await supabase.from('posts').select('*').eq('user_id', userId); // Duplicate the RLS condition
 ```
 
 **Why**: PostgreSQL can use the explicit filter to construct a more efficient query plan, even though the RLS policy already enforces this constraint.
