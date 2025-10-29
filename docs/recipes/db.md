@@ -177,12 +177,150 @@ pnpm db:status
 5. **Test locally** before pushing to staging/production
 6. **Use validation** before committing (`pnpm db:validate`)
 
+## RLS Validation
+
+Row-Level Security (RLS) is critical for data security. We automatically validate that all tables have proper RLS policies.
+
+### Running RLS Validation Locally
+
+```bash
+# Validate all tables have RLS enabled
+pnpm db:validate:rls
+
+# Verbose output with policy details
+pnpm db:validate:rls -- --verbose
+
+# JSON output for CI integration
+pnpm db:validate:rls -- --json
+```
+
+### What Gets Validated
+
+**✅ RLS Enabled Check**:
+
+- All tables must have `ENABLE ROW LEVEL SECURITY`
+- Exception tables are documented in `scripts/db/validate-rls.ts`
+
+**✅ Policy Completeness**:
+
+- Tables should have policies for SELECT, INSERT, UPDATE, DELETE
+- Or use an ALL policy if appropriate
+- Missing operations are flagged as warnings
+
+**✅ Policy Quality**:
+
+- RLS enabled but not forced (consider `FORCE ROW LEVEL SECURITY`)
+- RLS enabled but no policies (table is inaccessible)
+- Tables without RLS (security gap)
+
+### Understanding the Output
+
+#### Example: No Issues
+
+```text
+🔍 Validating Row-Level Security policies...
+
+📊 Total tables: 5
+✅ Tables with RLS: 5
+⚠️  Tables without RLS: 0
+🔓 Approved exceptions: 1
+```
+
+#### Example: RLS Gap Found
+
+```text
+🔍 Validating Row-Level Security policies...
+
+❌ Tables WITHOUT RLS:
+
+   • dangerous_table
+
+📊 Total tables: 5
+✅ Tables with RLS: 4
+⚠️  Tables without RLS: 1
+🔓 Approved exceptions: 0
+
+❌ RLS GAPS FOUND: 1 table(s) missing RLS
+
+💡 To fix RLS gaps:
+   1. Review docs/database/rls-implementation.md
+   2. Generate policies: pnpm tsx scripts/db/rls-scaffold.ts <table_name>
+   3. Or add to exceptions in docs/database/standards.md (with justification)
+
+📖 Documentation: docs/recipes/db.md#rls-validation
+```
+
+### Fixing RLS Issues
+
+**1. Enable RLS on a table:**
+
+```sql
+ALTER TABLE table_name ENABLE ROW LEVEL SECURITY;
+```
+
+**2. Add basic CRUD policies:**
+
+```sql
+-- Allow users to read their own data
+CREATE POLICY "Users can read own data" ON table_name
+  FOR SELECT USING (auth.uid() = user_id);
+
+-- Allow users to insert their own data
+CREATE POLICY "Users can insert own data" ON table_name
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- Allow users to update their own data
+CREATE POLICY "Users can update own data" ON table_name
+  FOR UPDATE USING (auth.uid() = user_id);
+
+-- Allow users to delete their own data
+CREATE POLICY "Users can delete own data" ON table_name
+  FOR DELETE USING (auth.uid() = user_id);
+```
+
+**3. Or use the scaffolding script:**
+
+```bash
+pnpm tsx scripts/db/rls-scaffold.ts table_name
+```
+
+### CI/CD Integration
+
+RLS validation runs automatically in CI for all pull requests:
+
+```yaml
+# .github/workflows/ci.yml
+- name: Validate RLS Policies
+  env:
+    SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+    SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+  run: pnpm db:validate:rls
+```
+
+**Requirements**:
+
+- Supabase project must be set up
+- GitHub secrets must include `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY`
+- Validation runs on all PRs
+- CI fails if RLS gaps are found
+
+**Skipping RLS Validation**:
+
+If you don't have Supabase configured yet, CI will skip RLS validation with a warning:
+
+```text
+⚠️  Supabase credentials not configured in CI
+📝 Skipping RLS validation (requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY)
+ℹ️  To enable: Add secrets in GitHub repository settings
+```
+
 ## CI/CD Integration
 
 Migrations are validated in CI:
 
-- ✅ Pre-commit hook runs validation
-- ✅ CI workflow blocks on validation errors
+- ✅ Pre-commit hook runs migration validation
+- ✅ CI workflow validates migrations and RLS policies
+- ✅ CI blocks on validation errors or RLS gaps
 - ✅ Staging deploys after validation passes
 - ✅ Production requires manual approval + validation
 

@@ -84,6 +84,26 @@ jobs:
             echo "📊 No database changes detected, skipping validation"
           fi
 
+      - name: Validate RLS Policies
+        if: github.event_name == 'pull_request'
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          set -euo pipefail
+          echo "🔒 Validating Row-Level Security policies..."
+
+          # Check if Supabase credentials are available
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "⚠️  Supabase credentials not configured in CI"
+            echo "📝 Skipping RLS validation (requires SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY)"
+            echo "ℹ️  To enable: Add secrets in GitHub repository settings"
+            exit 0
+          fi
+
+          # Run RLS validation
+          pnpm db:validate:rls
+
       - name: Scrape AI Reviews from PR Comments
         if: always() && github.event_name == 'pull_request'
         env:

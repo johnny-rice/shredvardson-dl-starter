@@ -290,6 +290,7 @@ async function validateRLS(options: { verbose?: boolean }): Promise<ValidationRe
     console.log('   1. Review docs/database/rls-implementation.md');
     console.log('   2. Generate policies: pnpm tsx scripts/db/rls-scaffold.ts <table_name>');
     console.log('   3. Or add to exceptions in docs/database/standards.md (with justification)');
+    console.log('\n📖 Documentation: docs/recipes/db.md#rls-validation');
   }
 
   return {
