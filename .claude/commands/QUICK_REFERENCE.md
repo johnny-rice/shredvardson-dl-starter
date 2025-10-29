@@ -21,6 +21,18 @@ Use these to invoke Skills quickly:
 | `/spec` | `prd-analyzer`             | Create specifications, extract criteria |
 | `/code` | `implementation-assistant` | Implement features with standards       |
 
+## 📝 Spec-Driven Workflow Commands (New)
+
+Three new commands that integrate with the `prd-analyzer` Skill for complete spec-driven development:
+
+| Command    | Purpose                                                            | Lane Detection |
+| ---------- | ------------------------------------------------------------------ | -------------- |
+| `/specify` | Create spec file with YAML frontmatter and automatic lane detection | Interactive    |
+| `/plan`    | Generate technical plan with design discovery for spec-driven lane | Auto-triggered |
+| `/tasks`   | Generate task breakdown with dependencies and estimates            | Both lanes     |
+
+**Key Feature**: `/plan` automatically triggers 3-phase Socratic design discovery for `lane: spec-driven` features (auth, payments, DB, multi-day work).
+
 ---
 
 ## 📚 Skills Catalog (Coming Soon)
@@ -123,7 +135,17 @@ Skills use progressive disclosure (load only what's needed). Invoke directly or 
 /git commit     # Create conventional commit
 ```
 
-### Spec-Driven Feature
+### Spec-Driven Feature (New Workflow)
+
+```bash
+/specify        # Create spec with lane detection
+/plan           # Generate plan (triggers design discovery for spec-driven lane)
+/tasks          # Generate task breakdown
+/code           # Implement tasks
+/git commit     # Commit
+```
+
+### Legacy Spec Workflow
 
 ```bash
 /spec           # Create spec, extract criteria (auto-chains to /test)

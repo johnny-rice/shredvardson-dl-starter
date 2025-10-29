@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2025-10-23T12:57:21.525Z",
+  "generated": "2025-10-29T22:41:36.858Z",
   "commands": [
     {
       "name": "_shared/branch-validation",
@@ -300,6 +300,17 @@
       "requiresHITL": false
     },
     {
+      "name": "plan",
+      "path": ".claude/commands/spec/plan.md",
+      "category": "Spec-Driven Development",
+      "tags": ["planning", "design", "architecture"],
+      "when": "Complex features requiring structured approach",
+      "purpose": "Generate technical plan from spec file. Automatically triggers design discovery for spec-driven lane features.",
+      "example": "Create technical plan for auth implementation",
+      "riskLevel": "MEDIUM",
+      "requiresHITL": true
+    },
+    {
       "name": "pr:assist",
       "path": ".claude/commands/git/pr-assistant.md",
       "category": "Git Workflow",
@@ -406,6 +417,28 @@
       "when": "Code quality and security improvements",
       "purpose": "Spec analysis via prd-analyzer Skill",
       "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "specify",
+      "path": ".claude/commands/spec/specify.md",
+      "category": "Spec-Driven Development",
+      "tags": ["spec", "planning", "prd"],
+      "when": "Complex features requiring structured approach",
+      "purpose": "Create a new spec file with lane detection to begin the spec-driven development workflow.",
+      "example": "Define requirements for user authentication system",
+      "riskLevel": "LOW",
+      "requiresHITL": true
+    },
+    {
+      "name": "tasks",
+      "path": ".claude/commands/spec/tasks.md",
+      "category": "Spec-Driven Development",
+      "tags": ["tasks", "breakdown", "implementation"],
+      "when": "Complex features requiring structured approach",
+      "purpose": "Generate implementation task breakdown from spec and plan files. Works for both spec-driven and simple lane features.",
+      "example": "Break down auth feature into TDD tasks",
       "riskLevel": "LOW",
       "requiresHITL": false
     },

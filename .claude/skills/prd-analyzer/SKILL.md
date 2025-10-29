@@ -297,9 +297,35 @@ Documentation: Created ADR-015-webhook-architecture.md
 
 ## Integration
 
-- **Commands**: Invoked via `/spec` discovery command
-- **Scripts**: TypeScript in `scripts/` directory
-- **Docs**: `docs/specs/` for standards and examples
+### Discovery Commands
+
+- **`/spec`**: Legacy discovery command for basic spec operations
+- **`/specify`**: Create new spec file with lane detection (interactive)
+- **`/plan`**: Generate technical plan with automatic design discovery for spec-driven lane
+- **`/tasks`**: Generate implementation task breakdown from spec and plan
+
+### Command Flow
+
+```text
+/specify → spec file created with lane assignment
+           ↓
+/plan    → reads spec, triggers design discovery if lane: spec-driven
+           ↓
+/tasks   → reads spec + plan, generates task breakdown
+           ↓
+/code    → implements tasks using implementation-assistant Skill
+```
+
+### Scripts
+
+- TypeScript in `scripts/` directory
+- Executed on-demand (0 tokens loaded)
+- Output returned to commands
+
+### Documentation
+
+- `docs/specs/` for standards and examples
+- `.claude/commands/spec/` for command definitions
 
 ## Token Efficiency
 

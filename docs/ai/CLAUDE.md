@@ -13,16 +13,7 @@ See [docs/constitution.md](../constitution.md) for complete project mission, gua
 
 Plan → Scaffold tests → Implement → Refactor/Secure → Prepare PR → Fix PR (if CI fails) → Self-critique → Docs & Release
 
-**Use Simple Workflow for:**
-
-- ✅ Bug fixes and small improvements
-- ✅ Single-component changes
-- ✅ Refactoring existing code
-- ✅ Documentation updates
-- ✅ UI tweaks and styling
-- ✅ Adding props to existing components
-- ✅ Quick prototypes and experiments
-- ✅ **Anything you can complete in 1-2 hours**
+**Use for:** Bug fixes, single-component changes, refactoring, docs, UI tweaks, anything completable in 1-2 hours.
 
 **Commands:** `/dev:plan-feature` → existing implementation commands
 
@@ -30,34 +21,9 @@ Plan → Scaffold tests → Implement → Refactor/Secure → Prepare PR → Fix
 
 Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → Fix PR (if CI fails) → Self-critique → Docs & Release
 
-**Use Spec-Driven Workflow ONLY when:**
-
-- ⚠️ **Authentication or authorization systems**
-- ⚠️ **Database schema changes or new models**
-- ⚠️ **Payment or billing integration**
-- ⚠️ **External API integrations**
-- ⚠️ **New dependencies** (especially with security implications)
-- ⚠️ **Multi-day features** with multiple components
-- ⚠️ **Breaking changes** to existing APIs
-- ⚠️ **Infrastructure or deployment changes**
-- ⚠️ **When requirements are unclear** and need GPT-5 planning
-- ⚠️ **Cross-cutting concerns** affecting multiple apps/packages
+**Use ONLY for:** Auth/authorization systems, database schema changes, payment integration, external APIs, new security-sensitive dependencies, multi-day features, breaking API changes, infrastructure changes, unclear requirements needing planning, cross-cutting concerns.
 
 **Commands:** `/specify` → `/plan` → `/tasks` → existing implementation commands
-
-### ❌ When NOT to Use Spec-Driven Workflow
-
-**Don't over-engineer these common tasks:**
-
-- Simple component creation
-- Adding a new route or page
-- Updating copy/text content
-- CSS/styling adjustments
-- Adding console logs or debug info
-- Renaming variables or functions
-- Adding TypeScript types for existing data
-- Documentation updates
-- Test file creation for existing features
 
 ### 🎯 Decision Framework
 
@@ -69,6 +35,12 @@ Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → 
 4. **Dependencies**: Am I adding new packages or external services?
 
 **If 2+ answers are "yes" → Spec-Driven. Otherwise → Simple.**
+
+**When user says "Start working on issue XXX" or "Pick a suitable lane":**
+
+- Assess using Decision Framework above
+- **If Spec-Driven:** Run `/specify` → `/plan` → `/tasks` in sequence
+- **If Simple:** Use `/dev:plan-feature` for lightweight planning
 
 **Reference**: All workflows must follow `docs/constitution.md` architectural decisions.
 

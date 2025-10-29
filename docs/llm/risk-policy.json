@@ -304,5 +304,26 @@
     "requiresHITL": false,
     "idempotent": false,
     "timeoutSeconds": 120
+  },
+
+  "specCreation": {
+    "riskLevel": "LOW",
+    "requiresHITL": true,
+    "idempotent": false,
+    "timeoutSeconds": 120
+  },
+
+  "designDecisions": {
+    "riskLevel": "MEDIUM",
+    "requiresHITL": true,
+    "idempotent": false,
+    "timeoutSeconds": 360
+  },
+
+  "taskPlanning": {
+    "riskLevel": "LOW",
+    "requiresHITL": false,
+    "idempotent": true,
+    "timeoutSeconds": 120
   }
 }
