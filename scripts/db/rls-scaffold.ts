@@ -49,6 +49,14 @@ interface ScaffoldResult {
   error?: string;
 }
 
+/**
+ * Builds an array of row-level security (RLS) policy definitions for a table according to the provided scaffold options.
+ *
+ * Generates owner-based policies when an owner column is specified; optionally adds a public read policy; when anonymous access is allowed, clones authenticated policies to create role-based anon variants; and, when soft-deletes are enabled, appends `deleted_at IS NULL` to SELECT policy conditions.
+ *
+ * @param options - Scaffold options that control policy generation (table name, ownerColumn defaulting to `user_id`, publicRead, allowAnon, softDeletes)
+ * @returns An array of `RLSPolicy` objects describing the policies to create for the target table
+ */
 function generateRLSPolicies(options: ScaffoldOptions): RLSPolicy[] {
   const { table, ownerColumn = 'user_id', publicRead, allowAnon, softDeletes } = options;
 
@@ -152,6 +160,12 @@ CREATE POLICY "${policy.name}" ON public.${policy.table}
   TO ${policy.role}${usingClause}${withCheckClause};`;
 }
 
+/**
+ * Generate a complete SQL migration script to enable and configure Row Level Security for a table.
+ *
+ * @param options - Scaffolding options including the target `table`, `ownerColumn`, and flags that control generated policies (e.g., public read, anonymous access, soft-deletes)
+ * @returns A single SQL script string that enables and forces RLS on the specified table, includes generated policy definitions and commented drop statements, a performance/index recommendation, and a sample admin-override snippet
+ */
 function generateCompleteRLSScript(options: ScaffoldOptions): string {
   const policies = generateRLSPolicies(options);
   const { table } = options;

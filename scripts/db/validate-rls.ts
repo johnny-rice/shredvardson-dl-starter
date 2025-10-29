@@ -56,7 +56,10 @@ interface ValidationResult {
 }
 
 /**
- * Fetch all user tables from the database
+ * Retrieve the names of all user-defined base tables in the public schema.
+ *
+ * @returns An array of table names in the public schema; returns an empty array if no tables are found.
+ * @throws An Error when the database RPC query fails or returns an error payload.
  */
 async function fetchAllTables(supabase: ReturnType<typeof createClient>): Promise<string[]> {
   const { data, error } = await supabase.rpc('query', {
@@ -89,7 +92,10 @@ async function fetchAllTables(supabase: ReturnType<typeof createClient>): Promis
 }
 
 /**
- * Check if RLS is enabled on a table
+ * Determine whether Row-Level Security is enabled and whether it is forced for a table in the public schema.
+ *
+ * @param tableName - The name of the table in the `public` schema to inspect
+ * @returns An object with `hasRLS` set to `true` when RLS is enabled for the table and `rlsForced` set to `true` when RLS is forced; both fields are `false` if the table is not found or the check fails
  */
 async function checkRLSStatus(
   supabase: ReturnType<typeof createClient>,
@@ -129,7 +135,12 @@ async function checkRLSStatus(
 }
 
 /**
- * Fetch RLS policies for a table
+ * Retrieve the RLS policies defined for a public-schema table.
+ *
+ * Queries the database catalogs and returns the policies associated with the specified table.
+ *
+ * @param tableName - The name of the table in the `public` schema to inspect
+ * @returns An array of `PolicyInfo` objects for the table's RLS policies; returns an empty array if no policies are found or if the query fails
  */
 async function fetchPolicies(
   supabase: ReturnType<typeof createClient>,
@@ -174,7 +185,10 @@ async function fetchPolicies(
 }
 
 /**
- * Analyze a single table's RLS status
+ * Produce the Row-Level Security status, discovered policies, and any warnings for a table in the public schema.
+ *
+ * @param tableName - The name of the table in the `public` schema to analyze
+ * @returns An object describing the table's RLS state, whether RLS is forced, the discovered policies, whether the table is an approved exception, and any validation warnings
  */
 async function analyzeTable(
   supabase: ReturnType<typeof createClient>,
@@ -220,7 +234,16 @@ async function analyzeTable(
 }
 
 /**
- * Validate RLS on all tables
+ * Validate row-level security (RLS) status for all public-schema tables and summarize findings.
+ *
+ * Performs a full scan of user tables, checks whether RLS is enabled/forced, collects policies,
+ * identifies gaps (tables without RLS that are not approved exceptions), and aggregates warnings.
+ *
+ * @param options - Options to control validation behavior.
+ * @param options.verbose - When true, print detailed per-table output.
+ * @returns A ValidationResult containing success status, counts (total, with RLS, without RLS, exceptions),
+ *          lists of gap and warning TableRLSStatus entries, and a textual summary.
+ * @throws Error If SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables are not set.
  */
 async function validateRLS(options: { verbose?: boolean }): Promise<ValidationResult> {
   const supabaseUrl = process.env.SUPABASE_URL;
@@ -306,7 +329,12 @@ async function validateRLS(options: { verbose?: boolean }): Promise<ValidationRe
 }
 
 /**
- * Display detailed results
+ * Print a human-readable breakdown of RLS validation results to stdout.
+ *
+ * Prints tables missing RLS, approved exceptions (when `verbose`), and — when `verbose` — details for tables with RLS including whether RLS is forced, policy counts and policy names. Always prints a consolidated warnings section for tables that have warnings.
+ *
+ * @param results - List of per-table RLS status objects to display
+ * @param verbose - If true, include exceptions and detailed RLS/policy information
  */
 function displayResults(results: TableRLSStatus[], verbose: boolean): void {
   // Group by status
@@ -373,7 +401,14 @@ function displayResults(results: TableRLSStatus[], verbose: boolean): void {
 }
 
 /**
- * Main execution
+ * Register and run the CLI command `db:validate:rls` to validate Row-Level Security across database tables.
+ *
+ * Parses command-line options, invokes `validateRLS` with the provided options, optionally emits JSON output
+ * when `--json` is specified, and exits the process with a non-zero code if validation fails or an error occurs.
+ *
+ * Supported options:
+ * - `-v, --verbose` — show detailed information for all tables
+ * - `--json` — output results as JSON
  */
 async function main(): Promise<void> {
   const program = new Command();
