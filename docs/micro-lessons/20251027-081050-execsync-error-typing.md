@@ -38,13 +38,14 @@ try {
   console.error({
     message: error instanceof Error ? error.message : 'Unknown error',
     status: execError.status, // Type-safe access
-    code: execError.code,     // Autocomplete works
+    code: execError.code, // Autocomplete works
     stderr: execError.stderr ? String(execError.stderr) : undefined,
   });
 }
 ```
 
 **Benefits:**
+
 - Type-safe property access (no typos)
 - IDE autocomplete for error properties
 - Passes linter rules (no `any` warnings)

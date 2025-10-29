@@ -7,8 +7,10 @@ tags: ['database', 'migration', 'supabase', 'schema', 'rls']
 deprecated: true
 deprecation_notice: >
   DEPRECATED: This command is being migrated to the `supabase-integration` Skill.
-  Use `/db` discovery command instead. This command will remain functional during
-  the 12-week transition period. See docs/adr/002-skills-architecture.md for details.
+  The Database Migration Agent integration (Issue #212) is a transitional enhancement
+  that will be moved to the new Skill. Use `/db` discovery command for new workflows.
+  This command will remain functional during the 12-week transition period.
+  See docs/adr/002-skills-architecture.md for details.
 when_to_use: >
   Streamline Supabase database migration workflow with validation and RLS policy checks.
 
@@ -86,10 +88,14 @@ Streamline Supabase database migration workflow with automatic validation, RLS p
 
 **Prompt:**
 
+This command delegates to the **Database Migration Agent** (Haiku 4.5) for efficient migration generation when using the `create` action.
+
+**Process:**
+
 1. Parse action and name arguments.
 2. Validate preconditions (Supabase CLI installed, local DB running).
 3. Execute the requested action:
-   - **create**: Generate new migration file with timestamp
+   - **create**: Delegate to Database Migration Agent to generate migration SQL
    - **validate**: Check migration syntax, breaking changes, RLS policies
    - **apply**: Apply migration to local DB and regenerate types
    - **rollback**: Revert last migration
@@ -97,6 +103,44 @@ Streamline Supabase database migration workflow with automatic validation, RLS p
 5. Generate migration report with validation results.
 6. Update TypeScript types if migration was applied.
 7. Suggest next steps.
+
+**Agent Integration (for `create` action):**
+
+When creating a new migration, gather requirements and delegate to the agent:
+
+```typescript
+const input = {
+  migration_type: 'create_table', // or alter_table, add_column, etc.
+  table_name: tableName,
+  schema_changes: {
+    columns: [
+      /* column definitions */
+    ],
+    indexes: [
+      /* index definitions */
+    ],
+  },
+  rls_required: true,
+  rls_policy_type: 'user_isolation', // or public_read, authenticated_read
+};
+
+// Use Task tool with database-migration-agent subagent
+const result = await Task({
+  subagent_type: 'database-migration-agent',
+  description: 'Generate database migration',
+  prompt: `Generate SQL migration.\n\nInput: ${JSON.stringify(input, null, 2)}`,
+});
+
+// Process result
+const { migration_sql, rls_policies, validation_queries, rollback_sql } = result;
+```
+
+**Agent Benefits:**
+
+- **Cost savings:** 68% reduction per task (Haiku vs Sonnet)
+- **Speed:** 4-5x faster response time
+- **Pattern-based generation:** Follows RLS templates and best practices
+- **Complete migrations:** Includes RLS policies, validation, and rollback SQL
 
 **Examples:**
 
@@ -107,7 +151,7 @@ Streamline Supabase database migration workflow with automatic validation, RLS p
 
 **Actions:**
 
-### 1. Create Migration
+## 1. Create Migration
 
 ```bash
 /db:migrate create "add_user_preferences"
@@ -125,7 +169,7 @@ Streamline Supabase database migration workflow with automatic validation, RLS p
 
 **Output:**
 
-```
+```text
 ✅ Created migration: supabase/migrations/20251018143000_add_user_preferences.sql
 
 Next steps:
@@ -244,7 +288,7 @@ pnpm db:migrate apply
 
 **Output:**
 
-```
+```text
 ✅ Migration applied successfully
 ✅ TypeScript types updated
 
@@ -271,7 +315,7 @@ Next steps:
 
 **Output:**
 
-```
+```text
 ⚠️  WARNING: Rolling back migration may cause data loss
 
 Last migration: 20251018143000_add_user_preferences.sql

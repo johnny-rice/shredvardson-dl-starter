@@ -53,6 +53,7 @@ token_cost: 500
 Execute: `scripts/skills/git.sh "$@"`
 
 #### 1.2 Create Git Router Script
+
 **File:** `scripts/skills/git.sh`
 
 ```bash
@@ -95,6 +96,7 @@ case "$ACTION" in
     exit 1
     ;;
 esac
+```
 ````
 
 #### 1.3 Refactor Existing Commands to Sub-Scripts
@@ -196,6 +198,7 @@ triggers:
 Execute: `scripts/skills/code-reviewer.sh "$@"`
 
 #### 2.2 Implement Code Reviewer Script
+
 **File:** `scripts/skills/code-reviewer.sh`
 
 ```bash
@@ -261,6 +264,7 @@ fi
 # TODO: Integrate with /security:scan
 
 echo "$RESULTS" | jq '.'
+```
 ````
 
 ### Step 3: Documentation Sync Skill (3.3)
@@ -302,6 +306,7 @@ token_cost: 400
 Execute: `scripts/skills/documentation-sync.sh "$@"`
 
 #### 3.2 Implement Documentation Sync Script
+
 **File:** `scripts/skills/documentation-sync.sh`
 
 ```bash
@@ -354,6 +359,7 @@ jq -n --argjson count "$FILES_COUNT" '{
     }
   ]
 }'
+```
 ````
 
 ### Step 4: Token Measurement & Validation (3.4)

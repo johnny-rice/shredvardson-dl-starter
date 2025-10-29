@@ -285,24 +285,28 @@ pnpm test:ci-scripts # Run CI script integration tests
 ### Test Types & What They Cover
 
 **Unit Tests** (Vitest 3.2.4 + React Testing Library 16.3.0)
+
 - Component rendering and interactions
 - Utility functions and business logic
 - Integration with mocked dependencies
 - **Coverage target**: 70% lines/functions/statements, 65% branches
 
 **RLS Security Tests** (Vitest + Supabase Test Client)
+
 - Row-Level Security policy validation
 - User isolation and data access boundaries
 - Multi-tenant security enforcement
 - **Templates ready** in `apps/web/tests/rls/` (requires tables)
 
 **E2E Tests** (Playwright 1.56.1)
+
 - Critical user flows (auth, navigation, CRUD)
 - Accessibility validation (@axe-core/playwright)
 - Cross-browser testing (Chrome + Mobile Chrome)
 - **Smoke tests complete** (4 passing)
 
 **CI Script Tests** (Bash + Integration)
+
 - Spec validation (naming, structure, required files)
 - Lane detection (simple vs. spec-driven)
 - Pre-commit/pre-push hook validation

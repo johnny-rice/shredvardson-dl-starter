@@ -61,25 +61,75 @@ references:
 
 **Slash Command:** `/github:create-issue`
 
-**Goal:**  
+**Goal:**
 Create a GitHub issue from current planning discussion with proper template.
 
 **Prompt:**
 
-1. Confirm lane (**lightweight/spec**) against `CLAUDE.md` decision rules.
-2. Create a GitHub issue based on our current conversation.
-3. Use the most appropriate template (ai-collaboration, learning-spike, refactor-secure, or standard).
-4. Include all relevant context, links to related issues, and clear acceptance criteria.
-5. Auto-assign appropriate labels and link to project board.
-6. Produce issue **artifacts** and **link** results, return the created issue URL for tracking.
-7. Emit **Result**: issue created, URL provided, and next suggested command.
+This command delegates to the **Issue Creator Agent** (Haiku 4.5) for efficient issue generation.
+
+**Process:**
+
+1. Gather context from conversation:
+   - Extract issue title from discussion
+   - Collect description/requirements
+   - Identify suggested labels (if any)
+   - Determine template type (feature, bug, epic, blank)
+   - Optional: Collect project context (tech stack, existing features)
+
+2. Confirm lane (**lightweight/spec**) against `CLAUDE.md` decision rules.
+
+3. Delegate to Issue Creator Agent:
+
+   ```typescript
+   const input = {
+     title: extractedTitle,
+     description: conversationSummary,
+     labels: suggestedLabels || [],
+     template: templateType || 'feature',
+     project_context: {
+       has_db: true,
+       has_supabase: true,
+       tech_stack: ['Next.js', 'Supabase', 'TypeScript'],
+     },
+   };
+
+   // Use Task tool with issue-creator-agent subagent
+   const result = await Task({
+     subagent_type: 'issue-creator-agent',
+     description: 'Generate GitHub issue',
+     prompt: `Generate GitHub issue from discussion.\n\nInput: ${JSON.stringify(input, null, 2)}`,
+   });
+   ```
+
+4. Process agent response:
+   - Parse JSON output from agent
+   - Extract `formatted_title` and `formatted_body`
+   - Review suggested labels and effort estimate
+   - Display preview to user
+
+5. Create GitHub issue:
+   - Use `gh issue create` with formatted content
+   - Apply suggested labels
+   - Return issue URL
+
+6. Emit **Result**: issue created, URL provided, and next suggested command.
 
 **Examples:**
 
 - `/github:create-issue ai-collaboration` → creates issue with AI collaboration template
 - `/github:create-issue --dry-run` → show planned issue content only.
 
+**Agent Benefits:**
+
+- **Cost savings:** 68% reduction per task (Haiku vs Sonnet)
+- **Speed:** 4-5x faster response time
+- **Consistent formatting:** Always follows template structure
+- **Smart label suggestions:** Automatically recommends appropriate labels
+
 **Failure & Recovery:**
 
-- If template missing → use standard template and suggest template creation.
-- If context unclear → ask for specific issue details and acceptance criteria.
+- If agent returns low confidence → ask for clarification on requirements
+- If template missing → agent uses built-in template structure
+- If context unclear → agent flags missing details for user review
+- If agent fails → fallback to manual issue creation

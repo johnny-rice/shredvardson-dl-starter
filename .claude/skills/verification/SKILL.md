@@ -41,17 +41,17 @@ This protocol is automatically enforced in:
 
 ## Verification Commands by Context
 
-| Context              | Verification Command                    | Success Indicator       |
-| -------------------- | --------------------------------------- | ----------------------- |
-| Tests                | `pnpm test`                             | "X/X tests pass"        |
-| TypeScript           | `pnpm typecheck`                        | "No errors found"       |
-| Linting              | `pnpm lint`                             | "0 errors, 0 warnings"  |
-| Build                | `pnpm build`                            | "Build succeeded"       |
-| Migration            | `pnpm db:migrate`                       | "Migration X applied"   |
-| Coverage             | `pnpm test:coverage`                    | "Coverage: X%"          |
-| E2E Tests            | `pnpm test:e2e`                         | "X specs passed"        |
-| RLS Tests            | `pnpm test:rls`                         | "X RLS tests passed"    |
-| Regression Test (TDD)| Write → Run (should fail) → Implement → Run (should pass) | Red-Green cycle verified |
+| Context               | Verification Command                                      | Success Indicator        |
+| --------------------- | --------------------------------------------------------- | ------------------------ |
+| Tests                 | `pnpm test`                                               | "X/X tests pass"         |
+| TypeScript            | `pnpm typecheck`                                          | "No errors found"        |
+| Linting               | `pnpm lint`                                               | "0 errors, 0 warnings"   |
+| Build                 | `pnpm build`                                              | "Build succeeded"        |
+| Migration             | `pnpm db:migrate`                                         | "Migration X applied"    |
+| Coverage              | `pnpm test:coverage`                                      | "Coverage: X%"           |
+| E2E Tests             | `pnpm test:e2e`                                           | "X specs passed"         |
+| RLS Tests             | `pnpm test:rls`                                           | "X RLS tests passed"     |
+| Regression Test (TDD) | Write → Run (should fail) → Implement → Run (should pass) | Red-Green cycle verified |
 
 ## Red Flags - STOP
 
@@ -68,26 +68,26 @@ If you catch yourself:
 
 ## Common Failures
 
-| Claim                  | Requires                               | Not Sufficient                     |
-| ---------------------- | -------------------------------------- | ---------------------------------- |
-| "Tests pass"           | `pnpm test` output: 0 failures         | Previous run, "should pass"        |
-| "Linter clean"         | `pnpm lint` output: 0 errors/warnings  | Partial check, extrapolation       |
-| "Build succeeds"       | `pnpm build` exit code 0               | Linter passing, logs look good     |
-| "Bug fixed"            | Test original symptom: passes          | Code changed, assumed fixed        |
-| "Regression test works"| Red-green cycle verified               | Test passes once                   |
-| "Requirements met"     | Line-by-line checklist                 | Tests passing                      |
+| Claim                   | Requires                              | Not Sufficient                 |
+| ----------------------- | ------------------------------------- | ------------------------------ |
+| "Tests pass"            | `pnpm test` output: 0 failures        | Previous run, "should pass"    |
+| "Linter clean"          | `pnpm lint` output: 0 errors/warnings | Partial check, extrapolation   |
+| "Build succeeds"        | `pnpm build` exit code 0              | Linter passing, logs look good |
+| "Bug fixed"             | Test original symptom: passes         | Code changed, assumed fixed    |
+| "Regression test works" | Red-green cycle verified              | Test passes once               |
+| "Requirements met"      | Line-by-line checklist                | Tests passing                  |
 
 ## Rationalization Prevention
 
-| Excuse                         | Reality                                   |
-| ------------------------------ | ----------------------------------------- |
-| "Should work now"              | RUN the verification                      |
-| "I'm confident"                | Confidence ≠ evidence                     |
-| "Just this once"               | No exceptions                             |
-| "Linter passed"                | Linter ≠ compiler ≠ tests                 |
-| "I'm tired"                    | Exhaustion ≠ excuse                       |
-| "Partial check is enough"      | Partial proves nothing                    |
-| "Different words so rule doesn't apply" | Spirit over letter                        |
+| Excuse                                  | Reality                   |
+| --------------------------------------- | ------------------------- |
+| "Should work now"                       | RUN the verification      |
+| "I'm confident"                         | Confidence ≠ evidence     |
+| "Just this once"                        | No exceptions             |
+| "Linter passed"                         | Linter ≠ compiler ≠ tests |
+| "I'm tired"                             | Exhaustion ≠ excuse       |
+| "Partial check is enough"               | Partial proves nothing    |
+| "Different words so rule doesn't apply" | Spirit over letter        |
 
 ## Key Patterns
 

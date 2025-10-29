@@ -1,5 +1,5 @@
 ---
-title: "🔒 CRITICAL: Implement Row-Level Security (RLS) policies for all tables"
+title: '🔒 CRITICAL: Implement Row-Level Security (RLS) policies for all tables'
 type: feature
 priority: p0
 status: ready
@@ -152,13 +152,13 @@ async function validateRLS(): Promise<RLSStatus[]> {
         tableName: table.name,
         hasRLS: rlsEnabled,
         policies,
-        isException
+        isException,
       };
     })
   );
 
   // 3. Identify gaps
-  const gaps = status.filter(t => !t.hasRLS && !t.isException);
+  const gaps = status.filter((t) => !t.hasRLS && !t.isException);
 
   if (gaps.length > 0) {
     console.error('❌ RLS gaps found:', gaps);

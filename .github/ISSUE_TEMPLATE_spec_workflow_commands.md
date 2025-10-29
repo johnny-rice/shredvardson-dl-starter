@@ -7,6 +7,7 @@ Implement the missing `/specify`, `/plan`, and `/tasks` commands referenced in C
 ## Problem
 
 **Current State:**
+
 - ✅ prd-analyzer Skill has design discovery protocol documented
 - ✅ CLAUDE.md references spec-driven workflow: `/specify` → `/plan` → `/tasks`
 - ❌ These commands **don't exist** - only `/spec` (basic Skill invocation) exists
@@ -14,6 +15,7 @@ Implement the missing `/specify`, `/plan`, and `/tasks` commands referenced in C
 - ❌ Design discovery must be manually invoked
 
 **Impact:**
+
 - Users can't access the design discovery enhancement from Issue #209 Phase 2
 - Spec-driven workflow in CLAUDE.md is broken
 - Enhanced prd-analyzer capabilities are undiscoverable
@@ -27,6 +29,7 @@ Create three missing commands that integrate prd-analyzer's design discovery pro
 **Purpose:** Create new spec file with lane detection
 
 **Behavior:**
+
 - Prompt for feature name, priority, type
 - Ask: "Is this complex/risky enough for spec-driven lane?" (yes/no)
 - Create spec file with `lane: spec-driven` or `lane: fast` frontmatter
@@ -40,6 +43,7 @@ Create three missing commands that integrate prd-analyzer's design discovery pro
 **Purpose:** Design planning with automatic discovery for spec-lane features
 
 **Behavior:**
+
 - Read spec file frontmatter
 - Check `lane` field:
   - If `lane: spec-driven` → Trigger 3-phase design discovery (Understanding → Exploration → Design)
@@ -57,6 +61,7 @@ Create three missing commands that integrate prd-analyzer's design discovery pro
 **Purpose:** Generate implementation task breakdown
 
 **Behavior:**
+
 - Read spec and plan files
 - Extract acceptance criteria
 - Generate ordered task list with dependencies
@@ -145,6 +150,7 @@ Prompt:
 ### Step 4: Integration Testing
 
 Test full workflow:
+
 ```bash
 /specify "Add payment processing"
 → Creates spec with lane: spec-driven
@@ -194,6 +200,7 @@ Test full workflow:
 ## Estimated Effort
 
 **4-6 hours**
+
 - `/specify`: 1-2 hours
 - `/plan`: 2-3 hours (design discovery integration)
 - `/tasks`: 1 hour
@@ -204,6 +211,7 @@ Test full workflow:
 **P1** - High priority
 
 **Reasoning:**
+
 - CLAUDE.md references broken workflow
 - Phase 2 enhancement from #209 is inaccessible
 - Blocks spec-driven development for complex features

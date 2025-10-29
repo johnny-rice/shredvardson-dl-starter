@@ -12,6 +12,7 @@ date: 2025-10-27
 Shell scripts that capture `stdout`/`stderr` from `execSync` may accidentally leak credentials, database URLs, or API tokens in logs when commands fail.
 
 **Example Risk:**
+
 ```typescript
 // ❌ DANGEROUS: May leak credentials
 const output = execSync('pnpm db:types', { encoding: 'utf-8' });
@@ -40,6 +41,7 @@ console.log(
 ## Pattern
 
 **1. Check environment variable:**
+
 ```typescript
 export function isVerboseEnabled(): boolean {
   return /^(1|true)$/i.test(process.env.SKILL_VERBOSE ?? '');
@@ -47,6 +49,7 @@ export function isVerboseEnabled(): boolean {
 ```
 
 **2. Apply to success output:**
+
 ```typescript
 const VERBOSE = isVerboseEnabled();
 console.log(
@@ -58,6 +61,7 @@ console.log(
 ```
 
 **3. Apply to error output:**
+
 ```typescript
 console.error(
   JSON.stringify({

@@ -12,6 +12,7 @@ date: 2025-10-27
 Hardcoded timeouts in `execSync` calls cause flaky CI failures when operations take longer than expected on slower hardware or under high load.
 
 **Example Flake:**
+
 ```typescript
 // ❌ BRITTLE: Hardcoded 60s timeout
 const output = execSync('pnpm db:types', {
@@ -34,8 +35,8 @@ export function getDefaultExecOptions(): ExecSyncOptions {
   return {
     encoding: 'utf-8',
     cwd: process.cwd(),
-    timeout: TIMEOUT_MS,      // 120s default, CI can override
-    maxBuffer: MAX_BUFFER,    // 10MB default, handles large outputs
+    timeout: TIMEOUT_MS, // 120s default, CI can override
+    maxBuffer: MAX_BUFFER, // 10MB default, handles large outputs
   };
 }
 
@@ -45,6 +46,7 @@ const output = execSync('pnpm db:types', getDefaultExecOptions());
 ## Pattern
 
 **1. Centralize exec options:**
+
 ```typescript
 // utils/exec-with-error-handling.ts
 export function getDefaultExecOptions(): ExecSyncOptions {
@@ -61,6 +63,7 @@ export function getDefaultExecOptions(): ExecSyncOptions {
 ```
 
 **2. Use in all scripts:**
+
 ```typescript
 import { getDefaultExecOptions } from './utils/exec-with-error-handling.js';
 
@@ -68,35 +71,39 @@ const output = execSync('command', getDefaultExecOptions());
 ```
 
 **3. Document in CI config:**
+
 ```yaml
 # .github/workflows/ci.yml
 env:
-  SKILL_EXEC_TIMEOUT_MS: 180000  # 3min for slower CI runners
-  SKILL_EXEC_MAX_BUFFER: 20971520  # 20MB for verbose output
+  SKILL_EXEC_TIMEOUT_MS: 180000 # 3min for slower CI runners
+  SKILL_EXEC_MAX_BUFFER: 20971520 # 20MB for verbose output
 ```
 
 ## Environment Variables
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
-| `SKILL_EXEC_TIMEOUT_MS` | `120000` (2min) | Command timeout in milliseconds |
-| `SKILL_EXEC_MAX_BUFFER` | `10485760` (10MB) | Max stdout/stderr buffer size |
+| Variable                | Default           | Purpose                         |
+| ----------------------- | ----------------- | ------------------------------- |
+| `SKILL_EXEC_TIMEOUT_MS` | `120000` (2min)   | Command timeout in milliseconds |
+| `SKILL_EXEC_MAX_BUFFER` | `10485760` (10MB) | Max stdout/stderr buffer size   |
 
 ## Usage Examples
 
 **Local development (use defaults):**
+
 ```bash
 tsx generate-types.ts
 # Timeout: 120s, Buffer: 10MB
 ```
 
 **CI with slower runners:**
+
 ```bash
 SKILL_EXEC_TIMEOUT_MS=300000 tsx generate-types.ts
 # Timeout: 5min
 ```
 
 **Debug with large output:**
+
 ```bash
 SKILL_EXEC_MAX_BUFFER=52428800 tsx generate-types.ts
 # Buffer: 50MB
@@ -112,18 +119,21 @@ SKILL_EXEC_MAX_BUFFER=52428800 tsx generate-types.ts
 ## Buffer Size Considerations
 
 **Default maxBuffer (1MB) is too small for:**
+
 - Type generation from large schemas
 - Verbose migration logs
 - Full test suite output
 - Detailed error diagnostics
 
 **Symptoms of buffer overflow:**
-```
+
+```text
 Error: stdout maxBuffer length exceeded
 Error: stderr maxBuffer length exceeded
 ```
 
 **Our default (10MB) handles:**
+
 - ~2000 TypeScript interfaces
 - ~5000 lines of migration SQL
 - Full stack traces with context
@@ -131,11 +141,13 @@ Error: stderr maxBuffer length exceeded
 ## Default Values Rationale
 
 **120s timeout (vs Node's 0/infinity):**
+
 - Long enough for complex operations
 - Short enough to catch hung processes
 - CI-friendly (most operations < 2min)
 
 **10MB buffer (vs Node's 1MB):**
+
 - 10× Node default
 - Handles realistic large outputs
 - Prevents silent truncation

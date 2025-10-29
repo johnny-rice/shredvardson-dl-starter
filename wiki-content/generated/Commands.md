@@ -100,7 +100,7 @@
 
 **Risk Level**: LOW
 
-**Tags**: 
+**Tags**:
 
 ---
 
@@ -218,7 +218,7 @@
 
 ### Git Workflow
 
-#### _shared/branch-validation
+#### \_shared/branch-validation
 
 **Purpose**: Reusable validation patterns for branch creation, name compliance, and git state checks
 
@@ -232,7 +232,7 @@
 
 ---
 
-#### _shared/commit-formatting
+#### \_shared/commit-formatting
 
 **Purpose**: Shared commit message formatting standards and conventional commit patterns
 
@@ -246,7 +246,7 @@
 
 ---
 
-#### _shared/common-git-workflow
+#### \_shared/common-git-workflow
 
 **Purpose**: Git workflow best practices including branch protection, commit hygiene, and push/pull patterns
 
@@ -260,7 +260,7 @@
 
 ---
 
-#### _shared/error-handling
+#### \_shared/error-handling
 
 **Purpose**: Comprehensive error detection, messaging, and recovery patterns for common git failure modes
 
@@ -555,20 +555,21 @@
 ## Decision Framework
 
 {
-  "spec_driven_triggers": [
-    "Risk: authentication/payments/data",
-    "Scope: 3+ files or 2+ hours",
-    "Clarity: requirements unclear",
-    "Dependencies: new packages/services"
-  ],
-  "simple_workflow_default": [
-    "Single component changes",
-    "UI tweaks and styling",
-    "Bug fixes",
-    "Documentation updates",
-    "Anything completable in 1-2 hours"
-  ]
+"spec_driven_triggers": [
+"Risk: authentication/payments/data",
+"Scope: 3+ files or 2+ hours",
+"Clarity: requirements unclear",
+"Dependencies: new packages/services"
+],
+"simple_workflow_default": [
+"Single component changes",
+"UI tweaks and styling",
+"Bug fixes",
+"Documentation updates",
+"Anything completable in 1-2 hours"
+]
 }
 
 ---
-*Generated from docs/commands/index.json*
+
+_Generated from docs/commands/index.json_

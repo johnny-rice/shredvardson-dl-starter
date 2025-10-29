@@ -127,7 +127,7 @@ function generateConstitutionPage(outputDir) {
   let content = fs.readFileSync(constitutionPath, 'utf8');
 
   // Add generation note
-  content += '\n\n---\n*Copied from docs/constitution.md*\n';
+  content += '\n\n---\n_Copied from docs/constitution.md_\n';
 
   fs.writeFileSync(path.join(outputDir, 'Constitution.md'), content);
 }
@@ -215,7 +215,7 @@ function generatePRDPage(outputDir) {
 
   // Add generation note
   content +=
-    '\n\n---\n*Copied from docs/product/PRD.md - DO NOT EDIT DIRECTLY*\n*Update the source file and run `pnpm wiki:generate` to sync*\n';
+    '\n\n---\n_Copied from docs/product/PRD.md - DO NOT EDIT DIRECTLY_\n_Update the source file and run `pnpm wiki:generate` to sync_\n';
 
   fs.writeFileSync(path.join(outputDir, 'WIKI-PRD.md'), content);
 

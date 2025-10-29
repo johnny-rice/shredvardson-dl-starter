@@ -184,7 +184,7 @@ Update `package.json`:
 
 Add section:
 
-```markdown
+````markdown
 ## RLS Validation
 
 ### Running Locally
@@ -192,6 +192,7 @@ Add section:
 ```bash
 pnpm db:validate-rls
 ```
+````
 
 ### CI/CD Integration
 
@@ -219,12 +220,12 @@ CREATE POLICY "policy_name" ON table_name
 
 ## Risk Assessment
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|---------|------------|
-| False positives | Medium | Medium | Warning-only mode first |
-| Increased CI time | Low | Low | Optimize queries |
-| Breaking existing CI | Low | High | Thorough testing |
-| Developer friction | Medium | Low | Clear documentation |
+| Risk                 | Likelihood | Impact | Mitigation              |
+| -------------------- | ---------- | ------ | ----------------------- |
+| False positives      | Medium     | Medium | Warning-only mode first |
+| Increased CI time    | Low        | Low    | Optimize queries        |
+| Breaking existing CI | Low        | High   | Thorough testing        |
+| Developer friction   | Medium     | Low    | Clear documentation     |
 
 ## References
 

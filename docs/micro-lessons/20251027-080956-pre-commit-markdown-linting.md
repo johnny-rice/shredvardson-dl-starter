@@ -25,8 +25,9 @@ git commit -m "feat: add spec"
 ```
 
 **Common Auto-Fixable Issues:**
+
 - MD036: Emphasis-as-heading (`**text:**` → `### text`)
-- MD040: Missing language identifiers (`` ``` `` → `` ```bash ``)
+- MD040: Missing language identifiers (` ``` ` → ` ```bash `)
 - MD034: Bare URLs (`https://...` → `[text](https://...)`)
 - MD041: First line must be top-level heading
 

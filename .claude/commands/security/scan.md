@@ -81,7 +81,6 @@ Scan codebase for security vulnerabilities using isolated Security Scanner conte
    **Scope → Focus Areas Mapping (runtime logic):**
 
    Dynamically populate `focus_areas` based on the parsed `scope` argument:
-
    - `"rls"` → `["rls", "policies", "row_security"]`
    - `"auth"` → `["auth", "session", "authentication", "authorization"]`
    - `"api"` → `["routes", "endpoints", "api", "request_handling"]`

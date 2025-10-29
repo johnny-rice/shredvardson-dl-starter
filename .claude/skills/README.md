@@ -180,6 +180,7 @@ Skills are the successor to slash commands, offering:
 **Usage**: Automatic (no command needed)
 
 **Example**:
+
 ```bash
 # Before (without verification):
 Claude: "All tests pass, ready to commit!"

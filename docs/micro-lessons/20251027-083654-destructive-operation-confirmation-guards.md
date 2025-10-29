@@ -12,6 +12,7 @@ date: 2025-10-27
 Database rollback operations destroy data. Without explicit confirmation, accidental invocations can cause catastrophic data loss.
 
 **Risk Scenario:**
+
 ```bash
 # Developer accidentally runs rollback instead of validate
 /db rollback  # 💥 All local data gone, no confirmation
@@ -41,24 +42,29 @@ const output = execSync('tsx scripts/db/migrate.ts rollback', options);
 ## Pattern
 
 **1. Identify destructive operations:**
+
 - Database rollbacks/resets
 - Data deletion (bulk or cascade)
 - Schema drops
 - File system cleanup (`rm -rf`)
 
 **2. Add confirmation guard at entry point:**
+
 ```typescript
 if (process.env.ALLOW_<OPERATION> !== '1') {
-  console.error(JSON.stringify({
-    success: false,
-    error: '<Operation> blocked. Set ALLOW_<OPERATION>=1 to proceed.',
-    hint: 'Safety measure to prevent accidental data loss.',
-  }));
+  console.error(
+    JSON.stringify({
+      success: false,
+      error: '<Operation> blocked. Set ALLOW_<OPERATION>=1 to proceed.',
+      hint: 'Safety measure to prevent accidental data loss.',
+    })
+  );
   process.exit(2);
 }
 ```
 
 **3. Use distinct exit codes:**
+
 - `0` = Success
 - `1` = Error during execution
 - `2` = Blocked by safety guard
@@ -98,6 +104,7 @@ tsx rollback-migration.ts
 ```
 
 This allows scripts to detect and handle differently:
+
 ```bash
 tsx rollback.ts
 EXIT_CODE=$?
@@ -111,6 +118,7 @@ fi
 ## Alternative Patterns
 
 **Interactive Confirmation (less suitable for Skills):**
+
 ```typescript
 // ⚠️ Not recommended for automated workflows
 const readline = require('readline');
@@ -119,6 +127,7 @@ if (answer !== 'CONFIRM') process.exit(2);
 ```
 
 **Why environment variables are better for Skills:**
+
 - Works in CI/CD and automated contexts
 - Explicit in command history: `ALLOW_DB_ROLLBACK=1 tsx rollback.ts`
 - Can be scripted and tested

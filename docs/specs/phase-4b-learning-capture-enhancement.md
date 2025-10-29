@@ -178,11 +178,13 @@ Other common tags: #git #bash #typescript #testing
 ### Automated Testing (Required)
 
 Implement before merge:
+
 - Automated tests for context extraction (mock git commands)
 - Regression tests for existing learning capture functionality
 - Tag suggestion accuracy tests (compare against corpus)
 
 **Acceptance Criteria:**
+
 - Test files added to `tests/specs/phase-4b/` directory
 - All tests passing in CI pipeline (`pnpm test`)
 - Coverage for critical paths: auto-context, tag suggestions, INDEX regeneration

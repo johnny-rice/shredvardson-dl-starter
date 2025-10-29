@@ -88,6 +88,7 @@ echo "=== Running Operation ===" && pnpm build --verbose
 ### Changes Made
 
 **Files:**
+
 - [.claude/commands/git/fix-pr.md](.claude/commands/git/fix-pr.md) - Fix attempt tracking
 - [docs/llm/DESIGN_CONSTITUTION.md](docs/llm/DESIGN_CONSTITUTION.md) - Already documented!
 
@@ -105,6 +106,7 @@ Discuss with human before attempting Fix #4
 ### Pattern Recognition
 
 Circuit breaker triggers when:
+
 - Each fix reveals new coupling in different files
 - Fixes require touching 5+ unrelated components
 - Each fix creates new symptoms elsewhere
@@ -131,11 +133,13 @@ pnpm test
 ```
 
 **Results:**
+
 - ✅ 89 tests passed
 - ⏭️ 20 tests skipped
 - ❌ 2 tests failed (pre-existing LineChart issue from #191)
 
 **Breakdown:**
+
 - web: 69 tests passed | 20 skipped
 - @ui/components: 33 tests passed | 2 failed (LineChart - React import issue)
 
@@ -150,6 +154,7 @@ pnpm typecheck
 ### Token Efficiency
 
 **Estimated Overhead:**
+
 - Verification protocol: ~100 tokens per use
 - Design discovery: ~300-500 tokens per complex feature
 - Debugging enhancement: ~150 tokens for evidence gathering
@@ -241,6 +246,7 @@ Per spec analysis, we intentionally **did not** adopt:
 **Goal:** Combine Superpowers' behavioral discipline with dl-starter's token-efficient execution layer
 
 **Expected ROI:**
+
 - 40% reduction in rework cycles
 - 90%+ fix success rate for CI failures
 - Better architectural decisions for complex features

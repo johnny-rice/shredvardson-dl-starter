@@ -65,25 +65,49 @@ references:
 
 **Slash Command:** `/pr:assist`
 
-**Goal:**  
+**Goal:**
 Auto-fill PR template with traceability IDs and metadata before opening PR.
 
 **Prompt:**
 
-1. Scan for traceability artifacts in current branch:
-   - Spec files: `specs/SPEC-YYYYMMDD-*.md`
-   - Plan files: `plans/PLAN-YYYYMMDD-*.md`
-   - Task files: `tasks/TASK-YYYYMMDD-*.md`
-   - ADR files: `docs/decisions/ADR-YYYYMMDD-*.md`
-2. Extract IDs and metadata from front-matter.
-3. Fill PR template with:
-   - GitHub Issue number (from argument or git branch)
-   - Spec/Plan/Task IDs (if found)
-   - ADR Reference (if governance changes detected)
-   - Summary (based on git diff and artifacts)
-   - Verification checklist status
-4. Save complete template to `artifacts/pr-body.md`.
-5. Emit **Result**: PR template ready, suggest `/git:prepare-pr` next.
+This command delegates to the **PR Template Agent** (Haiku 4.5) for efficient PR generation.
+
+**Process:**
+
+1. Gather context:
+   - Get current branch name: `git rev-parse --abbrev-ref HEAD`
+   - Identify base branch (usually `main`)
+   - Collect spec artifact paths: `specs/`, `plans/`, `tasks/`
+   - Optional: Issue number from argument
+
+2. Delegate to PR Template Agent:
+
+   ```typescript
+   const input = {
+     branch: currentBranch,
+     base_branch: baseBranch || 'main',
+     spec_artifacts: ['specs/', 'plans/', 'tasks/'],
+     pr_template_path: '.github/pull_request_template.md',
+   };
+
+   // Use Task tool with pr-template-agent subagent
+   const result = await Task({
+     subagent_type: 'pr-template-agent',
+     description: 'Generate PR template',
+     prompt: `Generate PR template for branch ${currentBranch}.\n\nInput: ${JSON.stringify(input, null, 2)}`,
+   });
+   ```
+
+3. Process agent response:
+   - Parse JSON output from agent
+   - Extract `pr_title` and `pr_body`
+   - Save to `artifacts/pr-body.md`
+   - Display traceability information to user
+
+4. Suggest next steps:
+   - If confidence is high: suggest `/git:prepare-pr`
+   - If confidence is medium/low: suggest reviewing the PR body
+   - Display any warnings or notes from the agent
 
 **Examples:**
 
@@ -91,7 +115,16 @@ Auto-fill PR template with traceability IDs and metadata before opening PR.
 - `/pr:assist` → auto-detects issue from branch name
 - `/pr:assist --dry-run` → shows template structure only.
 
+**Agent Benefits:**
+
+- **Cost savings:** 68% reduction per task (Haiku vs Sonnet)
+- **Speed:** 4-5x faster response time
+- **Context isolation:** Agent explores freely, returns concise summary
+- **Structured output:** Guaranteed JSON format with traceability
+
 **Failure & Recovery:**
 
-- If no traceability artifacts found → suggest simple workflow.
-- If multiple specs found → ask which one to reference.
+- If agent returns low confidence → review and supplement PR body manually
+- If no traceability artifacts found → agent will generate from commits only
+- If multiple specs found → agent will include all relevant IDs
+- If agent fails → fallback to manual PR template generation

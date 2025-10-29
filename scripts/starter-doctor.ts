@@ -1929,9 +1929,9 @@ function checkWikiPRDSync(): CheckResult {
     const sourceContent = readFileSync(sourcePRD, 'utf8');
     const wikiContent = readFileSync(wikiPRD, 'utf8');
 
-    // Remove the generation footer before comparing
+    // Remove the generation footer before comparing (matches both * and _ for emphasis)
     const cleanWikiContent = wikiContent.replace(
-      /\n\n---\n\*Copied from docs\/product\/PRD\.md[\s\S]*$/,
+      /\n\n---\n[_*]Copied from docs\/product\/PRD\.md[\s\S]*$/,
       ''
     );
 

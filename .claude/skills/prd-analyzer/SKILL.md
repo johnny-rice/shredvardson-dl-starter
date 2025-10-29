@@ -169,6 +169,7 @@ Ask clarifying questions **one at a time** to understand requirements.
 **Question:** Should we handle refunds in this phase?
 
 Options:
+
 - Yes - Full refund workflow
 - No - Ship without refunds
 - Partial - Basic refund, detailed later

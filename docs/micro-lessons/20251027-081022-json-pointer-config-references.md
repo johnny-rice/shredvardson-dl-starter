@@ -22,6 +22,7 @@ riskPolicyRef: 'docs/llm/risk-policy.json#/riskFramework/riskLevels/LOW'
 ```
 
 **JSON Pointer Rules:**
+
 - Start with `#/` for root-level paths
 - Use `/` as path separator (not `.`)
 - Each segment is a property name

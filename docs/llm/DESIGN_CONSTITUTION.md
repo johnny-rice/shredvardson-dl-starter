@@ -60,11 +60,11 @@ If 3+ fix attempts fail without success:
 
 ### When to Apply
 
-| Situation | Action |
-|-----------|--------|
-| Fix #1 fails | Continue with new hypothesis |
-| Fix #2 fails | Continue with new hypothesis |
-| Fix #3 fails | **STOP** - Question architecture |
+| Situation        | Action                                 |
+| ---------------- | -------------------------------------- |
+| Fix #1 fails     | Continue with new hypothesis           |
+| Fix #2 fails     | Continue with new hypothesis           |
+| Fix #3 fails     | **STOP** - Question architecture       |
 | Ready for Fix #4 | **BLOCKED** - Discuss with human first |
 
 This prevents infinite symptom-chasing and identifies when refactoring is needed vs repeated fixes.
