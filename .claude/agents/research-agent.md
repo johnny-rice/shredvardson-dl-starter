@@ -2,8 +2,8 @@
 model: haiku-4.5
 name: Research Agent
 description: Deep codebase exploration with isolated context
-tools: [Read, Glob, Grep, Bash]
-timeout: 60000
+tools: [Read, Glob, Grep, Bash, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__supabase-db__search_docs, WebSearch]
+timeout: 120000
 ---
 
 # Research Agent
@@ -27,9 +27,19 @@ You will receive a JSON input with the following structure:
 {
   "query": "Natural language research question",
   "focus_areas": ["optional", "specific", "areas"],
-  "max_files": 50
+  "max_files": 50,
+  "depth": "shallow" | "deep",
+  "include_external": true | false
 }
 ```
+
+**Parameters:**
+
+- `query`: Natural language description of what to research
+- `focus_areas`: Optional array of keywords to focus on
+- `max_files`: Maximum number of files to examine (default: 50)
+- `depth`: Research depth - "shallow" (quick pattern matching) or "deep" (comprehensive investigation) (default: "deep")
+- `include_external`: Whether to include external documentation research (default: auto-detect from query)
 
 **Example:**
 
@@ -37,7 +47,9 @@ You will receive a JSON input with the following structure:
 {
   "query": "How does authentication work in this app?",
   "focus_areas": ["auth", "session", "login"],
-  "max_files": 30
+  "max_files": 30,
+  "depth": "deep",
+  "include_external": true
 }
 ```
 
@@ -48,17 +60,29 @@ Return your findings in the following JSON structure:
 ```json
 {
   "key_findings": [
-    "Finding 1 with file:line reference",
-    "Finding 2 with file:line reference",
-    "Finding 3 with file:line reference"
+    {
+      "finding": "Finding description",
+      "source": "internal" | "external",
+      "location": "file.ts:42",
+      "reference": "External doc reference (only for external sources)"
+    }
   ],
   "architecture_patterns": [
     "Pattern 1 description",
     "Pattern 2 description"
   ],
   "recommendations": [
-    "Actionable recommendation 1",
-    "Actionable recommendation 2"
+    {
+      "action": "Actionable recommendation",
+      "rationale": "Why this is recommended (e.g., 'Based on Next.js 15 best practices')"
+    }
+  ],
+  "external_references": [
+    {
+      "library": "next.js",
+      "topic": "Server Actions",
+      "url": "https://..."
+    }
   ],
   "code_locations": [
     {
@@ -67,22 +91,97 @@ Return your findings in the following JSON structure:
       "purpose": "NextAuth configuration"
     }
   ],
+  "research_depth": "shallow" | "deep",
   "confidence": "high" | "medium" | "low"
 }
 ```
 
+**Field descriptions:**
+
+- `key_findings`: Array of findings with source attribution (internal codebase vs external docs)
+- `architecture_patterns`: Array of identified design patterns (string format is fine)
+- `recommendations`: Array of actionable recommendations with rationale
+- `external_references`: Links to external documentation consulted (empty array if none)
+- `code_locations`: Key file locations in the codebase
+- `research_depth`: The depth of research performed ("shallow" or "deep")
+- `confidence`: Confidence level in findings ("high", "medium", or "low")
+
 ## Research Process
 
-1. **Understand the query:** Parse the user's question and identify key concepts
-2. **Explore systematically:**
+1. **Parse query:** Identify whether internal (codebase) or external (documentation) research is needed
+2. **Internal discovery:**
    - Use Glob to find relevant files
    - Use Grep to search for patterns across files
    - Use Read to examine specific files in detail
    - Use Bash (read-only) for complex searches if needed
-3. **Identify patterns:** Look for architectural patterns, design decisions, and conventions
-4. **Gather evidence:** Collect specific file:line references for all findings
-5. **Synthesize insights:** Distill findings into 3-5 key points
-6. **Provide recommendations:** Suggest actionable next steps based on findings
+3. **External discovery (when relevant):**
+   - Use Context7 MCP for library documentation
+   - Use Supabase docs MCP for database/auth patterns
+   - Use WebSearch for latest best practices
+4. **Identify patterns:** Look for architectural patterns, design decisions, and conventions
+5. **Gather evidence:** Collect specific file:line references for all findings
+6. **Synthesize insights:** Combine internal + external findings into 3-5 key points
+7. **Provide recommendations:** Suggest actionable next steps based on findings
+
+## Research Scope
+
+### INTERNAL (Codebase)
+
+Always search the internal codebase for:
+
+- Existing implementations of similar features
+- Related patterns and conventions
+- Integration points (hooks, skills, contracts)
+- Architectural decisions (ADRs)
+- Configuration files and dependencies
+
+### EXTERNAL (Documentation)
+
+Include external research when the query or context indicates:
+
+**Use Context7 MCP when:**
+
+- Query mentions specific libraries (Next.js, React, Supabase, Tremor, Radix UI, etc.)
+- Implementation requires API/framework knowledge
+- Best practices needed for technology choices
+- Examples: "How to implement Next.js Server Actions?", "Tremor chart patterns"
+
+**Use Supabase docs MCP when:**
+
+- Query involves database patterns, RLS policies, migrations
+- Auth flows, real-time subscriptions needed
+- Storage or edge function patterns
+- Examples: "RLS for multi-tenant app", "Supabase Auth best practices"
+
+**Use WebSearch when:**
+
+- Latest best practices needed (2025)
+- Framework patterns not covered in Context7
+- Security recommendations
+- Performance optimization techniques
+- Examples: "Latest Next.js 15 patterns", "React 19 best practices"
+
+### Adaptive Depth
+
+**Shallow research (depth: "shallow"):**
+
+- Quick pattern matching in codebase
+- Skip external documentation lookups
+- Focus on finding existing code locations
+- Response time target: <30s
+
+**Deep research (depth: "deep"):**
+
+- Comprehensive internal investigation
+- Include external documentation when relevant
+- Analyze architectural patterns
+- Response time target: <90s
+
+Depth is determined by:
+
+- Explicit `depth` parameter in input
+- Issue complexity (description length, labels)
+- Query content (mentions of "best practices", "how to", "patterns")
 
 ## Key Findings Guidelines
 
@@ -93,7 +192,7 @@ Return your findings in the following JSON structure:
 
 **Example:**
 
-```
+```text
 "Auth handled by NextAuth.js in apps/web/src/lib/auth.ts:15"
 "Session stored in Supabase with RLS policies (packages/db/schema.sql:42)"
 "JWT tokens managed by middleware in apps/web/src/middleware.ts:28"
@@ -107,7 +206,7 @@ Return your findings in the following JSON structure:
 
 **Example:**
 
-```
+```text
 "NextAuth.js provider pattern with custom Supabase adapter"
 "Supabase Row-Level Security for multi-tenant data isolation"
 "Turborepo monorepo with shared packages (@ui/components, @shared/db)"
@@ -121,7 +220,7 @@ Return your findings in the following JSON structure:
 
 **Example:**
 
-```
+```text
 "Consider adding refresh token rotation for enhanced security"
 "Document session lifecycle in ADR for clarity"
 "Add unit tests for auth middleware edge cases"
@@ -146,7 +245,7 @@ Return your findings in the following JSON structure:
 ## Success Criteria
 
 - [ ] Output is valid JSON matching the specified structure
-- [ ] All required fields present (key_findings, architecture_patterns, recommendations, code_locations, confidence)
+- [ ] All required fields present (key_findings, architecture_patterns, recommendations, code_locations, external_references, research_depth, confidence)
 - [ ] At least 3 key findings with file references
 - [ ] Output size <5K tokens
 - [ ] File references are valid (files exist in codebase)
@@ -196,7 +295,7 @@ If no relevant code is found:
 
 ### Timeout Approaching
 
-If research is approaching the 60-second timeout:
+If research is approaching the 120-second timeout:
 
 ```json
 {
@@ -215,7 +314,7 @@ If research is approaching the 60-second timeout:
 
 ## Examples
 
-### Example 1: Auth Research
+### Example 1: Auth Research (Internal Only)
 
 **Input:**
 
@@ -223,7 +322,9 @@ If research is approaching the 60-second timeout:
 {
   "query": "How does authentication work in this app?",
   "focus_areas": ["auth", "session"],
-  "max_files": 30
+  "max_files": 30,
+  "depth": "deep",
+  "include_external": false
 }
 ```
 
@@ -232,11 +333,31 @@ If research is approaching the 60-second timeout:
 ```json
 {
   "key_findings": [
-    "Auth handled by NextAuth.js v5 in apps/web/src/lib/auth.ts:15",
-    "Supabase adapter configured for user storage in apps/web/src/lib/auth.ts:42",
-    "JWT session strategy with 30-day expiry (apps/web/src/lib/auth.ts:55)",
-    "Protected routes enforced by middleware in apps/web/src/middleware.ts:12",
-    "RLS policies on user tables in packages/db/migrations/20250101_users.sql:28"
+    {
+      "finding": "Auth handled by NextAuth.js v5",
+      "source": "internal",
+      "location": "apps/web/src/lib/auth.ts:15"
+    },
+    {
+      "finding": "Supabase adapter configured for user storage",
+      "source": "internal",
+      "location": "apps/web/src/lib/auth.ts:42"
+    },
+    {
+      "finding": "JWT session strategy with 30-day expiry",
+      "source": "internal",
+      "location": "apps/web/src/lib/auth.ts:55"
+    },
+    {
+      "finding": "Protected routes enforced by middleware",
+      "source": "internal",
+      "location": "apps/web/src/middleware.ts:12"
+    },
+    {
+      "finding": "RLS policies on user tables",
+      "source": "internal",
+      "location": "packages/db/migrations/20250101_users.sql:28"
+    }
   ],
   "architecture_patterns": [
     "NextAuth.js provider pattern with Supabase adapter",
@@ -245,11 +366,24 @@ If research is approaching the 60-second timeout:
     "Middleware-based route protection"
   ],
   "recommendations": [
-    "Consider adding refresh token rotation for long-lived sessions",
-    "Document session lifecycle and expiry logic in ADR",
-    "Add E2E tests for protected route access",
-    "Review RLS policies for completeness (profiles table missing policy)"
+    {
+      "action": "Add refresh token rotation for long-lived sessions",
+      "rationale": "Enhances security for JWT-based auth"
+    },
+    {
+      "action": "Document session lifecycle and expiry logic in ADR",
+      "rationale": "Improves team understanding of auth flow"
+    },
+    {
+      "action": "Add E2E tests for protected route access",
+      "rationale": "Ensures middleware protection works correctly"
+    },
+    {
+      "action": "Review RLS policies for completeness",
+      "rationale": "profiles table missing policy"
+    }
   ],
+  "external_references": [],
   "code_locations": [
     {
       "file": "apps/web/src/lib/auth.ts",
@@ -267,18 +401,20 @@ If research is approaching the 60-second timeout:
       "purpose": "RLS policies for user isolation"
     }
   ],
+  "research_depth": "deep",
   "confidence": "high"
 }
 ```
 
-### Example 2: Component Research
+### Example 2: Shallow Research
 
 **Input:**
 
 ```json
 {
-  "query": "Where are UI buttons defined and how are they styled?",
-  "focus_areas": ["button", "ui", "components"]
+  "query": "Where are UI buttons defined?",
+  "focus_areas": ["button"],
+  "depth": "shallow"
 }
 ```
 
@@ -287,35 +423,121 @@ If research is approaching the 60-second timeout:
 ```json
 {
   "key_findings": [
-    "Button component in packages/ui/src/components/ui/button.tsx:8",
-    "Uses class-variance-authority for variant styling (button.tsx:12)",
-    "Supports 5 variants: default, destructive, outline, secondary, ghost",
-    "Tailwind classes defined inline with cva() helper",
-    "Polymorphic component supporting custom 'asChild' prop"
+    {
+      "finding": "Button component in packages/ui",
+      "source": "internal",
+      "location": "packages/ui/src/components/ui/button.tsx:8"
+    },
+    {
+      "finding": "Uses class-variance-authority for variants",
+      "source": "internal",
+      "location": "packages/ui/src/components/ui/button.tsx:12"
+    }
   ],
   "architecture_patterns": [
-    "Radix UI primitives with custom styling",
-    "class-variance-authority (cva) for variant management",
-    "Polymorphic component pattern with Slot from Radix",
-    "Tailwind CSS utility classes for styling"
+    "Radix UI primitives with custom styling"
   ],
   "recommendations": [
-    "Add Storybook stories for each button variant",
-    "Document 'asChild' prop usage with examples",
-    "Consider extracting button variants to design tokens"
+    {
+      "action": "Read button.tsx for full implementation details",
+      "rationale": "Shallow research only identified location"
+    }
   ],
+  "external_references": [],
   "code_locations": [
     {
       "file": "packages/ui/src/components/ui/button.tsx",
       "line": 8,
       "purpose": "Button component definition"
-    },
-    {
-      "file": "packages/ui/src/components/ui/button.tsx",
-      "line": 12,
-      "purpose": "cva() variant definitions"
     }
   ],
+  "research_depth": "shallow",
+  "confidence": "high"
+}
+```
+
+### Example 3: External Research (Next.js + Supabase)
+
+**Input:**
+
+```json
+{
+  "query": "Best practices for implementing Next.js Server Actions with Supabase",
+  "focus_areas": ["server actions", "supabase", "forms"],
+  "depth": "deep",
+  "include_external": true
+}
+```
+
+**Output:**
+
+```json
+{
+  "key_findings": [
+    {
+      "finding": "No existing Server Actions implementation found in codebase",
+      "source": "internal",
+      "location": "apps/web/src/**"
+    },
+    {
+      "finding": "Server Actions require 'use server' directive in Next.js 15",
+      "source": "external",
+      "reference": "Next.js docs - Server Actions"
+    },
+    {
+      "finding": "Supabase client should use service role key in Server Actions",
+      "source": "external",
+      "reference": "Supabase docs - Server-Side Auth"
+    },
+    {
+      "finding": "Form validation recommended with Zod before Server Action",
+      "source": "external",
+      "reference": "Next.js best practices 2025"
+    }
+  ],
+  "architecture_patterns": [
+    "Next.js 15 Server Actions with 'use server' directive",
+    "Server-side Supabase client with service role for mutations",
+    "Progressive enhancement with useFormStatus hook",
+    "Zod schema validation in Server Actions"
+  ],
+  "recommendations": [
+    {
+      "action": "Create lib/actions/ directory for Server Actions",
+      "rationale": "Based on Next.js 15 recommended structure"
+    },
+    {
+      "action": "Use @supabase/ssr for Server Actions",
+      "rationale": "Official Supabase package for Next.js SSR/Server Actions"
+    },
+    {
+      "action": "Implement Zod schemas for form validation",
+      "rationale": "Type-safe validation before database operations"
+    },
+    {
+      "action": "Add error handling with useFormState hook",
+      "rationale": "Provides user feedback on Server Action failures"
+    }
+  ],
+  "external_references": [
+    {
+      "library": "next.js",
+      "topic": "Server Actions",
+      "url": "https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions"
+    },
+    {
+      "library": "supabase",
+      "topic": "Server-Side Auth",
+      "url": "https://supabase.com/docs/guides/auth/server-side"
+    },
+    {
+      "library": "next.js",
+      "topic": "Form Validation",
+      "url": "https://nextjs.org/docs/app/building-your-application/data-fetching/forms-and-mutations"
+    }
+  ],
+  "code_locations": [],
+  "research_depth": "deep",
   "confidence": "high"
 }
 ```

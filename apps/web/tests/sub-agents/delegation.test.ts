@@ -8,6 +8,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+import type { ResearchAgentOutput } from '../../types/agents';
 
 // Mock types for delegation framework
 interface DelegationInput<T = unknown> {
@@ -41,6 +42,20 @@ const delegateToAgent = vi.fn(
     };
   }
 );
+
+// Helper to create default ResearchAgentOutput for mocking
+const createMockResearchOutput = (
+  overrides: Partial<ResearchAgentOutput> = {}
+): ResearchAgentOutput => ({
+  key_findings: [],
+  architecture_patterns: [],
+  recommendations: [],
+  code_locations: [],
+  external_references: [],
+  research_depth: 'deep',
+  confidence: 'high',
+  ...overrides,
+});
 
 // Helper to mock successful delegation
 const mockSuccessfulDelegation = <T>(result: T, executionTime = 1000) => {
@@ -84,7 +99,7 @@ describe('Sub-Agent Delegation Framework', () => {
         task: { query: 'How does auth work?' },
       };
 
-      mockSuccessfulDelegation({ key_findings: [] });
+      mockSuccessfulDelegation(createMockResearchOutput());
 
       const result = await delegateToAgent(validInput);
 
@@ -118,6 +133,183 @@ describe('Sub-Agent Delegation Framework', () => {
       expect(result.success).toBe(false);
       expect(result.error).toContain('Task field is required');
     });
+
+    test('accepts depth parameter with valid values', async () => {
+      const input: DelegationInput<{ query: string; depth: 'shallow' | 'deep' }> = {
+        agentType: 'research-agent',
+        task: { query: 'Where is auth configured?', depth: 'shallow' },
+      };
+
+      mockSuccessfulDelegation(
+        createMockResearchOutput({
+          key_findings: [
+            {
+              finding: 'Auth config in src/auth.ts',
+              source: 'internal',
+              location: 'src/auth.ts:10',
+            },
+          ],
+          research_depth: 'shallow',
+        })
+      );
+
+      const result = (await delegateToAgent(input)) as DelegationOutput<ResearchAgentOutput>;
+
+      expect(result.success).toBe(true);
+      expect(result.result?.research_depth).toBe('shallow');
+    });
+
+    test('accepts depth parameter with deep value', async () => {
+      const input: DelegationInput<{ query: string; depth: 'shallow' | 'deep' }> = {
+        agentType: 'research-agent',
+        task: { query: 'Explain the complete auth flow', depth: 'deep' },
+      };
+
+      mockSuccessfulDelegation(
+        createMockResearchOutput({
+          key_findings: [
+            {
+              finding: 'JWT tokens used for session management',
+              source: 'internal',
+              location: 'src/auth.ts:45',
+            },
+            {
+              finding: 'OAuth flow handles third-party providers',
+              source: 'internal',
+              location: 'src/auth/oauth.ts:15',
+            },
+          ],
+          architecture_patterns: ['JWT-based authentication', 'OAuth 2.0'],
+          recommendations: [
+            {
+              action: 'Consider token rotation',
+              rationale: 'Enhances security for long-lived sessions',
+            },
+          ],
+        })
+      );
+
+      const result = (await delegateToAgent(input)) as DelegationOutput<ResearchAgentOutput>;
+
+      expect(result.success).toBe(true);
+      expect(result.result?.research_depth).toBe('deep');
+      expect(result.result?.key_findings?.length).toBeGreaterThan(1);
+    });
+
+    test('defaults to deep research when depth not specified', async () => {
+      const input: DelegationInput<{ query: string }> = {
+        agentType: 'research-agent',
+        task: { query: 'What is the auth flow?' },
+      };
+
+      mockSuccessfulDelegation(createMockResearchOutput());
+
+      const result = (await delegateToAgent(input)) as DelegationOutput<ResearchAgentOutput>;
+
+      expect(result.success).toBe(true);
+      expect(result.result?.research_depth).toBe('deep');
+    });
+
+    test('rejects invalid depth value', async () => {
+      const input = {
+        agentType: 'research-agent',
+        task: { query: 'test', depth: 'invalid' },
+      } as DelegationInput;
+
+      mockFailedDelegation('Invalid depth value: must be "shallow" or "deep"');
+
+      const result = await delegateToAgent(input);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Invalid depth value');
+    });
+
+    test('accepts include_external parameter', async () => {
+      const input: DelegationInput<{ query: string; include_external: boolean }> = {
+        agentType: 'research-agent',
+        task: { query: 'Next.js best practices', include_external: true },
+      };
+
+      mockSuccessfulDelegation({
+        key_findings: [
+          {
+            finding: 'Next.js 15 recommends Server Actions for mutations',
+            source: 'external',
+            location: 'N/A',
+            reference: 'Next.js docs - Server Actions',
+          },
+        ],
+        architecture_patterns: ['Next.js App Router with Server Components'],
+        recommendations: [
+          {
+            action: 'Use Server Actions for form submissions',
+            rationale: 'Based on Next.js 15 best practices',
+          },
+        ],
+        code_locations: [],
+        external_references: [
+          {
+            library: 'next.js',
+            topic: 'Server Actions',
+            url: 'https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions',
+          },
+        ],
+        research_depth: 'deep',
+        confidence: 'high',
+      });
+
+      const result = (await delegateToAgent(input)) as DelegationOutput<ResearchAgentOutput>;
+
+      expect(result.success).toBe(true);
+      expect(result.result?.external_references).toBeDefined();
+      expect(result.result?.external_references?.length).toBeGreaterThan(0);
+      expect(result.result?.external_references?.[0]).toMatchObject({
+        library: expect.any(String),
+        topic: expect.any(String),
+        url: expect.stringMatching(/^https?:\/\/[^\s]+$/i),
+      });
+      // Validate URL is well-formed
+      expect(result.result?.external_references?.[0].url).toBeDefined();
+      const url = result.result?.external_references?.[0].url;
+      if (url) {
+        expect(() => new URL(url)).not.toThrow();
+      }
+      expect(result.result?.key_findings?.[0]).toMatchObject({
+        finding: expect.any(String),
+        source: 'external',
+        reference: expect.any(String),
+      });
+      expect(result.result?.recommendations?.[0]).toMatchObject({
+        action: expect.any(String),
+        rationale: expect.any(String),
+      });
+    });
+
+    test('does not include external references when include_external is false', async () => {
+      const input: DelegationInput<{ query: string; include_external: boolean }> = {
+        agentType: 'research-agent',
+        task: { query: 'Internal auth patterns', include_external: false },
+      };
+
+      mockSuccessfulDelegation(
+        createMockResearchOutput({
+          key_findings: [
+            {
+              finding: 'Auth config found',
+              source: 'internal',
+              location: 'src/auth.ts:10',
+            },
+          ],
+          architecture_patterns: ['JWT-based authentication'],
+        })
+      );
+
+      const result = (await delegateToAgent(input)) as DelegationOutput<ResearchAgentOutput>;
+
+      expect(result.success).toBe(true);
+      expect(result.result?.external_references).toEqual([]);
+      expect(result.result?.key_findings?.every((f) => f.source === 'internal')).toBe(true);
+    });
   });
 
   describe('delegateToAgent - Timeout Enforcement', () => {
@@ -144,7 +336,7 @@ describe('Sub-Agent Delegation Framework', () => {
         // No timeout specified - should use 60s default
       };
 
-      mockSuccessfulDelegation({ key_findings: [] }, 1000);
+      mockSuccessfulDelegation(createMockResearchOutput(), 1000);
 
       const result = await delegateToAgent(input);
 
@@ -164,10 +356,18 @@ describe('Sub-Agent Delegation Framework', () => {
         success: false,
         error: 'Task timed out after 30000ms',
         result: {
-          key_findings: ['Partial finding 1'],
+          key_findings: [
+            {
+              finding: 'Partial finding 1',
+              source: 'internal',
+              location: 'src/file.ts:10',
+            },
+          ],
           architecture_patterns: [],
           recommendations: [],
           code_locations: [],
+          external_references: [],
+          research_depth: 'deep',
           confidence: 'low',
         },
         executionTime: 30000,
@@ -183,17 +383,35 @@ describe('Sub-Agent Delegation Framework', () => {
   });
 
   describe('delegateToAgent - Output Validation', () => {
-    test('validates output structure for research agent', async () => {
+    test('validates output structure for research agent with internal-only research', async () => {
       const input: DelegationInput = {
         agentType: 'research-agent',
         task: { query: 'How does auth work?' },
       };
 
       const expectedOutput = {
-        key_findings: ['Finding 1', 'Finding 2'],
+        key_findings: [
+          {
+            finding: 'Finding 1',
+            source: 'internal',
+            location: 'src/auth.ts:20',
+          },
+          {
+            finding: 'Finding 2',
+            source: 'internal',
+            location: 'src/auth.ts:30',
+          },
+        ],
         architecture_patterns: ['Pattern 1'],
-        recommendations: ['Recommendation 1'],
+        recommendations: [
+          {
+            action: 'Recommendation 1',
+            rationale: 'Improves code quality',
+          },
+        ],
         code_locations: [{ file: 'src/auth.ts', line: 15, purpose: 'Auth config' }],
+        external_references: [],
+        research_depth: 'deep',
         confidence: 'high',
       };
 
@@ -204,6 +422,51 @@ describe('Sub-Agent Delegation Framework', () => {
       expect(result.success).toBe(true);
       expect(result.result).toEqual(expectedOutput);
       expect(result.tokenCount).toBeLessThan(5000); // <5K token limit
+    });
+
+    test('validates output structure for research agent with external references', async () => {
+      const input: DelegationInput = {
+        agentType: 'research-agent',
+        task: { query: 'Next.js best practices', include_external: true },
+      };
+
+      const expectedOutput: ResearchAgentOutput = {
+        key_findings: [
+          {
+            finding: 'Server Actions recommended for mutations',
+            source: 'external',
+            location: 'N/A',
+            reference: 'Next.js docs - Server Actions',
+          },
+        ],
+        architecture_patterns: ['App Router'],
+        recommendations: [
+          {
+            action: 'Migrate to Server Actions',
+            rationale: 'Aligns with Next.js 15 best practices',
+          },
+        ],
+        code_locations: [],
+        external_references: [
+          {
+            library: 'next.js',
+            topic: 'Server Actions',
+            url: 'https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions',
+          },
+        ],
+        research_depth: 'deep',
+        confidence: 'high',
+      };
+
+      mockSuccessfulDelegation(expectedOutput);
+
+      const result = (await delegateToAgent(input)) as DelegationOutput<ResearchAgentOutput>;
+
+      expect(result.success).toBe(true);
+      expect(result.result).toEqual(expectedOutput);
+      expect(result.result?.external_references).toBeDefined();
+      expect(result.result?.external_references?.length).toBeGreaterThan(0);
+      expect(result.tokenCount).toBeLessThan(5000);
     });
 
     test('enforces 5K token limit', async () => {
@@ -251,6 +514,53 @@ describe('Sub-Agent Delegation Framework', () => {
 
       expect(result.success).toBe(false);
       expect(result.error).toContain('Missing required field');
+    });
+
+    test.each([
+      { field: 'research_depth', expectedError: 'Missing required field: research_depth' },
+      { field: 'confidence', expectedError: 'Missing required field: confidence' },
+      { field: 'key_findings', expectedError: 'Missing required field: key_findings' },
+      { field: 'recommendations', expectedError: 'Missing required field: recommendations' },
+      {
+        field: 'external_references',
+        expectedError: 'Missing required field: external_references',
+      },
+      { field: 'code_locations', expectedError: 'Missing required field: code_locations' },
+      {
+        field: 'architecture_patterns',
+        expectedError: 'Missing required field: architecture_patterns',
+      },
+    ])('validates research agent required field: $field', async ({ field, expectedError }) => {
+      const input: DelegationInput = {
+        agentType: 'research-agent',
+        task: { query: 'test query' },
+      };
+
+      const invalidOutput: Record<string, unknown> = {
+        key_findings: [],
+        architecture_patterns: [],
+        recommendations: [],
+        code_locations: [],
+        external_references: [],
+        research_depth: 'deep',
+        confidence: 'high',
+      };
+
+      delete invalidOutput[field];
+
+      delegateToAgent.mockResolvedValueOnce({
+        success: false,
+        error: expectedError,
+        result: invalidOutput,
+        executionTime: 1000,
+        tokenCount: 500,
+      });
+
+      const result = await delegateToAgent(input);
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('Missing required field');
+      expect(result.error).toContain(field);
     });
   });
 
@@ -314,10 +624,22 @@ describe('Sub-Agent Delegation Framework', () => {
         { agentType: 'refactor-analyzer', task: { targets: ['src/'] } },
       ];
 
-      // Mock successful responses for all
-      inputs.forEach((_, index) => {
-        mockSuccessfulDelegation({ result: `Result ${index}` }, 1000);
-      });
+      // Mock realistic responses for each agent type
+      mockSuccessfulDelegation(
+        createMockResearchOutput({
+          key_findings: [
+            {
+              finding: 'Auth implementation found',
+              source: 'internal',
+              location: 'src/auth.ts:10',
+            },
+          ],
+          research_depth: 'shallow',
+        }),
+        1000
+      );
+      mockSuccessfulDelegation({ vulnerabilities: [], scan_completed: true }, 1000);
+      mockSuccessfulDelegation({ suggestions: ['Extract util function'], complexity: 'low' }, 1000);
 
       const startTime = Date.now();
       const results = await Promise.all(inputs.map((input) => delegateToAgent(input)));
@@ -335,7 +657,7 @@ describe('Sub-Agent Delegation Framework', () => {
         { agentType: 'security-scanner', task: { scan_type: 'rls' } },
       ];
 
-      mockSuccessfulDelegation({ result: 'Success' });
+      mockSuccessfulDelegation(createMockResearchOutput({ research_depth: 'shallow' }));
       mockFailedDelegation('Scanner failed');
 
       const results = await Promise.all(
@@ -354,7 +676,7 @@ describe('Sub-Agent Delegation Framework', () => {
         { agentType: 'test-generator', task: { test_type: 'unit', targets: [] } },
       ];
 
-      mockSuccessfulDelegation({ result: 'Success' });
+      mockSuccessfulDelegation(createMockResearchOutput({ research_depth: 'shallow' }));
       delegateToAgent.mockRejectedValueOnce(new Error('Critical failure'));
 
       const results = await Promise.allSettled(inputs.map((input) => delegateToAgent(input)));
@@ -398,18 +720,43 @@ describe('Sub-Agent Delegation Framework', () => {
       expect(result.tokenCount).toBeLessThan(5000);
     });
 
-    test('completes research tasks in <60 seconds', async () => {
+    test('completes internal research tasks in <60 seconds', async () => {
       const input: DelegationInput = {
         agentType: 'research-agent',
         task: { query: 'How does X work?' },
       };
 
-      mockSuccessfulDelegation({ key_findings: [] }, 45000);
+      mockSuccessfulDelegation(createMockResearchOutput(), 45000);
 
       const result = await delegateToAgent(input);
 
       expect(result.success).toBe(true);
       expect(result.executionTime).toBeLessThan(60000);
+    });
+
+    test('completes external research tasks in <120 seconds', async () => {
+      const input: DelegationInput = {
+        agentType: 'research-agent',
+        task: { query: 'Next.js + Supabase patterns', include_external: true },
+      };
+
+      mockSuccessfulDelegation(
+        createMockResearchOutput({
+          external_references: [
+            {
+              library: 'next.js',
+              topic: 'Server Actions',
+              url: 'https://nextjs.org/docs',
+            },
+          ],
+        }),
+        90000 // 90 seconds for external research
+      );
+
+      const result = await delegateToAgent(input);
+
+      expect(result.success).toBe(true);
+      expect(result.executionTime).toBeLessThan(120000); // Updated timeout per PR
     });
   });
 });
