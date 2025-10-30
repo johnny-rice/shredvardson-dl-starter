@@ -7,6 +7,7 @@ Comprehensive guide for writing and running tests in the DL Starter monorepo.
 - [Overview](#overview)
 - [Test Stack](#test-stack)
 - [Running Tests](#running-tests)
+- [Test Data Seeding](#test-data-seeding)
 - [Writing Tests](#writing-tests)
 - [Coverage](#coverage)
 - [Best Practices](#best-practices)
@@ -94,6 +95,71 @@ pnpm test
 # Run all tests including CI scripts
 pnpm test && pnpm test:ci-scripts
 ```
+
+## Test Data Seeding
+
+The project includes deterministic test data seeding for E2E and integration tests. Test data is identical on every run, ensuring test reliability.
+
+### Seed Development Data
+
+Use this for manual testing with randomized data:
+
+```bash
+pnpm db:seed:dev
+```
+
+Generates random test data suitable for development and manual testing.
+
+### Seed Test Data
+
+Use this for automated tests with deterministic data:
+
+```bash
+pnpm db:seed:test
+```
+
+Creates test users with known IDs and emails:
+
+- `test-user-1` / `test1@example.com`
+- `test-user-2` / `test2@example.com`
+- `test-user-admin` / `admin@example.com`
+
+### Programmatic Seeding
+
+Use the seed script directly for custom seeding in your tests:
+
+```typescript
+import { seedTest } from '../scripts/seed-test';
+
+// Seed with default 3 users
+await seedTest();
+
+// Seed with custom user count
+await seedTest({ userCount: 5 });
+
+// Check result
+const result = await seedTest({ userCount: 3 });
+console.log(`Created ${result.created.users} users in ${result.duration}ms`);
+```
+
+### When to Seed
+
+- **Before E2E tests**: Ensures consistent test state with known user data
+- **After db:reset**: Rebuilds test database with fresh data
+- **In CI/CD**: Automatic seeding before test runs (see `.github/workflows/ci.yml`)
+- **RLS testing**: Use RLS helpers instead (see [RLS Tests](#rls-tests) below)
+
+### Idempotent Seeding
+
+The test seeding script is idempotent - it deletes existing test users before inserting new ones. This means you can run it multiple times safely without creating duplicate data.
+
+```bash
+# Safe to run multiple times
+pnpm db:seed:test
+pnpm db:seed:test  # Will reset and recreate the same data
+```
+
+**Note**: For RLS testing, use the specialized RLS helpers (`seedRLSTestData`, `createTestData`) instead of the general seeding script. See the [RLS Tests](#rls-tests) section below for details.
 
 ## Writing Tests
 
