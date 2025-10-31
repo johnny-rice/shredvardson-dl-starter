@@ -210,27 +210,34 @@ You are creating a technical plan from a spec file. Follow these steps:
    ## Implementation Phases
 
    ### Phase 1: [Phase Name]
+
    **Goal:** [What this phase achieves]
    **Tasks:**
+
    - Task 1
    - Task 2
 
    **Deliverables:**
+
    - Deliverable 1
    - Deliverable 2
 
    ### Phase 2: [Phase Name]
+
    [Same structure]
 
    ## Technical Specifications
 
    ### Data Model
+
    [Schema, relationships, constraints]
 
    ### API Design
+
    [Endpoints, request/response formats]
 
    ### Security
+
    [Authentication, authorization, data protection]
 
    ## Testing Strategy
@@ -270,7 +277,7 @@ You are creating a technical plan from a spec file. Follow these steps:
    Update spec file frontmatter:
 
    ```yaml
-   status: ready  # was: draft
+   status: ready # was: draft
    plan: plans/[spec-slug].md
    ```
 

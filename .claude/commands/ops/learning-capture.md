@@ -111,7 +111,7 @@ Capture development insights as micro-lessons with intelligent automation:
 
 ### Phase 2: Tag Suggestion (New in v2.0)
 
-3. **Suggest tags based on context:**
+1. **Suggest tags based on context:**
    - **From file paths:** Extract patterns (e.g., `scripts/` → bash, `.claude/skills/` → skills)
    - **From commit messages:** Extract keywords (sanitized - see privacy guardrails below)
    - **From existing corpus:** Read all `docs/micro-lessons/*.md`, parse `**Tags.**` lines, build frequency map
@@ -123,7 +123,7 @@ Capture development insights as micro-lessons with intelligent automation:
    - Drop numeric-only tokens unless whitelisted (e.g., issue numbers like `#170`)
    - Keep only generic technical keywords (languages, tools, concepts)
 
-4. **Present suggestions:**
+2. **Present suggestions:**
 
    ```text
    Suggested tags (from session): #learning #automation #phase-4b #170
@@ -134,7 +134,7 @@ Capture development insights as micro-lessons with intelligent automation:
 
 ### Phase 3: Create Micro-Lesson
 
-5. **Create micro-lesson using template:**
+1. **Create micro-lesson using template:**
    - Use `docs/micro-lessons/template.md` structure
    - Filename: `YYYYMMDD-HHMMSS-[slug].md` (ISO timestamp for sorting)
    - Pre-populate with detected context
@@ -142,28 +142,40 @@ Capture development insights as micro-lessons with intelligent automation:
    - Set Severity: low|normal|high (user decides)
    - Set UsedBy: 0 (initial value)
 
-6. **Write the lesson:**
+2. **Write the lesson:**
    - **Context:** Auto-generated from Phase 1 + user refinement
    - **Rule:** User-provided key insight (1 bold sentence)
    - **Example:** Code snippet or before/after
    - **Guardrails:** Bullet points to prevent regressions
    - **Tags:** Selected tags from Phase 2
 
+3. **Markdown linting requirements (CRITICAL):**
+   - **First heading must be H1 (`#`)** - Not H2 (`##`). Start with "# Problem" or "# Micro-Lesson Title"
+   - **All code blocks must have language tags:**
+     - Shell commands: ` ```bash `
+     - YAML frontmatter: ` ```yaml `
+     - Plain text/output: ` ```text `
+     - SQL: ` ```sql `
+     - TypeScript: ` ```typescript ` or ` ```ts `
+   - **Product names:** Capitalize properly (GitHub, PostgreSQL, pgTAP, Supabase)
+   - **Decision trees/ASCII art:** Use ` ```text ` for proper formatting
+   - Run markdown linter after creation to catch issues early
+
 ### Phase 4: Auto-Update INDEX (New in v2.0)
 
-7. **Regenerate INDEX.md automatically:**
+1. **Regenerate INDEX.md automatically:**
 
    ```bash
    pnpm learn:index
    ```
 
-8. **Show updated ranking:**
+2. **Show updated ranking:**
    - Display where new lesson appears in Top-10
    - Note heat score (recency + reuse + severity)
 
 ### Phase 5: Completion
 
-9. **Emit Result:**
+1. **Emit Result:**
    - ✅ Learning captured: `docs/micro-lessons/[filename].md`
    - ✅ INDEX.md updated (new lesson ranked #X)
    - ✅ Tags applied: [list of tags]

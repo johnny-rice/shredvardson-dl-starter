@@ -25,11 +25,11 @@ Use these to invoke Skills quickly:
 
 Three new commands that integrate with the `prd-analyzer` Skill for complete spec-driven development:
 
-| Command    | Purpose                                                            | Lane Detection |
-| ---------- | ------------------------------------------------------------------ | -------------- |
+| Command    | Purpose                                                             | Lane Detection |
+| ---------- | ------------------------------------------------------------------- | -------------- |
 | `/specify` | Create spec file with YAML frontmatter and automatic lane detection | Interactive    |
-| `/plan`    | Generate technical plan with design discovery for spec-driven lane | Auto-triggered |
-| `/tasks`   | Generate task breakdown with dependencies and estimates            | Both lanes     |
+| `/plan`    | Generate technical plan with design discovery for spec-driven lane  | Auto-triggered |
+| `/tasks`   | Generate task breakdown with dependencies and estimates             | Both lanes     |
 
 **Key Feature**: `/plan` automatically triggers 3-phase Socratic design discovery for `lane: spec-driven` features (auth, payments, DB, multi-day work).
 

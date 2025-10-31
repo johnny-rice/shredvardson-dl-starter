@@ -9,17 +9,22 @@ Comprehensive guide for writing and running tests in the DL Starter monorepo.
 - [Running Tests](#running-tests)
 - [Test Data Seeding](#test-data-seeding)
 - [Writing Tests](#writing-tests)
+  - [Unit Tests](#unit-tests)
+  - [RLS Tests (Application-Level)](#rls-tests)
+  - [pgTAP RLS Tests (Database-Level)](#pgtap-rls-tests-database-level)
+  - [E2E Tests](#e2e-tests)
 - [Coverage](#coverage)
 - [Best Practices](#best-practices)
 
 ## Overview
 
-The DL Starter uses a comprehensive testing strategy with four types of tests:
+The DL Starter uses a comprehensive testing strategy with five types of tests:
 
 1. **Unit Tests** - Test individual components and functions in isolation
-2. **RLS Tests** - Test Row Level Security policies in Supabase
-3. **E2E Tests** - Test complete user flows in a real browser
-4. **CI Script Tests** - Integration tests for CI validation scripts
+2. **RLS Tests (Application-Level)** - Test Row Level Security from the application perspective using Vitest
+3. **pgTAP RLS Tests (Database-Level)** - Test RLS policies directly in Postgres using pgTAP
+4. **E2E Tests** - Test complete user flows in a real browser
+5. **CI Script Tests** - Integration tests for CI validation scripts
 
 ### Testing Philosophy
 
@@ -367,6 +372,328 @@ describe('RLS: User Data Isolation', () => {
   });
 });
 ```
+
+### pgTAP RLS Tests (Database-Level)
+
+pgTAP tests provide database-level RLS validation that complements application-level RLS tests. They run directly in Postgres using transaction-based isolation, ensuring comprehensive security coverage.
+
+#### Why Database-Level Testing?
+
+**Application-level tests** (Vitest + JS helpers):
+
+- Test RLS from the application's perspective
+- Validate API endpoints respect RLS
+- Test client-side auth context handling
+
+**Database-level tests** (pgTAP + SQL):
+
+- Test RLS policies directly in Postgres
+- Use transaction isolation (no manual cleanup)
+- Validate schema-wide RLS coverage
+- More accurate for complex RLS scenarios
+
+Both test suites run independently and provide defense-in-depth security validation.
+
+#### Test Files
+
+pgTAP tests live in `supabase/tests/` and run alphabetically:
+
+- `000-setup-tests-hooks.sql` - Install pgTAP and test helpers
+- `001-rls-enabled.sql` - Validate RLS enabled on all tables
+- `002-user-isolation.sql` - Test user data isolation
+
+#### Running pgTAP Tests
+
+```bash
+# Run all pgTAP tests
+pnpm test:rls
+
+# Watch mode for development
+pnpm test:rls:watch
+```
+
+**Requirements**:
+
+- Docker Desktop must be running
+- Supabase CLI must be installed
+- Local Supabase instance will be started automatically
+
+#### Available Test Helpers
+
+The tests use [basejump-supabase_test_helpers](https://github.com/usebasejump/supabase-test-helpers) which provide:
+
+- `tests.create_supabase_user(email)` - Create test users
+- `tests.authenticate_as(email)` - Switch authentication context
+- `tests.get_supabase_uid(email)` - Get user ID from email
+- `tests.rls_enabled(schema)` - Verify RLS on all tables in schema
+- `tests.authenticate_as_service_role()` - Switch to admin context
+- `tests.clear_authentication()` - Clear authentication (anonymous user)
+
+#### Example: Schema-Wide RLS Validation
+
+```sql
+-- File: supabase/tests/001-rls-enabled.sql
+begin;
+select plan(1);
+
+-- Verify RLS is enabled on all tables in public schema
+select tests.rls_enabled('public');
+
+select * from finish();
+rollback;
+```
+
+This test fails if any table in the public schema lacks RLS policies, catching security gaps automatically.
+
+#### Example: User Isolation Test
+
+```sql
+-- File: supabase/tests/002-user-isolation.sql
+begin;
+select plan(4);
+
+-- Create test users
+select tests.create_supabase_user('user1@test.com');
+select tests.create_supabase_user('user2@test.com');
+
+-- Create test data as User 1
+select tests.authenticate_as('user1@test.com');
+insert into public.profiles (id, user_id, name)
+values (gen_random_uuid(), tests.get_supabase_uid('user1@test.com'), 'User One');
+
+-- Verify User 1 can see their data
+select results_eq(
+  'SELECT count(*)::int FROM public.profiles WHERE user_id = tests.get_supabase_uid(''user1@test.com'')',
+  ARRAY[1],
+  'User 1 can see their own profile'
+);
+
+-- Switch to User 2
+select tests.authenticate_as('user2@test.com');
+
+-- Verify User 2 cannot see User 1's data
+select results_eq(
+  'SELECT count(*)::int FROM public.profiles WHERE user_id = tests.get_supabase_uid(''user1@test.com'')',
+  ARRAY[0],
+  'User 2 cannot see User 1''s profile'
+);
+
+-- Test anonymous access
+select tests.clear_authentication();
+select results_eq(
+  'SELECT count(*)::int FROM public.profiles',
+  ARRAY[0],
+  'Anonymous users cannot see any profiles'
+);
+
+-- Verify User 2 cannot modify User 1's data
+select tests.authenticate_as('user2@test.com');
+select throws_ok(
+  'UPDATE public.profiles SET name = ''Hacked'' WHERE user_id = tests.get_supabase_uid(''user1@test.com'')',
+  '42501',  -- insufficient_privilege error code
+  null,
+  'User 2 cannot update User 1''s profile'
+);
+
+select * from finish();
+rollback;  -- All test data is automatically cleaned up
+```
+
+#### Writing New pgTAP Tests
+
+1. **Create test file** with numeric prefix (e.g., `003-team-isolation.sql`)
+2. **Wrap in transaction** using `begin` and `rollback`
+3. **Define test plan** with `select plan(N)` where N = number of tests
+4. **Use test helpers** to create users and switch contexts
+5. **Make assertions** using pgTAP functions:
+   - `ok(condition, description)` - Basic assertion
+   - `results_eq(query, expected, description)` - Compare query results
+   - `throws_ok(query, error_code, message, description)` - Verify errors
+   - `is_empty(query, description)` - Verify query returns no rows
+6. **Finish test** with `select * from finish()` and `rollback`
+
+#### Common Test Patterns
+
+**Pattern 1: User can only see their own data**
+
+```sql
+select tests.create_supabase_user('owner@test.com');
+select tests.authenticate_as('owner@test.com');
+
+-- Insert data as owner
+insert into public.documents (user_id, title)
+values (tests.get_supabase_uid('owner@test.com'), 'My Document');
+
+-- Verify owner can see it
+select results_eq(
+  'SELECT count(*)::int FROM public.documents WHERE user_id = tests.get_supabase_uid(''owner@test.com'')',
+  ARRAY[1],
+  'Owner can see their document'
+);
+
+-- Verify other user cannot see it
+select tests.create_supabase_user('other@test.com');
+select tests.authenticate_as('other@test.com');
+select results_eq(
+  'SELECT count(*)::int FROM public.documents WHERE user_id = tests.get_supabase_uid(''owner@test.com'')',
+  ARRAY[0],
+  'Other user cannot see owner document'
+);
+```
+
+**Pattern 2: Anonymous access restrictions**
+
+```sql
+select tests.clear_authentication();
+
+-- Verify anonymous cannot read protected data
+select is_empty(
+  'SELECT * FROM public.user_profiles',
+  'Anonymous users cannot read user profiles'
+);
+
+-- Verify anonymous cannot write
+select throws_ok(
+  'INSERT INTO public.user_profiles (user_id, name) VALUES (gen_random_uuid(), ''Hacker'')',
+  '42501',
+  null,
+  'Anonymous users cannot insert profiles'
+);
+```
+
+**Pattern 3: Organization/team-based access**
+
+```sql
+-- Users in same org can see each other's data
+select tests.create_supabase_user('user1@company.com');
+select tests.create_supabase_user('user2@company.com');
+
+-- Both users belong to same organization
+select tests.authenticate_as('user1@company.com');
+insert into public.documents (org_id, user_id, title)
+values ('org-abc', tests.get_supabase_uid('user1@company.com'), 'Team Doc');
+
+select tests.authenticate_as('user2@company.com');
+select results_eq(
+  'SELECT count(*)::int FROM public.documents WHERE org_id = ''org-abc''',
+  ARRAY[1],
+  'User 2 can see documents in their organization'
+);
+```
+
+#### Transaction Isolation Benefits
+
+pgTAP tests use `BEGIN/ROLLBACK` transactions, which means:
+
+- ✅ **No manual cleanup required** - All test data is automatically discarded
+- ✅ **No side effects** - Tests never modify the actual database
+- ✅ **Fast execution** - Rollback is instant compared to manual DELETE operations
+- ✅ **Parallel-safe** - Tests can run concurrently without conflicts
+
+Compare this to application-level tests which require:
+
+```typescript
+// Application-level cleanup (manual)
+afterEach(async () => {
+  await cleanupTestData(adminClient, user1.id, 'profiles');
+  await cleanupRLSTestData(adminClient, user1.id);
+});
+```
+
+With pgTAP:
+
+```sql
+-- Database-level cleanup (automatic)
+rollback;  -- That's it!
+```
+
+#### CI/CD Integration
+
+pgTAP tests run automatically in CI/CD after application-level RLS validation:
+
+```yaml
+# .github/workflows/ci.yml
+- name: Run RLS tests (database-level)
+  run: pnpm test:rls
+```
+
+Tests block deployment if:
+
+- Any table lacks RLS policies
+- User isolation is broken
+- Security boundaries are violated
+
+#### Troubleshooting
+
+**Issue: `supabase test db` fails with connection error**
+
+```
+failed to connect to postgres: dial tcp 127.0.0.1:54322: connect: connection refused
+```
+
+Solution: Start Supabase local instance first:
+
+```bash
+pnpm db:start
+pnpm test:rls
+```
+
+**Issue: `extension "pgtap" not found`**
+
+Solution: The setup hook file may not have run. Verify it exists:
+
+```bash
+ls supabase/tests/000-setup-tests-hooks.sql
+```
+
+**Issue: `function tests.create_supabase_user does not exist`**
+
+Solution: basejump-supabase_test_helpers failed to install. Check setup hook output:
+
+```bash
+pnpm test:rls --debug
+```
+
+**Issue: Tests pass but data persists**
+
+Solution: Ensure tests are wrapped in `begin/rollback`:
+
+```sql
+begin;  -- Add this at the start
+select plan(N);
+-- ... your tests ...
+select * from finish();
+rollback;  -- Add this at the end
+```
+
+**Issue: Docker not running**
+
+Solution: Start Docker Desktop before running tests:
+
+```bash
+# Check Docker status
+docker ps
+
+# Start Supabase (requires Docker)
+pnpm db:start
+```
+
+#### Best Practices
+
+1. **Test both layers** - Write both application-level and database-level RLS tests
+2. **Start with schema validation** - Ensure all tables have RLS before writing isolation tests
+3. **Use descriptive test names** - Make assertion messages clear and actionable
+4. **Test all CRUD operations** - Don't just test SELECT, also test INSERT/UPDATE/DELETE
+5. **Test anonymous access** - Always verify unauthenticated users are properly restricted
+6. **Keep tests focused** - One concern per test file (e.g., user isolation, org access, etc.)
+7. **Use error codes** - When testing violations, use specific Postgres error codes (42501 for insufficient_privilege)
+
+#### References
+
+- [Supabase pgTAP Testing Guide](https://supabase.com/docs/guides/local-development/testing/pgtap-extended)
+- [basejump-supabase_test_helpers](https://github.com/usebasejump/supabase-test-helpers)
+- [Testing RLS with pgTAP (Basejump Guide)](https://usebasejump.com/blog/testing-on-supabase-with-pgtap)
+- [pgTAP Documentation](https://pgtap.org/documentation.html)
 
 ### E2E Tests
 

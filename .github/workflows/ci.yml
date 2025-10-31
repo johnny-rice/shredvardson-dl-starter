@@ -104,6 +104,32 @@ jobs:
           # Run RLS validation
           pnpm db:validate:rls
 
+      - name: Run pgTAP RLS Tests
+        if: github.event_name == 'pull_request'
+        run: |
+          set -euo pipefail
+          echo "🧪 Running database-level RLS tests with pgTAP..."
+
+          # Check if Supabase CLI is available
+          if ! command -v supabase &> /dev/null; then
+            echo "⚠️  Supabase CLI not found in CI"
+            echo "📝 Skipping pgTAP tests (requires Supabase CLI)"
+            echo "ℹ️  To enable: Install Supabase CLI in CI workflow"
+            exit 0
+          fi
+
+          # Start Supabase local instance for testing
+          echo "🚀 Starting Supabase local instance..."
+          supabase start
+
+          # Run pgTAP tests
+          echo "🧪 Running pgTAP tests..."
+          pnpm test:rls
+
+          # Stop Supabase after tests
+          echo "🛑 Stopping Supabase..."
+          supabase stop
+
       - name: Scrape AI Reviews from PR Comments
         if: always() && github.event_name == 'pull_request'
         env:

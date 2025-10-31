@@ -7,7 +7,7 @@ Severity: high
 
 **Context.** PR #213 received 12 CodeRabbit markdown lint issues (emphasis-as-heading, missing language identifiers, bare URLs) that could have been caught pre-commit. These issues consumed review cycles and required 3 additional commits to fix.
 
-**Rule.** **Run `markdownlint-cli2 "**/*.md" --fix` before committing documentation changes to catch style issues locally.**
+**Rule.** **Run `markdownlint-cli2 "**/\*.md" --fix` before committing documentation changes to catch style issues locally.\*\*
 
 **Example.**
 

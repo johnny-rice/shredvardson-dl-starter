@@ -100,7 +100,7 @@
 
 **Risk Level**: LOW
 
-**Tags**:
+**Tags**: 
 
 ---
 
@@ -218,7 +218,7 @@
 
 ### Git Workflow
 
-#### \_shared/branch-validation
+#### _shared/branch-validation
 
 **Purpose**: Reusable validation patterns for branch creation, name compliance, and git state checks
 
@@ -232,7 +232,7 @@
 
 ---
 
-#### \_shared/commit-formatting
+#### _shared/commit-formatting
 
 **Purpose**: Shared commit message formatting standards and conventional commit patterns
 
@@ -246,7 +246,7 @@
 
 ---
 
-#### \_shared/common-git-workflow
+#### _shared/common-git-workflow
 
 **Purpose**: Git workflow best practices including branch protection, commit hygiene, and push/pull patterns
 
@@ -260,7 +260,7 @@
 
 ---
 
-#### \_shared/error-handling
+#### _shared/error-handling
 
 **Purpose**: Comprehensive error detection, messaging, and recovery patterns for common git failure modes
 
@@ -552,24 +552,65 @@
 
 ---
 
-## Decision Framework
+#### plan
 
-{
-"spec_driven_triggers": [
-"Risk: authentication/payments/data",
-"Scope: 3+ files or 2+ hours",
-"Clarity: requirements unclear",
-"Dependencies: new packages/services"
-],
-"simple_workflow_default": [
-"Single component changes",
-"UI tweaks and styling",
-"Bug fixes",
-"Documentation updates",
-"Anything completable in 1-2 hours"
-]
-}
+**Purpose**: Generate technical plan from spec file. Automatically triggers design discovery for spec-driven lane features.
+
+**When to use**: Complex features requiring structured approach
+
+**Example**: Create technical plan for auth implementation
+
+**Risk Level**: MEDIUM (Requires Human Approval)
+
+**Tags**: planning, design, architecture
 
 ---
 
-_Generated from docs/commands/index.json_
+#### specify
+
+**Purpose**: Create a new spec file with lane detection to begin the spec-driven development workflow.
+
+**When to use**: Complex features requiring structured approach
+
+**Example**: Define requirements for user authentication system
+
+**Risk Level**: LOW (Requires Human Approval)
+
+**Tags**: spec, planning, prd
+
+---
+
+#### tasks
+
+**Purpose**: Generate implementation task breakdown from spec and plan files. Works for both spec-driven and simple lane features.
+
+**When to use**: Complex features requiring structured approach
+
+**Example**: Break down auth feature into TDD tasks
+
+**Risk Level**: LOW
+
+**Tags**: tasks, breakdown, implementation
+
+---
+
+## Decision Framework
+
+{
+  "spec_driven_triggers": [
+    "Risk: authentication/payments/data",
+    "Scope: 3+ files or 2+ hours",
+    "Clarity: requirements unclear",
+    "Dependencies: new packages/services"
+  ],
+  "simple_workflow_default": [
+    "Single component changes",
+    "UI tweaks and styling",
+    "Bug fixes",
+    "Documentation updates",
+    "Anything completable in 1-2 hours"
+  ]
+}
+
+---
+*Generated from docs/commands/index.json*

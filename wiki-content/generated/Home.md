@@ -4,6 +4,8 @@
 
 See [docs/constitution.md](../constitution.md) for complete project mission, guardrails, and AI collaboration rules.
 
+
+
 ## Quick Links
 
 - [Commands Reference](Commands.md)
@@ -12,10 +14,13 @@ See [docs/constitution.md](../constitution.md) for complete project mission, gua
 
 ## Workflows
 
+
+
+
+
 ## Getting Started
 
 Follow the [CLAUDE.md](../docs/ai/CLAUDE.md) instructions for complete setup details.
 
 ---
-
-_Generated automatically from project files_
+*Generated automatically from project files*

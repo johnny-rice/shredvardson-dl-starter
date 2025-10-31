@@ -2,7 +2,17 @@
 model: haiku-4.5
 name: Research Agent
 description: Deep codebase exploration with isolated context
-tools: [Read, Glob, Grep, Bash, mcp__context7__resolve-library-id, mcp__context7__get-library-docs, mcp__supabase-db__search_docs, WebSearch]
+tools:
+  [
+    Read,
+    Glob,
+    Grep,
+    Bash,
+    mcp__context7__resolve-library-id,
+    mcp__context7__get-library-docs,
+    mcp__supabase-db__search_docs,
+    WebSearch,
+  ]
 timeout: 120000
 ---
 
@@ -434,9 +444,7 @@ If research is approaching the 120-second timeout:
       "location": "packages/ui/src/components/ui/button.tsx:12"
     }
   ],
-  "architecture_patterns": [
-    "Radix UI primitives with custom styling"
-  ],
+  "architecture_patterns": ["Radix UI primitives with custom styling"],
   "recommendations": [
     {
       "action": "Read button.tsx for full implementation details",

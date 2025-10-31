@@ -68,7 +68,7 @@ _Explicitly define what's out of scope to prevent scope creep:_
 1. Plan → Scaffold Tests → Implement → Prepare PR
 2. See [prompts/tasks](../../prompts/tasks/) for implementation guidance
 
----
 
+---
 _Copied from docs/product/PRD.md - DO NOT EDIT DIRECTLY_
 _Update the source file and run `pnpm wiki:generate` to sync_

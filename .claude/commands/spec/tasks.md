@@ -126,6 +126,7 @@ You are creating an implementation task breakdown. Follow these steps:
    ## Task List
 
    ### Task 1: [Task Name]
+
    **ID:** T1
    **Priority:** [p0|p1|p2|p3]
    **Estimate:** [hours]
@@ -136,6 +137,7 @@ You are creating an implementation task breakdown. Follow these steps:
    [What needs to be done, specific and actionable]
 
    **Acceptance Criteria:**
+
    - [ ] [Specific, testable criterion]
    - [ ] [Another criterion]
 
@@ -145,6 +147,7 @@ You are creating an implementation task breakdown. Follow these steps:
    ---
 
    ### Task 2: [Task Name]
+
    **ID:** T2
    **Priority:** [p0|p1|p2|p3]
    **Estimate:** [hours]
@@ -155,6 +158,7 @@ You are creating an implementation task breakdown. Follow these steps:
    [What needs to be done]
 
    **Acceptance Criteria:**
+
    - [ ] [Criterion]
 
    **Notes:**
@@ -167,35 +171,43 @@ You are creating an implementation task breakdown. Follow these steps:
    ## Implementation Order
 
    **Phase 1: Foundation** (depends on: none)
+
    - T1: [Task name]
    - T2: [Task name]
 
    **Phase 2: Core Features** (depends on: Phase 1)
+
    - T3: [Task name]
    - T4: [Task name]
 
    **Phase 3: Integration** (depends on: Phase 2)
+
    - T5: [Task name]
 
    **Phase 4: Testing & Polish** (depends on: Phase 3)
+
    - T6: [Task name]
 
    ## Risk Mitigation
 
    ### High-Risk Tasks
+
    [List tasks flagged as high-risk with mitigation strategies]
 
    ### Dependencies
+
    [Critical path and potential bottlenecks]
 
    ## Testing Strategy
 
    **Per-Task Testing:**
+
    - Each task should have unit tests
    - Integration tests after each phase
    - E2E tests at completion
 
    **Coverage Targets:**
+
    - Unit: 80%
    - Integration: 70%
    - E2E: Critical paths

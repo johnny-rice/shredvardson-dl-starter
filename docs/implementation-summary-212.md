@@ -148,7 +148,7 @@ Updated 3 slash commands to delegate to the new Haiku agents:
 const result = await Task({
   subagent_type: 'pr-template-agent',
   description: 'Generate PR template',
-  prompt: `Generate PR template for branch ${currentBranch}.\n\nInput: ${JSON.stringify(input, null, 2)}`
+  prompt: `Generate PR template for branch ${currentBranch}.\n\nInput: ${JSON.stringify(input, null, 2)}`,
 });
 ```
 
@@ -167,7 +167,7 @@ const result = await Task({
 const result = await Task({
   subagent_type: 'issue-creator-agent',
   description: 'Generate GitHub issue',
-  prompt: `Generate GitHub issue from discussion.\n\nInput: ${JSON.stringify(input, null, 2)}`
+  prompt: `Generate GitHub issue from discussion.\n\nInput: ${JSON.stringify(input, null, 2)}`,
 });
 ```
 
@@ -186,7 +186,7 @@ const result = await Task({
 const result = await Task({
   subagent_type: 'database-migration-agent',
   description: 'Generate database migration',
-  prompt: `Generate SQL migration.\n\nInput: ${JSON.stringify(input, null, 2)}`
+  prompt: `Generate SQL migration.\n\nInput: ${JSON.stringify(input, null, 2)}`,
 });
 ```
 

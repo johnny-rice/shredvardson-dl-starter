@@ -112,7 +112,8 @@ Coverage-driven TDD with escape hatches for pragmatism.
 - **70% coverage target** (configurable) with clear contracts
 - **Vitest + Playwright + React Testing Library** - modern, fast, reliable
 - **Test isolation helpers** - no more flaky tests from shared state
-- **RLS test templates** - validate security policies, not just code
+- **Dual-layer RLS testing** - validate security at both application (Vitest) and database (pgTAP) levels
+- **Transaction-isolated database tests** - no manual cleanup, no side effects
 
 See [Testing Guide](docs/testing/TESTING_GUIDE.md) for the full philosophy.
 
@@ -272,11 +273,12 @@ See [Database Recipe](docs/recipes/db.md) for the complete workflow.
 
 ## Testing
 
-Comprehensive test infrastructure with **4 test types** covering unit, RLS security, E2E, and CI validation:
+Comprehensive test infrastructure with **5 test types** covering unit, dual-layer RLS security, E2E, and CI validation:
 
 ```bash
 pnpm test            # Run all tests
 pnpm test:unit       # Run unit tests only (pre-push hook)
+pnpm test:rls        # Run database-level RLS tests (pgTAP)
 pnpm test:e2e        # Run E2E tests only
 pnpm test:coverage   # Generate coverage report
 pnpm test:ci-scripts # Run CI script integration tests
@@ -291,12 +293,20 @@ pnpm test:ci-scripts # Run CI script integration tests
 - Integration with mocked dependencies
 - **Coverage target**: 70% lines/functions/statements, 65% branches
 
-**RLS Security Tests** (Vitest + Supabase Test Client)
+**RLS Security Tests - Application Level** (Vitest + Supabase Test Client)
 
-- Row-Level Security policy validation
-- User isolation and data access boundaries
-- Multi-tenant security enforcement
+- Row-Level Security from application perspective
+- API endpoints respect RLS policies
+- Client-side auth context handling
 - **Templates ready** in `apps/web/tests/rls/` (requires tables)
+
+**RLS Security Tests - Database Level** (pgTAP + basejump-supabase_test_helpers)
+
+- RLS policies tested directly in Postgres
+- Schema-wide validation (catches tables missing RLS)
+- Transaction-isolated (automatic rollback, no cleanup)
+- User isolation and anonymous access validation
+- **Defense in depth**: Complements application-level RLS tests
 
 **E2E Tests** (Playwright 1.56.1)
 
@@ -362,13 +372,19 @@ pnpm db:start         # Start local Supabase
 pnpm db:stop          # Stop local Supabase
 pnpm db:reset         # Reset database with migrations
 pnpm db:validate      # Validate migrations for safety
-pnpm db:validate:rls  # Validate Row-Level Security policies
+pnpm db:validate:rls  # Validate Row-Level Security policies (app-level)
 pnpm db:rls:scaffold  # Generate RLS policies for a table
+pnpm test:rls         # Run database-level RLS tests (pgTAP)
+pnpm test:rls:watch   # Watch mode for RLS test development
 pnpm db:seed:dev      # Seed development data
 pnpm db:seed:test     # Seed deterministic test data
 ```
 
-**RLS Validation**: The `db:validate:rls` command checks that all tables have proper Row-Level Security policies. This runs automatically in CI to prevent deploying tables without security policies. See [RLS Implementation Guide](docs/database/rls-implementation.md) for details.
+**Dual-Layer RLS Validation**:
+- `db:validate:rls` - Application-level validation (runs in CI)
+- `test:rls` - Database-level pgTAP tests with transaction isolation (runs in CI)
+
+Both layers ensure comprehensive security coverage. See [RLS Implementation Guide](docs/database/rls-implementation.md) and [Testing Guide](docs/testing/TESTING_GUIDE.md#pgtap-rls-tests-database-level) for details.
 
 See [docs/recipes/db.md](docs/recipes/db.md) for complete database workflow.
 
