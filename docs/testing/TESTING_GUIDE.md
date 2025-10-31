@@ -86,6 +86,39 @@ bash tests/ci/validate-specs.test.sh
 - Blocks pushes and PRs if scripts are broken
 - Ensures token optimization governance scripts work correctly
 
+### Test Performance Analysis
+
+```bash
+# Analyze test execution time (requires running tests first)
+pnpm test:analyze-performance
+
+# Use a custom results path (first positional argument)
+pnpm test:analyze-performance apps/web/test-results/results.json
+
+# Show top 20 slowest tests (supports both formats)
+pnpm test:analyze-performance --top=20
+pnpm test:analyze-performance --top 20
+
+# Set custom slow test threshold (default: 1000ms)
+pnpm test:analyze-performance --threshold=500
+pnpm test:analyze-performance --threshold 500
+
+# Output as JSON for programmatic use
+pnpm test:analyze-performance --json
+
+# If the file is missing, run tests with JSON reporter first
+# (see vitest.config.ts)
+pnpm test:unit
+```
+
+**Purpose**: Track and identify slow tests to maintain fast pre-push hooks and CI builds.
+
+**Key Metrics**:
+
+- **Slow test threshold**: 1000ms (1 second)
+- **Pre-push target**: 8-15 seconds total
+- **Critical threshold**: 20 seconds (analysis exits non-zero; merge blocking depends on required checks in CI)
+
 ### All Tests
 
 ```bash
@@ -528,6 +561,55 @@ test('form submission', async ({ page }) => {
 });
 ```
 
+### 7. Test Performance Optimization
+
+**Monitor Test Performance**:
+
+```bash
+# Run tests and analyze performance
+pnpm test:unit && pnpm test:analyze-performance
+```
+
+**Optimization Strategies**:
+
+**1. Mock expensive operations**:
+
+```ts
+// Mock API calls instead of making real requests
+vi.mock('@/lib/api', () => ({
+  fetchData: vi.fn().mockResolvedValue({ data: 'mock' }),
+}));
+```
+
+**2. Use test.concurrent() for independent tests**:
+
+```ts
+// Run independent tests in parallel
+test.concurrent('test 1', async () => {
+  /* ... */
+});
+test.concurrent('test 2', async () => {
+  /* ... */
+});
+```
+
+**3. Avoid unnecessary re-renders**:
+
+```ts
+// Use screen queries instead of re-rendering
+const { getByText } = render(<Component />);
+expect(getByText('Hello')).toBeInTheDocument();
+// No need to render again
+```
+
+**4. Move slow integration tests to E2E suite** if they involve real I/O, database operations, or browser interactions.
+
+**Performance Targets**:
+
+- Unit tests: <1s per test file
+- Pre-push hook: 8-15s total
+- Critical threshold: <20s (fails analysis; merge blocking depends on required checks in CI)
+
 ## Troubleshooting
 
 ### Common Issues
@@ -570,13 +652,23 @@ export default defineConfig({
 
 Unit tests run automatically before every push:
 
-- **Target execution time**: <15-20 seconds (optimal developer experience)
+- **Target execution time**: 8-15 seconds (optimal developer experience)
 - **Actual time**: ~1-2 seconds (with Turbo cache)
-- **Feedback**: Hook provides timing feedback
+- **Slow test threshold**: 1000ms per test
+- **Feedback**: Hook provides timing feedback and optimization suggestions
   - `<5s` - Cached execution
   - `5-15s` - Normal execution
-  - `15-30s` - Acceptable but slower
-  - `>30s` - Warning (consider optimizing)
+  - `15-30s` - Acceptable but shows optimization suggestion
+  - `>30s` - Warning (strongly consider optimizing or reducing test scope)
+  - Note: CI marks >20s as critical for analysis; pre-push guidance is more lenient
+
+**When tests exceed 15s**, the pre-push hook suggests running:
+
+```bash
+pnpm test:analyze-performance
+```
+
+This identifies which tests are slow and provides actionable optimization recommendations.
 
 **Bypass hook** (not recommended):
 
@@ -589,10 +681,18 @@ git push --no-verify
 Tests run automatically in CI:
 
 - **Unit tests**: Run on every push (all tests)
+- **Test performance analysis**: Runs after unit tests to analyze and report slow tests
 - **E2E tests**: Run on PRs and main branch
 - **Accessibility tests**: Run with E2E suite
 - **Coverage**: Generated with json-summary for GitHub annotations
-- **Artifacts**: Coverage reports uploaded for review
+- **Artifacts**: Coverage reports and test performance data uploaded for review
+
+**CI Performance Tracking**:
+
+- Test performance results are uploaded as artifacts
+- Top 10 slowest tests are reported in CI logs
+- The analysis flags >20s as critical (non-zero exit); whether CI fails depends on continue-on-error
+- Performance data can be downloaded from GitHub Actions artifacts
 
 See `.github/workflows/ci.yml` for full CI configuration.
 

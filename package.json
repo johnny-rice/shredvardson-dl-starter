@@ -23,6 +23,7 @@
     "test:e2e:ci": "tsx scripts/pretest-env-check.ts && playwright test --config playwright.config.ts",
     "test:coverage": "npm run pretest && turbo run test:coverage --filter=web",
     "test:ci-scripts": "bash tests/ci/validate-specs.test.sh",
+    "test:analyze-performance": "node scripts/analyze-test-performance.mjs",
     "a11y:audit": "tsx scripts/accessibility/run-axe.ts",
     "a11y:audit:critical": "tsx scripts/accessibility/run-axe.ts full critical",
     "typecheck": "turbo run typecheck",

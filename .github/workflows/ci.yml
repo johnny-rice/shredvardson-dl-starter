@@ -245,6 +245,21 @@ jobs:
         if: env.IS_INFRA_CHANGE != 'true'
         run: pnpm --filter=web run test:unit
 
+      - name: Analyze test performance
+        if: env.IS_INFRA_CHANGE != 'true'
+        run: |
+          echo "📊 Analyzing test performance..."
+          pnpm test:analyze-performance --top=10 || echo "⚠️ Analysis completed with warnings"
+        continue-on-error: true
+
+      - name: Upload test performance results
+        if: env.IS_INFRA_CHANGE != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-performance
+          path: apps/web/test-results/results.json
+          if-no-files-found: warn
+
       - name: Generate coverage report
         if: env.IS_INFRA_CHANGE != 'true'
         run: pnpm --filter=web run test:coverage

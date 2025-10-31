@@ -203,8 +203,13 @@ pre-push:
           echo "✅ All tests passed! (${TEST_DURATION}s)"
         elif [ $TEST_DURATION -lt 30 ]; then
           echo "✅ All tests passed! (${TEST_DURATION}s - acceptable)"
+          if [ $TEST_DURATION -gt 15 ]; then
+            echo "⚠️  Tests took ${TEST_DURATION}s (target: 8-15s)"
+            echo "💡 Run 'pnpm test:analyze-performance' to identify slow tests"
+          fi
         else
           echo "⚠️  Tests passed but took ${TEST_DURATION}s (target: <20s)"
+          echo "💡 Run 'pnpm test:analyze-performance' to identify slow tests"
           echo "💡 Consider running fewer tests in pre-push or relying on CI for full suite"
         fi
 

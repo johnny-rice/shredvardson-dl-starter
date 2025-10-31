@@ -14,6 +14,11 @@ export default defineConfig({
       'tests/sub-agents/**/*.test.{ts,tsx}',
     ],
     exclude: ['e2e/**', 'tests/e2e/**', 'node_modules/**', '.next/**', 'dist/**', '.git/**'],
+    reporters: ['default', 'json'],
+    outputFile: {
+      json: './test-results/results.json',
+    },
+    slowTestThreshold: 1000, // Warn for tests >1s
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'json-summary', 'html', 'lcov'],
