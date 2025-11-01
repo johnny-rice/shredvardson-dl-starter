@@ -381,10 +381,17 @@ pnpm db:seed:test     # Seed deterministic test data
 ```
 
 **Dual-Layer RLS Validation**:
+
 - `db:validate:rls` - Application-level validation (runs in CI)
 - `test:rls` - Database-level pgTAP tests with transaction isolation (runs in CI)
 
 Both layers ensure comprehensive security coverage. See [RLS Implementation Guide](docs/database/rls-implementation.md) and [Testing Guide](docs/testing/TESTING_GUIDE.md#pgtap-rls-tests-database-level) for details.
+
+**RLS Performance Optimization**:
+
+- Use [optimized templates](supabase/templates/) for new tables (99%+ faster queries)
+- See [RLS Optimization Guide](docs/database/RLS_OPTIMIZATION.md) for patterns and best practices
+- Includes 6 battle-tested optimizations: indexes, function caching, security definer helpers
 
 See [docs/recipes/db.md](docs/recipes/db.md) for complete database workflow.
 

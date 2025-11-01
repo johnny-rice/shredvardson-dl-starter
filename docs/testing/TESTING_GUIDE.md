@@ -12,6 +12,7 @@ Comprehensive guide for writing and running tests in the DL Starter monorepo.
   - [Unit Tests](#unit-tests)
   - [RLS Tests (Application-Level)](#rls-tests)
   - [pgTAP RLS Tests (Database-Level)](#pgtap-rls-tests-database-level)
+  - [RLS Optimization Tests](#rls-optimization-tests)
   - [E2E Tests](#e2e-tests)
 - [Coverage](#coverage)
 - [Best Practices](#best-practices)
@@ -514,7 +515,7 @@ rollback;  -- All test data is automatically cleaned up
 
 #### Common Test Patterns
 
-**Pattern 1: User can only see their own data**
+### Pattern 1: User can only see their own data
 
 ```sql
 select tests.create_supabase_user('owner@test.com');
@@ -541,7 +542,7 @@ select results_eq(
 );
 ```
 
-**Pattern 2: Anonymous access restrictions**
+### Pattern 2: Anonymous access restrictions
 
 ```sql
 select tests.clear_authentication();
@@ -561,7 +562,7 @@ select throws_ok(
 );
 ```
 
-**Pattern 3: Organization/team-based access**
+### Pattern 3: Organization/team-based access
 
 ```sql
 -- Users in same org can see each other's data
@@ -627,7 +628,7 @@ Tests block deployment if:
 
 **Issue: `supabase test db` fails with connection error**
 
-```
+```text
 failed to connect to postgres: dial tcp 127.0.0.1:54322: connect: connection refused
 ```
 
@@ -654,7 +655,7 @@ Solution: basejump-supabase_test_helpers failed to install. Check setup hook out
 pnpm test:rls --debug
 ```
 
-**Issue: Tests pass but data persists**
+#### Issue: Tests pass but data persists
 
 Solution: Ensure tests are wrapped in `begin/rollback`:
 
@@ -666,7 +667,7 @@ select * from finish();
 rollback;  -- Add this at the end
 ```
 
-**Issue: Docker not running**
+#### Issue: Docker not running
 
 Solution: Start Docker Desktop before running tests:
 
@@ -694,6 +695,187 @@ pnpm db:start
 - [basejump-supabase_test_helpers](https://github.com/usebasejump/supabase-test-helpers)
 - [Testing RLS with pgTAP (Basejump Guide)](https://usebasejump.com/blog/testing-on-supabase-with-pgtap)
 - [pgTAP Documentation](https://pgtap.org/documentation.html)
+
+### RLS Optimization Tests
+
+RLS optimization tests validate that performance optimizations are correctly configured without breaking security. These tests complement functional RLS tests by checking infrastructure setup.
+
+**Location:** `supabase/tests/003-rls-optimization.sql`
+
+**Purpose:**
+
+- Verify optimization infrastructure exists (private schema, security definer functions)
+- Check indexes exist on RLS filter columns
+- Validate policies specify roles correctly
+- Ensure RLS security is maintained
+
+#### Running Optimization Tests
+
+```bash
+# Run all pgTAP tests (includes optimization tests)
+pnpm test:rls
+
+# Optimization tests run as part of the suite
+# Look for: "003-rls-optimization.sql" in output
+```
+
+#### What Gets Tested
+
+The optimization test suite validates all 6 RLS optimizations from [RLS_OPTIMIZATION.md](../database/RLS_OPTIMIZATION.md):
+
+1. **Infrastructure Tests**
+   - Private schema exists
+   - Private schema has correct permissions
+   - Security definer functions exist
+
+2. **Function Configuration Tests**
+   - Functions return correct types
+   - Functions are marked `SECURITY DEFINER`
+   - Functions are marked `STABLE` (not `VOLATILE`)
+
+3. **Index Tests**
+   - Indexes exist on RLS policy filter columns
+   - Composite indexes created where needed
+
+4. **Policy Tests**
+   - Policies specify roles (`TO authenticated`, `TO anon`)
+   - Policies use function caching (`(SELECT auth.uid())`)
+   - Expected policies exist on tables
+
+5. **Security Tests**
+   - RLS is enabled on tables
+   - Unauthorized access is blocked
+   - Existing RLS tests still pass
+
+#### Example: Validation Test
+
+```sql
+-- File: supabase/tests/003-rls-optimization.sql
+begin;
+select plan(12);
+
+-- Test private schema exists
+SELECT has_schema('private', 'Private schema should exist');
+
+-- Test security definer function
+SELECT has_function('private', 'current_user_id');
+SELECT is(
+    (SELECT prosecdef FROM pg_proc WHERE proname = 'current_user_id'),
+    true,
+    'Function should be SECURITY DEFINER'
+);
+
+-- Test index exists
+SELECT col_is_indexed('public', 'profiles', 'user_id');
+
+-- Test policies exist
+SELECT policies_are('public', 'profiles',
+    ARRAY['Users can view their own profile'],
+    'Expected policies exist'
+);
+
+select * from finish();
+rollback;
+```
+
+#### Writing Optimization Tests
+
+When you add a new optimized table (using [templates](../../supabase/templates/)):
+
+1. **No new tests needed** if using templates exactly as-is
+2. **Add tests** if you customize policies or add complex security definer functions
+
+**Test checklist for custom implementations:**
+
+- [ ] Index exists on filter columns
+- [ ] Security definer function is `SECURITY DEFINER` and `STABLE`
+- [ ] Policies specify roles
+- [ ] RLS is enabled
+- [ ] Security boundaries are maintained
+
+#### Common Test Patterns
+
+### Pattern 1: Verify security definer function
+
+```sql
+-- Check function exists and is configured correctly
+SELECT has_function('private', 'user_teams');
+
+-- Verify SECURITY DEFINER flag
+SELECT is(
+    (SELECT prosecdef FROM pg_proc
+     JOIN pg_namespace ON pg_proc.pronamespace = pg_namespace.oid
+     WHERE pg_namespace.nspname = 'private' AND proname = 'user_teams'),
+    true,
+    'user_teams() should be SECURITY DEFINER'
+);
+
+-- Verify STABLE flag (for caching)
+SELECT is(
+    (SELECT provolatile FROM pg_proc
+     JOIN pg_namespace ON pg_proc.pronamespace = pg_namespace.oid
+     WHERE pg_namespace.nspname = 'private' AND proname = 'user_teams'),
+    's',  -- 's' = STABLE
+    'user_teams() should be STABLE'
+);
+```
+
+### Pattern 2: Verify indexes on filter columns
+
+```sql
+-- Check index exists on RLS filter column
+SELECT col_is_indexed('public', 'documents', 'user_id',
+    'Index should exist on documents.user_id for RLS optimization'
+);
+
+-- Check index exists on team_id (team-scoped table)
+SELECT col_is_indexed('public', 'projects', 'team_id',
+    'Index should exist on projects.team_id for RLS optimization'
+);
+```
+
+### Pattern 3: Verify policies specify roles
+
+```sql
+-- Check that policies have role specification (not empty)
+SELECT isnt(
+    (SELECT COUNT(*) FROM pg_policies
+     WHERE schemaname = 'public'
+       AND tablename = 'profiles'
+       AND polroles IS NOT NULL
+       AND array_length(polroles, 1) > 0),
+    0,
+    'Policies on profiles should specify roles'
+);
+```
+
+#### Troubleshooting
+
+#### Test fails: "Private schema should exist"
+
+- Run the optimization migration: `supabase db reset`
+- Check migration file exists: `supabase/migrations/20251031000000_optimize_rls_performance.sql`
+
+#### Test fails: "Function should be SECURITY DEFINER"
+
+- Function was created without `SECURITY DEFINER` flag
+- Recreate function with: `CREATE OR REPLACE FUNCTION ... SECURITY DEFINER ...`
+
+#### Test fails: "Index should exist on column"
+
+- Index missing on RLS filter column
+- Add index: `CREATE INDEX idx_tablename_column ON tablename(column);`
+
+#### Test fails: "Policies should specify roles"
+
+- Policies missing `TO authenticated` or `TO anon` clause
+- Add role specification to policy
+
+#### Resources
+
+- **Full guide:** [RLS_OPTIMIZATION.md](../database/RLS_OPTIMIZATION.md)
+- **Templates:** [supabase/templates/](../../supabase/templates/)
+- **Issue:** [#237](https://github.com/your-org/your-repo/issues/237)
 
 ### E2E Tests
 

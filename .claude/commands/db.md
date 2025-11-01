@@ -59,6 +59,40 @@ This is a lightweight discovery command that delegates to the `supabase-integrat
 /db types
 ```
 
+### Optimized RLS Templates
+
+When creating tables with RLS, **ALWAYS start from the optimized templates** to prevent performance issues:
+
+```bash
+# For user-scoped tables (user_id column):
+cp supabase/templates/table-with-user-rls.sql \
+   supabase/migrations/$(date +%Y%m%d%H%M%S)_create_profiles.sql
+
+# For team-scoped tables (team_id column):
+cp supabase/templates/table-with-team-rls.sql \
+   supabase/migrations/$(date +%Y%m%d%H%M%S)_create_projects.sql
+
+# Then customize the template:
+# 1. Replace TABLENAME with your actual table name
+# 2. Add your custom columns
+# 3. Apply: pnpm db:reset
+```
+
+#### Why templates matter
+
+- ⚠️ Without optimization: RLS queries can be 100-1000x slower
+- ✅ With templates: All 6 optimizations included automatically
+- 📖 See: `docs/database/RLS_OPTIMIZATION.md` for details
+
+#### Templates include
+
+1. Indexes on filter columns (99.94% faster)
+2. Function caching (94.97% faster)
+3. Security definer helpers (99.993% faster)
+4. Role specification (99.78% faster)
+5. Minimized policy joins
+6. Client-side filter patterns
+
 **Implementation:**
 
 The Skill system handles:

@@ -18,19 +18,24 @@ BEGIN
     -- RLS enabled by default
     ALTER TABLE public._health_check ENABLE ROW LEVEL SECURITY;
 
+    -- Note: PRIMARY KEY constraint automatically creates a B-tree index on 'id'
+    -- No additional index needed on the primary key column
+
     -- Drop existing policies if they exist (idempotent)
     DROP POLICY IF EXISTS "Allow anonymous health check reads" ON public._health_check;
     DROP POLICY IF EXISTS "Allow authenticated health check reads" ON public._health_check;
 
+    -- RLS Performance Optimization: Role specification
+    -- (99.78% improvement when accessed by excluded roles)
     -- Allow anonymous reads for health checks (adjust as needed)
     CREATE POLICY "Allow anonymous health check reads" ON public._health_check
         FOR SELECT
-        TO anon
+        TO anon  -- Only evaluate for anonymous users
         USING (true);
 
     CREATE POLICY "Allow authenticated health check reads" ON public._health_check
         FOR SELECT
-        TO authenticated
+        TO authenticated  -- Only evaluate for authenticated users
         USING (true);
 
     -- Insert initial health check record

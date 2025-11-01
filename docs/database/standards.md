@@ -85,7 +85,43 @@ pnpm db:validate:rls
 pnpm test:rls
 ```
 
-See [RLS Implementation Guide](./rls-implementation.md) for detailed instructions.
+### ⚡ RLS Performance Optimization (CRITICAL)
+
+**ALWAYS use optimized templates when creating new tables with RLS.** Unoptimized RLS can cause 100x+ slower queries.
+
+**Templates available:**
+
+- `supabase/templates/table-with-user-rls.sql` - User-scoped tables (profiles, settings)
+- `supabase/templates/table-with-team-rls.sql` - Team-scoped tables (projects, documents)
+
+**Quick start:**
+
+```bash
+# Copy template
+cp supabase/templates/table-with-user-rls.sql \
+   supabase/migrations/$(date +%Y%m%d%H%M%S)_create_my_table.sql
+
+# Replace TABLENAME with your table name
+sed -i '' 's/TABLENAME/my_table/g' supabase/migrations/*_create_my_table.sql
+
+# Apply migration
+pnpm db:reset
+```
+
+**Performance impact:**
+
+- ✅ Indexes on filter columns: 99.94% faster (171ms → <0.1ms)
+- ✅ Function caching: 94.97% faster (179ms → 9ms)
+- ✅ Security definer helpers: 99.993% faster (178,000ms → 12ms)
+- ✅ Role specification: 99.78% faster (skips unnecessary evaluation)
+
+**See:** [RLS Performance Optimization Guide](./RLS_OPTIMIZATION.md) for complete details.
+
+**References:**
+
+- [RLS Implementation Guide](./rls-implementation.md) - Basic RLS setup
+- [RLS Optimization Guide](./RLS_OPTIMIZATION.md) - Performance best practices
+- [Templates](../../supabase/templates/) - Production-ready SQL templates
 
 ## Schema Design
 

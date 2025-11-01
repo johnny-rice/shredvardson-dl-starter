@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2025-10-29T22:41:36.858Z",
+  "generated": "2025-11-01T17:42:54.436Z",
   "commands": [
     {
       "name": "_shared/branch-validation",
@@ -83,8 +83,8 @@
       "name": "db",
       "path": ".claude/commands/db.md",
       "category": "General",
-      "tags": ["implementation"],
-      "when": "General development tasks",
+      "tags": ["security", "planning", "implementation"],
+      "when": "Code quality and security improvements",
       "purpose": "Database workflow via supabase-integration Skill",
       "example": "Standard development workflow",
       "riskLevel": "LOW",
