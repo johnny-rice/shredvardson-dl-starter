@@ -81,6 +81,7 @@ Copying acceptance criteria from specs/plans into implementation docs and forget
 
 ```markdown
 ## Success Criteria
+
 <!-- Note: Keep unchecked [ ] in plan documents - these are goals, not completed work -->
 ```
 

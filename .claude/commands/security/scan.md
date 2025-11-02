@@ -103,20 +103,58 @@ Scan codebase for security vulnerabilities using isolated Security Scanner conte
      }
 
      Analyze all code related to the focus areas and identify vulnerabilities at or above the severity threshold.
-     Return findings as a structured JSON response with vulnerabilities, summary, recommendations, and confidence level.
+
+     IMPORTANT: Return findings in the enhanced structured JSON format with:
+     - Per-finding confidence levels (high/medium/low) in each vulnerability object
+     - Structured remediation object with description, code, and references fields
+     - Overall scan confidence level
+
+     Required JSON structure:
+     {
+       "vulnerabilities": [
+         {
+           "severity": "CRITICAL|HIGH|MEDIUM|LOW",
+           "category": "string",
+           "location": { "file": "path", "line": number, "context": "string" },
+           "evidence": { "code": "string", "description": "string" },
+           "impact": "string",
+           "remediation": {
+             "description": "Step-by-step explanation",
+             "code": "Copy-paste ready code example",
+             "references": ["https://url1", "https://url2", "https://url3"]
+           },
+           "confidence": "high|medium|low"
+         }
+       ],
+       "summary": { "total": 0, "critical": 0, "high": 0, "medium": 0, "low": 0 },
+       "recommendations": ["string"],
+       "confidence": "high|medium|low"
+     }
      '''
    )
    ```
 
    Wait for the sub-agent to complete scanning and return the JSON response.
 
-3. **Parse and present the JSON response** containing:
-   - `vulnerabilities`: Array of vulnerability objects with severity, category, location, evidence, impact, remediation
-   - `summary`: Counts by severity (total, critical, high, medium, low)
-   - `recommendations`: High-level security improvements
-   - `confidence`: "high" | "medium" | "low"
+3. **Parse and filter the JSON response:**
 
-4. **Present findings** organized by severity with actionable remediation steps.
+   a. Parse the JSON containing:
+      - `vulnerabilities`: Array of vulnerability objects with severity, category, location, evidence, impact, remediation, confidence
+      - `summary`: Counts by severity (total, critical, high, medium, low)
+      - `recommendations`: High-level security improvements
+      - `confidence`: "high" | "medium" | "low"
+
+   b. **Apply severity filtering** based on the `[severity]` threshold:
+      - `critical` → Show only CRITICAL vulnerabilities
+      - `high` → Show CRITICAL and HIGH vulnerabilities
+      - `medium` → Show CRITICAL, HIGH, and MEDIUM vulnerabilities (default)
+      - `low` → Show all vulnerabilities (CRITICAL, HIGH, MEDIUM, LOW)
+
+   c. Filter the vulnerabilities array to include only items matching or exceeding the severity threshold.
+
+   d. Recalculate summary counts based on the filtered results.
+
+4. **Present findings** organized by severity with actionable remediation steps and confidence levels.
 
 5. **Save report** to `scratch/security-scan-YYYY-MM-DD.md` for future reference.
 
@@ -153,6 +191,7 @@ Present findings clearly:
 ### 1. Missing RLS policy on profiles table
 
 **Location:** [packages/db/migrations/20250101_profiles.sql:15](path#L15)
+**Confidence:** High
 
 **Impact:** Authenticated users can create profiles for any user_id, breaking data isolation.
 
@@ -171,9 +210,17 @@ CREATE POLICY profiles_insert ON profiles FOR INSERT
 WITH CHECK (auth.uid() = user_id);
 ```
 
+**References:**
+
+- <https://supabase.com/docs/guides/database/postgres/row-level-security>
+- <https://www.postgresql.org/docs/current/ddl-rowsecurity.html>
+
 ## High Issues
 
 ### 2. Unprotected API endpoint
+
+**Location:** [app/api/users/route.ts:23](path#L23)
+**Confidence:** Medium
 
 ...
 

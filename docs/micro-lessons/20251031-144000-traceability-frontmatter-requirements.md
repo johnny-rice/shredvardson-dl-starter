@@ -24,13 +24,13 @@ Traceability files require specific frontmatter structure:
 
 ```yaml
 ---
-id: SPEC-<descriptive-name>  # Must start with SPEC-
+id: SPEC-<descriptive-name> # Must start with SPEC-
 title: Feature name
-type: spec                    # Must be 'spec' (not 'feature')
+type: spec # Must be 'spec' (not 'feature')
 priority: p0|p1|p2
 status: draft|ready|in-progress|completed
 lane: simple|spec-driven
-issue: 123                    # GitHub issue number
+issue: 123 # GitHub issue number
 plan: plans/<filename>.md
 tasks: tasks/<filename>.md
 created: YYYY-MM-DD
@@ -41,10 +41,10 @@ created: YYYY-MM-DD
 
 ```yaml
 ---
-id: PLAN-<descriptive-name>   # Must start with PLAN-
-parentId: SPEC-<descriptive-name>  # Links to parent spec
+id: PLAN-<descriptive-name> # Must start with PLAN-
+parentId: SPEC-<descriptive-name> # Links to parent spec
 title: Feature name - Implementation Plan
-type: plan                     # Must be 'plan'
+type: plan # Must be 'plan'
 spec: specs/<filename>.md
 issue: 123
 lane: spec-driven
@@ -57,10 +57,10 @@ status: draft
 
 ```yaml
 ---
-id: TASK-<descriptive-name>   # Must start with TASK-
-parentId: PLAN-<descriptive-name>  # Links to parent plan
+id: TASK-<descriptive-name> # Must start with TASK-
+parentId: PLAN-<descriptive-name> # Links to parent plan
 title: Feature name - Task Breakdown
-type: task                     # Must be 'task'
+type: task # Must be 'task'
 spec: specs/<filename>.md
 plan: plans/<filename>.md
 issue: 123

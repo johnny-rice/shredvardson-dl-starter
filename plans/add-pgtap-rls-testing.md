@@ -101,11 +101,13 @@ No side effects (transaction rollback)
 **Goal:** Set up pgTAP test directory and installation script
 
 **Tasks:**
+
 - Create `supabase/tests/` directory
 - Create `000-setup-tests-hooks.sql` with extension installation
 - Verify setup by running `supabase test db`
 
 **Deliverables:**
+
 - `supabase/tests/` directory exists
 - Setup hook successfully installs pgTAP and test helpers
 - Verification test passes
@@ -119,12 +121,14 @@ No side effects (transaction rollback)
 **Goal:** Validate RLS is enabled on all tables
 
 **Tasks:**
+
 - Create `001-rls-enabled.sql` test file
 - Use `tests.rls_enabled('public')` helper
 - Run test locally to verify it passes
 - Document any intentional RLS exceptions
 
 **Deliverables:**
+
 - Schema-wide RLS validation test passes
 - Documentation of RLS exceptions (if any)
 
@@ -137,12 +141,14 @@ No side effects (transaction rollback)
 **Goal:** Validate users can only access their own data
 
 **Tasks:**
+
 - Create `002-user-isolation.sql` test file
 - Implement user creation and authentication switching
 - Add tests for existing tables with RLS policies
 - Verify tests pass with transaction rollback
 
 **Deliverables:**
+
 - User isolation tests for all RLS-protected tables
 - Tests pass locally without side effects
 
@@ -155,11 +161,13 @@ No side effects (transaction rollback)
 **Goal:** Add pgTAP test commands to package.json
 
 **Tasks:**
+
 - Add `test:rls` command to root package.json
 - Add `test:rls:watch` command for development
 - Test commands work locally
 
 **Deliverables:**
+
 - `pnpm test:rls` command works
 - `pnpm test:rls:watch` command works
 - Commands documented in TESTING_GUIDE.md
@@ -173,12 +181,14 @@ No side effects (transaction rollback)
 **Goal:** Run pgTAP tests in CI/CD pipeline
 
 **Tasks:**
+
 - Add pgTAP test step to GitHub Actions workflow
 - Position after `db:validate:rls` step
 - Verify tests pass in CI environment
 - Configure failure handling (block vs. warn)
 
 **Deliverables:**
+
 - pgTAP tests run in CI/CD
 - Tests block deployment on failure
 - CI logs show test results
@@ -192,12 +202,14 @@ No side effects (transaction rollback)
 **Goal:** Document pgTAP RLS testing for developers
 
 **Tasks:**
+
 - Add pgTAP section to `docs/testing/TESTING_GUIDE.md`
 - Include setup instructions
 - Add example test patterns
 - Document troubleshooting steps
 
 **Deliverables:**
+
 - TESTING_GUIDE.md includes pgTAP section
 - Examples show how to write new RLS tests
 - Troubleshooting guide for common issues
@@ -343,12 +355,14 @@ rollback;
 ### Test Coverage
 
 **Database-level tests (pgTAP):**
+
 - RLS enabled on all tables
 - Policy completeness (SELECT, INSERT, UPDATE, DELETE)
 - User isolation enforcement
 - Anonymous user access restrictions
 
 **Application-level tests (Vitest):**
+
 - RLS helper functions work correctly
 - API endpoints respect RLS
 - Client-side auth context handling
@@ -399,6 +413,7 @@ If pgTAP tests cause issues:
 ### Risk 1: Test helpers not compatible with current Supabase version
 
 **Mitigation:**
+
 - Verified basejump-supabase_test_helpers v0.0.6 compatibility
 - Test locally before CI/CD integration
 - Fallback: Use raw pgTAP without helpers (more boilerplate)
@@ -406,6 +421,7 @@ If pgTAP tests cause issues:
 ### Risk 2: Tests fail due to intentional RLS exceptions
 
 **Mitigation:**
+
 - Document all RLS exceptions upfront
 - Use allowlist approach in validation tests
 - Provide clear error messages for developers
@@ -413,6 +429,7 @@ If pgTAP tests cause issues:
 ### Risk 3: Performance impact from test execution
 
 **Mitigation:**
+
 - All tests use transactions (fast rollback)
 - Target < 10 seconds total execution time
 - Run tests in parallel with other CI steps
@@ -420,6 +437,7 @@ If pgTAP tests cause issues:
 ### Risk 4: Migration conflicts with test extensions
 
 **Mitigation:**
+
 - Test helpers installed in `extensions` schema (isolated)
 - Use `IF NOT EXISTS` for all extension creation
 - Test locally before deploying migrations

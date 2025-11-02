@@ -52,13 +52,13 @@
 
 **Purpose**: Database workflow via supabase-integration Skill
 
-**When to use**: General development tasks
+**When to use**: Code quality and security improvements
 
 **Example**: Standard development workflow
 
 **Risk Level**: LOW
 
-**Tags**: implementation
+**Tags**: security, planning, implementation
 
 ---
 

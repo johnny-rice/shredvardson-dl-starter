@@ -59,7 +59,15 @@ Return your findings in the following JSON structure:
       },
       "evidence": "Code snippet showing issue",
       "impact": "What could go wrong",
-      "remediation": "Step-by-step fix"
+      "confidence": "high" | "medium" | "low",
+      "remediation": {
+        "description": "Step-by-step explanation of fix",
+        "code": "Copy-paste ready code example",
+        "references": [
+          "https://owasp.org/...",
+          "https://supabase.com/docs/..."
+        ]
+      }
     }
   ],
   "summary": {
@@ -100,7 +108,16 @@ Return your findings in the following JSON structure:
   },
   "evidence": "ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;\n-- No INSERT policy defined",
   "impact": "Authenticated users can create profiles for any user_id, breaking data isolation.",
-  "remediation": "Add INSERT policy:\nCREATE POLICY profiles_insert ON profiles FOR INSERT\nWITH CHECK (auth.uid() = user_id);"
+  "confidence": "high",
+  "remediation": {
+    "description": "Add an INSERT policy that restricts users to creating only their own profile records using auth.uid() check.",
+    "code": "CREATE POLICY profiles_insert ON profiles FOR INSERT\nWITH CHECK (auth.uid() = user_id);",
+    "references": [
+      "https://supabase.com/docs/guides/database/postgres/row-level-security",
+      "https://www.postgresql.org/docs/current/ddl-rowsecurity.html",
+      "https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control"
+    ]
+  }
 }
 ```
 
@@ -125,7 +142,16 @@ Return your findings in the following JSON structure:
   },
   "evidence": "export async function GET(request: Request) {\n  const users = await db.query.users.findMany();\n  return Response.json(users);\n}",
   "impact": "Unauthenticated users can list all users, exposing PII.",
-  "remediation": "Add auth middleware:\nimport { requireAuth } from '@/lib/auth';\n\nexport const GET = requireAuth(async (request, session) => {\n  // Check admin role\n  if (session.user.role !== 'admin') {\n    return new Response('Forbidden', { status: 403 });\n  }\n  const users = await db.query.users.findMany();\n  return Response.json(users);\n});"
+  "confidence": "high",
+  "remediation": {
+    "description": "Wrap the route handler with authentication middleware and add role-based access control to verify the user has admin privileges.",
+    "code": "import { requireAuth } from '@/lib/auth';\n\nexport const GET = requireAuth(async (request, session) => {\n  if (session.user.role !== 'admin') return new Response('Forbidden', { status: 403 });\n  return Response.json(await db.query.users.findMany());\n});",
+    "references": [
+      "https://nextjs.org/docs/app/building-your-application/routing/middleware",
+      "https://owasp.org/www-project-top-ten/2017/A2_2017-Broken_Authentication",
+      "https://cheatsheetseries.owasp.org/cheatsheets/Authorization_Cheat_Sheet.html"
+    ]
+  }
 }
 ```
 
@@ -149,7 +175,16 @@ Return your findings in the following JSON structure:
   },
   "evidence": "const query = `SELECT * FROM posts WHERE title LIKE '%${searchTerm}%'`;",
   "impact": "Attackers can inject SQL to access/modify arbitrary data or escalate privileges.",
-  "remediation": "Use parameterized queries:\nconst results = await db.query.posts.findMany({\n  where: like(posts.title, `%${searchTerm}%`)\n});"
+  "confidence": "high",
+  "remediation": {
+    "description": "Replace string concatenation with parameterized queries using the ORM's query builder to prevent SQL injection.",
+    "code": "const results = await db.query.posts.findMany({\n  where: like(posts.title, `%${searchTerm}%`)\n});",
+    "references": [
+      "https://owasp.org/www-community/attacks/SQL_Injection",
+      "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html",
+      "https://cwe.mitre.org/data/definitions/89.html"
+    ]
+  }
 }
 ```
 
@@ -174,7 +209,16 @@ Return your findings in the following JSON structure:
   },
   "evidence": "const supabase = createClient(\n  'https://xxx.supabase.co',\n  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'\n);",
   "impact": "API key exposed in client bundle, could be extracted and abused.",
-  "remediation": "Use environment variable:\nconst supabase = createClient(\n  process.env.NEXT_PUBLIC_SUPABASE_URL!,\n  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!\n);\n\n// Ensure .env.local is in .gitignore"
+  "confidence": "high",
+  "remediation": {
+    "description": "Move the API key to environment variables and ensure .env.local is in .gitignore. Use Next.js environment variable conventions with NEXT_PUBLIC_ prefix for client-side variables.",
+    "code": "const supabase = createClient(\n  process.env.NEXT_PUBLIC_SUPABASE_URL!,\n  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!\n);",
+    "references": [
+      "https://nextjs.org/docs/app/building-your-application/configuring/environment-variables",
+      "https://owasp.org/www-project-top-ten/2017/A3_2017-Sensitive_Data_Exposure",
+      "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+    ]
+  }
 }
 ```
 
@@ -199,9 +243,43 @@ Return your findings in the following JSON structure:
   },
   "evidence": "<div dangerouslySetInnerHTML={{ __html: user.bio }} />",
   "impact": "Users can inject malicious scripts via bio field, executing in other users' browsers.",
-  "remediation": "Sanitize HTML:\nimport DOMPurify from 'isomorphic-dompurify';\n\n<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(user.bio) }} />"
+  "confidence": "medium",
+  "remediation": {
+    "description": "Install DOMPurify and sanitize all user-generated HTML before rendering to prevent XSS attacks.",
+    "code": "import DOMPurify from 'isomorphic-dompurify';\n\n<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(user.bio) }} />",
+    "references": [
+      "https://owasp.org/www-community/attacks/xss/",
+      "https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html",
+      "https://github.com/cure53/DOMPurify"
+    ]
+  }
 }
 ```
+
+## Confidence Levels
+
+Assign confidence levels to each finding based on the quality and clarity of the evidence:
+
+### High Confidence
+
+- Clear, unambiguous vulnerability with direct evidence in code
+- No additional context needed to confirm the issue
+- Pattern exactly matches known vulnerability signature
+- Examples: Missing RLS policy, hardcoded secrets, unprotected API endpoint
+
+### Medium Confidence
+
+- Likely vulnerability but may require verification
+- Some context missing or could be a false positive
+- Pattern matches vulnerability but implementation details matter
+- Examples: Potentially unsafe user input handling, possible XSS if no server-side validation
+
+### Low Confidence
+
+- Suspicious pattern that might be safe in context
+- Requires manual review to confirm
+- Could be a false positive based on defensive coding elsewhere
+- Examples: Dynamic SQL that might be parameterized elsewhere, complex auth logic that needs review
 
 ## Scanning Process
 
@@ -215,33 +293,118 @@ Return your findings in the following JSON structure:
 
 ## Severity Guidelines
 
+Use these comprehensive criteria to accurately categorize vulnerability severity:
+
 ### Critical
 
-- Unauthenticated access to admin functions
-- SQL injection with data access
-- Missing RLS policies on sensitive tables
-- Exposed production secrets in code
+**Impact:** Immediate and severe security compromise, data breach, or system takeover
+
+- **Authentication Bypass:** Unauthenticated access to admin functions or privileged operations
+- **SQL Injection:** Direct SQL injection with ability to read/modify database
+- **RLS Bypass:** Missing RLS policies on sensitive tables (users, profiles, payments)
+- **Secret Exposure:** Production API keys, database credentials, or private keys in code
+- **Remote Code Execution:** Ability to execute arbitrary code on server
+- **Complete Auth Bypass:** No authentication on critical endpoints (admin, payment, user data)
+- **Mass Data Exposure:** Endpoint returning all user PII without authentication
+- **Privilege Escalation:** User can gain admin/superuser privileges
+
+**Example:** `SELECT * FROM users WHERE id = '${userId}'` (SQL injection)
 
 ### High
 
-- Missing authentication on API endpoints
-- XSS vulnerabilities in user content
-- Weak password hashing (e.g., MD5, SHA1)
-- Client-side secret exposure
+**Impact:** Significant security risk requiring immediate attention, potential data exposure
+
+- **Missing Authentication:** API endpoints without auth checks (non-critical data)
+- **Stored XSS:** User-generated content rendered without sanitization
+- **Weak Cryptography:** MD5, SHA1, or weak password hashing
+- **Client-Side Secrets:** API keys or tokens exposed in client bundle
+- **Session Issues:** Missing session expiry, weak JWT validation
+- **Insufficient Authorization:** Users can access other users' data
+- **Incomplete RLS:** Missing INSERT/UPDATE/DELETE policies on user tables
+- **Path Traversal:** Unsanitized file paths allowing directory access
+- **Open Redirect:** User-controlled redirects without validation
+
+**Example:** `/api/users/:id` endpoint with no validation that user owns the resource
 
 ### Medium
 
-- Missing CSRF protection
-- Insecure session configuration
-- Incomplete RLS policies (e.g., missing DELETE)
-- Potential timing attacks
+**Impact:** Moderate security risk, requires remediation but not immediately exploitable
+
+- **CSRF Protection:** Missing anti-CSRF tokens on state-changing operations
+- **Insecure Session Config:** httpOnly/secure flags missing on session cookies
+- **Partial RLS Gaps:** Missing DELETE policy on non-sensitive tables
+- **Timing Attacks:** Constant-time comparison not used for secrets
+- **Reflected XSS:** Potential XSS with sanitization bypass possibility
+- **Information Disclosure:** Stack traces or debug info in production
+- **Weak Rate Limiting:** Insufficient rate limits on auth endpoints
+- **Insecure Defaults:** Default passwords or weak configuration
+- **Mixed Content:** HTTPS pages loading HTTP resources
+
+**Example:** Login endpoint allows 1000 attempts/minute (brute force risk)
 
 ### Low
 
-- Missing security headers
-- Verbose error messages
-- Weak rate limiting
-- Cookie security flags
+**Impact:** Minor security improvement, best practice violation
+
+- **Security Headers:** Missing CSP, X-Frame-Options, HSTS headers
+- **Verbose Errors:** Detailed error messages exposing internal structure
+- **Weak Rate Limiting:** No rate limits on non-sensitive endpoints
+- **Cookie Flags:** Missing secure/sameSite flags on non-session cookies
+- **Clickjacking:** No X-Frame-Options header
+- **Cache Control:** Sensitive data cached by browser
+- **Autocomplete:** Password fields missing autocomplete=off
+- **Version Disclosure:** Server version exposed in headers
+
+**Example:** Missing `X-Content-Type-Options: nosniff` header
+
+## Reference Sources
+
+Include 2-3 relevant references in each finding to help developers understand and fix the vulnerability:
+
+### Primary Sources (Use First)
+
+**OWASP Resources:**
+
+- OWASP Top 10: `https://owasp.org/www-project-top-ten/`
+- Cheat Sheets: `https://cheatsheetseries.owasp.org/cheatsheets/`
+- Attack Patterns: `https://owasp.org/www-community/attacks/`
+
+**CWE (Common Weakness Enumeration):**
+
+- SQL Injection: `https://cwe.mitre.org/data/definitions/89.html`
+- XSS: `https://cwe.mitre.org/data/definitions/79.html`
+- Path Traversal: `https://cwe.mitre.org/data/definitions/22.html`
+- Broken Authentication: `https://cwe.mitre.org/data/definitions/287.html`
+
+**Supabase Documentation:**
+
+- RLS Policies: `https://supabase.com/docs/guides/database/postgres/row-level-security`
+- Auth Helpers: `https://supabase.com/docs/guides/auth`
+- Security Best Practices: `https://supabase.com/docs/guides/platform/going-into-prod`
+
+**Next.js Security:**
+
+- Middleware: `https://nextjs.org/docs/app/building-your-application/routing/middleware`
+- Environment Variables: `https://nextjs.org/docs/app/building-your-application/configuring/environment-variables`
+- Security Headers: `https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy`
+
+### Category → Reference Mapping
+
+- **RLS Issues** → Supabase RLS docs, PostgreSQL docs, OWASP Access Control
+- **Auth Issues** → OWASP Authentication, Next.js Middleware, Supabase Auth
+- **SQL Injection** → OWASP SQL Injection, CWE-89, SQL Injection Prevention Cheat Sheet
+- **XSS** → OWASP XSS, CWE-79, XSS Prevention Cheat Sheet
+- **Secrets** → OWASP Sensitive Data, Next.js Environment Variables, Secrets Management Cheat Sheet
+- **CSRF** → OWASP CSRF, CSRF Prevention Cheat Sheet
+- **Headers** → OWASP Security Headers, Next.js CSP docs
+
+### Reference Selection Guidelines
+
+1. **Always include OWASP** for standardized security guidance
+2. **Add framework-specific docs** (Next.js, Supabase) for implementation details
+3. **Include CWE** for well-known vulnerability types (SQL injection, XSS)
+4. **Prioritize actionable content** over academic papers
+5. **Use specific pages** not just homepage URLs
 
 ## Success Criteria
 

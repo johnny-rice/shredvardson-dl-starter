@@ -61,6 +61,7 @@ Set up the `supabase/tests/` directory and create the setup hook file that insta
 - [ ] All extensions load successfully
 
 **Notes:**
+
 - **CRITICAL**: Must install `pgtap` extension first - it's required for all test functions
 - **CRITICAL**: Must install `supabase-dbdev` before using `dbdev.install()`
 - Correct installation order: pgtap → http → pg_tle → supabase-dbdev → basejump helpers
@@ -91,6 +92,7 @@ Create a test that validates RLS is enabled on all tables in the public schema u
 - [ ] Documentation includes list of intentional RLS exceptions (if any)
 
 **Notes:**
+
 - This test may initially fail if any tables lack RLS - that's expected
 - Document any tables that intentionally don't have RLS (e.g., audit logs, health checks)
 - Use the exact test code from the plan's technical specifications
@@ -123,6 +125,7 @@ Create comprehensive user isolation tests that validate users can only access th
 - [ ] Tests pass locally without side effects
 
 **Notes:**
+
 - **CURRENT STATE**: Only `_health_check` table exists with RLS (see supabase/seed.sql)
 - High risk due to dependency on existing RLS policies (Issues #226, #227)
 - Initial implementation will test only `_health_check` table
@@ -155,6 +158,7 @@ Add pgTAP test commands to the root `package.json` to enable easy local testing.
 - [ ] Commands return proper exit codes (0 for pass, 1 for fail)
 
 **Notes:**
+
 - Commands should use `supabase test db` (and `--watch` flag for watch mode)
 - Test both commands locally before marking complete
 - Ensure commands work from any subdirectory in the monorepo
@@ -183,6 +187,7 @@ Integrate pgTAP tests into the GitHub Actions CI/CD workflow. Position the step 
 - [ ] Test execution time < 10 seconds in CI
 
 **Notes:**
+
 - May need to ensure Supabase is properly started in CI before running tests
 - Check existing CI workflow for Supabase setup steps
 - Monitor first CI run closely for environment-specific issues
@@ -213,6 +218,7 @@ Add comprehensive pgTAP documentation to the testing guide. Include setup instru
 - [ ] Updated spec file frontmatter with `tasks: tasks/add-pgtap-rls-testing.md`
 
 **Notes:**
+
 - Use the existing TESTING_GUIDE.md structure as reference
 - Include code examples from the implemented test files
 - Document the complementary relationship with application-level tests
@@ -223,17 +229,21 @@ Add comprehensive pgTAP documentation to the testing guide. Include setup instru
 ## Implementation Order
 
 **Phase 1: Foundation** (depends on: none)
+
 - T1: Create pgTAP Test Infrastructure (1h)
 
 **Phase 2: Core Tests** (depends on: Phase 1)
+
 - T2: Add Schema-Wide RLS Validation Test (30m)
 - T3: Add User Isolation Tests (1.5h)
 
 **Phase 3: Integration** (depends on: Phase 2)
+
 - T4: Integrate with Package Scripts (15m)
 - T5: Add CI/CD Integration (30m)
 
 **Phase 4: Documentation** (depends on: Phase 3)
+
 - T6: Update Documentation (45m)
 
 ## Risk Mitigation
@@ -241,6 +251,7 @@ Add comprehensive pgTAP documentation to the testing guide. Include setup instru
 ### High-Risk Tasks
 
 **T3: Add User Isolation Tests**
+
 - **Risk:** Dependency on existing RLS policies (Issues #226, #227) - if policies are incomplete, tests will fail
 - **Mitigation:**
   - Review existing RLS policies before writing tests
@@ -251,6 +262,7 @@ Add comprehensive pgTAP documentation to the testing guide. Include setup instru
 ### Medium-Risk Tasks
 
 **T1: Create pgTAP Test Infrastructure**
+
 - **Risk:** Extension installation may fail if Supabase version incompatible
 - **Mitigation:**
   - Test locally first before CI integration
@@ -258,6 +270,7 @@ Add comprehensive pgTAP documentation to the testing guide. Include setup instru
   - Check Supabase CLI version compatibility
 
 **T5: Add CI/CD Integration**
+
 - **Risk:** Tests may behave differently in CI environment
 - **Mitigation:**
   - Monitor first CI run closely
@@ -270,11 +283,13 @@ Add comprehensive pgTAP documentation to the testing guide. Include setup instru
 T1 → T2 → T3 → T4 → T5 → T6
 
 **Potential Bottlenecks:**
+
 - T3 (User Isolation Tests) is the most complex and time-consuming task
 - T3 depends on existing RLS policies being complete and correct
 - If RLS policies are incomplete, may need to pause and implement policies first
 
 **Parallelization Opportunities:**
+
 - None - all tasks are sequential due to dependencies
 - T6 (Documentation) could potentially start earlier once T4 is complete
 
@@ -283,31 +298,37 @@ T1 → T2 → T3 → T4 → T5 → T6
 **Per-Task Testing:**
 
 **T1:**
+
 - Run `supabase test db` to verify setup hook executes
 - Check extensions are installed: `SELECT * FROM pg_extension`
 - Verify test helper functions available: `SELECT tests.create_supabase_user('test')`
 
 **T2:**
+
 - Run `supabase test db` to verify schema validation
 - Intentionally remove RLS from a test table to verify test catches it
 - Re-enable RLS and verify test passes
 
 **T3:**
+
 - Run individual isolation tests for each table
 - Manually verify transaction rollback (check no test data persists)
 - Test edge cases: anonymous users, invalid user IDs
 
 **T4:**
+
 - Run `pnpm test:rls` from root directory
 - Run `pnpm test:rls` from subdirectory
 - Test watch mode with file changes
 
 **T5:**
+
 - Push branch and monitor CI run
 - Verify test results appear in CI logs
 - Test that failures properly block pipeline
 
 **T6:**
+
 - Have another developer review documentation for clarity
 - Verify all commands work as documented
 - Test troubleshooting steps
@@ -321,6 +342,7 @@ T1 → T2 → T3 → T4 → T5 → T6
 ## Success Metrics
 
 **Completion Criteria:**
+
 - All 6 tasks completed with acceptance criteria met
 - All pgTAP tests passing locally
 - All pgTAP tests passing in CI/CD
@@ -328,12 +350,14 @@ T1 → T2 → T3 → T4 → T5 → T6
 - Documentation complete and reviewed
 
 **Quality Indicators:**
+
 - No test data persists after test runs (transaction isolation working)
 - Tests catch RLS violations when policies are removed
 - Clear error messages guide developers to fix issues
 - Other developers can add new RLS tests using documentation
 
 **Operational Readiness:**
+
 - CI/CD pipeline includes pgTAP tests
 - Pipeline blocks on RLS test failures
 - Developers can run tests locally without manual setup
