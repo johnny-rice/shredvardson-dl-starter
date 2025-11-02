@@ -30,6 +30,7 @@ allowed-tools:
   - 'Write(*)'
   - 'Glob(*)'
   - 'Bash(pnpm *)'
+  - 'Task(research-agent)'
 
 preconditions:
   - 'Feature description provided'
@@ -81,7 +82,56 @@ You are creating a new feature specification. Follow these steps:
    - Brief description (1-2 sentences)
    - Related GitHub issue number (optional)
 
-2. **Lane Detection** - Ask ONE question:
+2. **Delegate to Research Agent (Token Optimization)**:
+
+   Before generating the spec, delegate codebase exploration to Research Agent for 50%+ token savings:
+
+   **Step 2a: Invoke Research Agent**
+
+   Use Task tool to find similar implementations:
+
+   ```typescript
+   Task({
+     subagent_type: "research-agent",
+     description: "Research similar implementations for [feature name]",
+     prompt: `Find similar implementations in the codebase for: [feature description]
+
+Research Depth: moderate
+
+Focus Areas:
+
+- Similar features or patterns
+- Related architecture components
+- Existing implementations to reference
+- External library usage examples
+
+Include:
+
+- Code locations and file references
+- Architecture patterns used
+- Implementation approaches
+- External libraries or dependencies
+
+Return findings as structured JSON matching ResearchResponse schema.`
+   })
+
+   ```
+
+   **Step 2b: Parse and validate JSON response**
+
+   - Extract JSON from agent response (handle markdown wrappers)
+   - Validate against ResearchResponse schema
+   - If parsing fails, log error and continue without research findings (graceful degradation)
+
+   **Step 2c: Use findings to enrich spec template**
+
+   Store findings for use in spec generation:
+   - Similar implementations → add to "References" section
+   - Architecture patterns → mention in "Technical Constraints"
+   - External libraries → suggest in "Proposed Solution"
+   - Code references → include in "References" section
+
+3. **Lane Detection** - Ask ONE question:
 
    ```text
    Is this feature complex or risky enough for spec-driven lane?
@@ -97,7 +147,7 @@ You are creating a new feature specification. Follow these steps:
    Answer: (yes/no)
    ```
 
-3. **Create Spec File**:
+4. **Create Spec File**:
    - Generate slug from feature name (lowercase, hyphens)
    - Create file at `specs/[slug].md`
    - Use this template:
@@ -147,16 +197,22 @@ You are creating a new feature specification. Follow these steps:
 
    ## References
 
+   [If research findings available, include:
+   - Similar implementations found: [file:line references]
+   - Related architecture docs
+   - External library documentation
+   - Related issues/ADRs]
+
    [Placeholder - links to related docs, issues, ADRs, etc.]
    ```
 
-4. **Validate Spec**:
+5. **Validate Spec**:
    - Check for required fields (title, type, priority, status, lane)
    - Ensure proper YAML syntax
    - Verify all sections are present
    - Note: Validation can be done manually or via future `prd-analyzer` skill scripts
 
-5. **Output**:
+6. **Output**:
 
    ```text
    ✅ Created spec file: specs/[slug].md

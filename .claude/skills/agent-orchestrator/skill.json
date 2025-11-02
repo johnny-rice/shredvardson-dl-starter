@@ -1,0 +1,11 @@
+{
+  "name": "agent-orchestrator",
+  "version": "1.0.0",
+  "description": "Delegates exploration and research tasks to Haiku-based sub-agents for token isolation and cost optimization",
+  "entry_point": "scripts/orchestrate.ts",
+  "progressive_disclosure": {
+    "tier_1": "skill.json",
+    "tier_2": "SKILL.md",
+    "tier_3": "scripts/"
+  }
+}

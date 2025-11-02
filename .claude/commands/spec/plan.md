@@ -33,6 +33,8 @@ allowed-tools:
   - 'Glob(*)'
   - 'Bash(pnpm *)'
   - 'SlashCommand(/adr:draft)'
+  - 'Task(research-agent)'
+  - 'Task(security-scanner)'
 
 preconditions:
   - 'Spec file exists and is valid'
@@ -88,7 +90,78 @@ You are creating a technical plan from a spec file. Follow these steps:
    - Extract acceptance criteria and constraints
    - Validate spec completeness
 
-2. **Lane-Based Planning**:
+2. **Delegate to Sub-Agents (Token Optimization)**:
+
+   **If `lane: spec-driven`:**
+
+   Before design discovery, delegate codebase exploration and security analysis to Haiku-based sub-agents for 50%+ token savings:
+
+   **Step 2a: Invoke Research Agent + Security Scanner in parallel**
+
+   Use Task tool to invoke both agents simultaneously:
+
+   ```typescript
+   // Research Agent delegation
+   Task({
+     subagent_type: "research-agent",
+     description: "Research codebase patterns for [feature type]",
+     prompt: `Analyze the codebase for patterns related to: [feature summary from spec]
+
+Focus Areas:
+${spec.focus_areas.map(area => `- ${area}`).join('\n')}
+
+Research Depth: deep
+
+Include:
+
+- Similar implementations in the codebase
+- Architecture patterns used
+- External library recommendations
+- Code locations and references
+
+Return findings as structured JSON matching ResearchResponse schema.`
+   })
+
+   // Security Scanner delegation
+   Task({
+     subagent_type: "security-scanner",
+     description: "Scan for security vulnerabilities in [feature area]",
+     prompt: `Scan for security issues related to: [feature summary from spec]
+
+Focus Areas:
+${spec.focus_areas.map(area => `- ${area}`).join('\n')}
+
+Analyze:
+
+- RLS (Row-Level Security) policy gaps
+- Authentication/authorization vulnerabilities
+- Input validation and injection risks
+- Data exposure and privacy issues
+- API security weaknesses
+
+Return findings as structured JSON matching SecurityResponse schema.`
+   })
+
+   ```
+
+   **Step 2b: Parse and validate JSON responses**
+
+   - Extract JSON from both agent responses (handle markdown wrappers)
+   - Validate against ResearchResponse and SecurityResponse schemas
+   - If parsing fails, log error and continue without sub-agent findings (graceful degradation)
+
+   **Step 2c: Use findings to enrich design discovery**
+
+   Store findings for use in Phase 1-3:
+   - Research findings → inform architectural options in Phase 2
+   - Security findings → add to security considerations in Phase 3
+   - Code references → include in plan references section
+
+   **If `lane: simple`:**
+
+   Skip sub-agent delegation (simple features don't need deep research)
+
+3. **Lane-Based Planning**:
 
    **If `lane: spec-driven`:**
 
@@ -96,40 +169,57 @@ You are creating a technical plan from a spec file. Follow these steps:
 
    **Phase 1: Understanding** - Ask clarifying questions one at a time
 
+   **IMPORTANT: Use research findings from sub-agents to inform your questions**
+
+   Before asking questions, review:
+   - Research Agent findings: similar patterns, architecture used, code locations
+   - Security Scanner findings: vulnerabilities, RLS gaps, security recommendations
+
    Use the AskUserQuestion pattern:
 
    ```text
    **Question:** [Specific technical question]
 
+   [If relevant] Based on codebase analysis: [Brief insight from research findings]
+
    Options:
-   - Option A: [Description]
+   - Option A: [Description] [+ reference to similar implementation if found]
    - Option B: [Description]
    - Option C: [Description]
 
    Context: [Why this matters and how it affects the design]
+   [If relevant] Security note: [Mention any security findings related to this decision]
    ```
 
    **Rules:**
-   - Ask ONE question at a time
-   - Provide 2-3 concrete options
-   - Explain WHY the answer matters
-   - Wait for user response before next question
-   - Focus on: requirements, constraints, trade-offs, success criteria
+
+- Ask ONE question at a time
+- Provide 2-3 concrete options
+- **Use research findings to make options more concrete and evidence-based**
+- Include code references from research when relevant
+- Mention security concerns from scanner when applicable
+- Explain WHY the answer matters
+- Wait for user response before next question
+- Focus on: requirements, constraints, trade-offs, success criteria
 
    **Phase 2: Exploration** - Present 2-3 architectural approaches
 
+   **IMPORTANT: Base options on research findings + security recommendations**
+
    ```text
-   I see [2-3] approaches for [feature]:
+   Based on codebase analysis, I see [2-3] approaches for [feature]:
 
    **Option A:** [Approach Name]
+   [If found in research] Similar to: [file:line reference from codebase]
+
    ✅ Pros:
    - [Benefit 1]
-   - [Benefit 2]
+   - [Benefit 2 - backed by research findings]
    - [Benefit 3]
 
    ❌ Cons:
    - [Drawback 1]
-   - [Drawback 2]
+   - [Security concern from scanner, if applicable]
    - [Drawback 3]
 
    Best for: [Specific use case]
@@ -140,18 +230,27 @@ You are creating a technical plan from a spec file. Follow these steps:
    **Option C:** [Approach Name]
    [Same structure]
 
+   Security considerations:
+   [List P0/high severity issues from Security Scanner that apply to all options]
+   [Recommend security patterns that should be included in chosen approach]
+
    Which approach fits your needs?
    ```
 
    **Rules:**
-   - Present options objectively (no pushing preferred solution)
-   - Include honest trade-offs
-   - Tailor to user's infrastructure/constraints
-   - Wait for user decision
+
+- Present options objectively (no pushing preferred solution)
+- **Ground options in research findings (similar implementations, patterns used)**
+- Include honest trade-offs
+- **Include security findings in cons/considerations**
+- **Reference actual code locations when suggesting patterns**
+- Tailor to user's infrastructure/constraints
+- Wait for user decision
 
    **Phase 3: Design Presentation** - Present design incrementally
 
    Present design in **200-300 word sections**:
+
    1. Present one section (architecture, data model, API, etc.)
    2. Ask: "Does this address your requirements?"
    3. Wait for validation
@@ -159,25 +258,33 @@ You are creating a technical plan from a spec file. Follow these steps:
    5. Move to next section
 
    **Sections to cover:**
-   - High-level architecture
-   - Data model/schema
-   - API design
-   - Security considerations
-   - Error handling
-   - Testing strategy
-   - Deployment approach
+
+- High-level architecture [+ architecture patterns from research]
+- Data model/schema [+ RLS requirements from security scan]
+- API design [+ security patterns from scanner]
+- Security considerations [+ vulnerabilities and recommendations from Security Scanner]
+- Error handling
+- Testing strategy
+- Deployment approach
 
    **Anti-pattern:** Don't dump entire design at once
+
+   **Enhancement from sub-agents:**
+
+- Include code references from Research Agent in each section
+- Incorporate security recommendations from Security Scanner
+- Link to external library documentation found by Research Agent
 
    **If `lane: simple`:**
 
    Skip design discovery and create basic plan:
-   - Read spec acceptance criteria
-   - Identify major implementation steps
-   - Note any obvious technical decisions
-   - Create straightforward implementation plan
 
-3. **Create Plan File**:
+- Read spec acceptance criteria
+- Identify major implementation steps
+- Note any obvious technical decisions
+- Create straightforward implementation plan
+
+4. **Create Plan File**:
 
    Create `plans/[spec-slug].md` with this structure:
 
@@ -265,14 +372,14 @@ You are creating a technical plan from a spec file. Follow these steps:
    - Related docs
    ```
 
-4. **Create ADR (If Needed)**:
+5. **Create ADR (If Needed)**:
 
    If architectural decisions were made during design discovery:
    - Use `/adr:draft` to create ADR
    - Document decision context, chosen approach, consequences
    - Link ADR from plan file
 
-5. **Update Spec Status**:
+6. **Update Spec Status**:
 
    Update spec file frontmatter:
 
@@ -281,7 +388,7 @@ You are creating a technical plan from a spec file. Follow these steps:
    plan: plans/[spec-slug].md
    ```
 
-6. **Output**:
+7. **Output**:
 
    ```text
    ✅ Created plan: plans/[spec-slug].md
@@ -301,12 +408,24 @@ You are creating a technical plan from a spec file. Follow these steps:
 /plan specs/refactor-db-connections.md
 ```
 
-**Design Discovery Token Budget:**
+**Token Budget with Sub-Agent Optimization:**
 
-- **Understanding phase:** ~20 tokens per question (3-5 questions)
-- **Exploration phase:** ~150 tokens for 3 options
-- **Design presentation:** ~50 tokens per validation checkpoint (5-8 sections)
-- **Total overhead:** ~300-500 tokens
+**Without sub-agents (legacy):**
+
+- Research & exploration: ~50,000 tokens ($0.90 Sonnet)
+- Design discovery: ~70,000 tokens ($1.26 Sonnet)
+- **Total: ~120,000 tokens ($2.16)**
+
+**With sub-agents (optimized):**
+
+- Sub-agent overhead: 200 tokens (SKILL.md load)
+- Research Agent (isolated): ~45,000 tokens ($0.25 Haiku)
+- Security Scanner (isolated): ~20,000 tokens ($0.11 Haiku)
+- Sub-agent responses loaded: ~5,000 tokens ($0.09 Sonnet)
+- Design discovery (enriched): ~30,000 tokens ($0.54 Sonnet)
+- **Total: ~50,200 tokens ($0.99)**
+
+**Savings: 58% tokens, 54% cost ($1.17 saved per workflow)**
 
 **ROI:** Prevents costly architectural mistakes (saves 2-4 hours of rework) when:
 

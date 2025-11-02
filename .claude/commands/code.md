@@ -23,6 +23,44 @@ Invoke the implementation-assistant Skill for coding standards and patterns.
 
 This is a lightweight discovery command that delegates to the `implementation-assistant` Skill.
 
+**Phase 0: Security Pre-Check** 🛡️
+
+Before implementation, delegate security analysis to the Security Scanner:
+
+```typescript
+// Delegate to Security Scanner for pre-implementation checks
+import { orchestrate } from '.claude/skills/agent-orchestrator/scripts/orchestrate.ts';
+
+const securityResult = await orchestrate({
+  agents: [{
+    type: 'security',
+    prompt: `Analyze security implications before implementing:
+    1. Review proposed changes for security risks
+    2. Check authentication/authorization requirements
+    3. Identify data validation needs
+    4. Flag sensitive operations (payments, auth, PII)
+    5. Suggest security best practices for this implementation
+
+    Context:
+    - Feature type: ${featureType}
+    - Files to modify: ${filePaths}
+    - Implementation scope: ${scope}
+
+    Focus on: CRITICAL and HIGH severity issues only`,
+    timeout: 60000 // 60s for security pre-check
+  }]
+});
+
+// Extract security findings
+const securityFindings = securityResult.agents[0].response;
+```
+
+**Act on security findings**:
+
+- **CRITICAL issues**: Block implementation until resolved
+- **HIGH severity**: Show warnings and recommendations
+- **MEDIUM/LOW**: Document in implementation notes
+
 **Actions:**
 
 1. **standards**: Invokes Skill script `show-standards.ts` with optional category

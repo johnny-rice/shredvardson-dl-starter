@@ -77,6 +77,44 @@ Generate a detailed implementation task breakdown from spec and plan files, with
 
 You are creating an implementation task breakdown. Follow these steps:
 
+**Phase 0: Sub-Agent Research** 🤖
+
+Before generating the task breakdown, delegate research to sub-agents for enriched context:
+
+```typescript
+// Delegate to Research Agent for dependency analysis
+import { orchestrate } from '.claude/skills/agent-orchestrator/scripts/orchestrate.ts';
+
+const researchResult = await orchestrate({
+  agents: [{
+    type: 'research',
+    prompt: `Analyze the codebase to identify:
+    1. Dependencies and integration points for implementing: [feature from spec]
+    2. Similar implementations or patterns already in use
+    3. External dependencies or third-party packages needed
+    4. Database schema changes required
+    5. API endpoints that need creation/modification
+
+    Context:
+    - Spec file: ${specPath}
+    - Plan file: ${planPath || 'none'}
+
+    Focus on: dependencies, integration points, and technical complexity`,
+    timeout: 90000 // 90s for dependency analysis
+  }]
+});
+
+// Extract findings
+const dependencies = researchResult.agents[0].response;
+```
+
+**Use research findings to**:
+
+- Identify all dependencies between tasks
+- Estimate complexity based on integration points
+- Flag high-risk tasks (external APIs, complex migrations, etc.)
+- Suggest parallel vs sequential work streams
+
 1. **Read Source Files**:
    - Read spec file (required)
    - Read plan file if it exists at `plans/[spec-slug].md`
