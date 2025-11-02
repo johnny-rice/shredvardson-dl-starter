@@ -203,11 +203,22 @@ Context: [Why this matters and how it affects the design]
 - Wait for user response before next question
 - Focus on: requirements, constraints, trade-offs, success criteria
 
-  **Phase 2: Exploration** - Present 2-3 architectural approaches
+  **Phase 2: Exploration** - Present 2-3 architectural approaches with confidence-based recommendation
 
-  **IMPORTANT: Base options on research findings + security recommendations**
+  **IMPORTANT: Base options on research findings + security recommendations + confidence calculation**
+
+  **Before presenting options:**
+  1. Calculate confidence using `.claude/scripts/orchestrator/confidence/calculate-confidence.ts`
+  2. If confidence < 90%, trigger auto-research via `.claude/scripts/orchestrator/confidence/auto-research.ts`
+  3. Display recommendation with confidence level and reasoning
 
   ```text
+  🎯 Recommended: [Option Name]
+  Confidence: [XX]%
+  Reasoning: Based on your [tech stack context from detectTechStack()], this approach [specific benefits]. [If research triggered: Research findings suggest [external insight from Context7/WebSearch].]
+
+  ---
+
   Based on codebase analysis, I see [2-3] approaches for [feature]:
 
   **Option A:** [Approach Name]
@@ -225,28 +236,53 @@ Context: [Why this matters and how it affects the design]
 
   Best for: [Specific use case]
 
-  **Option B:** [Approach Name]
+  **Option B:** [Approach Name] ← RECOMMENDED
   [Same structure]
 
   **Option C:** [Approach Name]
   [Same structure]
 
+  ---
+
   Security considerations:
   [List P0/high severity issues from Security Scanner that apply to all options]
   [Recommend security patterns that should be included in chosen approach]
 
-  Which approach fits your needs?
+  Which approach fits your needs? (Accept recommendation or choose different option)
   ```
+
+  **Confidence Calculation:**
+  - Use `detectTechStack()` to extract libraries and deployment platform from package.json + ADRs
+  - Use `calculateConfidence()` with inputs:
+    - `researchDepth`: 'high' if Research Agent ran, 'medium' if partial findings, 'low'/'null' if none
+    - `techStackMatch`: 'full' if all options fit stack, 'partial' if some, 'generic' if none
+    - `architectureSimplicity`: 'simple' for common patterns, 'moderate', 'complex' for novel
+    - `knowledgeRecency`: 'current' if pre-2025, 'emerging' if post-2025
+  - Threshold: ≥90% = HIGH, 70-89% = MEDIUM, <70% = LOW
+  - If < 90%, call `triggerAutoResearch()` which:
+    - Checks rate limit (max 10 per session)
+    - Displays progress: "Let me research... [Context7]... [WebSearch]... [complete]"
+    - Recalculates confidence with new findings
+    - Returns enhanced reasoning with external references
+
+  **After user chooses option:**
+  - Log decision with `createRecommendationLog()` and `logRecommendation()`
+  - Track: sessionId, confidence, recommended option, user choice, accepted (boolean), research triggered
 
   **Rules:**
 
-- Present options objectively (no pushing preferred solution)
+- **Present recommendation with 🎯 and ← RECOMMENDED markers**
+- **Display confidence percentage and reasoning at top**
+- **Show auto-research progress if triggered (< 90% confidence)**
+- Present options objectively (recommendation is guidance, not mandate)
 - **Ground options in research findings (similar implementations, patterns used)**
 - Include honest trade-offs
 - **Include security findings in cons/considerations**
 - **Reference actual code locations when suggesting patterns**
-- Tailor to user's infrastructure/constraints
+- Tailor to user's infrastructure/constraints (detected tech stack)
+- **User can override recommendation - always respect their choice**
 - Wait for user decision
+- **Log decision to audit trail for metrics tracking**
 
   **Phase 3: Design Presentation** - Present design incrementally
 

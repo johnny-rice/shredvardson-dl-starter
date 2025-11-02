@@ -1,6 +1,7 @@
 ---
+id: SPEC-257
 title: Integrate sub-agents into workflow lane commands for token optimization
-type: feature
+type: spec
 priority: p2
 status: ready
 lane: spec-driven

@@ -1,4 +1,8 @@
 ---
+id: TASK-257
+type: task
+parentId: PLAN-257
+issue: 257
 title: Integrate sub-agents into workflow lane commands - Task Breakdown
 spec: specs/integrate-sub-agents-workflow-commands.md
 plan: plans/integrate-sub-agents-workflow-commands.md

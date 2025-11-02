@@ -1,4 +1,8 @@
 ---
+id: PLAN-257
+type: plan
+parentId: SPEC-257
+issue: 257
 title: Integrate sub-agents into workflow lane commands - Implementation Plan
 spec: specs/integrate-sub-agents-workflow-commands.md
 lane: spec-driven

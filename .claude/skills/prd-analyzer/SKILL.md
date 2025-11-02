@@ -184,13 +184,43 @@ Context: This affects payment provider choice and data model.
 - Offer concrete options
 - Wait for answer before next question
 
-#### Phase 2: Exploration
+#### Phase 2: Exploration (with Confidence-Based Recommendations)
 
-Present **2-3 architectural approaches** with honest trade-offs.
+Present **2-3 architectural approaches** with honest trade-offs, **plus a recommended option** based on confidence calculation.
+
+**Confidence Calculation** (uses `.claude/scripts/orchestrator/confidence/`):
+
+1. **Detect tech stack** via `detectTechStack()`:
+   - Parse package.json for libraries (Next.js, React, Supabase, etc.)
+   - Scan ADRs for deployment platform (Vercel, Netlify, etc.)
+   - Cache result per planning session
+
+2. **Calculate confidence** via `calculateConfidence()`:
+   - **Research depth** (40 pts): 'high' if Research Agent ran, 'medium' if partial, 'low'/'null' if none
+   - **Tech stack match** (30 pts): 'full' if all options fit, 'partial' if some, 'generic' if none
+   - **Architecture simplicity** (20 pts): 'simple' for common patterns, 'moderate', 'complex' for novel
+   - **Knowledge recency** (10 pts): 'current' if pre-2025, 'emerging' if post-2025
+   - **Threshold**: ≥90% = HIGH, 70-89% = MEDIUM, <70% = LOW
+
+3. **Auto-research trigger** if confidence <90% via `triggerAutoResearch()`:
+   - Check rate limit (max 10 per session)
+   - Display: "My confidence is XX% because [reason]. Let me research..."
+   - Call Context7 MCP for library docs + WebSearch MCP for best practices
+   - Show progress: "[Checking docs...] [Searching best practices...] [complete]"
+   - Recalculate confidence with new findings
+   - Sanitize all external text before use
+
+4. **Display recommendation** with confidence:
 
 **Format:**
 
 ```markdown
+🎯 Recommended: [Option Name]
+Confidence: [XX]%
+Reasoning: Based on your [Next.js, Supabase, Vercel] stack, this approach [specific benefits]. [If research: Research findings suggest [external insight].]
+
+---
+
 I see 3 approaches for [feature]:
 
 **Option A:** [Name]
@@ -198,8 +228,8 @@ I see 3 approaches for [feature]:
 ❌ Cons: [2-3 drawbacks]
 Best for: [use case]
 
-**Option B:** [Name]
-✅ Pros: [2-3 benefits]
+**Option B:** [Name] ← RECOMMENDED
+✅ Pros: [2-3 benefits - include research-backed benefits]
 ❌ Cons: [2-3 drawbacks]
 Best for: [use case]
 
@@ -208,10 +238,24 @@ Best for: [use case]
 ❌ Cons: [2-3 drawbacks]
 Best for: [use case]
 
-Which approach resonates with your needs?
+---
+
+Which approach fits your needs? (Accept recommendation or choose different option)
 ```
 
-**No pushing preferred solution** - present options objectively.
+**After user chooses:**
+
+- Log decision via `createRecommendationLog()` and `logRecommendation()`
+- Tracked data: sessionId, confidence, recommended option, user choice, accepted (boolean), research triggered
+- Audit log: `.claude/logs/recommendations.jsonl` (JSON Lines format)
+
+**Success metrics** (after 2 weeks):
+
+- Acceptance rate: ≥70% (user chooses recommended option)
+- Research trigger rate: ~30% (confidence <90%)
+- Review via: `bash scripts/analyze-recommendations.sh`
+
+**Recommendation is guidance, not mandate** - user can always override. Present options objectively while providing transparent reasoning for the recommendation.
 
 #### Phase 3: Design Presentation
 
