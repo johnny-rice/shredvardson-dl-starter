@@ -549,6 +549,7 @@ Run measurements on 3-5 different feature types (auth, CRUD, external API, refac
 ### High-Risk Tasks
 
 **T7: Implement orchestrator main entry point**
+
 - **Risk:** Central coordination logic, parallel execution complexity, partial failure handling
 - **Mitigation:**
   - Write unit tests before integration (T8 depends on T7)
@@ -558,6 +559,7 @@ Run measurements on 3-5 different feature types (auth, CRUD, external API, refac
   - Consider circuit breaker pattern if sub-agents repeatedly fail
 
 **T3: Implement JSON response parser with validation**
+
 - **Risk:** Malformed JSON from sub-agents could break workflows
 - **Mitigation:**
   - Use try-catch for JSON.parse with graceful fallback
@@ -572,11 +574,13 @@ Run measurements on 3-5 different feature types (auth, CRUD, external API, refac
 T1 → T2 → T3 → T4,T5 → T7 → T8 → T9,T10,T11,T12 → T13,T14 → T18
 
 **Potential Bottlenecks:**
+
 - T7 (orchestrator entry point) blocks all workflow integration tasks
 - T8 (unit tests) must pass before workflow integration to ensure stability
 - T13 (integration tests) needed before metrics measurement to validate correctness
 
 **Parallelization Opportunities:**
+
 - Phase 1: T1, T15, T16 can run in parallel (independent)
 - Phase 2: T4, T5, T6 can run in parallel after T2, T3 complete
 - Phase 4: T9, T10, T11, T12 can run in parallel after T8 completes
@@ -588,6 +592,7 @@ T1 → T2 → T3 → T4,T5 → T7 → T8 → T9,T10,T11,T12 → T13,T14 → T18
 ### Per-Task Testing
 
 Each implementation task (T4-T7, T9-T12) should include:
+
 - Unit tests for core logic (80% coverage target)
 - Error handling tests (malformed input, missing data)
 - Timeout tests (sub-agent hangs, exceeds 120s limit)
@@ -596,6 +601,7 @@ Each implementation task (T4-T7, T9-T12) should include:
 ### Integration Testing (T13)
 
 After Phase 4, run integration tests validating:
+
 - Command → Orchestrator → Sub-Agent → Response flow
 - Findings incorporated into command outputs
 - Fallback behavior when orchestrator fails
@@ -604,6 +610,7 @@ After Phase 4, run integration tests validating:
 ### E2E Testing (T14)
 
 After Phase 5, run E2E tests validating:
+
 - Token reduction ≥50% vs baseline
 - Cost reduction ≥56% vs baseline
 - Output quality maintained (manual review)
@@ -638,6 +645,7 @@ After Phase 5, run E2E tests validating:
 ### Acceptance Criteria Mapping
 
 All acceptance criteria from spec must be validated:
+
 - ✅ `/spec:specify` delegates research (T10)
 - ✅ `/spec:plan` uses Research + Security (T9)
 - ✅ `/spec:tasks` uses Research for dependencies (T11)

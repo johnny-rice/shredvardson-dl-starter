@@ -95,6 +95,7 @@ You are creating a new feature specification. Follow these steps:
      subagent_type: "research-agent",
      description: "Research similar implementations for [feature name]",
      prompt: `Find similar implementations in the codebase for: [feature description]
+   ```
 
 Research Depth: moderate
 
@@ -113,39 +114,39 @@ Include:
 - External libraries or dependencies
 
 Return findings as structured JSON matching ResearchResponse schema.`
-   })
+})
 
-   ```
+````
 
-   **Step 2b: Parse and validate JSON response**
+**Step 2b: Parse and validate JSON response**
 
-   - Extract JSON from agent response (handle markdown wrappers)
-   - Validate against ResearchResponse schema
-   - If parsing fails, log error and continue without research findings (graceful degradation)
+- Extract JSON from agent response (handle markdown wrappers)
+- Validate against ResearchResponse schema
+- If parsing fails, log error and continue without research findings (graceful degradation)
 
-   **Step 2c: Use findings to enrich spec template**
+**Step 2c: Use findings to enrich spec template**
 
-   Store findings for use in spec generation:
-   - Similar implementations → add to "References" section
-   - Architecture patterns → mention in "Technical Constraints"
-   - External libraries → suggest in "Proposed Solution"
-   - Code references → include in "References" section
+Store findings for use in spec generation:
+- Similar implementations → add to "References" section
+- Architecture patterns → mention in "Technical Constraints"
+- External libraries → suggest in "Proposed Solution"
+- Code references → include in "References" section
 
 3. **Lane Detection** - Ask ONE question:
 
-   ```text
-   Is this feature complex or risky enough for spec-driven lane?
+```text
+Is this feature complex or risky enough for spec-driven lane?
 
-   Consider spec-driven if the feature involves:
-   - Authentication or authorization systems
-   - Payment processing or financial transactions
-   - Database architecture or schema changes
-   - Multi-day or multi-phase implementation
-   - Cross-cutting architectural concerns
-   - Security-sensitive operations
+Consider spec-driven if the feature involves:
+- Authentication or authorization systems
+- Payment processing or financial transactions
+- Database architecture or schema changes
+- Multi-day or multi-phase implementation
+- Cross-cutting architectural concerns
+- Security-sensitive operations
 
-   Answer: (yes/no)
-   ```
+Answer: (yes/no)
+````
 
 4. **Create Spec File**:
    - Generate slug from feature name (lowercase, hyphens)

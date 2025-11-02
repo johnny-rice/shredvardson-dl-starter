@@ -25,6 +25,7 @@
 **Impact:** If this migration contains intentional vulnerabilities for testing purposes, it could create security holes in production. Test vulnerabilities should never be in production migration paths. This could lead to data breaches, unauthorized access, or RLS policy bypasses depending on the file contents.
 
 **Evidence:**
+
 ```
 File: 20251101000000_test_vulnerability.sql
 A migration file explicitly named 'test_vulnerability' exists in the production migrations directory.
@@ -55,6 +56,7 @@ rm supabase/migrations/20251101000000_test_vulnerability.sql
 ```
 
 **References:**
+
 - https://supabase.com/docs/guides/platform/going-into-prod
 - https://owasp.org/www-project-top-ten/2017/A6_2017-Security_Misconfiguration
 - https://cheatsheetseries.owasp.org/cheatsheets/Database_Security_Cheat_Sheet.html
@@ -72,6 +74,7 @@ rm supabase/migrations/20251101000000_test_vulnerability.sql
 **Impact:** Without a centralized schema, developers may create tables without proper RLS policies. There's no automated way to ensure every table has RLS enabled and appropriate policies. This increases the risk of data exposure through missing or incomplete RLS policies.
 
 **Evidence:**
+
 ```
 Missing: packages/db/schema.ts or similar schema definition file
 No central schema definition file was found in the database package.
@@ -98,7 +101,7 @@ export const profiles = pgTable('profiles', {
 // Add RLS validation test
 import { sql } from 'drizzle-orm';
 
-const tables = [profiles, /* other tables */];
+const tables = [profiles /* other tables */];
 for (const table of tables) {
   const hasRLS = await db.execute(sql`
     SELECT relrowsecurity FROM pg_class
@@ -111,6 +114,7 @@ for (const table of tables) {
 ```
 
 **References:**
+
 - https://orm.drizzle.team/docs/sql-schema-declaration
 - https://supabase.com/docs/guides/database/postgres/row-level-security
 - https://www.postgresql.org/docs/current/ddl-rowsecurity.html
@@ -126,6 +130,7 @@ for (const table of tables) {
 **Impact:** If templates are missing DELETE policies, developers copying these templates will create tables where users might be able to delete records they shouldn't have access to, or conversely, be unable to delete their own data. This breaks either security or functionality.
 
 **Evidence:**
+
 ```
 Template files exist (table-with-user-rls.sql, table-with-team-rls.sql) but may not include comprehensive DELETE policies
 ```
@@ -158,6 +163,7 @@ CREATE POLICY "users_delete_own" ON your_table
 ```
 
 **References:**
+
 - https://supabase.com/docs/guides/database/postgres/row-level-security#policy-command
 - https://www.postgresql.org/docs/current/sql-createpolicy.html
 - https://owasp.org/www-project-top-ten/2017/A5_2017-Broken_Access_Control
@@ -173,6 +179,7 @@ CREATE POLICY "users_delete_own" ON your_table
 **Impact:** Tables may have RLS enabled but missing critical policies (commonly DELETE or UPDATE), allowing unauthorized data modification or deletion. This creates a false sense of security where developers believe data is protected but gaps exist.
 
 **Evidence:**
+
 ```
 Test files exist (001-rls-enabled.sql, 002-user-isolation.sql, 003-rls-optimization.sql) but may not comprehensively check for missing policies
 ```
@@ -213,6 +220,7 @@ ROLLBACK;
 ```
 
 **References:**
+
 - https://pgtap.org/documentation.html
 - https://www.postgresql.org/docs/current/catalog-pg-policies.html
 - https://supabase.com/docs/guides/database/testing

@@ -97,7 +97,7 @@ function buildSecurityPrompt(context: OrchestrationContext): string {
  * @param prompt - Prompt for Security Scanner
  * @returns JSON response from Security Scanner
  */
-async function invokeSecurityAgent(prompt: string): Promise<string> {
+async function invokeSecurityAgent(_prompt: string): Promise<string> {
   // Placeholder: In actual implementation, the workflow command would invoke:
   //
   // Task tool with:

@@ -93,13 +93,13 @@ export function parseAgentResponse<T>(
 export function extractJSON(responseText: string): string {
   // Try to find JSON in markdown code blocks first
   const jsonCodeBlockMatch = responseText.match(/```json\s*([\s\S]*?)\s*```/);
-  if (jsonCodeBlockMatch && jsonCodeBlockMatch[1]) {
+  if (jsonCodeBlockMatch?.[1]) {
     return jsonCodeBlockMatch[1].trim();
   }
 
   // Try to find standalone JSON object
   const jsonObjectMatch = responseText.match(/(\{[\s\S]*\})/);
-  if (jsonObjectMatch && jsonObjectMatch[1]) {
+  if (jsonObjectMatch?.[1]) {
     return jsonObjectMatch[1].trim();
   }
 

@@ -15,6 +15,7 @@ status: draft
 ## Overview
 
 This plan implements structured severity levels and enhanced remediation guidance for the Security Scanner sub-agent. The current implementation already has severity levels in the output format, but lacks:
+
 1. Structured remediation with code examples and references
 2. Confidence levels on findings
 3. Severity filtering in slash commands
@@ -130,6 +131,7 @@ The implementation enhances existing functionality rather than building from scr
 - Clear confidence level criteria
 
 **Files Modified:**
+
 - `.claude/agents/security-scanner.md`
 
 ---
@@ -164,6 +166,7 @@ The implementation enhances existing functionality rather than building from scr
 - Workflow summary showing severity breakdown
 
 **Files Modified:**
+
 - `.github/workflows/security-review.yml`
 
 ---
@@ -199,11 +202,12 @@ The implementation enhances existing functionality rather than building from scr
 - Updated command documentation
 
 **Files Modified:**
+
 - `.claude/commands/security/scan.md`
 
 **Example Output:**
 
-```markdown
+````markdown
 # Security Scan Report
 
 **Date:** 2025-11-01
@@ -226,22 +230,26 @@ The implementation enhances existing functionality rather than building from scr
 **Confidence:** High
 
 **Evidence:**
+
 ```sql
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 -- No INSERT policy defined
 ```
+````
 
 **Impact:** Authenticated users can create profiles for any user_id, breaking data isolation.
 
 **Remediation:**
 
 Add INSERT policy:
+
 ```sql
 CREATE POLICY profiles_insert ON profiles FOR INSERT
 WITH CHECK (auth.uid() = user_id);
 ```
 
 **References:**
+
 - [Supabase RLS Guide](https://supabase.com/docs/guides/auth/row-level-security)
 - [OWASP: Broken Access Control](https://owasp.org/Top10/A01_2021-Broken_Access_Control/)
 
@@ -279,9 +287,11 @@ WITH CHECK (auth.uid() = user_id);
 - Usage examples and best practices
 
 **Files Modified:**
+
 - `SECURITY.md`
 
 **Files Created:**
+
 - `docs/micro-lessons/YYYYMMDD-HHMMSS-security-scanner-severity-levels.md`
 
 ---
@@ -291,6 +301,7 @@ WITH CHECK (auth.uid() = user_id);
 ### Enhanced Output Format
 
 **Current format:**
+
 ```json
 {
   "remediation": "Use parameterized queries instead of string concatenation"
@@ -298,6 +309,7 @@ WITH CHECK (auth.uid() = user_id);
 ```
 
 **New format:**
+
 ```json
 {
   "remediation": {
@@ -315,24 +327,28 @@ WITH CHECK (auth.uid() = user_id);
 ### Severity Criteria (from spec)
 
 **CRITICAL** 🔴 (Fix immediately)
+
 - Exploitable vulnerabilities: SQL injection, XSS, CSRF
 - Authentication/authorization bypass
 - Data exposure potential
 - Remote code execution
 
 **HIGH** 🟠 (Fix within 1 sprint)
+
 - Security misconfigurations
 - Missing auth checks
 - Exposed secrets
 - Insufficient input validation
 
 **MEDIUM** 🟡 (Fix within 2-3 sprints)
+
 - Missing error handling
 - Information disclosure
 - Weak password policies
 - Missing rate limiting
 
 **LOW** 🟢 (Address when convenient)
+
 - Code quality issues
 - Best practice violations
 - Minor improvements
@@ -340,20 +356,24 @@ WITH CHECK (auth.uid() = user_id);
 ### Confidence Levels
 
 **High** - Finding is definitively a security issue based on clear evidence
+
 - Example: Missing RLS policy on table with RLS enabled
 - Example: Hardcoded API key in source code
 
 **Medium** - Finding is likely a security issue but requires context verification
+
 - Example: Potentially unprotected API endpoint (might have middleware)
 - Example: Possible XSS vulnerability (depends on sanitization elsewhere)
 
 **Low** - Finding might be a security issue or false positive
+
 - Example: Dynamic query construction (might be safe depending on input source)
 - Example: Error messages that might leak information
 
 ### API Design
 
 **Slash Command Arguments:**
+
 ```bash
 /security:scan [scope] [severity]
 
@@ -365,6 +385,7 @@ WITH CHECK (auth.uid() = user_id);
 ```
 
 **Agent Input (unchanged):**
+
 ```json
 {
   "scope": "full" | "auth" | "rls" | "api" | "secrets",
@@ -374,6 +395,7 @@ WITH CHECK (auth.uid() = user_id);
 ```
 
 **Agent Output (enhanced):**
+
 ```json
 {
   "findings": [
@@ -411,6 +433,7 @@ WITH CHECK (auth.uid() = user_id);
 ### Manual Testing
 
 **Phase 1 (Agent):**
+
 1. Run `/security:scan rls` and verify output includes:
    - Structured remediation with code examples
    - References to Supabase docs
@@ -419,6 +442,7 @@ WITH CHECK (auth.uid() = user_id);
 3. Verify all severity levels are properly assigned
 
 **Phase 2 (Workflow):**
+
 1. Create test PR with deliberate security issue
 2. Verify workflow parses new JSON format
 3. Check PR comment shows severity-grouped findings
@@ -426,12 +450,14 @@ WITH CHECK (auth.uid() = user_id);
 5. Confirm workflow summary displays severity counts
 
 **Phase 3 (Command):**
+
 1. Test filtering: `/security:scan api critical`
 2. Verify report saved to `scratch/security-scan-YYYY-MM-DD.md`
 3. Check output grouped by severity with emoji indicators
 4. Verify code examples and references display correctly
 
 **Phase 4 (Documentation):**
+
 1. Review `SECURITY.md` for completeness
 2. Validate micro-lesson captures key learnings
 3. Check all examples are accurate
@@ -467,6 +493,7 @@ WITH CHECK (auth.uid() = user_id);
 ### Rollback Plan
 
 If issues arise:
+
 1. Revert PR containing changes
 2. Security Scanner falls back to previous format
 3. Workflow and command continue working with old format
@@ -504,29 +531,34 @@ If issues arise:
 From spec acceptance criteria:
 
 **Phase 1:**
+
 - ✅ Security Scanner agent outputs structured remediation
 - ✅ All findings include code examples
 - ✅ References included (OWASP, Supabase, etc.)
 - ✅ Confidence levels on all findings
 
 **Phase 2:**
+
 - ✅ Workflow parses new JSON format without errors
 - ✅ PR comments grouped by severity
 - ✅ GitHub annotations for CRITICAL/HIGH findings
 - ✅ Workflow summary shows severity counts
 
 **Phase 3:**
+
 - ✅ `/security:scan --severity=X` filters correctly
 - ✅ Output grouped by severity with emoji indicators
 - ✅ Reports saved to `scratch/` directory
 - ✅ Command documentation updated
 
 **Phase 4:**
+
 - ✅ `SECURITY.md` documents severity criteria
 - ✅ Micro-lesson created with examples
 - ✅ Documentation includes usage examples
 
 **Overall:**
+
 - 90%+ of findings include actionable code examples
 - Developers can filter by severity
 - Workflow integration works seamlessly

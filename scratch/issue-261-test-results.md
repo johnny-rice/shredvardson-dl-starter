@@ -12,6 +12,7 @@ All features implemented in Issue #261 have been successfully tested and verifie
 **Feature:** Comprehensive severity criteria in Security Scanner agent
 
 **Test Results:**
+
 - ✅ Agent correctly classifies vulnerabilities into 4 severity levels
 - ✅ CRITICAL: Immediate security compromise examples provided
 - ✅ HIGH: Significant security risk examples provided
@@ -25,6 +26,7 @@ All features implemented in Issue #261 have been successfully tested and verifie
 **Feature:** Per-finding confidence levels and enhanced remediation format
 
 **Test Results:**
+
 - ✅ Each finding includes confidence level (high/medium/low)
 - ✅ Remediation includes:
   - Step-by-step description
@@ -34,6 +36,7 @@ All features implemented in Issue #261 have been successfully tested and verifie
 - ✅ Agent output matches required JSON structure
 
 **Evidence:**
+
 - Report 1 (high threshold): [scratch/security-scan-2025-11-02.md](scratch/security-scan-2025-11-02.md)
   - 3 HIGH severity findings with confidence levels
   - Structured remediation with code + references
@@ -46,6 +49,7 @@ All features implemented in Issue #261 have been successfully tested and verifie
 **Feature:** Command-line severity filtering to control output verbosity
 
 **Test Results:**
+
 - ✅ `/security:scan rls high` filtered to show only CRITICAL + HIGH
   - Original: 4 total (0 critical, 3 high, 1 medium)
   - Filtered: 3 shown (0 critical, 3 high)
@@ -58,6 +62,7 @@ All features implemented in Issue #261 have been successfully tested and verifie
 - ✅ Severity threshold displayed in report header
 
 **Evidence:**
+
 - High threshold test: [scratch/security-scan-2025-11-02.md](scratch/security-scan-2025-11-02.md)
 - Medium threshold test: [scratch/security-scan-2025-11-02-medium.md](scratch/security-scan-2025-11-02-medium.md)
 
@@ -66,6 +71,7 @@ All features implemented in Issue #261 have been successfully tested and verifie
 **Feature:** Comprehensive user-facing documentation
 
 **Test Results:**
+
 - ✅ SECURITY.md updated with Security Scanner section
   - Usage examples for all scope + severity combinations
   - Severity level definitions with examples
@@ -81,6 +87,7 @@ All features implemented in Issue #261 have been successfully tested and verifie
   - Reference source mapping provided
 
 **Evidence:**
+
 - [SECURITY.md:58-133](SECURITY.md)
 - [.claude/commands/security/scan.md](.claude/commands/security/scan.md)
 - [.claude/agents/security-scanner.md](.claude/agents/security-scanner.md)
@@ -96,44 +103,52 @@ All features implemented in Issue #261 have been successfully tested and verifie
 ## Test Scenarios Executed
 
 ### Scenario 1: High Severity Threshold
+
 ```bash
 /security:scan rls high
 ```
+
 **Expected:** Show only CRITICAL + HIGH vulnerabilities
 **Result:** ✅ Correctly filtered 3 HIGH findings, excluded 1 MEDIUM
 
 ### Scenario 2: Medium Severity Threshold
+
 ```bash
 /security:scan rls medium
 ```
+
 **Expected:** Show CRITICAL + HIGH + MEDIUM vulnerabilities
 **Result:** ✅ Correctly filtered 1 HIGH + 2 MEDIUM, excluded 1 LOW
 
 ### Scenario 3: Confidence Levels
+
 **Expected:** Each finding shows confidence (high/medium/low)
 **Result:** ✅ All findings include confidence levels:
+
 - High confidence: 2 findings
 - Medium confidence: 3 findings
 - Low confidence: 0 findings (filtered out in both tests)
 
 ### Scenario 4: Structured Remediation
+
 **Expected:** Each finding includes description + code + references
 **Result:** ✅ All findings include:
+
 - Step-by-step remediation description
 - Copy-paste ready code examples
 - 2-3 relevant references (OWASP, CWE, Supabase, PostgreSQL)
 
 ## Feature Comparison: Before vs After
 
-| Feature | Before Issue #261 | After Issue #261 |
-|---------|-------------------|------------------|
-| Severity Levels | Basic (implied) | 4 comprehensive levels with detailed criteria |
-| Confidence | Not present | Per-finding + overall confidence levels |
-| Remediation | Basic text | Structured (description + code + references) |
-| Severity Filtering | Not supported | Command-line argument support |
-| Documentation | Minimal | Comprehensive (SECURITY.md + examples) |
-| References | None | 2-3 authoritative sources per finding |
-| Summary Filtering | No | Recalculated based on filter |
+| Feature            | Before Issue #261 | After Issue #261                              |
+| ------------------ | ----------------- | --------------------------------------------- |
+| Severity Levels    | Basic (implied)   | 4 comprehensive levels with detailed criteria |
+| Confidence         | Not present       | Per-finding + overall confidence levels       |
+| Remediation        | Basic text        | Structured (description + code + references)  |
+| Severity Filtering | Not supported     | Command-line argument support                 |
+| Documentation      | Minimal           | Comprehensive (SECURITY.md + examples)        |
+| References         | None              | 2-3 authoritative sources per finding         |
+| Summary Filtering  | No                | Recalculated based on filter                  |
 
 ## Performance Notes
 
@@ -167,6 +182,7 @@ All features implemented in Issue #261 have been successfully tested and verifie
 **All features for Issue #261 have been successfully implemented and tested.**
 
 The Security Scanner now provides:
+
 - ✅ Comprehensive severity classification
 - ✅ Confidence levels for finding reliability
 - ✅ Structured remediation with code examples

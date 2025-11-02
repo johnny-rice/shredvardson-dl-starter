@@ -142,9 +142,9 @@ const result = await orchestrate({
     {
       type: 'research', // or 'security'
       prompt: `[Context-specific research/security task]`,
-      timeout: 90000
-    }
-  ]
+      timeout: 90000,
+    },
+  ],
 });
 
 const findings = result.agents[0].response;

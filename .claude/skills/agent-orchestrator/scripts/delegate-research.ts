@@ -99,7 +99,7 @@ function buildResearchPrompt(context: OrchestrationContext): string {
  * @param prompt - Prompt for Research Agent
  * @returns JSON response from Research Agent
  */
-async function invokeResearchAgent(prompt: string): Promise<string> {
+async function invokeResearchAgent(_prompt: string): Promise<string> {
   // Placeholder: In actual implementation, the workflow command would invoke:
   //
   // Task tool with:

@@ -34,12 +34,14 @@ Current output is a simple list of vulnerabilities without context or guidance, 
 Implement a structured findings format with four severity levels and comprehensive remediation guidance:
 
 **Severity Levels:**
+
 - **CRITICAL** 🔴 - Exploitable vulnerabilities requiring immediate fixes
 - **HIGH** 🟠 - Security misconfigurations to fix within 1 sprint
 - **MEDIUM** 🟡 - Issues to address within 2-3 sprints
 - **LOW** 🟢 - Best practice violations to address when convenient
 
 **Structured Output Format:**
+
 ```json
 {
   "findings": [
@@ -123,24 +125,28 @@ Implement a structured findings format with four severity levels and comprehensi
 ## Severity Criteria Reference
 
 **CRITICAL 🔴** (Fix immediately)
+
 - Exploitable vulnerabilities: SQL injection, XSS, CSRF
 - Authentication/authorization bypass
 - Data exposure potential
 - Remote code execution
 
 **HIGH 🟠** (Fix within 1 sprint)
+
 - Security misconfigurations
 - Missing auth checks
 - Exposed secrets
 - Insufficient input validation
 
 **MEDIUM 🟡** (Fix within 2-3 sprints)
+
 - Missing error handling
 - Information disclosure
 - Weak password policies
 - Missing rate limiting
 
 **LOW 🟢** (Address when convenient)
+
 - Code quality issues
 - Best practice violations
 - Minor improvements

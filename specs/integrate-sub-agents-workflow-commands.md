@@ -22,6 +22,7 @@ Integrate sub-agents (Research Agent, Security Scanner, etc.) into spec-driven w
 Sub-agents are implemented and working in standalone commands (`/research:explore`, `/security:scan`, etc.) but are **NOT integrated** into the spec-driven workflow lanes (`/spec:specify`, `/spec:plan`, `/spec:tasks`, `/code`).
 
 **Current situation:**
+
 - ✅ 8 sub-agent definitions exist in `.claude/agents/` (Research Agent, Security Scanner, etc.)
 - ✅ 5 standalone commands successfully delegate to sub-agents
 - ❌ Workflow lane commands (spec/code) do NOT use sub-agents
@@ -42,12 +43,14 @@ Implement a **hybrid architecture** that combines Skills and sub-agents with cle
 - **Sub-agents** → Exploration/research (codebase analysis, security scanning, pattern discovery)
 
 **Commands to update:**
+
 1. `/spec:specify` → Add Research Agent for finding similar implementations
 2. `/spec:plan` → Add Research Agent + Security Scanner before planning
 3. `/spec:tasks` → Add Research Agent for dependency analysis
 4. `/code` → Add Security Scanner pre-check before implementation
 
 **Integration Pattern:**
+
 ```typescript
 // Example: /spec:plan with sub-agent delegation
 1. Delegate to Research Agent: "Analyze codebase for X"
@@ -71,17 +74,20 @@ Implement a **hybrid architecture** that combines Skills and sub-agents with cle
 ## Technical Constraints
 
 **File locations:**
+
 - Sub-agent definitions: `.claude/agents/`
 - Command implementations: `.claude/commands/spec/` and `.claude/commands/code/`
 - Skills: `.claude/skills/`
 - Documentation: `docs/architecture/`
 
 **Existing architecture:**
+
 - ADR-002: Skills Architecture (must maintain compatibility)
 - Existing sub-agent implementations must be used as-is
 - Working standalone commands provide reference implementation
 
 **Requirements:**
+
 - No breaking changes to existing command syntax
 - Fallback to current behavior if sub-agents unavailable
 - Gradual rollout possible (one command at a time)
@@ -90,6 +96,7 @@ Implement a **hybrid architecture** that combines Skills and sub-agents with cle
 ## Success Metrics
 
 Track for 2 weeks after implementation:
+
 - **Token usage per workflow:** Target 50-60K vs current 120K (50%+ reduction)
 - **Cost per workflow:** Target $1.60 vs current $3.60 (56% reduction)
 - **Time to completion:** Should be faster due to parallel execution

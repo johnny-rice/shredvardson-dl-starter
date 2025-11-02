@@ -213,6 +213,6 @@ This constitution establishes the architectural decisions, governance patterns, 
 
 This constitution serves as the foundational governance document for all development activities within the Dissonance Labs Starter project. All contributors, human and AI, are bound by these principles.
 
-
 ---
+
 _Copied from docs/constitution.md_

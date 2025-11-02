@@ -32,9 +32,10 @@ Before implementation, delegate security analysis to the Security Scanner:
 import { orchestrate } from '.claude/skills/agent-orchestrator/scripts/orchestrate.ts';
 
 const securityResult = await orchestrate({
-  agents: [{
-    type: 'security',
-    prompt: `Analyze security implications before implementing:
+  agents: [
+    {
+      type: 'security',
+      prompt: `Analyze security implications before implementing:
     1. Review proposed changes for security risks
     2. Check authentication/authorization requirements
     3. Identify data validation needs
@@ -47,8 +48,9 @@ const securityResult = await orchestrate({
     - Implementation scope: ${scope}
 
     Focus on: CRITICAL and HIGH severity issues only`,
-    timeout: 60000 // 60s for security pre-check
-  }]
+      timeout: 60000, // 60s for security pre-check
+    },
+  ],
 });
 
 // Extract security findings

@@ -41,6 +41,7 @@ Update `.claude/agents/security-scanner.md` to change the `remediation` field fr
 - [ ] Agent prompt validates this is the required output format
 
 **Notes:**
+
 - Keep code examples concise (2-5 lines max) to avoid token bloat
 - Prioritize OWASP, Supabase docs, and CWE references
 - Ensure examples are copy-paste ready for developers
@@ -66,6 +67,7 @@ Add `confidence` field to each finding in the agent output format. Define clear 
 - [ ] Guidance provided on when to use each confidence level
 
 **Notes:**
+
 - High: Clear evidence, no context needed (e.g., missing RLS policy)
 - Medium: Likely issue, needs verification (e.g., potentially unprotected endpoint)
 - Low: Might be false positive (e.g., dynamic queries that might be safe)
@@ -92,6 +94,7 @@ Enhance the severity criteria section in `.claude/agents/security-scanner.md` wi
 - [ ] Each severity level includes concrete code examples
 
 **Notes:**
+
 - Align with OWASP Top 10 and CVSS standards
 - Include Supabase-specific issues (RLS policies, auth checks)
 - Provide context on why each example maps to that severity
@@ -117,6 +120,7 @@ Document guidelines in the agent prompt for selecting appropriate security refer
 - [ ] Examples show when to use OWASP vs CWE vs Supabase docs
 
 **Notes:**
+
 - Include direct links to OWASP Top 10, CWE categories, Supabase RLS guide
 - Prioritize actionable docs over academic papers
 - Include Next.js security best practices for frontend issues
@@ -143,6 +147,7 @@ Run `/security:scan rls` on the current codebase to validate the agent produces 
 - [ ] No JSON parsing errors
 
 **Notes:**
+
 - If token usage is high, identify which sections to make more concise
 - Save sample output for reference when updating command/workflow
 - Document any edge cases or unexpected behavior
@@ -169,6 +174,7 @@ Update `.github/workflows/security-review.yml` to parse the new enhanced JSON st
 - [ ] No workflow syntax errors
 
 **Notes:**
+
 - Use `jq` for JSON parsing in bash
 - Add fallback: if remediation is string, display as-is
 - Test locally with sample JSON before committing
@@ -195,6 +201,7 @@ Update the workflow PR comment template to group findings by severity (CRITICAL,
 - [ ] Summary section shows counts by severity
 
 **Notes:**
+
 - Ensure markdown rendering works in GitHub PR comments
 - Test with multi-line code examples
 - Keep comment size reasonable (collapse LOW findings by default)
@@ -221,6 +228,7 @@ Add GitHub workflow annotations using `::error` syntax for all CRITICAL and HIGH
 - [ ] Annotations appear in GitHub PR "Files changed" view
 
 **Notes:**
+
 - Format: `::error file={file},line={line}::{title} - {impact}`
 - Test that annotations appear correctly in PR UI
 - Ensure annotations don't exceed GitHub's limits (max 10 annotations)
@@ -247,6 +255,7 @@ Update `.claude/commands/security/scan.md` to parse severity argument and filter
 - [ ] Filtered findings correctly grouped in output
 
 **Notes:**
+
 - Filter AFTER agent returns results (agent always scans everything)
 - `/security:scan api critical` → only show CRITICAL findings
 - `/security:scan rls high` → show CRITICAL + HIGH findings
@@ -275,6 +284,7 @@ Update the output presentation in `/security:scan` command to group findings by 
 - [ ] Report saved to `scratch/security-scan-YYYY-MM-DD.md`
 
 **Notes:**
+
 - Use markdown collapsible sections `<details>` for readability
 - Include confidence level in each finding
 - Format matches workflow PR comment style for consistency
@@ -302,6 +312,7 @@ Update `SECURITY.md` with severity criteria, confidence levels, and usage exampl
 - [ ] Micro-lesson tagged with: security, sub-agents, tooling
 
 **Notes:**
+
 - Include copy-paste ready command examples
 - Show sample output demonstrating new format
 - Link to OWASP and Supabase security docs
@@ -330,8 +341,8 @@ Update `SECURITY.md` with severity criteria, confidence levels, and usage exampl
 **Depends on:** Phase 1
 
 - T6: Update workflow JSON parsing logic (1h)
-- T7: Add severity-grouped PR comments (1h) *(can run parallel with T8)*
-- T8: Add GitHub annotations for CRITICAL/HIGH findings (30min) *(can run parallel with T7)*
+- T7: Add severity-grouped PR comments (1h) _(can run parallel with T8)_
+- T8: Add GitHub annotations for CRITICAL/HIGH findings (30min) _(can run parallel with T7)_
 
 **Deliverable:** CI/CD workflow that displays structured findings in PRs
 
@@ -363,6 +374,7 @@ Update `SECURITY.md` with severity criteria, confidence levels, and usage exampl
 ### High-Risk Tasks
 
 **T6: Update workflow JSON parsing logic**
+
 - **Risk:** Workflow could fail if JSON parsing breaks
 - **Mitigation:**
   - Test parsing logic locally with sample JSON before committing
@@ -374,6 +386,7 @@ Update `SECURITY.md` with severity criteria, confidence levels, and usage exampl
 ### Medium-Risk Tasks
 
 **T7: Add severity-grouped PR comments**
+
 - **Risk:** Markdown rendering might break with complex code examples
 - **Mitigation:**
   - Test comment rendering in test PR
@@ -391,11 +404,13 @@ Phase 1 → Phase 2/3 → Phase 4
 - Phase 4 requires all phases to document final behavior
 
 **Potential Bottlenecks:**
+
 - T5 (testing) might reveal issues requiring T1-T4 rework
 - T6 (workflow parsing) is on critical path for Phase 2
 - T9 (command filtering) is on critical path for Phase 3
 
 **Parallelization Opportunities:**
+
 - T7 and T8 can run in parallel (both enhance workflow)
 - Phase 2 and Phase 3 can run in parallel (workflow and command are independent)
 
@@ -406,34 +421,42 @@ Phase 1 → Phase 2/3 → Phase 4
 ### Per-Task Testing
 
 **Phase 1 (Agent):**
+
 - T5: Run `/security:scan` and validate JSON structure
 - Check: All fields present, token usage <3K, no parsing errors
 
 **Phase 2 (Workflow):**
+
 - Create test PR with deliberate security issue (e.g., missing RLS policy)
 - T6: Verify workflow parses JSON without errors
 - T7: Check PR comment formatting, collapsible sections work
 - T8: Verify annotations appear in "Files changed" view
 
 **Phase 3 (Command):**
+
 - T9: Test all filter levels: `/security:scan api critical/high/medium/low`
 - T10: Check output grouping, emoji indicators, saved reports
 
 **Phase 4 (Documentation):**
+
 - T11: Review docs for accuracy, test example commands
 
 ### Integration Testing
 
 **After Phase 1:**
+
 - Run `/security:scan rls` and save output for use in Phase 2/3 testing
 
 **After Phase 2:**
+
 - Create PR, trigger workflow, verify end-to-end flow works
 
 **After Phase 3:**
+
 - Run all `/security:scan` variations and verify output matches spec
 
 **After Phase 4:**
+
 - Review all documentation for consistency with implementation
 
 ### Edge Case Testing
@@ -448,6 +471,7 @@ Phase 1 → Phase 2/3 → Phase 4
 ### Coverage Targets
 
 This is a prompt/workflow enhancement, not application code:
+
 - No unit test coverage required (modifying markdown prompts)
 - Manual testing required for each phase
 - Validation: Agent outputs valid JSON, workflow parses correctly, command filters correctly
@@ -489,42 +513,47 @@ This is a prompt/workflow enhancement, not application code:
 
 ## Effort Breakdown by Phase
 
-| Phase | Tasks | Estimated Hours | % of Total |
-|-------|-------|-----------------|------------|
-| Phase 1: Agent Enhancement | T1-T5 | 2.5h | 42% |
-| Phase 2: Workflow Integration | T6-T8 | 1.5h | 25% |
-| Phase 3: Command Enhancement | T9-T10 | 1.5h | 25% |
-| Phase 4: Documentation | T11 | 0.5h | 8% |
-| **Total** | **11 tasks** | **6h** | **100%** |
+| Phase                         | Tasks        | Estimated Hours | % of Total |
+| ----------------------------- | ------------ | --------------- | ---------- |
+| Phase 1: Agent Enhancement    | T1-T5        | 2.5h            | 42%        |
+| Phase 2: Workflow Integration | T6-T8        | 1.5h            | 25%        |
+| Phase 3: Command Enhancement  | T9-T10       | 1.5h            | 25%        |
+| Phase 4: Documentation        | T11          | 0.5h            | 8%         |
+| **Total**                     | **11 tasks** | **6h**          | **100%**   |
 
 ---
 
 ## Completion Checklist
 
 **Phase 1 Complete When:**
+
 - [ ] All 5 tasks (T1-T5) completed
 - [ ] Agent outputs new JSON format successfully
 - [ ] Sample scan demonstrates all new fields
 - [ ] Token usage validated (<3K)
 
 **Phase 2 Complete When:**
+
 - [ ] All 3 tasks (T6-T8) completed
 - [ ] Workflow parses new format without errors
 - [ ] PR comment displays severity-grouped findings
 - [ ] Annotations appear for CRITICAL/HIGH issues
 
 **Phase 3 Complete When:**
+
 - [ ] All 2 tasks (T9-T10) completed
 - [ ] Command filtering works for all severity levels
 - [ ] Output matches expected format
 - [ ] Reports saved correctly to `scratch/`
 
 **Phase 4 Complete When:**
+
 - [ ] Task T11 completed
 - [ ] `SECURITY.md` updated with criteria and examples
 - [ ] Micro-lesson created and tagged
 
 **Feature Complete When:**
+
 - [ ] All 11 tasks completed
 - [ ] All phases validated with testing
 - [ ] PR created and ready for review

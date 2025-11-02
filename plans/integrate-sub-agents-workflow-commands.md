@@ -23,6 +23,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 **Chosen:** Centralized orchestrator Skill that all workflow commands invoke
 
 **Rationale:**
+
 - Industry best practice for production multi-agent systems (2025 research)
 - Scales to 10,000+ agents with 80%+ coordination efficiency
 - Matches existing Skills architecture (supabase-integration, test-scaffolder)
@@ -30,6 +31,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 - Research shows 8-10x memory reduction vs distributed delegation
 
 **Alternatives considered:**
+
 - Command-level integration: Too much duplication, doesn't scale
 - Distributed delegation: Higher coordination overhead, context pollution risk
 
@@ -38,23 +40,27 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 **Chosen:** Sub-agents return structured JSON, orchestrator parses and validates
 
 **Rationale:**
+
 - Already implemented in existing sub-agents (Research Agent, Security Scanner)
 - Most token-efficient (vs conversational extraction or file I/O)
 - Clear contracts enable debugging and testing
 - Supports parallel execution with mergeable responses
 
 **Alternatives considered:**
+
 - Shared context files: Adds I/O overhead
 - Conversational extraction: Uses more tokens for parsing
 
 ### 3. Progressive Disclosure Strategy
 
 **Implementation:**
+
 - Orchestrator Skill loads in 3 tiers: metadata (20 tokens) → SKILL.md (200 tokens) → scripts (0 tokens, executed)
 - Sub-agents execute in isolated context (0 tokens in main agent)
 - Only JSON responses loaded into main agent context (~2-5K tokens per agent)
 
 **Token budget per workflow:**
+
 - Command: 50-200 tokens
 - Orchestrator SKILL.md: 200 tokens
 - Sub-agent responses: 2-5K tokens each
@@ -96,6 +102,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 ### Component Breakdown
 
 **Agent Orchestrator Skill:**
+
 - `skill.json`: Metadata (20 tokens)
 - `SKILL.md`: Discovery documentation (200 tokens)
 - `scripts/orchestrate.ts`: Main entry point
@@ -106,6 +113,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 - `scripts/types.ts`: TypeScript interfaces
 
 **Workflow Commands (Updated):**
+
 - `/spec:specify`: Add research step for similar implementations
 - `/spec:plan`: Add multi-agent research before Socratic planning
 - `/spec:tasks`: Add dependency analysis via research
@@ -147,6 +155,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 6. Command uses findings to enrich Socratic planning with evidence-based options
 
 **Token Comparison:**
+
 - Without orchestrator: 120K tokens ($3.60)
 - With orchestrator: 20K tokens ($0.65)
 - **Savings: 83% tokens, 82% cost**
@@ -158,6 +167,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 **Goal:** Create centralized orchestration infrastructure
 
 **Tasks:**
+
 - Create `.claude/skills/agent-orchestrator/` directory structure
 - Implement `skill.json` metadata
 - Write `SKILL.md` progressive disclosure documentation
@@ -170,6 +180,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 - Add error handling and fallback logic
 
 **Deliverables:**
+
 - Working orchestrator Skill callable via `pnpm skill:run agent-orchestrator orchestrate '{...}'`
 - Unit tests for orchestration logic (80% coverage target)
 - Documentation in `README.md`
@@ -183,6 +194,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 **Goal:** First workflow command integration (highest token savings)
 
 **Tasks:**
+
 - Update `.claude/commands/spec/plan.md` to add orchestration step
 - Add delegation call before Phase 1 (Understanding)
 - Parse orchestrator JSON response
@@ -193,6 +205,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 - Measure token usage before/after
 
 **Deliverables:**
+
 - Updated `/spec:plan` command with orchestrator integration
 - Integration tests for command → orchestrator flow
 - Token usage measurement showing 80%+ reduction
@@ -206,6 +219,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 **Goal:** Add research for similar implementations during spec creation
 
 **Tasks:**
+
 - Update `.claude/commands/spec/specify.md` to add research step
 - Delegate "find similar implementations" query to orchestrator
 - Parse findings and include in spec template
@@ -215,6 +229,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 - Measure token usage
 
 **Deliverables:**
+
 - Updated `/spec:specify` command
 - Specs include evidence-based patterns and references
 - Token usage measurement showing 90%+ reduction for research step
@@ -228,6 +243,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 **Goal:** Add dependency analysis for task ordering
 
 **Tasks:**
+
 - Update `.claude/commands/spec/tasks.md` to add dependency research
 - Delegate dependency discovery to orchestrator
 - Parse findings to identify blocking tasks
@@ -237,6 +253,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 - Measure token usage
 
 **Deliverables:**
+
 - Updated `/spec:tasks` command
 - Task breakdowns include dependency ordering
 - Token usage measurement showing 73%+ reduction
@@ -250,6 +267,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 **Goal:** Add security pre-check before implementation
 
 **Tasks:**
+
 - Update `.claude/commands/code/code.md` to add security scan step
 - Delegate security analysis to orchestrator (Security Scanner)
 - Parse findings and block implementation on P0 issues
@@ -259,6 +277,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 - Measure token usage
 
 **Deliverables:**
+
 - Updated `/code` command with security gate
 - P0 security issues block implementation
 - Token usage measurement showing 76%+ reduction
@@ -272,6 +291,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 **Goal:** Validate token savings, cost reduction, and quality
 
 **Tasks:**
+
 - Write unit tests for orchestrator (80% coverage)
 - Write integration tests for each workflow command (70% coverage)
 - Write E2E tests for token optimization validation
@@ -283,6 +303,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 - Document findings and metrics
 
 **Deliverables:**
+
 - Test suite with 75%+ overall coverage
 - Token/cost measurements proving 50%+ reduction
 - Quality validation report
@@ -297,6 +318,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 **Goal:** Document architecture and enable team adoption
 
 **Tasks:**
+
 - Update `docs/architecture/` with orchestration pattern
 - Create ADR documenting orchestration decision
 - Update `.claude/skills/README.md` with agent-orchestrator
@@ -308,6 +330,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 - Gather feedback from users
 
 **Deliverables:**
+
 - ADR: Sub-Agent Orchestration Pattern
 - Updated Skills catalog
 - Troubleshooting documentation
@@ -320,6 +343,7 @@ This plan implements a centralized **Agent Orchestrator Skill** that enables wor
 ### Data Model
 
 **Orchestration Request:**
+
 ```typescript
 interface OrchestrationRequest {
   task_type: 'research' | 'security' | 'test' | 'multi';
@@ -334,6 +358,7 @@ interface OrchestrationRequest {
 ```
 
 **Orchestration Response:**
+
 ```typescript
 interface OrchestrationResponse {
   success: boolean;
@@ -348,6 +373,7 @@ interface OrchestrationResponse {
 ```
 
 **Research Agent Response:**
+
 ```typescript
 interface ResearchResponse {
   key_findings: Array<{
@@ -377,6 +403,7 @@ interface ResearchResponse {
 ```
 
 **Security Scanner Response:**
+
 ```typescript
 interface SecurityResponse {
   vulnerabilities: Array<{
@@ -394,6 +421,7 @@ interface SecurityResponse {
 ### API Design
 
 **Orchestrator Entry Point:**
+
 ```bash
 pnpm skill:run agent-orchestrator orchestrate '{
   "task_type": "research",
@@ -406,6 +434,7 @@ pnpm skill:run agent-orchestrator orchestrate '{
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -422,6 +451,7 @@ pnpm skill:run agent-orchestrator orchestrate '{
 ```
 
 **Parallel Execution:**
+
 ```bash
 pnpm skill:run agent-orchestrator orchestrate '{
   "task_type": "multi",
@@ -431,6 +461,7 @@ pnpm skill:run agent-orchestrator orchestrate '{
 ```
 
 **Response:**
+
 ```json
 {
   "success": true,
@@ -448,18 +479,21 @@ pnpm skill:run agent-orchestrator orchestrate '{
 ### Security
 
 **Orchestrator Security:**
+
 - Read-only operations (no file writes)
 - JSON parsing with schema validation
 - Error messages sanitized (no sensitive data leaks)
 - Sub-agent timeout enforcement (120s max)
 
 **Sub-Agent Security:**
+
 - Existing sub-agents already scoped to read-only tools
 - Research Agent: Read, Glob, Grep, Bash (read-only)
 - Security Scanner: Read, Glob, Grep, MCP tools
 - Token limits enforced by agent definitions
 
 **Fallback Security:**
+
 - If orchestrator fails, commands fall back to main agent
 - No silent failures (all errors logged)
 - User notified if delegation failed
@@ -471,12 +505,14 @@ pnpm skill:run agent-orchestrator orchestrate '{
 **Target:** 80% coverage for orchestrator scripts
 
 **Test files:**
+
 - `tests/skills/agent-orchestrator/orchestrate.test.ts`
 - `tests/skills/agent-orchestrator/delegate-research.test.ts`
 - `tests/skills/agent-orchestrator/delegate-security.test.ts`
 - `tests/skills/agent-orchestrator/parse-response.test.ts`
 
 **Key tests:**
+
 - Build correct JSON input for sub-agents
 - Parse sub-agent JSON responses
 - Handle malformed JSON gracefully
@@ -493,9 +529,11 @@ pnpm skill:run agent-orchestrator orchestrate '{
 **Target:** 70% coverage for workflow integration paths
 
 **Test files:**
+
 - `tests/integration/workflow-orchestration.test.ts`
 
 **Key tests:**
+
 - `/spec:plan` delegates research before planning
 - `/spec:plan` uses findings in Socratic questions
 - `/spec:specify` includes research findings in spec template
@@ -511,9 +549,11 @@ pnpm skill:run agent-orchestrator orchestrate '{
 **Target:** Validate token/cost reduction and quality
 
 **Test files:**
+
 - `tests/e2e/token-optimization.test.ts`
 
 **Key tests:**
+
 - Token reduction: 50%+ for `/spec:plan` workflow
 - Cost reduction: 56%+ per workflow
 - Output quality maintained (manual validation)
@@ -525,6 +565,7 @@ pnpm skill:run agent-orchestrator orchestrate '{
 ### Success Metrics
 
 **Track for 2 weeks after implementation:**
+
 - **Token usage per workflow:** Target 50-60K vs current 120K (50%+ reduction)
 - **Cost per workflow:** Target $1.60 vs current $3.60 (56% reduction)
 - **Time to completion:** Should be faster due to parallel execution
@@ -559,12 +600,14 @@ pnpm skill:run agent-orchestrator orchestrate '{
 ### Rollback Plan
 
 **If issues detected:**
+
 1. Disable orchestrator integration in affected command
 2. Commands fall back to main agent (existing behavior)
 3. Investigate issue in orchestrator scripts
 4. Fix and redeploy incrementally
 
 **Rollback is safe because:**
+
 - Commands check `response.success` before using findings
 - Fallback logic returns control to main agent
 - No breaking changes to command syntax
@@ -573,12 +616,14 @@ pnpm skill:run agent-orchestrator orchestrate '{
 ### Migration Strategy
 
 **No migration needed:**
+
 - New orchestrator Skill is additive (no breaking changes)
 - Existing sub-agents work as-is (no modifications)
 - Commands updated incrementally (gradual rollout)
 - Users experience improved performance transparently
 
 **Configuration:**
+
 - No environment variables needed
 - No feature flags required
 - Orchestrator enabled by default once deployed
@@ -588,26 +633,31 @@ pnpm skill:run agent-orchestrator orchestrate '{
 ### Identified Risks
 
 **Risk 1: Sub-agent failures increase workflow latency**
+
 - **Mitigation:** 120s timeout enforced, fallback to main agent
 - **Impact:** Medium (users wait 120s then proceed)
 - **Likelihood:** Low (existing sub-agents stable)
 
 **Risk 2: JSON parsing errors break workflows**
+
 - **Mitigation:** Schema validation, graceful error handling, fallback logic
 - **Impact:** Low (fallback preserves functionality)
 - **Likelihood:** Low (sub-agents return valid JSON)
 
 **Risk 3: Token savings don't materialize**
+
 - **Mitigation:** E2E tests validate savings before rollout
 - **Impact:** Medium (no cost reduction achieved)
 - **Likelihood:** Very low (research proven, existing sub-agents work)
 
 **Risk 4: Output quality degrades**
+
 - **Mitigation:** 2-week manual validation period, rollback if quality drops
 - **Impact:** High (user experience suffers)
 - **Likelihood:** Very low (sub-agents designed for quality research)
 
 **Risk 5: Orchestrator becomes bottleneck as agents scale**
+
 - **Mitigation:** Parallel execution, stateless design, performance monitoring
 - **Impact:** Medium (slower workflows)
 - **Likelihood:** Low (research shows 10,000+ agent scalability)

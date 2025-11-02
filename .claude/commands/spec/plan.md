@@ -106,6 +106,7 @@ You are creating a technical plan from a spec file. Follow these steps:
      subagent_type: "research-agent",
      description: "Research codebase patterns for [feature type]",
      prompt: `Analyze the codebase for patterns related to: [feature summary from spec]
+   ```
 
 Focus Areas:
 ${spec.focus_areas.map(area => `- ${area}`).join('\n')}
@@ -120,13 +121,13 @@ Include:
 - Code locations and references
 
 Return findings as structured JSON matching ResearchResponse schema.`
-   })
+})
 
-   // Security Scanner delegation
-   Task({
-     subagent_type: "security-scanner",
-     description: "Scan for security vulnerabilities in [feature area]",
-     prompt: `Scan for security issues related to: [feature summary from spec]
+// Security Scanner delegation
+Task({
+subagent_type: "security-scanner",
+description: "Scan for security vulnerabilities in [feature area]",
+prompt: `Scan for security issues related to: [feature summary from spec]
 
 Focus Areas:
 ${spec.focus_areas.map(area => `- ${area}`).join('\n')}
@@ -140,58 +141,58 @@ Analyze:
 - API security weaknesses
 
 Return findings as structured JSON matching SecurityResponse schema.`
-   })
+})
 
-   ```
+````
 
-   **Step 2b: Parse and validate JSON responses**
+**Step 2b: Parse and validate JSON responses**
 
-   - Extract JSON from both agent responses (handle markdown wrappers)
-   - Validate against ResearchResponse and SecurityResponse schemas
-   - If parsing fails, log error and continue without sub-agent findings (graceful degradation)
+- Extract JSON from both agent responses (handle markdown wrappers)
+- Validate against ResearchResponse and SecurityResponse schemas
+- If parsing fails, log error and continue without sub-agent findings (graceful degradation)
 
-   **Step 2c: Use findings to enrich design discovery**
+**Step 2c: Use findings to enrich design discovery**
 
-   Store findings for use in Phase 1-3:
-   - Research findings → inform architectural options in Phase 2
-   - Security findings → add to security considerations in Phase 3
-   - Code references → include in plan references section
+Store findings for use in Phase 1-3:
+- Research findings → inform architectural options in Phase 2
+- Security findings → add to security considerations in Phase 3
+- Code references → include in plan references section
 
-   **If `lane: simple`:**
+**If `lane: simple`:**
 
-   Skip sub-agent delegation (simple features don't need deep research)
+Skip sub-agent delegation (simple features don't need deep research)
 
 3. **Lane-Based Planning**:
 
-   **If `lane: spec-driven`:**
+**If `lane: spec-driven`:**
 
-   Trigger **3-phase design discovery** using prd-analyzer's Socratic methodology:
+Trigger **3-phase design discovery** using prd-analyzer's Socratic methodology:
 
-   **Phase 1: Understanding** - Ask clarifying questions one at a time
+**Phase 1: Understanding** - Ask clarifying questions one at a time
 
-   **IMPORTANT: Use research findings from sub-agents to inform your questions**
+**IMPORTANT: Use research findings from sub-agents to inform your questions**
 
-   Before asking questions, review:
-   - Research Agent findings: similar patterns, architecture used, code locations
-   - Security Scanner findings: vulnerabilities, RLS gaps, security recommendations
+Before asking questions, review:
+- Research Agent findings: similar patterns, architecture used, code locations
+- Security Scanner findings: vulnerabilities, RLS gaps, security recommendations
 
-   Use the AskUserQuestion pattern:
+Use the AskUserQuestion pattern:
 
-   ```text
-   **Question:** [Specific technical question]
+```text
+**Question:** [Specific technical question]
 
-   [If relevant] Based on codebase analysis: [Brief insight from research findings]
+[If relevant] Based on codebase analysis: [Brief insight from research findings]
 
-   Options:
-   - Option A: [Description] [+ reference to similar implementation if found]
-   - Option B: [Description]
-   - Option C: [Description]
+Options:
+- Option A: [Description] [+ reference to similar implementation if found]
+- Option B: [Description]
+- Option C: [Description]
 
-   Context: [Why this matters and how it affects the design]
-   [If relevant] Security note: [Mention any security findings related to this decision]
-   ```
+Context: [Why this matters and how it affects the design]
+[If relevant] Security note: [Mention any security findings related to this decision]
+````
 
-   **Rules:**
+**Rules:**
 
 - Ask ONE question at a time
 - Provide 2-3 concrete options
@@ -202,42 +203,42 @@ Return findings as structured JSON matching SecurityResponse schema.`
 - Wait for user response before next question
 - Focus on: requirements, constraints, trade-offs, success criteria
 
-   **Phase 2: Exploration** - Present 2-3 architectural approaches
+  **Phase 2: Exploration** - Present 2-3 architectural approaches
 
-   **IMPORTANT: Base options on research findings + security recommendations**
+  **IMPORTANT: Base options on research findings + security recommendations**
 
-   ```text
-   Based on codebase analysis, I see [2-3] approaches for [feature]:
+  ```text
+  Based on codebase analysis, I see [2-3] approaches for [feature]:
 
-   **Option A:** [Approach Name]
-   [If found in research] Similar to: [file:line reference from codebase]
+  **Option A:** [Approach Name]
+  [If found in research] Similar to: [file:line reference from codebase]
 
-   ✅ Pros:
-   - [Benefit 1]
-   - [Benefit 2 - backed by research findings]
-   - [Benefit 3]
+  ✅ Pros:
+  - [Benefit 1]
+  - [Benefit 2 - backed by research findings]
+  - [Benefit 3]
 
-   ❌ Cons:
-   - [Drawback 1]
-   - [Security concern from scanner, if applicable]
-   - [Drawback 3]
+  ❌ Cons:
+  - [Drawback 1]
+  - [Security concern from scanner, if applicable]
+  - [Drawback 3]
 
-   Best for: [Specific use case]
+  Best for: [Specific use case]
 
-   **Option B:** [Approach Name]
-   [Same structure]
+  **Option B:** [Approach Name]
+  [Same structure]
 
-   **Option C:** [Approach Name]
-   [Same structure]
+  **Option C:** [Approach Name]
+  [Same structure]
 
-   Security considerations:
-   [List P0/high severity issues from Security Scanner that apply to all options]
-   [Recommend security patterns that should be included in chosen approach]
+  Security considerations:
+  [List P0/high severity issues from Security Scanner that apply to all options]
+  [Recommend security patterns that should be included in chosen approach]
 
-   Which approach fits your needs?
-   ```
+  Which approach fits your needs?
+  ```
 
-   **Rules:**
+  **Rules:**
 
 - Present options objectively (no pushing preferred solution)
 - **Ground options in research findings (similar implementations, patterns used)**
@@ -247,17 +248,16 @@ Return findings as structured JSON matching SecurityResponse schema.`
 - Tailor to user's infrastructure/constraints
 - Wait for user decision
 
-   **Phase 3: Design Presentation** - Present design incrementally
+  **Phase 3: Design Presentation** - Present design incrementally
 
-   Present design in **200-300 word sections**:
+  Present design in **200-300 word sections**:
+  1. Present one section (architecture, data model, API, etc.)
+  2. Ask: "Does this address your requirements?"
+  3. Wait for validation
+  4. Adjust if needed
+  5. Move to next section
 
-   1. Present one section (architecture, data model, API, etc.)
-   2. Ask: "Does this address your requirements?"
-   3. Wait for validation
-   4. Adjust if needed
-   5. Move to next section
-
-   **Sections to cover:**
+  **Sections to cover:**
 
 - High-level architecture [+ architecture patterns from research]
 - Data model/schema [+ RLS requirements from security scan]
@@ -267,17 +267,17 @@ Return findings as structured JSON matching SecurityResponse schema.`
 - Testing strategy
 - Deployment approach
 
-   **Anti-pattern:** Don't dump entire design at once
+  **Anti-pattern:** Don't dump entire design at once
 
-   **Enhancement from sub-agents:**
+  **Enhancement from sub-agents:**
 
 - Include code references from Research Agent in each section
 - Incorporate security recommendations from Security Scanner
 - Link to external library documentation found by Research Agent
 
-   **If `lane: simple`:**
+  **If `lane: simple`:**
 
-   Skip design discovery and create basic plan:
+  Skip design discovery and create basic plan:
 
 - Read spec acceptance criteria
 - Identify major implementation steps

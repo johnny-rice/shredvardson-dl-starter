@@ -65,22 +65,23 @@ Follow a 3-phase implementation pattern for sub-agent output enhancements:
 ### Severity Guidelines
 
 **CRITICAL** - Immediate security compromise
+
 - SQL injection with database access
 - Missing RLS policies on sensitive tables
 - Production secrets in code
-[... 40+ more specific examples ...]
+  [... 40+ more specific examples ...]
 
 **Output Format:**
 {
-  "vulnerabilities": [{
-    "severity": "CRITICAL|HIGH|MEDIUM|LOW",
-    "confidence": "high|medium|low",
-    "remediation": {
-      "description": "Step-by-step fix",
-      "code": "Copy-paste ready example",
-      "references": ["url1", "url2", "url3"]
-    }
-  }]
+"vulnerabilities": [{
+"severity": "CRITICAL|HIGH|MEDIUM|LOW",
+"confidence": "high|medium|low",
+"remediation": {
+"description": "Step-by-step fix",
+"code": "Copy-paste ready example",
+"references": ["url1", "url2", "url3"]
+}
+}]
 }
 ```
 
@@ -106,10 +107,10 @@ Follow a 3-phase implementation pattern for sub-agent output enhancements:
 3. **Parse and filter the JSON response:**
 
    b. **Apply severity filtering** based on threshold:
-      - `critical` → Show only CRITICAL
-      - `high` → Show CRITICAL + HIGH
-      - `medium` → Show CRITICAL + HIGH + MEDIUM (default)
-      - `low` → Show all vulnerabilities
+   - `critical` → Show only CRITICAL
+   - `high` → Show CRITICAL + HIGH
+   - `medium` → Show CRITICAL + HIGH + MEDIUM (default)
+   - `low` → Show all vulnerabilities
 
    c. Filter vulnerabilities array
    d. Recalculate summary counts

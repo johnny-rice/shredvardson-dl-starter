@@ -139,16 +139,16 @@ Scan codebase for security vulnerabilities using isolated Security Scanner conte
 3. **Parse and filter the JSON response:**
 
    a. Parse the JSON containing:
-      - `vulnerabilities`: Array of vulnerability objects with severity, category, location, evidence, impact, remediation, confidence
-      - `summary`: Counts by severity (total, critical, high, medium, low)
-      - `recommendations`: High-level security improvements
-      - `confidence`: "high" | "medium" | "low"
+   - `vulnerabilities`: Array of vulnerability objects with severity, category, location, evidence, impact, remediation, confidence
+   - `summary`: Counts by severity (total, critical, high, medium, low)
+   - `recommendations`: High-level security improvements
+   - `confidence`: "high" | "medium" | "low"
 
    b. **Apply severity filtering** based on the `[severity]` threshold:
-      - `critical` → Show only CRITICAL vulnerabilities
-      - `high` → Show CRITICAL and HIGH vulnerabilities
-      - `medium` → Show CRITICAL, HIGH, and MEDIUM vulnerabilities (default)
-      - `low` → Show all vulnerabilities (CRITICAL, HIGH, MEDIUM, LOW)
+   - `critical` → Show only CRITICAL vulnerabilities
+   - `high` → Show CRITICAL and HIGH vulnerabilities
+   - `medium` → Show CRITICAL, HIGH, and MEDIUM vulnerabilities (default)
+   - `low` → Show all vulnerabilities (CRITICAL, HIGH, MEDIUM, LOW)
 
    c. Filter the vulnerabilities array to include only items matching or exceeding the severity threshold.
 

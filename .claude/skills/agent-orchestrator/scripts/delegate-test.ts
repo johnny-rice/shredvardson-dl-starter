@@ -13,7 +13,7 @@ import type { OrchestrationContext, TestResponse } from './types.js';
  * @param context - Orchestration context (unused in stub)
  * @returns Stub response indicating Test Generator is not yet integrated
  */
-export async function delegateTest(context: OrchestrationContext): Promise<TestResponse> {
+export async function delegateTest(_context: OrchestrationContext): Promise<TestResponse> {
   console.log('[orchestrator] Test Generator delegation requested (stub)');
 
   // Return stub response

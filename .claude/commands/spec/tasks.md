@@ -86,9 +86,10 @@ Before generating the task breakdown, delegate research to sub-agents for enrich
 import { orchestrate } from '.claude/skills/agent-orchestrator/scripts/orchestrate.ts';
 
 const researchResult = await orchestrate({
-  agents: [{
-    type: 'research',
-    prompt: `Analyze the codebase to identify:
+  agents: [
+    {
+      type: 'research',
+      prompt: `Analyze the codebase to identify:
     1. Dependencies and integration points for implementing: [feature from spec]
     2. Similar implementations or patterns already in use
     3. External dependencies or third-party packages needed
@@ -100,8 +101,9 @@ const researchResult = await orchestrate({
     - Plan file: ${planPath || 'none'}
 
     Focus on: dependencies, integration points, and technical complexity`,
-    timeout: 90000 // 90s for dependency analysis
-  }]
+      timeout: 90000, // 90s for dependency analysis
+    },
+  ],
 });
 
 // Extract findings

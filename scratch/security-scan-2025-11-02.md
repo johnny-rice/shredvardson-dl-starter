@@ -8,6 +8,7 @@
 ## Summary
 
 Filtered by severity threshold (High+):
+
 - **Total:** 3 vulnerabilities
 - **Critical:** 0
 - **High:** 3
