@@ -1,0 +1,17 @@
+{
+  "workflow": "/code",
+  "timestamp": "2025-11-02T12:11:58.617Z",
+  "sub_agent_tokens": {
+    "security": 20000
+  },
+  "sonnet_tokens": 8000,
+  "total_tokens": 28000,
+  "total_cost_usd": 0.083,
+  "execution_time_ms": 2000,
+  "baseline_comparison": {
+    "baseline_tokens": 50000,
+    "baseline_cost_usd": 0.9,
+    "token_savings_pct": 44,
+    "cost_savings_pct": 90.77777777777779
+  }
+}

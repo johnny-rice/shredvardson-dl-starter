@@ -1,0 +1,18 @@
+{
+  "workflow": "/spec:plan",
+  "timestamp": "2025-11-02T12:11:48.520Z",
+  "sub_agent_tokens": {
+    "research": 22000,
+    "security": 18000
+  },
+  "sonnet_tokens": 8000,
+  "total_tokens": 48000,
+  "total_cost_usd": 0.09400000000000001,
+  "execution_time_ms": 2000,
+  "baseline_comparison": {
+    "baseline_tokens": 120000,
+    "baseline_cost_usd": 2.16,
+    "token_savings_pct": 60,
+    "cost_savings_pct": 95.64814814814817
+  }
+}
