@@ -4,6 +4,28 @@
 
 See [docs/constitution.md](../constitution.md) for complete project mission, guardrails, and AI collaboration rules.
 
+## ⚠️ Command Discovery Protocol
+
+**ALWAYS check for custom commands BEFORE using native tools**
+
+This project has custom commands/skills with built-in quality gates, sub-agent orchestration, and learning capture.
+
+**The Process:**
+
+1. About to do something (git operation, db migration, create test, etc.)?
+2. Check: "Does `.claude/commands/QUICK_REFERENCE.md` have a command for this?"
+3. If YES → Use the command (it triggers workflows, agents, validations)
+4. If NO → Use native tools
+
+**Common Examples:**
+
+- Git operations → Check for `/git:*` commands FIRST
+- Database changes → Check for `/db:*` commands FIRST
+- Test creation → Check for `/test:*` commands FIRST
+- Spec/implementation → Check for `/spec:*`, `/code` commands FIRST
+
+**Why this matters:** Commands trigger sub-agents, quality gates, and learning capture that native tools bypass.
+
 ## Development Workflows
 
 **Default: Simple Workflow** (80% of development work)  
@@ -58,7 +80,11 @@ Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → 
 
 **Full protocol:** [docs/workflows/discovered-bug-protocol.md](../workflows/discovered-bug-protocol.md)
 
-## Commands Index
+## Commands Index (⚠️ Check These Before Native Tools)
+
+**Before using git, gh, npm, or database tools, check this list.**
+
+Custom commands include quality gates and PR workflows that native tools bypass.
 
 ### Spec-Driven Development (Complex Features)
 

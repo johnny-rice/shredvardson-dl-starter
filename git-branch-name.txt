@@ -1,1 +1,1 @@
-feature/263-socratic-planning-confidence-levels
+docs/274-add-command-discovery-protocol

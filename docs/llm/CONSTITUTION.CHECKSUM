@@ -1,10 +1,10 @@
 {
-  "generated": "2025-11-03T08:35:56.598Z",
+  "generated": "2025-11-03T09:50:06.404Z",
   "version": "0.1.1",
   "algorithm": "sha256-trunc16",
   "checksums": {
     "apps/web/app.config.ts": "73fba51f5be58666",
-    "docs/ai/CLAUDE.md": "e3d6bc6f2dcf2cc3",
+    "docs/ai/CLAUDE.md": "89641216ef27deb6",
     "docs/commands/index.json": "734021e197c4d4d5",
     "docs/constitution.md": "b8da9035ccc21214",
     "docs/llm/context-map.json": "cb34d1393ae40879",
