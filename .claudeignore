@@ -11,14 +11,12 @@ coverage/
 
 # Heavy documentation (unless specifically working on docs)
 docs/archive/
-docs/wiki/              # External LLM planning docs (for GPT-5, not Claude)
 docs/micro-lessons/     # 260KB learning archive
 docs/scratch/           # Temporary work files
 templates/learnings/
 
 # Large workflow files (unless specifically working on CI)
 .github/workflows/telemetry-weekly.yml
-.github/workflows/wiki-publish.yml
 .github/workflows/spec-guard.yml
 
 # Generated files

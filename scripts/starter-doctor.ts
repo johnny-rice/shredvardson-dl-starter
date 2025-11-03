@@ -1907,6 +1907,16 @@ function checkTraceability(): CheckResult {
 function checkWikiPRDSync(): CheckResult {
   const sourcePRD = resolve('docs/product/PRD.md');
   const wikiPRD = resolve('docs/wiki/WIKI-PRD.md');
+  const wikiDir = resolve('docs/wiki');
+
+  // Skip check if wiki directory doesn't exist (wiki infrastructure removed)
+  if (!existsSync(wikiDir)) {
+    return {
+      name: 'WIKI-PRD Sync',
+      status: 'pass',
+      message: 'Wiki infrastructure not present (skipped)',
+    };
+  }
 
   if (!existsSync(sourcePRD)) {
     return {

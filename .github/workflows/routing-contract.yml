@@ -12,7 +12,6 @@ on:
       - 'specs/**'
       - 'plans/**'
       - 'tasks/**'
-      - 'wiki-content/**'
 
 permissions:
   contents: read
@@ -165,22 +164,6 @@ jobs:
             echo "ℹ️ No PR template found"
           fi
 
-      - name: Check wiki generation sources
-        run: |
-          echo "🔍 Checking wiki generation sources..."
-
-          # Verify all source files for wiki generation exist
-          sources=("docs/constitution.md" "docs/ai/CLAUDE.md" "docs/commands/index.json")
-
-          for source in "${sources[@]}"; do
-            if [ ! -f "$source" ]; then
-              echo "❌ Wiki source file missing: $source"
-              exit 1
-            fi
-          done
-
-          echo "✅ All wiki source files exist"
-
       - name: Check PR label workflow compliance
         env:
           PR_LABELS: ${{ join(github.event.pull_request.labels.*.name, ',') }}
@@ -230,41 +213,6 @@ jobs:
             fi
           fi
 
-      - name: Check wiki generation integrity
-        run: |
-          echo "🔍 Checking wiki generation integrity..."
-
-          # Generate fresh wiki content
-          node scripts/generate-wiki.js --scrub-secrets
-
-          # Check that Home.md was generated
-          if [ ! -f "wiki-content/generated/Home.md" ]; then
-            echo "❌ Wiki generation failed - Home.md not created"
-            exit 1
-          fi
-
-          # Basic markdown link check for generated files
-          cd wiki-content/generated
-
-          for file in *.md; do
-            echo "Checking links in $file..."
-            
-            # Extract markdown links and check if referenced files exist
-            grep -o '\\[.*\\](.*\\.md)' "$file" | sed 's/.*](\\(.*\\))/\\1/' | while read -r link; do
-              # Skip external links
-              if [[ "$link" =~ ^https?:// ]]; then
-                continue
-              fi
-              
-              # Check if local file exists
-              if [[ ! -f "$link" && ! -f "${link}.md" ]]; then
-                echo "⚠️ Broken link in $file: $link"
-              fi
-            done
-          done
-
-          echo "✅ Wiki generation integrity check complete"
-
       - name: Summary
         run: |
           {
@@ -272,5 +220,4 @@ jobs:
             echo "✅ All paths exist and are valid"
             echo "✅ Command index is synchronized"
             echo "✅ PR workflow compliance verified"
-            echo "✅ Wiki generation integrity confirmed"
           }

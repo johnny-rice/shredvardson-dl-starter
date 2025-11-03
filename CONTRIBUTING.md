@@ -70,7 +70,6 @@ This keeps agent context lean and prevents repeat issues. The doctor tracks metr
 - `prompts/**` - AI behavior and prompt engineering
 - `scripts/**` - Build, deployment, and utility scripts
 - `.github/workflows/**` - CI/CD and automation workflows
-- `docs/wiki/**` - Public documentation and processes
 
 **Process:**
 

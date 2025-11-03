@@ -104,14 +104,12 @@ Custom commands include quality gates and PR workflows that native tools bypass.
 
 - /adr:draft → ../../.claude/commands/spec/adr-draft.md
 - /pr:assist → ../../.claude/commands/git/pr-assistant.md
-- /ops:wiki-sync → ../../.claude/commands/ops/wiki-sync.md
 - /ops:learning-capture → ../../.claude/commands/ops/learning-capture.md
 
 ### GitHub Integration
 
 - /github:create-issue → ../../.claude/commands/github/create-issue.md
 - /github:github-learning-capture → ../../.claude/commands/github/capture-learning.md
-- /github:update-wiki → ../../.claude/commands/github/update-wiki.md
 - /quality:run-linter → ../../.claude/commands/quality/run-linter.md
 - /git:branch → ../../.claude/commands/git/branch.md
 - /git:commit → ../../.claude/commands/git/commit.md

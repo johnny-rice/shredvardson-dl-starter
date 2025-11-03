@@ -75,7 +75,6 @@
     "hooks:install": "bash scripts/git-hooks/install.sh",
     "docs:check": "tsx scripts/docs-check.ts",
     "pr:create": "tsx scripts/create-pr.ts",
-    "wiki:generate": "node scripts/generate-wiki.js",
     "learn:index": "node scripts/generate-learnings-index.js",
     "learn:update-reuse": "bash scripts/update-micro-lesson-reuse.sh",
     "learn:archive": "node scripts/archive-micro-lessons.js --older-than 90 --unused",

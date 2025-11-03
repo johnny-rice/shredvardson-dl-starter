@@ -89,6 +89,9 @@ Thumbs.db
 # Scratch directory for temporary planning, research, and analysis
 docs/scratch/
 
+# Wiki content (infrastructure removed)
+wiki-content/
+
 # Runtime data
 pids
 *.pid

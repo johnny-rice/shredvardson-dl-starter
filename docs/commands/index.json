@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2025-11-02T18:17:24.592Z",
+  "generated": "2025-11-03T17:40:39.715Z",
   "commands": [
     {
       "name": "_shared/branch-validation",
@@ -256,17 +256,6 @@
       "requiresHITL": false
     },
     {
-      "name": "github:update-wiki",
-      "path": ".claude/commands/github/update-wiki.md",
-      "category": "GitHub Integration",
-      "tags": ["github", "wiki", "documentation"],
-      "when": "GitHub workflow and project management",
-      "purpose": "Generated wiki content updates",
-      "example": "Create GitHub issue with proper templates",
-      "riskLevel": "LOW",
-      "requiresHITL": true
-    },
-    {
       "name": "learn",
       "path": ".claude/commands/ops/learn-search.md",
       "category": "Operations",
@@ -284,17 +273,6 @@
       "tags": ["learning", "automation", "micro-lessons", "knowledge-management"],
       "when": "General development tasks",
       "purpose": "Capture development insights, patterns, or decisions as micro-lessons with intelligent context detection and automatic indexing.",
-      "example": "Standard development workflow",
-      "riskLevel": "LOW",
-      "requiresHITL": false
-    },
-    {
-      "name": "ops:wiki-sync",
-      "path": ".claude/commands/ops/wiki-sync.md",
-      "category": "Operations",
-      "tags": ["wiki", "sync", "maintenance"],
-      "when": "General development tasks",
-      "purpose": "Verify docs/PRD.md and docs/wiki/WIKI-PRD.md are in sync, auto-fix if needed.",
       "example": "Standard development workflow",
       "riskLevel": "LOW",
       "requiresHITL": false

@@ -136,7 +136,6 @@ Documentation that **evolves with your codebase**, not against it.
 - **Micro-Lessons**: 90-second notes on "gotchas" you encountered
 - **Heat Ranking**: Most useful lessons rise to Top-10 automatically
 - **ADR System**: Architectural decisions with full traceability
-- **Wiki Auto-Sync**: GitHub Wiki stays in sync with your codebase
 
 **Unlike static docs**, the micro-lesson system prevents knowledge rot:
 
@@ -238,18 +237,6 @@ See [Database Recipe](docs/recipes/db.md) for the complete workflow.
 | Skills Architecture    | ❌              | ❌              | ✅ Progressive disclosure (51-90% ↓)   |
 | Two-Lane Workflow      | ❌              | ❌              | ✅ Quick + Spec-driven Skill workflows |
 | Production Ready       | ⚠️ Starter      | ✅              | ✅ Battle-tested                       |
-
-## 📘 Project Wiki
-
-**For developers and AI agents** - comprehensive reference and best practices:
-
-- [🏠 **Home**](https://github.com/Shredvardson/dl-starter/wiki/Home) - Mission, two-lane development model, guardrails
-- [📋 **Spec System**](https://github.com/Shredvardson/dl-starter/wiki/Spec-System) - Kernel templates (Full/Micro) and examples
-- [⚡ **Commands**](https://github.com/Shredvardson/dl-starter/wiki/Commands) - Complete slash command reference
-- [✅ **Quality Gates**](https://github.com/Shredvardson/dl-starter/wiki/Quality-Gates) - Pipeline explanation and standards
-- [🏗️ **Architecture**](https://github.com/Shredvardson/dl-starter/wiki/Architecture) - Stack, structure, and UI rules
-- [🚀 **Getting Started**](https://github.com/Shredvardson/dl-starter/wiki/Getting-Started) - Setup and first contribution
-- [🤖 **AI Collaboration**](https://github.com/Shredvardson/dl-starter/wiki/AI-Collaboration) - Best practices with Claude/GPT-5
 
 ## Docs for LLMs
 

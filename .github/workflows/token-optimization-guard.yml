@@ -192,7 +192,6 @@ jobs:
           failed=0
 
           required_patterns=(
-            "docs/wiki/"
             "docs/micro-lessons/"
             "docs/archive/"
           )
