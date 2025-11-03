@@ -20,6 +20,7 @@ tests/phase3-sub-agents/
 ## Test Scenarios
 
 ### Test 001: Auth Feature (TC1.1)
+
 - **Workflow:** `/spec:plan`
 - **Lane:** spec-driven
 - **Sub-Agents:** Research + Security (parallel)
@@ -27,6 +28,7 @@ tests/phase3-sub-agents/
 - **Purpose:** Validate standard spec-driven feature with research-enriched design discovery
 
 ### Test 002: Simple Bugfix (TC1.2)
+
 - **Workflow:** `/spec:plan`
 - **Lane:** simple
 - **Sub-Agents:** None
@@ -34,6 +36,7 @@ tests/phase3-sub-agents/
 - **Purpose:** Validate simple lane skips sub-agent delegation
 
 ### Test 003: Payment System (TC3.1)
+
 - **Workflow:** `/spec:tasks`
 - **Lane:** spec-driven
 - **Sub-Agents:** Research (dependencies)
@@ -41,6 +44,7 @@ tests/phase3-sub-agents/
 - **Purpose:** Validate task dependency research with complex multi-phase feature
 
 ### Test 004: Admin Dashboard (TC4.1)
+
 - **Workflow:** `/code`
 - **Lane:** spec-driven
 - **Sub-Agents:** Security (pre-check)
@@ -52,6 +56,7 @@ tests/phase3-sub-agents/
 ### Prerequisites
 
 1. Ensure Phase 1-2 implementation is complete:
+
    ```bash
    # Verify orchestrator scripts exist
    ls .claude/skills/agent-orchestrator/scripts/
@@ -71,6 +76,7 @@ Execute a single test scenario:
 ```
 
 **Examples:**
+
 ```bash
 # Test 001: Auth feature with /spec:plan
 ./tests/phase3-sub-agents/run-test.sh 001 /spec:plan
@@ -94,6 +100,7 @@ Execute all test scenarios and generate aggregate report:
 ```
 
 **Modes:**
+
 - `simulation` (default): Uses simulated token values for testing the harness
 - `real`: Executes actual workflows and measures real token usage
 
@@ -161,6 +168,7 @@ After running the full suite, an aggregate markdown report is generated:
 **Location:** `tests/phase3-sub-agents/reports/aggregate-<timestamp>.md`
 
 **Contents:**
+
 - Summary table with all test results
 - Detailed results for each test
 - Overall performance metrics
@@ -170,11 +178,13 @@ After running the full suite, an aggregate markdown report is generated:
 ### Success Criteria
 
 A test **PASSES** if:
+
 - Token savings ≥50% compared to baseline
 - Cost savings ≥50% compared to baseline
 - No workflow execution errors
 
 The full suite **PASSES** if:
+
 - All individual tests pass
 - Average token savings ≥50%
 - Average cost savings ≥50%
@@ -184,11 +194,13 @@ The full suite **PASSES** if:
 ### Token Breakdown
 
 **Haiku tokens** (sub-agents):
+
 - Research Agent: Codebase exploration, pattern discovery
 - Security Scanner: Vulnerability detection, RLS policy checks
 - Test Generator: Test scaffolding and generation
 
 **Sonnet tokens** (main conversation):
+
 - Loading sub-agent findings
 - Design discovery (enriched by research)
 - Final plan/task/code generation
@@ -199,6 +211,7 @@ The full suite **PASSES** if:
 **Sonnet pricing:** ~$9/1M tokens (average of input + output)
 
 **Example calculation:**
+
 ```
 Haiku:  40,000 tokens × $0.55/1M = $0.0220
 Sonnet:  8,000 tokens × $9.00/1M = $0.0720
@@ -206,6 +219,7 @@ Total:                            = $0.0940
 ```
 
 **Baseline (no sub-agents):**
+
 ```
 Sonnet: 120,000 tokens × $9.00/1M = $1.0800
 ```
@@ -219,6 +233,7 @@ Sonnet: 120,000 tokens × $9.00/1M = $1.0800
 **Error:** `Test spec file not found for test XXX`
 
 **Solution:**
+
 ```bash
 # Check if spec file exists
 ls tests/phase3-sub-agents/specs/test-XXX-*.md
@@ -233,6 +248,7 @@ ls tests/phase3-sub-agents/specs/test-XXX-*.md
 **Error:** `pnpm tsx .claude/skills/agent-orchestrator/scripts/track-tokens.ts: command not found`
 
 **Solution:**
+
 ```bash
 # Ensure track-tokens.ts exists
 ls .claude/skills/agent-orchestrator/scripts/track-tokens.ts
@@ -247,6 +263,7 @@ cd /path/to/dl-starter-new
 **Error:** `jq: command not found`
 
 **Solution:**
+
 ```bash
 # macOS
 brew install jq
@@ -263,6 +280,7 @@ sudo yum install jq
 **Error:** `bc: command not found`
 
 **Solution:**
+
 ```bash
 # macOS
 brew install bc
@@ -279,6 +297,7 @@ sudo yum install bc
 After running Phase 3 tests:
 
 ### If Tests Pass (≥50% savings)
+
 1. Update [docs/implementation/sub-agent-workflow-integration.md](../../docs/implementation/sub-agent-workflow-integration.md) with actual results
 2. Mark Issue #257 as complete
 3. Update [ADR-008](../../docs/decisions/ADR-008-sub-agent-orchestration.md) with outcomes
@@ -286,6 +305,7 @@ After running Phase 3 tests:
 5. Monitor usage for 1 month
 
 ### If Tests Fail (<50% savings)
+
 1. Profile workflows to identify overhead sources
 2. Review sub-agent prompts for optimization opportunities
 3. Check for network/API latency issues
@@ -293,12 +313,14 @@ After running Phase 3 tests:
 5. Re-test with optimizations
 
 ### Phase 3.2: Real-World Testing
+
 1. Select 2-3 real features from backlog
 2. Execute full workflow: `/specify` → `/plan` → `/tasks` → `/code`
 3. Measure end-to-end token usage
 4. Collect developer feedback on quality
 
 ### Phase 3.3: Failure Testing
+
 1. Simulate Research Agent timeout
 2. Simulate Security Scanner JSON parsing failure
 3. Simulate parallel execution failure

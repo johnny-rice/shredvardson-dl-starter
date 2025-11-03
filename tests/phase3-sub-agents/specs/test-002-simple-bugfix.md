@@ -19,11 +19,13 @@ The theme toggle button flickers briefly when switching between light and dark m
 ## Problem Statement
 
 When users click the theme toggle button, there's a visible flicker where:
+
 1. The old theme appears for 50-100ms
 2. The transition animation stutters
 3. Some components render with the wrong theme momentarily
 
 **User Impact:**
+
 - Jarring visual experience
 - Appears buggy and unpolished
 - Users report motion sickness from flicker
@@ -31,12 +33,14 @@ When users click the theme toggle button, there's a visible flicker where:
 ## Proposed Solution
 
 Fix the flicker by:
+
 1. Apply theme class synchronously before any paint
 2. Use CSS `color-scheme` meta tag to prevent flash
 3. Ensure `ThemeProvider` updates before component re-renders
 4. Add transition timing to smooth the switch
 
 **Technical approach:**
+
 - Move theme application to `document.documentElement` immediately
 - Add `<meta name="color-scheme" content="dark light">` to layout
 - Use CSS containment to prevent layout shifts
@@ -54,13 +58,16 @@ Fix the flicker by:
 ## Technical Constraints
 
 **Performance:**
+
 - Must apply theme within one frame (16ms)
 - No layout shifts (CLS = 0)
 
 **Browser Support:**
+
 - Chrome 90+, Firefox 88+, Safari 14+ (existing support targets)
 
 **Dependencies:**
+
 - Existing `ThemeProvider` component
 - Next.js app router layout
 
@@ -85,6 +92,7 @@ Fix the flicker by:
 ## Expected Behavior (Simple Lane)
 
 This test spec should:
+
 - **NOT** trigger Research Agent (simple lane)
 - **NOT** trigger Security Scanner (simple lane)
 - Create basic plan without design discovery

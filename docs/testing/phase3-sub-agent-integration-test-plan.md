@@ -273,7 +273,7 @@ const HAIKU_COST_PER_TOKEN = 0.55 / 1_000_000;
 const SONNET_COST_PER_TOKEN = 9 / 1_000_000;
 
 function calculateCost(haikuTokens: number, sonnetTokens: number): number {
-  return (haikuTokens * HAIKU_COST_PER_TOKEN) + (sonnetTokens * SONNET_COST_PER_TOKEN);
+  return haikuTokens * HAIKU_COST_PER_TOKEN + sonnetTokens * SONNET_COST_PER_TOKEN;
 }
 
 function generateReport(data: TokenUsageReport): void {

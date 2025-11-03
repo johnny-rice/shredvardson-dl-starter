@@ -18,6 +18,7 @@ Add a "Command Discovery Protocol" section to CLAUDE.md to prevent Claude from b
 ## Problem Statement
 
 Claude sometimes bypasses custom commands (like `/git:prepare-pr`) in favor of native tools (like `git push`), which skips:
+
 - Quality gates (linting, type checks)
 - Security checks (RLS validation)
 - Workflow automation (PR templates)
@@ -33,6 +34,7 @@ Claude sometimes bypasses custom commands (like `/git:prepare-pr`) in favor of n
 Add two reinforcement points for command discovery based on research findings:
 
 ### Part 1: Command Discovery Protocol (After Line 7)
+
 Add forcing function at beginning of file (right after Mission & Guardrails):
 
 ```markdown
@@ -43,12 +45,14 @@ Add forcing function at beginning of file (right after Mission & Guardrails):
 This project has custom commands/skills with built-in quality gates, sub-agent orchestration, and learning capture.
 
 **The Process:**
+
 1. About to do something (git operation, db migration, create test, etc.)?
 2. Check: "Does `.claude/commands/QUICK_REFERENCE.md` have a command for this?"
 3. If YES → Use the command (it triggers workflows, agents, validations)
 4. If NO → Use native tools
 
 **Common Examples:**
+
 - Git operations → Check for `/git:*` commands FIRST
 - Database changes → Check for `/db:*` commands FIRST
 - Test creation → Check for `/test:*` commands FIRST
@@ -58,6 +62,7 @@ This project has custom commands/skills with built-in quality gates, sub-agent o
 ```
 
 ### Part 2: Enhanced Commands Index (Line 61)
+
 Update Commands Index section header to reinforce message at point of lookup:
 
 ```markdown
@@ -82,6 +87,7 @@ Custom commands include quality gates and PR workflows that native tools bypass.
 ## Technical Constraints
 
 **Line Count Budget:**
+
 - Current CLAUDE.md: 162 lines
 - Available budget: 18 lines
 - Part 1 content: ~15 lines
@@ -89,11 +95,13 @@ Custom commands include quality gates and PR workflows that native tools bypass.
 - Target total: 177 lines (3-line margin)
 
 **Placement Strategy:**
+
 - Part 1: After line 7 (early placement for maximum attention)
 - Part 2: Line 61 update (reinforcement at point of command lookup)
 - Two reinforcement points address "lost in the middle" effect
 
 **Documentation Style:**
+
 - Use imperative mood with strong verbs (ALWAYS, BEFORE)
 - Bullet points for space efficiency
 - No code examples in Part 1 (use markdown formatting instead)
@@ -116,17 +124,20 @@ Custom commands include quality gates and PR workflows that native tools bypass.
 ## References
 
 **Research Findings:**
+
 - "Lost in the middle" effect: Placement matters more than content
 - Explicit priority statements work better than implied hierarchy
 - Anthropic recommends "check before action" patterns for Claude 4+
 - Two reinforcement points better than one (beginning + point-of-use)
 
 **Similar Implementations Found:**
+
 - [CLAUDE.md:9-79](CLAUDE.md#L9-L79) - Existing Workflow Commands section (70 lines)
 - [prompts/orchestrator.md:1-50](prompts/orchestrator.md#L1-L50) - Strong imperative language patterns (MUST, ALWAYS, NEVER)
 - [prompts/planner.md:1](prompts/planner.md#L1) - MUST/ALWAYS constraint patterns
 
 **Current CLAUDE.md Structure:**
+
 - Line 1: Purpose
 - Line 9-79: Workflow Commands (insertion point for Part 1: after line 7)
 - Line 80-96: Tips
@@ -136,9 +147,11 @@ Custom commands include quality gates and PR workflows that native tools bypass.
 - Line 152-162: Contributing
 
 **External Documentation:**
+
 - Anthropic best practices: "Check before action" pattern
 - Web research on LLM prompt engineering 2025 (dual reinforcement)
 
 **Related Issues:**
+
 - Issue #274 (this issue)
 - Closed #275 (merged into #274 for single implementation)

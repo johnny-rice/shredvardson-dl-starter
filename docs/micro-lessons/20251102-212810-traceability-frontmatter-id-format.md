@@ -43,10 +43,10 @@ Each document type has specific requirements:
 
 ```yaml
 ---
-id: "SPEC-263"
+id: 'SPEC-263'
 type: spec
 issue: 263
-title: "Add confidence levels to Socratic planning"
+title: 'Add confidence levels to Socratic planning'
 priority: p2
 status: ready
 lane: spec-driven
@@ -57,11 +57,11 @@ lane: spec-driven
 
 ```yaml
 ---
-id: "PLAN-263"
+id: 'PLAN-263'
 type: plan
 issue: 263
-parentId: "SPEC-263"
-title: "Add Confidence Levels - Implementation Plan"
+parentId: 'SPEC-263'
+title: 'Add Confidence Levels - Implementation Plan'
 spec: specs/263-socratic-planning-confidence-levels.md
 lane: spec-driven
 created: 2025-01-02
@@ -73,11 +73,11 @@ status: draft
 
 ```yaml
 ---
-id: "TASK-263"
+id: 'TASK-263'
 type: task
 issue: 263
-parentId: "PLAN-263"
-title: "Add Confidence Levels - Task Breakdown"
+parentId: 'PLAN-263'
+title: 'Add Confidence Levels - Task Breakdown'
 spec: specs/263-socratic-planning-confidence-levels.md
 plan: plans/263-socratic-planning-confidence-levels.md
 created: 2025-01-02

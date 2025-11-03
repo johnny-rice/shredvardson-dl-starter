@@ -123,7 +123,7 @@ Include all props, variants, examples, and accessibility notes.
 
 **Generated JSDoc:**
 
-```typescript
+````typescript
 /**
  * Primary button component for actions and navigation.
  *
@@ -167,21 +167,21 @@ export interface ButtonProps
    * Visual style variant
    * @default "default"
    */
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
+  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link';
 
   /**
    * Size of the button
    * @default "default"
    */
-  size?: 'default' | 'sm' | 'lg' | 'icon'
+  size?: 'default' | 'sm' | 'lg' | 'icon';
 
   /**
    * Render as child component (Slot pattern)
    * @default false
    */
-  asChild?: boolean
+  asChild?: boolean;
 }
-```
+````
 
 ### Example 2: ADR for Architecture Decision
 
@@ -216,10 +216,7 @@ export interface ButtonProps
     "documented_apis": ["apply_migration", "rollback_migration"],
     "examples_provided": 3,
     "accessibility_notes": false,
-    "related_docs": [
-      "docs/database/README.md",
-      "docs/specs/124-database-migration-workflow.md"
-    ]
+    "related_docs": ["docs/database/README.md", "docs/specs/124-database-migration-workflow.md"]
   },
   "quality_checks": {
     "all_public_apis_documented": true,
@@ -244,6 +241,7 @@ export interface ButtonProps
 ## Context
 
 We need a standardized workflow for database schema changes that:
+
 - Supports local development and production environments
 - Integrates with Supabase migrations
 - Prevents breaking changes
@@ -252,6 +250,7 @@ We need a standardized workflow for database schema changes that:
 ## Decision
 
 Implement a database migration workflow using Supabase CLI with:
+
 1. Migration file generation via `pnpm db:migration:new`
 2. Local testing via `pnpm db:push --local`
 3. CI validation before merge
@@ -260,12 +259,14 @@ Implement a database migration workflow using Supabase CLI with:
 ## Consequences
 
 **Positive:**
+
 - Standardized migration process
 - Safer deployments with validation
 - Easy rollbacks
 - Developer productivity
 
 **Negative:**
+
 - Requires Supabase CLI setup
 - Additional CI step adds ~30s to builds
 - Manual coordination for large schema changes

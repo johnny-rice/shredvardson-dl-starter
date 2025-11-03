@@ -1,6 +1,6 @@
 ---
 id: markdown-code-blocks
-title: "Always Specify Language Identifiers in Markdown Code Blocks"
+title: 'Always Specify Language Identifiers in Markdown Code Blocks'
 category: documentation
 tags: [markdown, documentation, linting, accessibility, best-practices]
 date: 2025-11-03
@@ -8,10 +8,10 @@ confidence: high
 impact: medium
 effort: trivial
 related:
-  - issue: "#259"
+  - issue: '#259'
   - files:
-    - ".claude/prompts/*.md"
-    - "docs/**/*.md"
+      - '.claude/prompts/*.md'
+      - 'docs/**/*.md'
 ---
 
 # Always Specify Language Identifiers in Markdown Code Blocks
@@ -28,15 +28,17 @@ During PR #273 (structured prompt templates), CodeRabbit flagged multiple instan
 **Problem Pattern:**
 
 <!-- markdownlint-disable MD040 -->
+
 ```markdown
 **Input:**
-
 ```
 
 Some code or text here
 
 ```
+
 ```
+
 <!-- markdownlint-enable MD040 -->
 
 This creates ambiguous code blocks that tools can't properly process.
@@ -48,12 +50,14 @@ This creates ambiguous code blocks that tools can't properly process.
 Every fenced code block should specify a language identifier:
 
 <!-- markdownlint-disable MD040 -->
-```markdown
+
+````markdown
 ```language
 code here
 ```
+````
 
-```
+````
 <!-- markdownlint-enable MD040 -->
 
 Even for plain text content, use the `text` identifier:
@@ -63,9 +67,9 @@ Even for plain text content, use the `text` identifier:
 ```text
 Generate JSDoc for packages/ui/src/components/button.tsx
 Include all props, variants, examples.
-```
+````
 
-```
+````
 <!-- markdownlint-enable MD040 -->
 
 ### Common Language Identifiers
@@ -100,9 +104,9 @@ Include all props, variants, examples.
 ```text
 Create a profiles table with user_id (uuid), display_name (text).
 Add RLS so users can only read/write their own profile.
-```
+````
 
-```
+````
 <!-- markdownlint-enable MD040 -->
 
 This is better than no identifier and makes the intent clear: "this is textual input, not code."
@@ -138,25 +142,29 @@ This is better than no identifier and makes the intent clear: "this is textual i
 ```markdown
 Here's how to run tests:
 
-```
+````
 
 pnpm test
 
 ```
+
 ```
+
 <!-- markdownlint-enable MD040 -->
 
 **After:**
 
 <!-- markdownlint-disable MD040 -->
-```markdown
+
+````markdown
 Here's how to run tests:
 
 ```bash
 pnpm test
 ```
+````
 
-```
+````
 <!-- markdownlint-enable MD040 -->
 
 ### 2. When Creating Prompt Examples
@@ -166,27 +174,31 @@ pnpm test
 ```markdown
 **Input:**
 
-```
+````
 
 Generate tests for button.tsx
 Use Vitest and React Testing Library
 
 ```
+
 ```
+
 <!-- markdownlint-enable MD040 -->
 
 **After:**
 
 <!-- markdownlint-disable MD040 -->
-```markdown
+
+````markdown
 **Input:**
 
 ```text
 Generate tests for button.tsx
 Use Vitest and React Testing Library
 ```
+````
 
-```
+````
 <!-- markdownlint-enable MD040 -->
 
 ### 3. When Showing Multi-Step Processes
@@ -196,7 +208,7 @@ Use Vitest and React Testing Library
 ```markdown
 First create the file:
 
-```
+````
 
 touch config.json
 
@@ -209,26 +221,30 @@ Then edit it:
 {"enabled": true}
 
 ```
+
 ```
+
 <!-- markdownlint-enable MD040 -->
 
 **After:**
 
 <!-- markdownlint-disable MD040 -->
-```markdown
+
+````markdown
 First create the file:
 
 ```bash
 touch config.json
 ```
+````
 
 Then edit it:
 
 ```json
-{"enabled": true}
+{ "enabled": true }
 ```
 
-```
+````
 <!-- markdownlint-enable MD040 -->
 
 ### 4. Update Existing Files
@@ -237,7 +253,7 @@ Run markdownlint to find violations:
 
 ```bash
 npx markdownlint-cli2 "**/*.md"
-```
+````
 
 Look for MD040 warnings:
 
@@ -253,24 +269,27 @@ docs/example.md:42 MD040/fenced-code-language
 **Before (no language):**
 
 <!-- markdownlint-disable MD040 -->
+
 ```markdown
 ### Example 1: Create Migration
 
 **Input:**
-
 ```
 
 Create users table with email and password fields.
 Add RLS policies for user isolation.
 
 ```
+
 ```
+
 <!-- markdownlint-enable MD040 -->
 
 **After (with `text` identifier):**
 
 <!-- markdownlint-disable MD040 -->
-```markdown
+
+````markdown
 ### Example 1: Create Migration
 
 **Input:**
@@ -279,8 +298,9 @@ Add RLS policies for user isolation.
 Create users table with email and password fields.
 Add RLS policies for user isolation.
 ```
+````
 
-```
+````
 <!-- markdownlint-enable MD040 -->
 
 **Why `text`?** The input is natural language instructions, not executable code.
@@ -292,7 +312,7 @@ Add RLS policies for user isolation.
 ```markdown
 Run the following command:
 
-```
+````
 
 pnpm tsx scripts/validate.ts
 
@@ -305,18 +325,22 @@ You should see:
 ✅ All validations passed
 
 ```
+
 ```
+
 <!-- markdownlint-enable MD040 -->
 
 **After (with appropriate identifiers):**
 
 <!-- markdownlint-disable MD040 -->
-```markdown
+
+````markdown
 Run the following command:
 
 ```bash
 pnpm tsx scripts/validate.ts
 ```
+````
 
 You should see:
 
@@ -324,7 +348,7 @@ You should see:
 ✅ All validations passed
 ```
 
-```
+````
 <!-- markdownlint-enable MD040 -->
 
 **Why different identifiers?** The command is bash-executable, but the output is plain text (not code).
@@ -336,11 +360,11 @@ You should see:
 ```markdown
 Request body:
 
-```
+````
 
 {
-  "query": "research authentication patterns",
-  "depth": "deep"
+"query": "research authentication patterns",
+"depth": "deep"
 }
 
 ```
@@ -350,18 +374,21 @@ Response:
 ```
 
 {
-  "findings": ["..."],
-  "confidence": "high"
+"findings": ["..."],
+"confidence": "high"
 }
 
 ```
+
 ```
+
 <!-- markdownlint-enable MD040 -->
 
 **After (with `json` identifier):**
 
 <!-- markdownlint-disable MD040 -->
-```markdown
+
+````markdown
 Request body:
 
 ```json
@@ -370,6 +397,7 @@ Request body:
   "depth": "deep"
 }
 ```
+````
 
 Response:
 
@@ -380,7 +408,7 @@ Response:
 }
 ```
 
-```
+````
 <!-- markdownlint-enable MD040 -->
 
 **Why `json`?** Both are valid JSON objects that could be parsed/validated.
@@ -393,7 +421,7 @@ Our pre-commit hooks check this automatically:
 
 ```bash
 pnpm hooks:validate  # Runs markdownlint
-```
+````
 
 **MD040 Rule:**
 
@@ -422,7 +450,7 @@ The `markdown-lint` hook in `lefthook.yml`:
 
 ```yaml
 markdown-lint:
-  glob: "*.md"
+  glob: '*.md'
   run: |
     markdownlint-cli2 {staged_files}
 ```
@@ -503,7 +531,7 @@ All markdown files go through markdownlint in pre-commit hooks. See [.markdownli
 
 ### 2. Prompt Documentation
 
-See [.claude/prompts/_TEMPLATE.md](../../.claude/prompts/_TEMPLATE.md) for structured prompt format that includes code block examples.
+See [.claude/prompts/\_TEMPLATE.md](../../.claude/prompts/_TEMPLATE.md) for structured prompt format that includes code block examples.
 
 ## Saved Us From
 
@@ -566,25 +594,25 @@ See [.claude/prompts/_TEMPLATE.md](../../.claude/prompts/_TEMPLATE.md) for struc
 
 ## Quick Reference Card
 
-```markdown
+````markdown
 # Language Identifier Quick Reference
 
 ## Common Scenarios
 
-User input/instructions     → ```text
-Shell commands              → ```bash
-TypeScript code             → ```typescript
-JSON data                   → ```json
-SQL queries                 → ```sql
-Markdown examples           → ```markdown
-Plain output                → ```text
-Configuration files         → ```yaml or ```json
+User input/instructions → `text
+Shell commands              → `bash
+TypeScript code → `typescript
+JSON data                   → `json
+SQL queries → `sql
+Markdown examples           → `markdown
+Plain output → `text
+Configuration files         → `yaml or ```json
 
 ## When in Doubt
 
 Use ```text for plain language content.
 Use specific language for executable code.
-```
+````
 
 ## Checklist
 

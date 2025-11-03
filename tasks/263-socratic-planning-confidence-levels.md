@@ -533,6 +533,7 @@ Documentation critical for future maintainers. Troubleshooting guide will reduce
 ### High-Risk Tasks
 
 **T7: Auto-Research Trigger (5h)**
+
 - **Risk:** MCP integration untested, timeout handling complex
 - **Mitigation:**
   - Implement timeout with graceful degradation (proceed without research if timeout)
@@ -542,6 +543,7 @@ Documentation critical for future maintainers. Troubleshooting guide will reduce
 - **Contingency:** If MCP integration fails, deploy without auto-research (confidence still works, manual research required)
 
 **T2: Confidence Calculation (3h)**
+
 - **Risk:** Scoring algorithm may be poorly calibrated, leading to low acceptance rate
 - **Mitigation:**
   - Base on proven Security Scanner pattern (`.claude/agents/security-scanner.md:115-145`)
@@ -550,6 +552,7 @@ Documentation critical for future maintainers. Troubleshooting guide will reduce
 - **Contingency:** If calibration off, adjust scoring weights in T2 without changing API
 
 **T15: Security Hardening (2h)**
+
 - **Risk:** Input validation gaps could allow prompt injection or HTML injection
 - **Mitigation:**
   - Zod schemas for all external inputs (MCP responses, user choices, reasoning text)
@@ -563,11 +566,13 @@ Documentation critical for future maintainers. Troubleshooting guide will reduce
 T1 → T2/T3/T4/T5 → T6 → T7 → T10 → T12/T13 → T14 → T15
 
 **Potential Bottlenecks:**
+
 - T7 (auto-research) blocks T10 (command integration) - highest complexity task
 - T13 (integration tests) requires T7 complete - testing MCP integration takes time
 - T14 (manual testing) requires real MCP tools - external dependency
 
 **Parallelization Opportunities:**
+
 - T2, T3, T4, T5 can be developed in parallel (independent utilities)
 - T12 (unit tests) can start as soon as individual utilities complete
 - T9 (analysis script) can be developed in parallel with T10-T15
@@ -577,17 +582,20 @@ T1 → T2/T3/T4/T5 → T6 → T7 → T10 → T12/T13 → T14 → T15
 ### Per-Task Testing
 
 **Unit Tests (T12):**
+
 - Confidence calculation: Test all scoring combinations and thresholds
 - Tech stack detection: Test with various package.json fixtures
 - Sanitization: Test HTML injection, oversized inputs, valid inputs
 - Rate limiting: Test enforcement, TTL expiration, reset
 
 **Integration Tests (T13):**
+
 - Auto-research: Mock MCP responses, test timeout, test degradation
 - Audit logging: Test file creation, JSON Lines format, PII exclusion
 - Phase 2 flow: Test complete workflow with high/low confidence scenarios
 
 **Manual Tests (T14):**
+
 - Real `/spec:plan` execution with test specs
 - User interaction: Accept recommendation, override recommendation
 - Display format: Verify 🎯 and ← markers render correctly
@@ -595,6 +603,7 @@ T1 → T2/T3/T4/T5 → T6 → T7 → T10 → T12/T13 → T14 → T15
 - Logging: Verify `.claude/logs/recommendations.jsonl` populated correctly
 
 **Security Tests (T15):**
+
 - Prompt injection: Attempt to manipulate reasoning via malicious input
 - MCP tampering: Send malformed MCP responses
 - Rate limit bypass: Attempt to trigger >10 research calls
@@ -624,17 +633,20 @@ T1 → T2/T3/T4/T5 → T6 → T7 → T10 → T12/T13 → T14 → T15
 ### Post-Deployment Validation (2 weeks)
 
 **Run analysis script:**
+
 ```bash
 bash scripts/analyze-recommendations.sh
 ```
 
 **Expected Results:**
+
 - Acceptance rate: ≥70% (indicates good calibration)
 - Research trigger rate: ~30% (indicates appropriate threshold)
 - Average confidence (accepted): >90%
 - Average confidence (rejected): <85%
 
 **If metrics off:**
+
 - Acceptance <70% → Adjust scoring weights in T2 (likely tech stack weight too low)
 - Research trigger >50% → Raise threshold from 90% to 92-95%
 - Research trigger <20% → Lower threshold from 90% to 85-88%
@@ -655,6 +667,7 @@ bash scripts/analyze-recommendations.sh
 ### Research Findings
 
 **From Research Agent (Phase 0):**
+
 - No existing tech stack detection implementation
 - No test infrastructure (vitest needs to be added)
 - No Zod dependency (needs to be added)

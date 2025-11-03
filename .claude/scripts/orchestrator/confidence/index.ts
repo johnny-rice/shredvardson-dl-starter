@@ -17,17 +17,10 @@ export {
   generateSessionId,
   logRecommendation,
 } from './audit-log';
-export {
-  shouldTriggerAutoResearch,
-  triggerAutoResearch,
-} from './auto-research';
+export { shouldTriggerAutoResearch, triggerAutoResearch } from './auto-research';
 // Core utilities
 export { calculateConfidence, isSufficientConfidence } from './calculate-confidence';
-export {
-  clearTechStackCache,
-  detectTechStack,
-  determineTechStackMatch,
-} from './detect-tech-stack';
+export { clearTechStackCache, detectTechStack, determineTechStackMatch } from './detect-tech-stack';
 
 // Rate limiting
 export {

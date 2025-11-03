@@ -25,6 +25,7 @@ Our sub-agents currently use unstructured markdown prompts without clear section
 
 ```markdown
 # Research Agent
+
 You are a research agent. Research the codebase...
 ```
 
@@ -37,20 +38,24 @@ Adopt structured prompt templates with four key sections for all sub-agents:
 
 ```markdown
 ## PURPOSE
+
 Clear, one-sentence description of what this prompt does
 
 ## CONTEXT
+
 - Input data available
 - Project-specific context
 - Relevant constraints from conversation
 
 ## CONSTRAINTS
+
 - Output format requirements
 - Length limits
 - Style guidelines
 - What NOT to do
 
 ## OUTPUT FORMAT
+
 Explicit schema or template for expected output
 ```
 
@@ -120,16 +125,19 @@ You are a specialized research agent. Explore the codebase deeply and return foc
 
 **After (structured):**
 
-```markdown
+````markdown
 ## PURPOSE
+
 Explore the codebase deeply to answer architectural questions and return focused, actionable insights.
 
 ## CONTEXT
+
 - Input: { query, focus_areas, max_files, depth, include_external }
 - Project: Next.js 15 + Supabase monorepo with Turborepo
 - Access: Read, Glob, Grep, Bash, WebSearch tools
 
 ## CONSTRAINTS
+
 - Return summary in <5K tokens
 - Burn tokens freely in isolated context (you're Haiku, not Sonnet)
 - Include specific file:line references
@@ -137,15 +145,17 @@ Explore the codebase deeply to answer architectural questions and return focused
 - Confidence level required: high | medium | low
 
 ## OUTPUT FORMAT
+
 ```json
 {
   "key_findings": ["Finding 1", "Finding 2", "Finding 3"],
   "architecture_patterns": ["Pattern 1", "Pattern 2"],
-  "recommendations": [{"action": "...", "rationale": "..."}],
-  "code_locations": [{"file": "...", "line": 42, "purpose": "..."}],
+  "recommendations": [{ "action": "...", "rationale": "..." }],
+  "code_locations": [{ "file": "...", "line": 42, "purpose": "..." }],
   "confidence": "high"
 }
 ```
+````
 
 ### Inspiration
 

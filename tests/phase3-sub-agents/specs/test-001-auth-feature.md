@@ -21,6 +21,7 @@ Add multi-factor authentication (MFA) support to the application, allowing users
 Users currently authenticate with only username/password, which is vulnerable to credential theft and phishing attacks. High-value accounts need an additional layer of security.
 
 **User Impact:**
+
 - Account takeovers result in data breaches
 - Compliance requirements (SOC 2, HIPAA) mandate MFA
 - Users have no self-service way to improve security
@@ -65,20 +66,24 @@ Implement TOTP (Time-based One-Time Password) MFA using industry-standard librar
 ## Technical Constraints
 
 **Authentication:**
+
 - Must integrate with existing Supabase Auth system
 - TOTP secrets must be encrypted at rest
 - Backup codes must be hashed before storage
 
 **Performance:**
+
 - TOTP verification must complete in <200ms
 - QR code generation must be fast (<100ms)
 
 **Security:**
+
 - Rate limiting on TOTP verification (5 attempts per 5 minutes)
 - Backup codes single-use only
 - Secret keys generated with cryptographically secure RNG
 
 **Dependencies:**
+
 - Supabase Auth (existing)
 - TOTP library (e.g., `otpauth`, `speakeasy`)
 - QR code library (e.g., `qrcode`)
@@ -106,6 +111,7 @@ Implement TOTP (Time-based One-Time Password) MFA using industry-standard librar
 ## Expected Research Findings
 
 This test spec should trigger Research Agent to find:
+
 - Existing auth patterns in `apps/web/lib/auth/` or similar
 - Supabase Auth integration examples
 - RLS policy patterns for user data
@@ -114,6 +120,7 @@ This test spec should trigger Research Agent to find:
 ## Expected Security Findings
 
 This test spec should trigger Security Scanner to identify:
+
 - Missing RLS policies on MFA-related tables
 - Authentication bypass risks
 - Session management vulnerabilities

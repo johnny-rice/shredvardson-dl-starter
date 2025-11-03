@@ -79,13 +79,14 @@ Return findings as JSON:
 
 \`\`\`json
 {
-  "key_findings": [...],
-  "recommendations": [...],
-  "confidence": "high" | "medium" | "low"
+"key_findings": [...],
+"recommendations": [...],
+"confidence": "high" | "medium" | "low"
 }
 \`\`\`
 
 **Required Fields:**
+
 - `key_findings`: 3-5 findings with file:line references
 - `recommendations`: 2-4 actionable next steps
 - `confidence`: Overall confidence (high | medium | low)

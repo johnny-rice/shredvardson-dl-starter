@@ -107,7 +107,7 @@ jq -n \
           "Read .github/pull_request_template.md",
           "Analyze commits and changes",
           "Generate PR title: type: description (Issue #X)",
-          "Generate PR body with all sections",
+          "Generate PR body with all sections. IMPORTANT: If issue number exists, add '**Closes #X**' at the end of the Summary section to auto-close the issue when merged",
           "Create PR: gh pr create --title \"...\" --body \"...\""
         ]
       }

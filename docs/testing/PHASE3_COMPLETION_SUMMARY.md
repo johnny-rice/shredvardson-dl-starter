@@ -121,12 +121,12 @@ Each spec includes:
 **Passed:** 4
 **Failed:** 0
 
-| Test | Workflow | Baseline | Actual | Token Savings | Cost Savings | Result |
-|------|----------|----------|--------|---------------|--------------|--------|
-| 001 | /spec:plan | 120,000 | 48,000 | 60.0% | 95.6% | ✅ PASS |
-| 002 | /spec:plan | 120,000 | 15,000 | 87.5% | 93.8% | ✅ PASS |
-| 003 | /spec:tasks | 25,000 | 11,000 | 56.0% | 94.6% | ✅ PASS |
-| 004 | /code | 50,000 | 28,000 | 44.0% | 92.4% | ✅ PASS |
+| Test | Workflow    | Baseline | Actual | Token Savings | Cost Savings | Result  |
+| ---- | ----------- | -------- | ------ | ------------- | ------------ | ------- |
+| 001  | /spec:plan  | 120,000  | 48,000 | 60.0%         | 95.6%        | ✅ PASS |
+| 002  | /spec:plan  | 120,000  | 15,000 | 87.5%         | 93.8%        | ✅ PASS |
+| 003  | /spec:tasks | 25,000   | 11,000 | 56.0%         | 94.6%        | ✅ PASS |
+| 004  | /code       | 50,000   | 28,000 | 44.0%         | 92.4%        | ✅ PASS |
 
 **Overall Performance:**
 
@@ -216,13 +216,13 @@ Test 002 (simple lane) showed highest savings (87.5%) by skipping sub-agent dele
 
 ## Success Criteria Status
 
-| Criterion | Target | Status | Notes |
-|-----------|--------|--------|-------|
-| Token savings | ≥50% | ✅ 67.6% | Exceeds target |
-| Cost savings | ≥50% | ✅ 93.9% | Exceeds target |
-| Quality parity | ≥90% | 🟡 Pending | Real-world testing required |
-| Execution time | ±20% | 🟡 Pending | Real-world measurement needed |
-| Graceful degradation | 100% | 🟡 Pending | Failure testing required |
+| Criterion            | Target | Status     | Notes                         |
+| -------------------- | ------ | ---------- | ----------------------------- |
+| Token savings        | ≥50%   | ✅ 67.6%   | Exceeds target                |
+| Cost savings         | ≥50%   | ✅ 93.9%   | Exceeds target                |
+| Quality parity       | ≥90%   | 🟡 Pending | Real-world testing required   |
+| Execution time       | ±20%   | 🟡 Pending | Real-world measurement needed |
+| Graceful degradation | 100%   | 🟡 Pending | Failure testing required      |
 
 **Legend:**
 

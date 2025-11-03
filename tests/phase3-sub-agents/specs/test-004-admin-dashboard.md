@@ -19,12 +19,14 @@ Create an admin dashboard that allows administrators to view user activity, mana
 ## Problem Statement
 
 Administrators currently have no visibility into:
+
 - User activity and engagement metrics
 - System performance and errors
 - Account status and user support issues
 - Security incidents and anomalies
 
 **Admin Impact:**
+
 - Manual database queries for basic user info
 - No real-time monitoring of system health
 - Slow response to user support requests
@@ -35,30 +37,35 @@ Administrators currently have no visibility into:
 Build a comprehensive admin dashboard with:
 
 ### 1. User Management
+
 - User list with search and filters
 - User detail view (profile, activity, usage)
 - Account actions (suspend, delete, impersonate)
 - Role and permission management
 
 ### 2. Analytics Dashboard
+
 - Total users, MAU, DAU metrics
 - Revenue charts (MRR, ARR)
 - Feature usage heatmaps
 - Conversion funnel analytics
 
 ### 3. System Health Monitoring
+
 - API response times and error rates
 - Database performance metrics
 - Background job status
 - Uptime and availability
 
 ### 4. Security Center
+
 - Recent login attempts (successful/failed)
 - Suspicious activity alerts
 - IP blocklist management
 - Audit log viewer
 
 ### 5. Support Tools
+
 - User search by email/ID
 - Impersonation for troubleshooting
 - Support ticket integration
@@ -67,6 +74,7 @@ Build a comprehensive admin dashboard with:
 ## Acceptance Criteria
 
 ### User Management
+
 - [ ] Admin can view all users with pagination
 - [ ] Admin can search users by email/name/ID
 - [ ] Admin can filter by role, status, plan
@@ -76,18 +84,21 @@ Build a comprehensive admin dashboard with:
 - [ ] Admin can assign/revoke roles
 
 ### Analytics
+
 - [ ] Dashboard shows key metrics (users, revenue, engagement)
 - [ ] Charts render with real-time data (<2s load)
 - [ ] Export data as CSV
 - [ ] Date range filters work correctly
 
 ### System Health
+
 - [ ] API metrics displayed (latency, error rate)
 - [ ] Database metrics displayed (query time, connections)
 - [ ] Background jobs monitored (success/failure)
 - [ ] Alerts shown for critical issues
 
 ### Security
+
 - [ ] Recent logins displayed with IP and device info
 - [ ] Failed login attempts tracked
 - [ ] Suspicious activity flagged (e.g., multiple IPs)
@@ -95,6 +106,7 @@ Build a comprehensive admin dashboard with:
 - [ ] IP blocklist management works
 
 ### Support
+
 - [ ] Admin can search users for support
 - [ ] Admin can impersonate user (with audit trail)
 - [ ] Activity timeline shows user history
@@ -103,24 +115,28 @@ Build a comprehensive admin dashboard with:
 ## Technical Constraints
 
 **Authorization:**
+
 - Only users with `admin` or `superadmin` role can access
 - `admin` role: read-only access
 - `superadmin` role: full CRUD access
 - Impersonation requires `superadmin` + 2FA verification
 
 **Security:**
+
 - RLS policies enforce admin-only access
 - All admin actions audit logged
 - Rate limiting on sensitive operations (delete, suspend)
 - CSRF protection on all forms
 
 **Performance:**
+
 - Dashboard loads in <2s
 - User list paginated (50 per page)
 - Analytics queries cached (5-minute TTL)
 - Real-time updates via WebSocket for critical alerts
 
 **Dependencies:**
+
 - Supabase RLS policies for admin tables
 - Analytics data aggregation (background jobs)
 - Audit log storage and querying
@@ -129,14 +145,17 @@ Build a comprehensive admin dashboard with:
 ## Success Metrics
 
 **Admin Efficiency:**
+
 - Average user lookup time: <10 seconds (vs. 5 minutes manual)
 - Support ticket resolution time: -30%
 
 **Security:**
+
 - Time to detect security incident: <5 minutes
 - False positive rate on suspicious activity: <5%
 
 **Performance:**
+
 - Dashboard load time: <2s P95
 - User list search: <500ms P95
 
@@ -157,6 +176,7 @@ Build a comprehensive admin dashboard with:
 ## Expected Research Findings
 
 This test spec should trigger Research Agent to find:
+
 - Existing admin routes or components
 - Role/permission management patterns
 - Analytics data aggregation approaches
@@ -165,6 +185,7 @@ This test spec should trigger Research Agent to find:
 ## Expected Security Findings (P0 CRITICAL)
 
 This test spec should trigger Security Scanner to identify:
+
 - **Missing RLS policies** on admin-only tables
 - **Authorization bypass risks** (no role checks in API routes)
 - **Audit logging gaps** (admin actions not tracked)
@@ -173,6 +194,7 @@ This test spec should trigger Security Scanner to identify:
 - **Data exposure risks** (viewing all user data without RLS)
 
 **Expected P0 findings:**
+
 - No RLS policy on users table (admins can see everything)
 - No role-based access control in `/admin/*` routes
 - Impersonation allows privilege escalation

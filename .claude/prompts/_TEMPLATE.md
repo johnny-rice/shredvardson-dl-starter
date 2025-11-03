@@ -87,29 +87,31 @@ Return findings as JSON:
 
 \`\`\`json
 {
-  "key_findings": [
-    {
-      "finding": "Description",
-      "source": "internal" | "external",
-      "location": "file.ts:42"
-    }
-  ],
-  "recommendations": [
-    {
-      "action": "Actionable step",
-      "rationale": "Why this matters"
-    }
-  ],
-  "confidence": "high" | "medium" | "low"
+"key_findings": [
+{
+"finding": "Description",
+"source": "internal" | "external",
+"location": "file.ts:42"
+}
+],
+"recommendations": [
+{
+"action": "Actionable step",
+"rationale": "Why this matters"
+}
+],
+"confidence": "high" | "medium" | "low"
 }
 \`\`\`
 
 **Required Fields:**
+
 - \`key_findings\`: Array of findings with file references
 - \`recommendations\`: Array of actionable next steps
 - \`confidence\`: Overall confidence level
 
 **Optional Fields:**
+
 - \`architecture_patterns\`: Identified design patterns
 - \`code_locations\`: Key file locations
 ```

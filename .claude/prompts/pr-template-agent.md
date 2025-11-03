@@ -167,6 +167,7 @@ Implements comprehensive testing infrastructure for the DL Starter monorepo, add
 ## Test Coverage
 
 ✅ **16 tests passing** (4 test files)
+
 - Unit tests: Header, Link, ThemeToggle, sum function
 - E2E smoke tests: Homepage, navigation, 404, health endpoint
 - RLS test templates (TODOs until tables exist)
@@ -179,6 +180,7 @@ Target: **70%** minimum (defined in coverage contract)
 ### Testing Infrastructure (Phase 1-2)
 
 **Configuration:**
+
 - ✅ Vitest 3.2.4 with React Testing Library 16.3.0
 - ✅ Playwright 1.55.1 for E2E tests
 - ✅ @vitest/coverage-v8 for coverage reporting

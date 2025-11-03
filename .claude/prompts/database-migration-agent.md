@@ -164,9 +164,7 @@ Add RLS so users can only read/write their own profile.
     "rls_coverage_complete": true,
     "rollback_tested": true
   },
-  "deployment_notes": [
-    "Safe to deploy anytime (non-breaking)"
-  ],
+  "deployment_notes": ["Safe to deploy anytime (non-breaking)"],
   "confidence": "high"
 }
 ```

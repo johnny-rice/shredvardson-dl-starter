@@ -275,18 +275,21 @@ As a user, I want to toggle between light and dark modes, so that I can use the 
 ## Requirements
 
 ### Functional
+
 - [ ] Toggle in Settings page
 - [ ] Persist preference (localStorage + user profile)
 - [ ] Apply theme across all pages
 - [ ] Smooth transition between themes
 
 ### Technical
+
 - [ ] CSS variables for theme colors
 - [ ] Theme context/provider
 - [ ] SSR support (prevent flash)
 - [ ] Respect system preference (prefers-color-scheme)
 
 ### Design
+
 - [ ] Follow design system color palette
 - [ ] Ensure WCAG AA contrast ratios
 - [ ] Maintain brand identity in both themes
@@ -303,6 +306,7 @@ As a user, I want to toggle between light and dark modes, so that I can use the 
 ## Implementation Notes
 
 Consider using:
+
 - `next-themes` for Next.js integration
 - CSS custom properties for theming
 - `prefers-color-scheme` media query for default

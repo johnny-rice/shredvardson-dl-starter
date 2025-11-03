@@ -1,6 +1,6 @@
 ---
 id: document-required-optional-parameters
-title: "Explicitly Document Required vs Optional Parameters"
+title: 'Explicitly Document Required vs Optional Parameters'
 category: api-design
 tags: [api, parameters, documentation, clarity, prompts, json-schema]
 date: 2025-11-03
@@ -8,10 +8,10 @@ confidence: high
 impact: high
 effort: low
 related:
-  - issue: "#259"
+  - issue: '#259'
   - files:
-    - ".claude/prompts/*.md"
-    - "docs/api/**"
+      - '.claude/prompts/*.md'
+      - 'docs/api/**'
 ---
 
 # Explicitly Document Required vs Optional Parameters
@@ -77,7 +77,7 @@ During PR #273 code review, CodeRabbit identified ambiguity in the Research Agen
    - JSON request bodies
 
 2. **Prompt Input Schemas**
-   - Sub-agent inputs (.claude/prompts/*.md)
+   - Sub-agent inputs (.claude/prompts/\*.md)
    - Task delegation interfaces
    - Tool invocation parameters
 
@@ -180,16 +180,18 @@ If your examples omit optional fields, ensure the docs explain why:
 
 **Example:**
 
-```markdown
+````markdown
 ### Example 2: Quick Codebase Search
 
 **Input:**
+
 ```json
 {
   "query": "Where is auth configured?",
   "depth": "shallow"
 }
 ```
+````
 
 **Note:** `max_files` omitted (uses default of 10 for shallow search)
 
@@ -307,10 +309,10 @@ Borrow from TypeScript optional syntax:
 
 ```typescript
 interface ResearchInput {
-  query: string;          // required (no ?)
-  depth: "shallow" | "deep";  // required
-  max_files?: number;     // optional (with ?)
-  include_external?: boolean;  // optional
+  query: string; // required (no ?)
+  depth: 'shallow' | 'deep'; // required
+  max_files?: number; // optional (with ?)
+  include_external?: boolean; // optional
 }
 ```
 
@@ -327,6 +329,7 @@ When parameters affect each other, document the relationships:
 
 ```markdown
 **Parameter Interaction:**
+
 - If `include_external: false` is set, external tools are skipped regardless of `depth`
 - If `include_external: true` is set for shallow research, external research will be performed despite shallow depth
 - Default behavior: shallow = no external, deep = yes external
@@ -338,12 +341,12 @@ This prevents confusion about precedence and interaction.
 
 For complex APIs, create a defaults table:
 
-| Parameter | Required | Type | Default | Notes |
-|-----------|----------|------|---------|-------|
-| `query` | ✅ Yes | string | - | Search term |
-| `depth` | ✅ Yes | "shallow"\|"deep" | - | Research level |
-| `max_files` | ❌ No | number | 10 (shallow)<br>20 (deep) | 1-50 range |
-| `include_external` | ❌ No | boolean | false (shallow)<br>true (deep) | External docs |
+| Parameter          | Required | Type              | Default                        | Notes          |
+| ------------------ | -------- | ----------------- | ------------------------------ | -------------- |
+| `query`            | ✅ Yes   | string            | -                              | Search term    |
+| `depth`            | ✅ Yes   | "shallow"\|"deep" | -                              | Research level |
+| `max_files`        | ❌ No    | number            | 10 (shallow)<br>20 (deep)      | 1-50 range     |
+| `include_external` | ❌ No    | boolean           | false (shallow)<br>true (deep) | External docs  |
 
 ## Trade-offs & Considerations
 
@@ -419,7 +422,7 @@ See [packages/types/src/](../../packages/types/src/) for strongly-typed paramete
 
 ### 3. Prompt Template Standards
 
-See [.claude/prompts/_TEMPLATE.md](../../.claude/prompts/_TEMPLATE.md) for full prompt documentation guidelines.
+See [.claude/prompts/\_TEMPLATE.md](../../.claude/prompts/_TEMPLATE.md) for full prompt documentation guidelines.
 
 ## Saved Us From
 
@@ -490,6 +493,7 @@ Example 3 (lines 450-457): Omitted `max_files`, changed `include_external`
 ## Parameter Interactions
 
 Document when parameters affect each other:
+
 - If param1 = X, then param2 is ignored
 - Default behavior: ...
 

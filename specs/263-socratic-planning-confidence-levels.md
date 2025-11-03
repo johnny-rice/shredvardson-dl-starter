@@ -72,14 +72,17 @@ Which approach fits your needs? (Accept recommendation or choose different optio
 ### Confidence & Research Logic
 
 **Confidence Threshold: 90%**
+
 - ≥90%: Proceed with recommendation presentation
 - <90%: Auto-trigger research before presenting options
 
 **Auto-Research Sources:**
+
 - Context7 MCP for library/framework documentation
 - WebSearch for community consensus, 2025 best practices, security advisories
 
 **Research Process Example:**
+
 ```
 My confidence is 65% because the technology landscape may have shifted since January 2025.
 
@@ -95,6 +98,7 @@ Let me research:
 ### Scope Boundaries
 
 **Apply to Phase 2 Only:**
+
 - Phase 1 (Understanding): No changes - clarifying questions don't need confidence
 - Phase 2 (Exploration): Add confidence + recommendation ✅
 - Phase 3 (Design Presentation): No changes
@@ -134,6 +138,7 @@ Let me research:
 ### Confidence Calibration
 
 Confidence should be based on:
+
 - **Recency of knowledge** (post-2025 topics = lower confidence due to cutoff)
 - **Tech stack familiarity** (Supabase/Next.js/Vercel = higher confidence)
 - **Architecture complexity** (simpler patterns = higher confidence)
@@ -142,6 +147,7 @@ Confidence should be based on:
 ## Success Metrics
 
 After 2 weeks of usage:
+
 - User accepts recommendation ≥70% of time (indicates good calibration)
 - Research triggered in ~30% of planning sessions
 - Subjective: User reports reduced decision paralysis in feedback

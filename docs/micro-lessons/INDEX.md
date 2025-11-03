@@ -2,18 +2,20 @@
 
 _Generated automatically. Run `pnpm learn:index` to update. Do not edit by hand._
 
-_📅 Recency ranking (0/8 usage events needed for heat ranking)_
+## Ranking Method
 
-1. **[Explicitly Document Required vs Optional Parameters](document-required-optional-parameters.md)**
-2. **[Always Specify Language Identifiers in Markdown Code Blocks](markdown-code-blocks.md)**
-3. **[Structured Prompt Templates - Phase 3 Validation Results](259-structured-prompt-validation.md)**
-4. **[Traceability Frontmatter Requires Specific ID Format and Hierarchy](20251102-212810-traceability-frontmatter-id-format.md)** `#traceability #frontmatter #yaml #spec-driven #validation #ci #documentation`
-5. **[Sub-Agent Structured Output Enhancement Pattern](20251102-092100-sub-agent-structured-output-enhancement.md)**
-6. **[20251031-144000-traceability-frontmatter-requirements](20251031-144000-traceability-frontmatter-requirements.md)**
-7. **[20251031-144300-plan-document-unchecked-criteria](20251031-144300-plan-document-unchecked-criteria.md)**
-8. **[Pre-Commit Markdown Linting Prevents Bulk Review Comments](20251027-080956-pre-commit-markdown-linting.md)** `markdown,linting,pre-commit,code-review,automation,pr-quality,coderabbit,documentation`
-9. **[20251031-144100-adr-compliance-override-label](20251031-144100-adr-compliance-override-label.md)**
-10. **[20251031-144200-pgtap-pg-tle-schema-clarification](20251031-144200-pgtap-pg-tle-schema-clarification.md)**
+📅 Recency ranking (0/8 usage events needed for heat ranking)
+
+1. **[Eliminate Redundant Sanitization with Single Final Pass](20251103-145100-eliminate-redundant-sanitization-passes.md)** `performance, sanitization, optimization, api-design, typescript`
+2. **[Input Validation Must Happen Before Any Processing](20251103-145000-input-validation-before-sanitization.md)** `security, input-validation, zod, typescript, api-design, defense-in-depth`
+3. **[Git `--` Separator Requires Conditional Logic](20251103-144900-git-double-dash-separator-conditional.md)** `git, security, command-injection, defense-in-depth, typescript`
+4. **[Always Specify Language Identifiers in Markdown Code Blocks](markdown-code-blocks.md)**
+5. **[Explicitly Document Required vs Optional Parameters](document-required-optional-parameters.md)**
+6. **[Structured Prompt Templates - Phase 3 Validation Results](259-structured-prompt-validation.md)**
+7. **[Traceability Frontmatter Requires Specific ID Format and Hierarchy](20251102-212810-traceability-frontmatter-id-format.md)** `#traceability #frontmatter #yaml #spec-driven #validation #ci #documentation`
+8. **[Sub-Agent Structured Output Enhancement Pattern](20251102-092100-sub-agent-structured-output-enhancement.md)**
+9. **[20251031-144000-traceability-frontmatter-requirements](20251031-144000-traceability-frontmatter-requirements.md)**
+10. **[20251031-144300-plan-document-unchecked-criteria](20251031-144300-plan-document-unchecked-criteria.md)**
 
 ---
 
