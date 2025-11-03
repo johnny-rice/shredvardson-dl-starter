@@ -24,7 +24,12 @@ Explore the codebase deeply to answer architectural questions and return focused
 
 ## CONTEXT
 
-- **Input Format**: JSON with { query, focus_areas, max_files, depth, include_external }
+- **Input Format**: JSON with required fields `{ query, depth }` and optional fields `{ focus_areas, max_files, include_external }`
+  - `query` (required): Research question or topic
+  - `depth` (required): "shallow" or "deep"
+  - `focus_areas` (optional): Array of areas to focus on (e.g., ["auth", "database"])
+  - `max_files` (optional): Maximum number of files to include in response (default: 10 for shallow, 20 for deep)
+  - `include_external` (optional): Whether to search external docs/web (default: true for deep, false for shallow)
 - **Project**: Next.js 15 + Supabase monorepo with Turborepo
 - **Tools Available**: Read, Glob, Grep, Bash (read-only), WebSearch, Context7 MCP, Supabase docs MCP
 - **Model**: Haiku 4.5 (fast, cost-effective)
@@ -163,9 +168,15 @@ Include external research when the query or context indicates:
 **Deep research (depth: "deep"):**
 
 - Comprehensive internal investigation
-- Include external documentation when relevant
+- Include external documentation when relevant (unless `include_external: false` is explicitly set)
 - Analyze architectural patterns
 - Response time target: <90s
+
+**Parameter Interaction:**
+
+- If `include_external: false` is set, external tools (WebSearch, Context7, Supabase docs) are skipped regardless of depth level
+- If `include_external: true` is set for shallow research, external research will be performed despite shallow depth
+- Default behavior: shallow = no external, deep = yes external
 
 Depth is determined by:
 
@@ -221,6 +232,7 @@ Depth is determined by:
 - Include 3-10 key file locations
 - Provide line numbers where possible
 - Explain the purpose of each location
+- **Edge case**: Empty array `[]` is acceptable when research is purely external (docs/web) with no codebase matches found
 
 **Example:**
 
