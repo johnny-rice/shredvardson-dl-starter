@@ -104,8 +104,19 @@ pre-push:
         TYPECHECK_LOG=$(mktemp)
         LINT_LOG=$(mktemp)
 
-        # Set up cleanup trap
-        trap 'rm -f "$TYPECHECK_LOG" "$LINT_LOG"' EXIT INT TERM
+        # Set up cleanup trap that kills background processes
+        cleanup() {
+          # Kill background processes if still running
+          if [ -n "$TYPECHECK_PID" ] && kill -0 "$TYPECHECK_PID" 2>/dev/null; then
+            kill "$TYPECHECK_PID" 2>/dev/null || true
+          fi
+          if [ -n "$LINT_PID" ] && kill -0 "$LINT_PID" 2>/dev/null; then
+            kill "$LINT_PID" 2>/dev/null || true
+          fi
+          # Remove temp files
+          rm -f "$TYPECHECK_LOG" "$LINT_LOG"
+        }
+        trap cleanup EXIT INT TERM
 
         echo "🔎 Type checking..."
         START_TIME_TYPECHECK=$(date +%s)
@@ -117,14 +128,52 @@ pre-push:
         pnpm lint > "$LINT_LOG" 2>&1 &
         LINT_PID=$!
 
-        # Wait for both processes and collect exit codes
-        wait $TYPECHECK_PID
-        TYPECHECK_EXIT=$?
+        # Wait for both processes with timeout (60 seconds each)
+        TIMEOUT=60
+        TYPECHECK_EXIT=1
+        LINT_EXIT=1
+
+        # Wait for typecheck with timeout
+        ELAPSED=0
+        while [ $ELAPSED -lt $TIMEOUT ]; do
+          if ! kill -0 "$TYPECHECK_PID" 2>/dev/null; then
+            wait "$TYPECHECK_PID" 2>/dev/null
+            TYPECHECK_EXIT=$?
+            break
+          fi
+          sleep 1
+          ELAPSED=$((ELAPSED + 1))
+        done
+
+        if [ $ELAPSED -ge $TIMEOUT ]; then
+          echo "⚠️  Typecheck timed out after ${TIMEOUT}s"
+          kill "$TYPECHECK_PID" 2>/dev/null || true
+          wait "$TYPECHECK_PID" 2>/dev/null || true
+          TYPECHECK_EXIT=1
+        fi
+
         END_TIME_TYPECHECK=$(date +%s)
         TYPECHECK_DURATION=$((END_TIME_TYPECHECK - START_TIME_TYPECHECK))
 
-        wait $LINT_PID
-        LINT_EXIT=$?
+        # Wait for lint with timeout
+        ELAPSED=0
+        while [ $ELAPSED -lt $TIMEOUT ]; do
+          if ! kill -0 "$LINT_PID" 2>/dev/null; then
+            wait "$LINT_PID" 2>/dev/null
+            LINT_EXIT=$?
+            break
+          fi
+          sleep 1
+          ELAPSED=$((ELAPSED + 1))
+        done
+
+        if [ $ELAPSED -ge $TIMEOUT ]; then
+          echo "⚠️  Lint timed out after ${TIMEOUT}s"
+          kill "$LINT_PID" 2>/dev/null || true
+          wait "$LINT_PID" 2>/dev/null || true
+          LINT_EXIT=1
+        fi
+
         END_TIME_LINT=$(date +%s)
         LINT_DURATION=$((END_TIME_LINT - START_TIME_LINT))
 
@@ -136,7 +185,6 @@ pre-push:
           echo ""
           echo "💡 Fix: Run 'pnpm typecheck' to see errors"
           echo ""
-          rm -f "$TYPECHECK_LOG" "$LINT_LOG"
           exit 1
         fi
 
@@ -154,7 +202,6 @@ pre-push:
           echo ""
           echo "💡 Fix: Run 'pnpm lint' to see errors, or 'pnpm format' to auto-fix"
           echo ""
-          rm -f "$TYPECHECK_LOG" "$LINT_LOG"
           exit 1
         fi
 
@@ -183,18 +230,73 @@ pre-push:
         echo "🧪 Running unit tests..."
         START_TIME=$(date +%s)
 
-        if ! pnpm --silent test:unit; then
+        # Run with timeout (120 seconds for tests)
+        TIMEOUT=120
+        TEST_LOG=$(mktemp)
+
+        # Set up cleanup trap
+        cleanup() {
+          if [ -n "$TEST_PID" ] && kill -0 "$TEST_PID" 2>/dev/null; then
+            kill "$TEST_PID" 2>/dev/null || true
+          fi
+          rm -f "$TEST_LOG"
+        }
+        trap cleanup EXIT INT TERM
+
+        # Run tests in background
+        pnpm --silent test:unit > "$TEST_LOG" 2>&1 &
+        TEST_PID=$!
+
+        # Wait for tests with timeout
+        ELAPSED=0
+        while [ $ELAPSED -lt $TIMEOUT ]; do
+          if ! kill -0 "$TEST_PID" 2>/dev/null; then
+            wait "$TEST_PID" 2>/dev/null
+            TEST_EXIT=$?
+            break
+          fi
+          sleep 1
+          ELAPSED=$((ELAPSED + 1))
+        done
+
+        # Check if timed out
+        if [ $ELAPSED -ge $TIMEOUT ]; then
+          echo ""
+          echo "⚠️  Tests timed out after ${TIMEOUT}s"
+          echo ""
+          echo "💡 Possible causes:"
+          echo "   - Tests are waiting for input"
+          echo "   - Environment variables missing (check scripts/pretest-env-check.ts)"
+          echo "   - Infinite loop in test code"
+          echo ""
+          echo "💡 To bypass this check (not recommended):"
+          echo "   git push --no-verify"
+          echo ""
+          kill "$TEST_PID" 2>/dev/null || true
+          wait "$TEST_PID" 2>/dev/null || true
+          rm -f "$TEST_LOG"
+          exit 1
+        fi
+
+        END_TIME=$(date +%s)
+        TEST_DURATION=$((END_TIME - START_TIME))
+
+        # Display test output
+        cat "$TEST_LOG"
+
+        # Check test exit code
+        if [ ${TEST_EXIT:-1} -ne 0 ]; then
           echo ""
           echo "❌ Unit tests failed! Fix the tests before pushing."
           echo ""
           echo "💡 To bypass this check (not recommended):"
           echo "   git push --no-verify"
           echo ""
+          rm -f "$TEST_LOG"
           exit 1
         fi
 
-        END_TIME=$(date +%s)
-        TEST_DURATION=$((END_TIME - START_TIME))
+        rm -f "$TEST_LOG"
 
         # Provide feedback on execution time
         if [ $TEST_DURATION -lt 5 ]; then
