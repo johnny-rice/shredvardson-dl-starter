@@ -6,7 +6,7 @@ See [docs/constitution.md](../constitution.md) for complete project mission, gua
 
 ## ⚠️ Command Discovery Protocol
 
-**ALWAYS check for custom commands BEFORE using native tools**
+### ALWAYS check for custom commands BEFORE using native tools
 
 This project has custom commands/skills with built-in quality gates, sub-agent orchestration, and learning capture.
 
@@ -164,6 +164,10 @@ See [docs/workflow-security.md](../workflow-security.md) for complete review com
 **Components:** [Workflow](../COMPONENT_WORKFLOW.md) (existing → shadcn → approved libs → custom)
 
 See [Testing Guide](../testing/TESTING_GUIDE.md) for comprehensive testing patterns, coverage requirements, and best practices.
+
+## Error Handling Patterns
+
+When implementing features with external APIs, see [Failure Handling Best Practices](../testing/failure-handling-best-practices.md) and [Production Monitoring Guide](../testing/production-monitoring-guide.md).
 
 **Quick:** `/test:scaffold` · `pnpm test` · `pnpm test:e2e` · `pnpm test:coverage` · **Scratch:** `docs/scratch/` ([README](../scratch/README.md))
 

@@ -126,6 +126,13 @@
       "allowed": ["workflow:update", "command:create", "instruction:update"],
       "avoid": ["breaking existing workflows"],
       "tags": ["ai-guidance", "workflows", "instructions"]
+    },
+    {
+      "path": "docs/testing/",
+      "purpose": "Testing guides and error handling patterns",
+      "allowed": ["docs:reference", "pattern:apply"],
+      "avoid": ["modifying without testing validation"],
+      "tags": ["testing", "error-handling", "patterns", "reference"]
     }
   ]
 }
