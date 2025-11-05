@@ -88,6 +88,11 @@ Thumbs.db
 .cache/
 # Scratch directory for temporary planning, research, and analysis
 docs/scratch/
+# Session resume files (for context continuity between Claude sessions)
+.resume-*.md
+# Phase completion reports (temporary task tracking)
+PHASE*_COMPLETE.md
+PHASE*_TASK_*.md
 
 # Wiki content (infrastructure removed)
 wiki-content/
