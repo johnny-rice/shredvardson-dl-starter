@@ -42,6 +42,15 @@ interface PolicyInfo {
 }
 
 /**
+ * Database row representing an RLS policy query result
+ */
+interface PolicyRow {
+  policy_name: string;
+  operation: string;
+  roles: string[];
+}
+
+/**
  * Validation result summary
  */
 interface ValidationResult {
@@ -64,12 +73,14 @@ interface ValidationResult {
 async function fetchAllTables(supabase: ReturnType<typeof createClient>): Promise<string[]> {
   const { data, error } = await supabase.rpc('query', {
     sql: `
-      SELECT table_name
-      FROM information_schema.tables
-      WHERE table_schema = 'public'
-        AND table_type = 'BASE TABLE'
-        AND table_name NOT LIKE 'pg_%'
-      ORDER BY table_name;
+      SELECT COALESCE(jsonb_agg(t.table_name ORDER BY t.table_name), '[]'::jsonb) as result
+      FROM (
+        SELECT table_name
+        FROM information_schema.tables
+        WHERE table_schema = 'public'
+          AND table_type = 'BASE TABLE'
+          AND table_name NOT LIKE 'pg_%'
+      ) t;
     `,
   });
 
@@ -82,13 +93,12 @@ async function fetchAllTables(supabase: ReturnType<typeof createClient>): Promis
     return [];
   }
 
-  // Parse the result
-  const result = data as { table_name: string }[] | { error?: string };
-  if ('error' in result) {
-    throw new Error(`Query error: ${result.error}`);
+  // Parse the result - data is returned as a JSONB array
+  if (Array.isArray(data)) {
+    return data as string[];
   }
 
-  return (result as { table_name: string }[]).map((row) => row.table_name);
+  return [];
 }
 
 /**
@@ -101,17 +111,19 @@ async function checkRLSStatus(
   supabase: ReturnType<typeof createClient>,
   tableName: string
 ): Promise<{ hasRLS: boolean; rlsForced: boolean }> {
+  // Note: Using string interpolation since query RPC doesn't support parameters
+  // tableName is from trusted source (information_schema) so SQL injection not a concern
   const { data, error } = await supabase.rpc('query', {
     sql: `
-      SELECT
-        relrowsecurity AS has_rls,
-        relforcerowsecurity AS rls_forced
+      SELECT jsonb_build_object(
+        'has_rls', relrowsecurity,
+        'rls_forced', relforcerowsecurity
+      ) as result
       FROM pg_class
       JOIN pg_namespace ON pg_class.relnamespace = pg_namespace.oid
       WHERE nspname = 'public'
-        AND relname = $1;
+        AND relname = '${tableName.replace(/'/g, "''")}';
     `,
-    params: { 1: tableName },
   });
 
   if (error) {
@@ -119,18 +131,26 @@ async function checkRLSStatus(
     return { hasRLS: false, rlsForced: false };
   }
 
-  if (!data || typeof data !== 'object' || 'error' in data) {
+  if (!data || typeof data !== 'object') {
     return { hasRLS: false, rlsForced: false };
   }
 
-  const result = data as { has_rls: boolean; rls_forced: boolean }[];
-  if (result.length === 0) {
+  // Check for error in response
+  if ('error' in data) {
+    console.warn(`⚠️  Query error for ${tableName}:`, (data as { error: string }).error);
+    return { hasRLS: false, rlsForced: false };
+  }
+
+  const result = data as { has_rls: boolean; rls_forced: boolean };
+
+  if (typeof result.has_rls !== 'boolean' || typeof result.rls_forced !== 'boolean') {
+    console.warn(`⚠️  Unexpected data shape for ${tableName}:`, result);
     return { hasRLS: false, rlsForced: false };
   }
 
   return {
-    hasRLS: result[0].has_rls || false,
-    rlsForced: result[0].rls_forced || false,
+    hasRLS: result.has_rls,
+    rlsForced: result.rls_forced,
   };
 }
 
@@ -146,25 +166,27 @@ async function fetchPolicies(
   supabase: ReturnType<typeof createClient>,
   tableName: string
 ): Promise<PolicyInfo[]> {
+  // Note: Using string interpolation since query RPC doesn't support parameters
+  // tableName is from trusted source (information_schema) so SQL injection not a concern
   const { data, error } = await supabase.rpc('query', {
     sql: `
-      SELECT
-        polname AS policy_name,
-        CASE polcmd
+      SELECT COALESCE(jsonb_agg(jsonb_build_object(
+        'policy_name', polname,
+        'operation', CASE polcmd
           WHEN 'r' THEN 'SELECT'
           WHEN 'a' THEN 'INSERT'
           WHEN 'w' THEN 'UPDATE'
           WHEN 'd' THEN 'DELETE'
           WHEN '*' THEN 'ALL'
-        END AS operation,
-        polroles::regrole[] AS roles
+        END,
+        'roles', ARRAY(SELECT rolname FROM pg_roles WHERE oid = ANY(polroles))
+      )), '[]'::jsonb) as result
       FROM pg_policy
       JOIN pg_class ON pg_policy.polrelid = pg_class.oid
       JOIN pg_namespace ON pg_class.relnamespace = pg_namespace.oid
       WHERE nspname = 'public'
-        AND relname = $1;
+        AND relname = '${tableName.replace(/'/g, "''")}';
     `,
-    params: { 1: tableName },
   });
 
   if (error) {
@@ -172,14 +194,23 @@ async function fetchPolicies(
     return [];
   }
 
-  if (!data || typeof data !== 'object' || 'error' in data) {
+  if (!data) {
     return [];
   }
 
-  const result = data as { policy_name: string; operation: string; roles: string[] }[];
-  return result.map((row) => ({
-    policyName: row.policy_name,
-    operation: row.operation,
+  // Check for error in response
+  if (typeof data === 'object' && 'error' in data) {
+    console.warn(`⚠️  Query error for ${tableName}:`, (data as { error: string }).error);
+    return [];
+  }
+
+  if (!Array.isArray(data)) {
+    return [];
+  }
+
+  return data.map((row: PolicyRow) => ({
+    policyName: typeof row.policy_name === 'string' ? row.policy_name : '',
+    operation: typeof row.operation === 'string' ? row.operation : 'UNKNOWN',
     roles: Array.isArray(row.roles) ? row.roles : [],
   }));
 }
