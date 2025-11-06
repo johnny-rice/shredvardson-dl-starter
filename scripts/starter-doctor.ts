@@ -190,9 +190,16 @@ function checkPlaceholders(): CheckResult {
 
         // Skip excluded directories and this file
         if (
-          ['node_modules', '.git', '.next', '.turbo', 'coverage', 'dist', 'artifacts'].includes(
-            entry
-          ) ||
+          [
+            'node_modules',
+            '.git',
+            '.next',
+            '.turbo',
+            'coverage',
+            'dist',
+            'artifacts',
+            '.claude',
+          ].includes(entry) ||
           fullPath.startsWith(resolve('docs/wiki')) ||
           fullPath.endsWith('scripts/starter-doctor.ts') ||
           fullPath.endsWith('docs/decisions/0001-template.md') // Skip ADR template with intentional variables

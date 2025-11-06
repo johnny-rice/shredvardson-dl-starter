@@ -1,0 +1,246 @@
+# Claude Code Web Delegation Guide
+
+## Quick Answer
+
+**Claude Code web is best for simple lane issues with this 4-step workflow:**
+
+1. **You (Desktop):** Ask if issue is suitable → `/specify Issue #XXX`
+2. **You (Desktop):** Review spec → `/delegate Issue #XXX`
+3. **Delegate:** Paste into Claude web
+4. **You (Desktop):** Review PR, fix metadata, merge
+
+## What Claude Web Can Do
+
+✅ Read and write code
+✅ Run bash commands (npm, pnpm, build, test)
+✅ Create branches and commits
+✅ Create PRs (but needs help with formatting)
+
+❌ Can't read GitHub issues
+❌ Can't use slash commands
+❌ Can't access project templates/workflows
+
+## Optimal Workflow: The "Delegation Package"
+
+### Step 1: Verify Suitability (You - Desktop)
+
+Ask Claude: "Is issue #XXX suitable for Claude web delegation?"
+
+**Good candidates:**
+
+- Simple lane (1-2 file changes)
+- Clear requirements
+- Bug fixes with known solutions
+- Refactoring with clear patterns
+
+### Step 2: Create the Spec (You - Desktop)
+
+```bash
+# For simple lane issues:
+/specify Issue #XXX
+
+# Review and edit the spec if needed
+# Ensures: specs/XXX-feature-name.md
+```
+
+### Step 3: Generate Delegation Package (You - Desktop)
+
+#### Option A: Use the slash command (recommended)
+
+```bash
+/delegate Issue #XXX
+```
+
+This automatically:
+
+- ✅ Validates spec exists and has proper frontmatter
+- ✅ Fetches issue details from GitHub
+- ✅ Generates ready-to-paste package
+- ✅ Copies to clipboard
+- ✅ Shows preview
+
+#### Option B: Use the script manually
+
+Run this command to create a ready-to-paste package:
+
+```bash
+gh issue view XXX --json number,title,body,labels > /tmp/issue-XXX.json && \
+cat specs/XXX-*.md > /tmp/spec-XXX.md && \
+echo "=== DELEGATION PACKAGE FOR ISSUE #XXX ===" && \
+echo "" && \
+echo "## Issue Details" && \
+cat /tmp/issue-XXX.json | jq -r '"**#\(.number)**: \(.title)\n\n\(.body)"' && \
+echo "" && \
+echo "---" && \
+echo "" && \
+echo "## Spec" && \
+cat /tmp/spec-XXX.md && \
+echo "" && \
+echo "---" && \
+echo "" && \
+echo "## PR Requirements" && \
+cat .github/pull_request_template.md
+```
+
+**Or manually copy-paste these 3 things:**
+
+1. Issue body from GitHub (or `gh issue view XXX`)
+2. Spec file content (`specs/XXX-*.md`)
+3. PR template (`.github/pull_request_template.md`)
+
+### Step 4: Paste into Claude Web
+
+Paste the package (from clipboard or `/tmp/delegation-XXX.txt`) into Claude Code web at <https://claude.ai/code>
+
+The package already includes all instructions, so just paste and Claude web will handle the rest!
+
+### Step 5: Review and Merge (You - Desktop)
+
+After Claude web creates the PR:
+
+```bash
+# Check out the PR
+gh pr checkout XXX
+
+# Fix any metadata issues (like we just did for #300)
+# Usually just need to:
+# - Verify PR title format
+# - Check traceability is complete
+# - Ensure spec references are correct
+
+# Push fixes
+git push
+```
+
+## Example: Issue #258 Style Delegation
+
+Here's how you would have delegated #258:
+
+**Your message to Claude web:**
+
+```text
+Please fix this bug following our project standards:
+
+## Issue #258: Fix invalid JSON cast in RLS validation script
+
+[paste issue body]
+
+## Spec (SPEC-258)
+
+[paste specs/258-fix-rls-json-cast.md]
+
+## Requirements
+
+1. Fix line 160 in scripts/db/validate-rls.ts as specified
+2. Test locally with: SUPABASE_URL=http://127.0.0.1:54321 SUPABASE_SERVICE_ROLE_KEY=xxx pnpm tsx scripts/db/validate-rls.ts
+3. Create branch: feature/258-fix-rls-json-cast
+4. Commit message: "fix: PostgreSQL JSON serialization in RLS validation (Issue #258)"
+5. Create PR with:
+   - Spec ID: SPEC-258
+   - Issue: #258
+   - Proper summary from spec
+
+[paste .github/pull_request_template.md]
+```
+
+## When to Use Claude Web
+
+### ✅ Good Candidates
+
+- **Simple lane** issues (1-2 file changes)
+- **Clear specs** with explicit steps
+- **Bug fixes** with known solutions
+- **Refactoring** with clear patterns
+- **Documentation** updates
+
+### ❌ Not Good For
+
+- **Complex features** needing spec-driven workflow
+- **Database migrations** requiring RLS policies
+- **Multi-package changes** across monorepo
+- **Anything requiring** `/git:workflow` or sub-agents
+
+## Pro Tips
+
+### 1. Pre-populate the Spec
+
+Instead of having Claude web create the spec, you create it on desktop and include it in the delegation package. This ensures:
+
+- Proper YAML frontmatter
+- Correct spec ID format
+- Follows project conventions
+
+### 2. Include Test Instructions
+
+Be explicit about what to test:
+
+```markdown
+Test checklist:
+- [ ] pnpm typecheck passes
+- [ ] pnpm lint passes
+- [ ] pnpm test passes
+- [ ] Manual test: [specific test command]
+```
+
+### 3. Reference Similar PRs
+
+Include a link to a good example PR:
+
+```text
+Format your PR similar to: https://github.com/org/repo/pull/256
+```
+
+### 4. Use Desktop for Final Review
+
+Always do the final review on desktop where you have:
+
+- Full git workflows
+- Slash commands for `/review`, `/test`
+- Access to quality gates
+
+## Quick Commands for Delegation
+
+```bash
+# Create delegation package (simple version)
+gh issue view XXX > delegation.txt && \
+cat specs/XXX-*.md >> delegation.txt && \
+echo "Ready to paste: delegation.txt"
+
+# After Claude web creates PR, check it:
+gh pr view XXX --json title,body,headRefName
+
+# Fix it on desktop:
+gh pr checkout XXX
+# [make fixes]
+git push
+```
+
+## Time Savings
+
+**Without delegation:**
+
+- You: 30-60 min implementation
+- Total: 30-60 min
+
+**With web delegation:**
+
+- You: 5 min (create spec + package)
+- Claude web: 10-20 min (implementation)
+- You: 5 min (review + fix metadata)
+- Total: 20-30 min, but only 10 min of YOUR time
+
+**Best for:** When you have 3+ simple issues to delegate in parallel.
+
+## Next Steps
+
+Want to streamline this further? Consider:
+
+1. **Script it:** Create `scripts/delegation/create-package.sh XXX`
+2. **Template it:** Add delegation template to `.claude/commands/`
+3. **Automate PR fixes:** Script common metadata fixes
+
+## References
+
+- [CONTRIBUTING.md](../CONTRIBUTING.md) - Project standards
+- [docs/ai/CLAUDE.md](../ai/CLAUDE.md) - Workflow overview
+- [.github/pull_request_template.md](../../.github/pull_request_template.md) - PR format

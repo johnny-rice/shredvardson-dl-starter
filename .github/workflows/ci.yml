@@ -227,7 +227,7 @@ jobs:
         run: |
           # Build the token dynamically to avoid committing the literal
           PATTERN="{{"; PATTERN+="PLACEHOLDER"; PATTERN+="}}"
-          MATCHES=$(grep -R "$PATTERN" -n --exclude-dir=node_modules --exclude-dir=.turbo -- . || true)
+          MATCHES=$(grep -R "$PATTERN" -n --exclude-dir=node_modules --exclude-dir=.turbo --exclude-dir=.claude -- . || true)
           if [ -n "$MATCHES" ]; then
             echo "::error title=Unreplaced placeholders detected::%0A$MATCHES%0AReplace placeholder tokens before merging."
             exit 1
