@@ -28,6 +28,30 @@ pnpm doctor && pnpm lint && pnpm typecheck && pnpm build && pnpm test
 4. **Run quality checks** (see above)
 5. **Open PR** with filled-out template
 
+## Security Guidelines for AI-Assisted Development
+
+**Required reading:** [docs/SECURE_PROMPTING.md](docs/SECURE_PROMPTING.md)
+
+When using AI coding assistants (Claude, GitHub Copilot, ChatGPT):
+
+- **NEVER include secrets** in prompts (API keys, passwords, tokens, credentials)
+- **NEVER include PII** (real names, emails, SSNs, personal data)
+- **Sanitize all data** before sharing with AI (use placeholders/synthetic data)
+- **Review all AI-generated code** line-by-line for security vulnerabilities
+- **Test thoroughly** - AI code requires same 80% coverage as human code
+- **Validate inputs** - Ensure Zod schemas, parameterized queries, safe command execution
+- **Check RLS policies** - All database tables need proper Row-Level Security
+
+**Common AI-generated vulnerabilities to watch for:**
+- SQL injection (use parameterized queries, NOT string concatenation)
+- Command injection (use `execFileSync()` with argv arrays, NOT `execSync()`)
+- Missing input validation (add Zod schemas)
+- Hardcoded secrets (use environment variables)
+- Missing authentication/authorization checks
+- XSS vulnerabilities (sanitize user content)
+
+See [docs/SECURE_PROMPTING.md](docs/SECURE_PROMPTING.md) for comprehensive guidelines, examples, and incident response procedures.
+
 ## Learning Loop in 60s
 
 When you discover a reusable pattern or fix a tricky issue:
