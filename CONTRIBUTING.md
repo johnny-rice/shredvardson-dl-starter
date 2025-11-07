@@ -11,6 +11,7 @@ Thank you for your interest in contributing! This document outlines the developm
 - [ ] `pnpm typecheck` - TypeScript compilation
 - [ ] `pnpm build` - production build succeeds
 - [ ] `pnpm test` - all tests pass
+- [ ] AI disclosure completed - document AI assistance in PR template (see [AI Disclosure Guide](docs/ai/AI_DISCLOSURE_GUIDE.md))
 
 **Quick verification:**
 

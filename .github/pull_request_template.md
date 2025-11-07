@@ -43,6 +43,27 @@ _If AI review completed, paste advisory feedback summary from doctor report belo
 [Paste "🤖 AI Review (Advisory)" or "🛡️ AI Security Review (Advisory)" sections from artifacts/doctor-report.md]
 ```
 
+## AI Assistance Disclosure
+
+**AI Assistance Used:** ☐ None / ☐ Minimal (<25%) / ☐ Moderate (25-75%) / ☐ Significant (>75%)
+
+**AI-Generated Components:** _(List specific files/functions that were primarily AI-generated)_
+
+-
+
+**AI Tools Used:** _(e.g., Claude Code, GitHub Copilot, Cursor, etc.)_
+
+-
+
+**Human Review Applied:**
+
+- [ ] All AI-generated code reviewed line-by-line
+- [ ] Edge cases manually tested
+- [ ] Security implications considered
+- [ ] Performance implications validated
+
+**Notes:** _(Optional: Describe AI workflow, prompt strategies, or lessons learned)_
+
 ## Verification
 
 Paste real outputs or "OK":
