@@ -39,7 +39,7 @@ _**Quick create:** `pnpm adr:create "Your Title"` → edit file → add `ADR: AD
 
 _If AI review completed, paste advisory feedback summary from doctor report below:_
 
-```
+```text
 [Paste "🤖 AI Review (Advisory)" or "🛡️ AI Security Review (Advisory)" sections from artifacts/doctor-report.md]
 ```
 
@@ -118,7 +118,7 @@ Refs:
 
 ## Used Micro-Lesson
 
-_Optional: reference any micro-lesson that helped avoid an issue (e.g., test-isolation-hooks)_
+**Optional:** Reference any micro-lesson that helped avoid an issue (e.g., test-isolation-hooks)
 
 ## Breaking changes / Migration
 

@@ -42,6 +42,7 @@ Choose the category that best describes the overall AI contribution to your PR:
 **Definition:** All code written manually without AI code generation tools.
 
 **Examples:**
+
 - Typed out implementation from scratch
 - Used only standard IDE autocomplete
 - Reviewed AI suggestions but rejected them all
@@ -54,6 +55,7 @@ Choose the category that best describes the overall AI contribution to your PR:
 **Definition:** AI helped with boilerplate, suggestions, or small sections.
 
 **Examples:**
+
 - AI generated import statements or type definitions
 - Used AI for 1-2 simple helper functions
 - AI suggested approach, human wrote the code
@@ -67,6 +69,7 @@ Choose the category that best describes the overall AI contribution to your PR:
 **Definition:** AI generated structure/scaffolding, human refined and validated.
 
 **Examples:**
+
 - AI generated component structure, human added business logic
 - AI wrote initial implementation, human refactored significantly
 - AI generated tests, human added edge cases and assertions
@@ -80,6 +83,7 @@ Choose the category that best describes the overall AI contribution to your PR:
 **Definition:** Primarily AI-generated code with human review and minor adjustments.
 
 **Examples:**
+
 - AI generated entire feature, human tweaked configuration
 - AI wrote implementation, human only fixed linting/type errors
 - AI generated complete test suite, human verified correctness
@@ -93,10 +97,12 @@ Choose the category that best describes the overall AI contribution to your PR:
 ### Be Specific with AI-Generated Components
 
 **❌ Vague:**
+
 - "Some files used AI"
 - "AI helped with implementation"
 
 **✅ Specific:**
+
 - `src/components/UserProfile.tsx` (lines 15-89)
 - `lib/auth/session-manager.ts` (entire file)
 - `calculateTotalWithTax()` function in `utils/pricing.ts`
@@ -104,6 +110,7 @@ Choose the category that best describes the overall AI contribution to your PR:
 ### List All AI Tools Used
 
 Include specific tools, not just "AI":
+
 - Claude Code
 - GitHub Copilot
 - Cursor AI
@@ -115,6 +122,7 @@ Include specific tools, not just "AI":
 ### Document Your Review Process
 
 Check all applicable boxes in "Human Review Applied":
+
 - [ ] All AI-generated code reviewed line-by-line
 - [ ] Edge cases manually tested
 - [ ] Security implications considered
@@ -127,6 +135,7 @@ Check all applicable boxes in "Human Review Applied":
 Use the Notes field to help the team learn:
 
 **Good examples:**
+
 - "Used Claude Code's /review command to catch edge case bugs before PR"
 - "AI struggled with TypeScript generics, manually refactored for type safety"
 - "Prompt: 'Generate CRUD handlers with RLS policies' worked well"
@@ -235,6 +244,7 @@ autocomplete for imports.
 ## Questions?
 
 If you're unsure how to categorize your AI usage:
+
 1. **Err on the side of disclosure:** When in doubt, select higher AI percentage
 2. **Be specific:** List files even if you're not 100% sure of the percentage
 3. **Ask in PR:** Tag maintainers with `@mention` to clarify expectations
