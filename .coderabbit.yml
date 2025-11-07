@@ -10,10 +10,25 @@ reviews:
   high_level_summary: true
   request_changes_workflow: false
   path_filters:
-    - '!docs/**'
+    # Exclude low-risk planning/example docs
+    - '!specs/**'
+    - '!plans/**'
+    - '!tasks/**'
+    - '!docs/micro-lessons/**'
+    - '!docs/research/**'
     - '!scripts/**'
-    - '!**/*.md'
     - '!**/*.spec.*'
     - '!**/*.test.*'
+
+    # Include all code
     - 'apps/**'
     - 'packages/**'
+
+    # Include critical LLM-facing documentation
+    - '.claude/**'          # Skills, commands, prompts - LLMs execute these
+    - 'docs/llm/**'         # Constitution, guidelines - LLMs follow these
+    - 'docs/adr/**'         # Architecture decisions - LLMs implement these
+    - 'docs/testing/**'     # Test standards - LLMs apply these
+    - 'docs/ai/**'          # AI guidelines - LLMs follow these
+    - 'CONTRIBUTING.md'     # Workflow rules - LLMs follow these
+    - 'SECURITY.md'         # Security policy - Critical for all code
