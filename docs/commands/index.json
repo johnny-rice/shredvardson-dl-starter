@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2025-11-05T20:41:38.640Z",
+  "generated": "2025-11-07T10:05:02.751Z",
   "commands": [
     {
       "name": "_shared/branch-validation",
@@ -67,6 +67,28 @@
       "example": "Standard development workflow",
       "riskLevel": "LOW",
       "requiresHITL": true
+    },
+    {
+      "name": "batch-commit-specs",
+      "path": ".claude/commands/git/batch-commit-specs.md",
+      "category": "Git Workflow",
+      "tags": ["workflow", "delegation", "batch", "web"],
+      "when": "General development tasks",
+      "purpose": "Commit multiple spec files to a batch branch for delegation",
+      "example": "Create conventional commit for completed feature",
+      "riskLevel": "LOW",
+      "requiresHITL": false
+    },
+    {
+      "name": "batch-delegate",
+      "path": ".claude/commands/git/batch-delegate.md",
+      "category": "Git Workflow",
+      "tags": ["workflow", "delegation", "batch", "web"],
+      "when": "General development tasks",
+      "purpose": "Batch commit specs and generate all delegation packages",
+      "example": "Standard development workflow",
+      "riskLevel": "LOW",
+      "requiresHITL": false
     },
     {
       "name": "code",

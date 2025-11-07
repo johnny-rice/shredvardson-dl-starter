@@ -1,16 +1,19 @@
-enabled: true # flip to false if you want a "bot holiday"
-review:
-  auto_review: false
-  require_label: 'ai-review' # only runs when YOU add this label
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+
+language: en-US
+early_access: false
+reviews:
+  profile: chill
+  auto_review:
+    enabled: false # flip to true if you want automatic reviews
+    labels: ['ai-review'] # only runs when YOU add this label
   high_level_summary: true
-  path_includes:
+  request_changes_workflow: false
+  path_filters:
+    - '!docs/**'
+    - '!scripts/**'
+    - '!**/*.md'
+    - '!**/*.spec.*'
+    - '!**/*.test.*'
     - 'apps/**'
     - 'packages/**'
-  path_excludes:
-    - 'docs/**'
-    - 'scripts/**'
-    - '**/*.md'
-    - '**/*.spec.*'
-    - '**/*.test.*'
-post_review:
-  request_changes: false

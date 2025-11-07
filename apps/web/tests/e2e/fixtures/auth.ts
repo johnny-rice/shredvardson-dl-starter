@@ -9,33 +9,67 @@ export type TestUser = {
   id?: string;
 };
 
+/**
+ * Auth fixture for E2E tests
+ * Provides authenticated page and test user creation
+ */
 export const test = base.extend<{
   authenticatedPage: Page;
   testUser: TestUser;
 }>({
-  testUser: async ({}, use) => {
-    // Create test user with unique email
+  /**
+   * Creates a unique test user for each test
+   * Password meets Supabase requirements: 8+ chars, uppercase, lowercase, number, symbol
+   */
+  testUser: async (_fixtures, use) => {
     const testUser: TestUser = {
       email: `test-${Date.now()}@example.com`,
-      password: 'TestPassword123!',
+      password: 'TestPassword123!', // Meets Supabase password requirements
     };
 
-    // TODO: Create user via Supabase API when auth is implemented
     await use(testUser);
 
-    // TODO: Cleanup user after test
+    // Note: Cleanup handled by database reset between test runs
+    // Local Supabase can be reset with: supabase db reset
   },
 
-  authenticatedPage: async ({ page }, use) => {
-    // TODO: Implement when /login and /dashboard routes exist
-    // For now, just provide the page without authentication
-    // When auth is implemented, this should:
-    // 1. Navigate to /login
-    // 2. Fill email/password form with testUser credentials
-    // 3. Submit form
-    // 4. Wait for redirect to /dashboard
+  /**
+   * Provides an authenticated page by:
+   * 1. Creating a test user via sign-up flow
+   * 2. Waiting for successful authentication
+   * 3. Verifying redirect to dashboard
+   */
+  authenticatedPage: async ({ page, testUser }, use) => {
+    // Navigate to sign-up page
+    await page.goto('/sign-up');
 
+    // Fill sign-up form
+    await page.fill('[name="email"]', testUser.email);
+    await page.fill('[name="password"]', testUser.password);
+
+    // Submit form
+    await page.click('button[type="submit"]');
+
+    // Wait for redirect after successful sign-up
+    // Supabase auto-confirms in local dev, so we should land on / or /dashboard
+    await page.waitForURL((url) => url.pathname === '/' || url.pathname === '/dashboard', {
+      timeout: 10000,
+    });
+
+    // Provide the authenticated page to the test
     await use(page);
+
+    // Logout after test (cleanup)
+    try {
+      await page.goto('/dashboard');
+      // Click sign out button if it exists
+      const signOutButton = page.locator('button:has-text("Sign out")');
+      if (await signOutButton.isVisible()) {
+        await signOutButton.click();
+      }
+    } catch {
+      // If logout fails, that's okay - session will be cleared by browser context cleanup
+    }
   },
 });
 

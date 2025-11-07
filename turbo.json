@@ -8,6 +8,7 @@
     "build:tokens": {
       "dependsOn": ["^build:tokens"],
       "outputs": ["styles/**/*.css"],
+      "persistent": true,
       "interruptible": true
     },
     "dev": {

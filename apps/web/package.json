@@ -17,6 +17,8 @@
     "@sentry/nextjs": "^10.20.0",
     "@shared/ai": "workspace:*",
     "@shared/types": "workspace:*",
+    "@supabase/ssr": "^0.7.0",
+    "@supabase/supabase-js": "^2.80.0",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tanstack/react-table": "^8.21.3",
     "@ui/components": "workspace:*",
@@ -32,7 +34,6 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.1.0",
     "@shared/config": "workspace:*",
-    "@supabase/supabase-js": "^2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
     "@types/node": "^24.9.1",

@@ -35,7 +35,8 @@ Given the issue number `{{ISSUE_NUMBER}}`, perform these steps:
    - The script will automatically:
      - Fetch issue details from GitHub
      - Include the spec file
-     - Add implementation requirements
+     - Include current branch name (for spec retrieval)
+     - Add implementation requirements with git checkout instructions
      - Include PR template
      - Copy to clipboard (if supported)
 

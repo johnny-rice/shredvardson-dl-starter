@@ -111,11 +111,14 @@ Coverage-driven TDD with escape hatches for pragmatism.
 
 - **70% coverage target** (configurable) with clear contracts
 - **Vitest + Playwright + React Testing Library** - modern, fast, reliable
+- **AI-Powered UI Testing** - Playwright MCP for interactive browser automation
 - **Test isolation helpers** - no more flaky tests from shared state
 - **Dual-layer RLS testing** - validate security at both application (Vitest) and database (pgTAP) levels
 - **Transaction-isolated database tests** - no manual cleanup, no side effects
 
-See [Testing Guide](docs/testing/TESTING_GUIDE.md) for the full philosophy.
+**Playwright MCP**: Test UIs conversationally with Claude Code using real browsers. Perfect for exploratory testing, debugging visual issues, and validating user flows before codifying them into traditional E2E tests.
+
+See [Testing Guide](docs/testing/TESTING_GUIDE.md) and [Playwright MCP Guide](docs/testing/PLAYWRIGHT_MCP_GUIDE.md) for the full philosophy.
 
 ### 🔍 Automated Quality Commands
 
@@ -251,10 +254,24 @@ See [Database Recipe](docs/recipes/db.md) for the complete workflow.
 - `packages/ui/styles/tokens.css` (brand hue / tokens)
 - `app.config.ts` (feature toggles: billing/orgs/ai)
 
+## Authentication
+
+Production-ready authentication with Supabase Auth:
+
+- ✅ Email/password sign up and sign in
+- ✅ Password reset flow (via email)
+- ✅ Protected routes with middleware
+- ✅ Server-side session management (Next.js 15 SSR)
+- ✅ Zod validation + Supabase server validation
+
+**Local Development**: Uses local Supabase (`http://localhost:54321`)
+**Testing Emails**: View emails at `http://localhost:54324` (Inbucket)
+
+See plan file at [plans/292-auth-module-mvp.md](plans/292-auth-module-mvp.md) for architecture details.
+
 ## Optional Integrations
 
 - **Sentry**: Set `SENTRY_DSN` to enable error tracking (silent if not set)
-- **Auth**: See [docs/recipes/auth.md](docs/recipes/auth.md)
 - **Database**: See [docs/recipes/db.md](docs/recipes/db.md) - includes migration validation & seeding
 - **Payments**: See [docs/recipes/stripe.md](docs/recipes/stripe.md)
 
@@ -302,6 +319,14 @@ pnpm test:ci-scripts # Run CI script integration tests
 - Cross-browser testing (Chrome + Mobile Chrome)
 - **Smoke tests complete** (4 passing)
 
+**AI-Powered UI Testing** (Playwright MCP)
+
+- Interactive browser automation via natural language
+- Real browser testing with screenshots and accessibility tree
+- Exploratory testing and visual debugging
+- Perfect for initial feature validation before codifying tests
+- See [Playwright MCP Guide](docs/testing/PLAYWRIGHT_MCP_GUIDE.md)
+
 **CI Script Tests** (Bash + Integration)
 
 - Spec validation (naming, structure, required files)
@@ -312,9 +337,12 @@ pnpm test:ci-scripts # Run CI script integration tests
 ### TDD Workflow
 
 1. **Contracts First** → Define security boundaries and user flows
-2. **RLS Tests** → Security policy validation (templates ready)
-3. **E2E Tests** → Critical user flows (smoke tests complete)
-4. **Unit Tests** → Component and function testing
+2. **Manual Testing (Playwright MCP)** → Validate flows interactively, catch bugs early
+3. **RLS Tests** → Security policy validation (templates ready)
+4. **E2E Tests** → Codify validated flows into automated tests
+5. **Unit Tests** → Component and function testing
+
+**Recommended Flow**: Start with Playwright MCP for exploratory testing, fix bugs discovered, then convert validated flows into traditional E2E tests for CI/CD.
 
 Use `/test unit <path>` to scaffold tests with the Test Generator sub-agent.
 
@@ -322,7 +350,7 @@ Use `/test unit <path>` to scaffold tests with the Test Generator sub-agent.
 
 Unit tests run automatically on `git push` (target: 8-15s). Bypass with `--no-verify` if needed.
 
-See [Testing Guide](docs/testing/TESTING_GUIDE.md) for complete documentation, best practices, and troubleshooting.
+See [Testing Guide](docs/testing/TESTING_GUIDE.md), [Playwright MCP Guide](docs/testing/PLAYWRIGHT_MCP_GUIDE.md), and [UI Automation Guide](docs/testing/UI_AUTOMATION_GUIDE.md) for complete documentation, best practices, and troubleshooting.
 
 ## Scripts
 

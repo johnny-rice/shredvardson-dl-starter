@@ -22,7 +22,20 @@ function hashFile(filePath: string): string | null {
     if (!stat.isFile()) {
       return null; // Skip directories
     }
-    const content = readFileSync(filePath, 'utf8');
+    let content = readFileSync(filePath, 'utf8');
+
+    // Normalize timestamp-sensitive files before hashing
+    if (filePath.includes('docs/commands/index.json')) {
+      // Remove the "generated" timestamp field from commands index
+      try {
+        const json = JSON.parse(content);
+        delete json.generated;
+        content = JSON.stringify(json, null, 2) + '\n';
+      } catch {
+        // If parsing fails, hash as-is
+      }
+    }
+
     return createHash('sha256').update(content).digest('hex').substring(0, 16);
   } catch (error) {
     console.warn(`Warning: Could not hash ${filePath} - ${error}`);
