@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { SeedConfig, SeedResult } from './types/seed-data';
+import { confirm } from './utils/confirm';
 
 /**
  * Seeds the database with deterministic test data.
@@ -14,6 +15,10 @@ import type { SeedConfig, SeedResult } from './types/seed-data';
  * ```bash
  * # CLI usage
  * pnpm db:seed:test
+ *
+ * # CI/CD usage (skip confirmation)
+ * pnpm db:seed:test --force
+ * FORCE=true pnpm db:seed:test
  *
  * # Programmatic usage
  * await seedTest({ userCount: 5 });
@@ -38,8 +43,6 @@ export async function seedTest(config: SeedConfig = {}): Promise<SeedResult> {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    console.log('🧪 Seeding test data...\n');
-
     const { userCount = 3 } = config;
 
     // Generate deterministic test users
@@ -49,6 +52,13 @@ export async function seedTest(config: SeedConfig = {}): Promise<SeedResult> {
       name: i === userCount - 1 ? 'Test Admin' : `Test User ${i + 1}`,
       bio: i === userCount - 1 ? 'Admin user for testing' : `Test bio ${i + 1}`,
     }));
+
+    // Confirm before deleting existing test users
+    await confirm(
+      `This will delete existing test users (${testUsers.map((u) => u.id).join(', ')}) and recreate them with fresh data.`
+    );
+
+    console.log('🧪 Seeding test data...\n');
 
     // Delete existing test users for idempotent seeding
     await supabase

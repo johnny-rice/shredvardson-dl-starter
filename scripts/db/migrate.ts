@@ -7,14 +7,17 @@
  * Usage:
  *   tsx scripts/db/migrate.ts create "migration_name"
  *   tsx scripts/db/migrate.ts validate
- *   tsx scripts/db/migrate.ts apply
- *   tsx scripts/db/migrate.ts rollback
+ *   tsx scripts/db/migrate.ts apply [--force]
+ *   tsx scripts/db/migrate.ts rollback [--force]
+ *
+ * Options:
+ *   --force    Skip confirmation prompts (use in CI/CD)
  */
 
 import { execSync } from 'node:child_process';
 import { mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import * as readline from 'node:readline';
+import { confirm } from './utils/confirm';
 
 type Action = 'create' | 'validate' | 'apply' | 'rollback';
 
@@ -231,15 +234,7 @@ async function applyMigrations(): Promise<void> {
   console.log('Running validation first...\n');
   await validateMigrations();
 
-  console.log('\n⚠️  About to apply migrations to local database.');
-  console.log('This operation cannot be undone easily.\n');
-
-  const confirmed = await askConfirmation('Continue? (yes/no): ');
-
-  if (!confirmed) {
-    console.log('❌ Migration cancelled');
-    process.exit(0);
-  }
+  await confirm('About to apply migrations to local database. This operation cannot be undone easily.');
 
   try {
     // Apply migrations
@@ -264,7 +259,7 @@ async function applyMigrations(): Promise<void> {
 }
 
 async function rollbackMigration(): Promise<void> {
-  console.log('⚠️  WARNING: Rolling back will reset the database to last migration\n');
+  console.log('⚠️  WARNING: Rolling back will reset the database to last migration');
   console.log('This will DELETE all data in your local database!\n');
 
   // List recent migrations
@@ -283,12 +278,7 @@ async function rollbackMigration(): Promise<void> {
     console.log('No migrations found\n');
   }
 
-  const confirmed = await askConfirmation('Confirm rollback? (yes/no): ');
-
-  if (!confirmed) {
-    console.log('❌ Rollback cancelled');
-    process.exit(0);
-  }
+  await confirm('Confirm rollback? This will reset your database and DELETE all data.');
 
   try {
     console.log('\nResetting database...');
@@ -305,19 +295,6 @@ async function rollbackMigration(): Promise<void> {
   }
 }
 
-function askConfirmation(question: string): Promise<boolean> {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
-  return new Promise((resolve) => {
-    rl.question(question, (answer) => {
-      rl.close();
-      resolve(answer.toLowerCase() === 'yes' || answer.toLowerCase() === 'y');
-    });
-  });
-}
 
 // CLI
 const action = process.argv[2] as Action;
