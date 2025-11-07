@@ -16,13 +16,13 @@ reviews:
     - '!tasks/**'
     - '!docs/micro-lessons/**'
     - '!docs/research/**'
-    - '!scripts/**'
     - '!**/*.spec.*'
     - '!**/*.test.*'
 
-    # Include all code
+    # Include all code (including scripts - they're critical!)
     - 'apps/**'
     - 'packages/**'
+    - 'scripts/**'         # Database migrations, destructive ops, production scripts
 
     # Include critical LLM-facing documentation
     - '.claude/**'          # Skills, commands, prompts - LLMs execute these
@@ -30,5 +30,6 @@ reviews:
     - 'docs/adr/**'         # Architecture decisions - LLMs implement these
     - 'docs/testing/**'     # Test standards - LLMs apply these
     - 'docs/ai/**'          # AI guidelines - LLMs follow these
+    - 'docs/scripts/**'     # Script documentation and safety guidelines
     - 'CONTRIBUTING.md'     # Workflow rules - LLMs follow these
     - 'SECURITY.md'         # Security policy - Critical for all code
