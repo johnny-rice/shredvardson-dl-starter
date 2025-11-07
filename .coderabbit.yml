@@ -5,8 +5,8 @@ early_access: false
 reviews:
   profile: chill
   auto_review:
-    enabled: false # flip to true if you want automatic reviews
-    labels: ['ai-review'] # only runs when YOU add this label
+    enabled: true # automatically review all PRs
+    labels: [] # empty = review all PRs (use ['ai-review'] to require label)
   high_level_summary: true
   request_changes_workflow: false
   path_filters:
