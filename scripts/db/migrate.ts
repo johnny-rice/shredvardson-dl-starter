@@ -227,6 +227,13 @@ function generateValidationReport(date: string): string {
 `;
 }
 
+/**
+ * Apply pending SQL migrations to the local Supabase database and update TypeScript types.
+ *
+ * Performs a validation pass, prompts the user for confirmation, applies migrations to the local database, and regenerates TypeScript types. On failure the process exits with a non-zero status.
+ *
+ * @returns Nothing.
+ */
 async function applyMigrations(): Promise<void> {
   console.log('📦 Applying migrations...\n');
 
@@ -258,6 +265,14 @@ async function applyMigrations(): Promise<void> {
   }
 }
 
+/**
+ * Reset the local Supabase database to the last applied migration and regenerate TypeScript types.
+ *
+ * Prompts the user to confirm the rollback, displays up to five recent migration filenames, runs
+ * `supabase db reset` (deleting all data in the local database), and then runs `pnpm db:types` to
+ * update TypeScript definitions. If the reset or type generation fails, the process exits with
+ * status code 1.
+ */
 async function rollbackMigration(): Promise<void> {
   console.log('⚠️  WARNING: Rolling back will reset the database to last migration');
   console.log('This will DELETE all data in your local database!\n');
