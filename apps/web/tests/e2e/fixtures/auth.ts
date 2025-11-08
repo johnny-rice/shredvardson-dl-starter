@@ -21,7 +21,7 @@ export const test = base.extend<{
    * Creates a unique test user for each test
    * Password meets Supabase requirements: 8+ chars, uppercase, lowercase, number, symbol
    */
-  testUser: async (_fixtures, use) => {
+  testUser: async (_, use) => {
     const testUser: TestUser = {
       email: `test-${Date.now()}@example.com`,
       password: 'TestPassword123!', // Meets Supabase password requirements
@@ -41,7 +41,7 @@ export const test = base.extend<{
    */
   authenticatedPage: async ({ page, testUser }, use) => {
     // Navigate to sign-up page
-    await page.goto('/sign-up');
+    await page.goto('/signup');
 
     // Fill sign-up form
     await page.fill('[name="email"]', testUser.email);

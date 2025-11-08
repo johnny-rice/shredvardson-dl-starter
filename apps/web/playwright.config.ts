@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
-  testDir: 'apps/web/tests/e2e',
+  testDir: './tests/e2e',
   testMatch: '**/*.spec.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
@@ -32,7 +32,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'pnpm --filter=web run start',
+    command: 'cd ../.. && pnpm --filter=web run dev',
     port: 3000,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

@@ -13,6 +13,9 @@
  * - Typography using design system tokens
  * - Semantic HTML structure for accessibility
  */
+
+import { Button } from '@ui/components';
+import NextLink from 'next/link';
 import { Link } from '@/components/Link';
 
 /** Page metadata for SEO and social sharing */
@@ -23,6 +26,35 @@ export const metadata = {
   openGraph: { title: 'Ship Faster with AI-Ready Code' },
   twitter: { card: 'summary_large_image' },
 };
+
+/**
+ * BenefitCard component props
+ */
+interface BenefitCardProps {
+  /** Icon or emoji to display */
+  icon: string;
+  /** Title of the benefit */
+  title: string;
+  /** Description of the benefit */
+  description: string;
+}
+
+/**
+ * Reusable benefit card component
+ *
+ * Displays a card with an icon, title, and description following
+ * the design system token patterns.
+ */
+function BenefitCard({ icon, title, description }: BenefitCardProps) {
+  return (
+    <div className="bg-card rounded-lg p-6 border border-border">
+      <h3 className="text-xl font-semibold text-card-foreground mb-4 leading-tight">
+        {icon} {title}
+      </h3>
+      <p className="text-muted-foreground leading-relaxed">{description}</p>
+    </div>
+  );
+}
 
 /**
  * Marketing page component.
@@ -40,75 +72,89 @@ export const metadata = {
  */
 export default function Marketing() {
   return (
-    <main className="min-h-dvh bg-background font-sans py-4xl px-xl">
-      <div className="max-w-4xl mx-auto" data-testid="smoke">
-        <header className="text-center mb-4xl">
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight mb-lg">
+    <main className="min-h-dvh bg-background font-sans">
+      {/* Navigation Header */}
+      <nav className="border-b border-border" aria-label="Main navigation">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-8">
+            <Link href="/" className="text-xl font-bold text-foreground hover:no-underline">
+              DLStarter
+            </Link>
+            <div className="hidden md:flex items-center gap-6">
+              <Link href="/docs" variant="nav">
+                Docs
+              </Link>
+              <Link href="/showcase" variant="nav">
+                Showcase
+              </Link>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+            <Button asChild variant="ghost">
+              <NextLink href="/login">Log In</NextLink>
+            </Button>
+            <Button asChild>
+              <NextLink href="/signup">Sign Up</NextLink>
+            </Button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <div className="max-w-4xl mx-auto px-6 py-24" data-testid="smoke">
+        <header className="text-center mb-24">
+          <h1 className="text-5xl md:text-6xl font-bold text-foreground leading-tight mb-6">
             Ship Faster with AI-Ready Code
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed mb-3xl max-w-3xl mx-auto">
+          <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed mb-12 max-w-3xl mx-auto">
             A lightweight, LLM-friendly starter that gets you from idea to production without the
             bloat.
           </p>
-          <div className="flex flex-col sm:flex-row gap-md justify-center">
-            <Link
-              href="/docs"
-              className="text-lg px-3xl py-lg font-medium"
-              aria-label="Get started with DLStarter documentation"
-            >
-              Get Started
-            </Link>
-            <Link
-              href="/docs"
-              variant="ghost"
-              className="text-lg px-3xl py-lg font-medium"
-              aria-label="View complete documentation"
-            >
-              View Docs
-            </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild size="lg">
+              <NextLink href="/signup" aria-label="Get started with DLStarter">
+                Get Started Free
+              </NextLink>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <NextLink href="/docs" aria-label="View complete documentation">
+                View Docs
+              </NextLink>
+            </Button>
           </div>
         </header>
 
-        <section className="mb-4xl">
-          <h2 className="text-3xl md:text-4xl font-semibold text-center text-foreground leading-tight mb-3xl">
+        <section className="mb-24">
+          <h2 className="text-3xl md:text-4xl font-semibold text-center text-foreground leading-tight mb-12">
             Top 3 Benefits
           </h2>
-          <div className="grid md:grid-cols-3 gap-xl">
-            <div className="bg-card rounded-lg p-xl border border-border">
-              <h3 className="text-xl font-semibold text-card-foreground mb-md leading-tight">
-                ⚡ Zero Bloat
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Clean, minimal codebase with only essential dependencies.
-              </p>
-            </div>
-            <div className="bg-card rounded-lg p-xl border border-border">
-              <h3 className="text-xl font-semibold text-card-foreground mb-md leading-tight">
-                🤖 AI-Optimized
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Built for Claude and LLMs with clear patterns and documentation.
-              </p>
-            </div>
-            <div className="bg-card rounded-lg p-xl border border-border">
-              <h3 className="text-xl font-semibold text-card-foreground mb-md leading-tight">
-                🔧 Recipe-Driven
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Add features progressively with battle-tested recipes.
-              </p>
-            </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            <BenefitCard
+              icon="⚡"
+              title="Zero Bloat"
+              description="Clean, minimal codebase with only essential dependencies."
+            />
+            <BenefitCard
+              icon="🤖"
+              title="AI-Optimized"
+              description="Built for Claude and LLMs with clear patterns and documentation."
+            />
+            <BenefitCard
+              icon="🔧"
+              title="Recipe-Driven"
+              description="Add features progressively with battle-tested recipes."
+            />
           </div>
         </section>
 
-        <section className="mb-4xl">
-          <h2 className="text-3xl md:text-4xl font-semibold text-center text-foreground leading-tight mb-3xl">
+        <section className="mb-24">
+          <h2 className="text-3xl md:text-4xl font-semibold text-center text-foreground leading-tight mb-12">
             Perfect For
           </h2>
-          <div className="bg-card rounded-lg p-3xl border border-border">
-            <div className="grid md:grid-cols-2 gap-2xl">
+          <div className="bg-card rounded-lg p-12 border border-border">
+            <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <h3 className="text-lg font-semibold text-card-foreground mb-md leading-tight">
+                <h3 className="text-lg font-semibold text-card-foreground mb-4 leading-tight">
                   Solo Developers
                 </h3>
                 <p className="text-muted-foreground leading-normal">
@@ -116,7 +162,7 @@ export default function Marketing() {
                 </p>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-card-foreground mb-md leading-tight">
+                <h3 className="text-lg font-semibold text-card-foreground mb-4 leading-tight">
                   AI-Assisted Teams
                 </h3>
                 <p className="text-muted-foreground leading-normal">
@@ -128,58 +174,40 @@ export default function Marketing() {
         </section>
 
         <section>
-          <h2 className="text-3xl md:text-4xl font-semibold text-center text-foreground leading-tight mb-3xl">
+          <h2 className="text-3xl md:text-4xl font-semibold text-center text-foreground leading-tight mb-12">
             What&apos;s Inside
           </h2>
-          <div className="grid md:grid-cols-2 gap-xl">
-            <div className="bg-card rounded-lg p-xl border border-border">
-              <h3 className="text-lg font-semibold text-card-foreground mb-md leading-tight">
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-card rounded-lg p-6 border border-border">
+              <h3 className="text-lg font-semibold text-card-foreground mb-4 leading-tight">
                 Documentation
               </h3>
-              <nav className="space-y-sm">
-                <a
-                  href="/docs"
-                  className="block text-primary hover:underline focus-visible:underline leading-normal"
-                >
+              <nav className="space-y-2">
+                <Link variant="default" href="/docs" className="block leading-normal">
                   Getting Started Guide
-                </a>
-                <a
-                  href="/docs"
-                  className="block text-primary hover:underline focus-visible:underline leading-normal"
-                >
+                </Link>
+                <Link variant="default" href="/docs" className="block leading-normal">
                   Command Reference
-                </a>
-                <a
-                  href="/docs"
-                  className="block text-primary hover:underline focus-visible:underline leading-normal"
-                >
+                </Link>
+                <Link variant="default" href="/docs" className="block leading-normal">
                   Architecture Overview
-                </a>
+                </Link>
               </nav>
             </div>
-            <div className="bg-card rounded-lg p-xl border border-border">
-              <h3 className="text-lg font-semibold text-card-foreground mb-md leading-tight">
+            <div className="bg-card rounded-lg p-6 border border-border">
+              <h3 className="text-lg font-semibold text-card-foreground mb-4 leading-tight">
                 Recipes
               </h3>
-              <nav className="space-y-sm">
-                <a
-                  href="/docs"
-                  className="block text-primary hover:underline focus-visible:underline leading-normal"
-                >
+              <nav className="space-y-2">
+                <Link variant="default" href="/docs" className="block leading-normal">
                   Authentication Setup
-                </a>
-                <a
-                  href="/docs"
-                  className="block text-primary hover:underline focus-visible:underline leading-normal"
-                >
+                </Link>
+                <Link variant="default" href="/docs" className="block leading-normal">
                   Database Integration
-                </a>
-                <a
-                  href="/docs"
-                  className="block text-primary hover:underline focus-visible:underline leading-normal"
-                >
+                </Link>
+                <Link variant="default" href="/docs" className="block leading-normal">
                   Payment Processing
-                </a>
+                </Link>
               </nav>
             </div>
           </div>

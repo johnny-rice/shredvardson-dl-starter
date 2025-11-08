@@ -192,6 +192,22 @@ Track large initiatives with **minimal overhead**.
 
 See [Epic System Guide](docs/EPIC_SYSTEM.md) for details.
 
+### 🔐 Production-Ready Authentication
+
+Complete auth module using Supabase Auth and Next.js 15 Server Components.
+
+- **Email/password authentication** - Sign up, sign in, password reset flows
+- **Protected routes** - Middleware-based session management with automatic token refresh
+- **Server-side security** - `getUser()` validates tokens on Supabase servers (not just local storage)
+- **Progressive inline validation** - onBlur initially, onChange after first error for optimal UX
+- **Full accessibility** - ARIA attributes, screen reader support, keyboard navigation
+- **Mobile responsive** - Tested on viewports from 320px to 768px+
+- **Design system compliant** - 100% semantic tokens, fluid typography, shadcn/ui components
+
+**Battle-tested pattern**: Follows Supabase's official Next.js 15 SSR guide with 3 client variants (browser, server, middleware) for optimal security and performance.
+
+See auth pages at `/login`, `/signup`, `/reset-password`. Protected routes automatically redirect to login.
+
 ### 🔒 Security & Best Practices Baked In
 
 From day one, not bolted on later.
