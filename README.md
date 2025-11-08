@@ -40,6 +40,7 @@ Most templates assume you're coding alone. This one assumes **you're pair progra
 
 - **5 Discovery Commands + 11 Skills**: `/db`, `/test`, `/git`, `/spec`, `/code` - intuitive entry points
 - **Progressive Disclosure**: Skills load only what's needed, saving 51-90% tokens
+- **Confidence-Based Gating**: AI auto-proceeds on high-confidence decisions, reducing interruptions by 60%
 - **Self-Improving**: `skill-creator` meta-Skill lets you create new Skills from conversation
 - **LLM-Optimized**: Skills work seamlessly with sub-agents for specialized tasks
 
