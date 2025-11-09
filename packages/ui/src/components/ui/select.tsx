@@ -98,6 +98,34 @@ const selectTriggerVariants = cva(
   }
 );
 
+/**
+ * SelectTrigger - Button that opens the Select dropdown
+ *
+ * Styled button displaying the selected value with chevron icon.
+ * Built on Radix UI Select.Trigger primitive with size variants.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param size - Size variant (default | sm | lg)
+ * @param children - Trigger content (typically SelectValue)
+ *
+ * @example
+ * ```tsx
+ * <SelectTrigger>
+ *   <SelectValue placeholder="Select an option" />
+ * </SelectTrigger>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <SelectTrigger size="lg" className="w-[300px]">
+ *   <SelectValue placeholder="Large trigger" />
+ * </SelectTrigger>
+ * ```
+ *
+ * @see {@link https://www.radix-ui.com/primitives/docs/components/select#trigger | Radix UI Select.Trigger}
+ * @see {@link SelectValue} - For displaying selected value
+ * @see {@link SelectContent} - For dropdown content
+ */
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger> &
@@ -165,6 +193,40 @@ const SelectScrollDownButton = React.forwardRef<
 ));
 SelectScrollDownButton.displayName = SelectPrimitive.ScrollDownButton.displayName;
 
+/**
+ * SelectContent - Dropdown container for Select options
+ *
+ * Popover container with smooth animations and scroll controls.
+ * Automatically positioned relative to SelectTrigger with Portal rendering.
+ * Built on Radix UI Select.Content primitive.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Select items and groups (SelectItem, SelectGroup, SelectLabel)
+ * @param position - Positioning strategy (popper | item-aligned)
+ *
+ * @example
+ * ```tsx
+ * <SelectContent>
+ *   <SelectItem value="option1">Option 1</SelectItem>
+ *   <SelectItem value="option2">Option 2</SelectItem>
+ * </SelectContent>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <SelectContent position="item-aligned">
+ *   <SelectGroup>
+ *     <SelectLabel>Fruits</SelectLabel>
+ *     <SelectItem value="apple">Apple</SelectItem>
+ *     <SelectItem value="banana">Banana</SelectItem>
+ *   </SelectGroup>
+ * </SelectContent>
+ * ```
+ *
+ * @see {@link https://www.radix-ui.com/primitives/docs/components/select#content | Radix UI Select.Content}
+ * @see {@link SelectItem} - For selectable options
+ * @see {@link SelectGroup} - For grouping options
+ */
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
@@ -197,6 +259,29 @@ const SelectContent = React.forwardRef<
 ));
 SelectContent.displayName = SelectPrimitive.Content.displayName;
 
+/**
+ * SelectLabel - Group label for Select options
+ *
+ * Non-selectable label for grouping related SelectItems.
+ * Used within SelectGroup to provide semantic structure.
+ * Built on Radix UI Select.Label primitive.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Label text content
+ *
+ * @example
+ * ```tsx
+ * <SelectGroup>
+ *   <SelectLabel>Fruits</SelectLabel>
+ *   <SelectItem value="apple">Apple</SelectItem>
+ *   <SelectItem value="banana">Banana</SelectItem>
+ * </SelectGroup>
+ * ```
+ *
+ * @see {@link https://www.radix-ui.com/primitives/docs/components/select#label | Radix UI Select.Label}
+ * @see {@link SelectGroup} - Parent container
+ * @see {@link SelectItem} - For selectable options
+ */
 const SelectLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
@@ -209,6 +294,34 @@ const SelectLabel = React.forwardRef<
 ));
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
 
+/**
+ * SelectItem - Selectable option in a Select dropdown
+ *
+ * Individual option with checkmark indicator for selected state.
+ * Supports keyboard navigation and accessibility.
+ * Built on Radix UI Select.Item primitive.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param value - Unique value for this option (required)
+ * @param children - Option text content
+ * @param disabled - Whether the option is disabled
+ *
+ * @example
+ * ```tsx
+ * <SelectItem value="apple">Apple</SelectItem>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <SelectItem value="unavailable" disabled>
+ *   Out of Stock
+ * </SelectItem>
+ * ```
+ *
+ * @see {@link https://www.radix-ui.com/primitives/docs/components/select#item | Radix UI Select.Item}
+ * @see {@link SelectContent} - Parent container
+ * @see {@link SelectLabel} - For group labels
+ */
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
@@ -239,6 +352,32 @@ const SelectItem = React.forwardRef<
 ));
 SelectItem.displayName = SelectPrimitive.Item.displayName;
 
+/**
+ * SelectSeparator - Visual divider between Select option groups
+ *
+ * Horizontal line separating groups of SelectItems for better visual organization.
+ * Built on Radix UI Select.Separator primitive.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ *
+ * @example
+ * ```tsx
+ * <SelectContent>
+ *   <SelectGroup>
+ *     <SelectLabel>Fruits</SelectLabel>
+ *     <SelectItem value="apple">Apple</SelectItem>
+ *   </SelectGroup>
+ *   <SelectSeparator />
+ *   <SelectGroup>
+ *     <SelectLabel>Vegetables</SelectLabel>
+ *     <SelectItem value="carrot">Carrot</SelectItem>
+ *   </SelectGroup>
+ * </SelectContent>
+ * ```
+ *
+ * @see {@link https://www.radix-ui.com/primitives/docs/components/select#separator | Radix UI Select.Separator}
+ * @see {@link SelectGroup} - For grouping items
+ */
 const SelectSeparator = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>

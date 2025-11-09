@@ -136,14 +136,47 @@ export interface DataTableProps<TData, TValue> extends VariantProps<typeof dataT
 /**
  * DataTable component using TanStack Table
  *
- * A headless table component styled with our design tokens.
- * Supports sorting, filtering, pagination, and row selection.
+ * A flexible, accessible data table built on TanStack Table with design system styling.
+ * Supports sorting, filtering, pagination, row selection, and responsive layouts.
+ *
+ * @usageGuidelines
+ * - Use for displaying tabular data with 10+ rows
+ * - Enable pagination for datasets with 20+ rows
+ * - Use sorting for columns users need to compare (numbers, dates, names)
+ * - Enable row selection only when bulk actions are needed
+ * - Provide stable row IDs via getRowId for consistent selection across re-renders
+ * - Keep column count reasonable (5-10 columns ideal on desktop)
+ * - Use compact density for dashboards, comfortable for data entry
+ *
+ * @accessibilityConsiderations
+ * - Uses semantic table elements (table, thead, tbody, tr, th, td)
+ * - Sortable columns have aria-sort attribute (ascending | descending | none)
+ * - Checkboxes have aria-label for screen reader announcements
+ * - Row selection state indicated via data-state="selected"
+ * - Pagination controls have descriptive aria-labels
+ * - Focus management maintained during interactions
+ *
+ * @param columns - Column definitions (TanStack Table ColumnDef[])
+ * @param data - Array of row data objects
+ * @param getRowId - Optional function to generate stable row IDs (for selection)
+ * @param size - Text size variant (sm | md | lg)
+ * @param density - Spacing density (compact | comfortable | spacious)
+ * @param enableSorting - Enable column sorting @default true
+ * @param enableFiltering - Enable column filtering @default false
+ * @param enablePagination - Enable pagination controls @default false
+ * @param enableRowSelection - Enable row selection checkboxes @default false
+ * @param pageSize - Initial rows per page @default 10
+ * @param className - Additional CSS classes for container
+ * @param tableClassName - Additional CSS classes for table element
+ * @param onRowSelectionChange - Callback when selection changes
  *
  * @example
  * ```tsx
+ * // Basic table with sorting
  * const columns: ColumnDef<User>[] = [
  *   { accessorKey: 'name', header: 'Name' },
  *   { accessorKey: 'email', header: 'Email' },
+ *   { accessorKey: 'role', header: 'Role' },
  * ];
  *
  * <DataTable
@@ -151,10 +184,39 @@ export interface DataTableProps<TData, TValue> extends VariantProps<typeof dataT
  *   data={users}
  *   size="md"
  *   density="comfortable"
- *   enablePagination
- *   pageSize={20}
  * />
  * ```
+ *
+ * @example
+ * ```tsx
+ * // Table with pagination and row selection
+ * <DataTable
+ *   columns={columns}
+ *   data={largeDataset}
+ *   enablePagination
+ *   enableRowSelection
+ *   pageSize={20}
+ *   onRowSelectionChange={(selected) => {
+ *     console.log('Selected rows:', selected);
+ *   }}
+ *   getRowId={(row) => row.id}
+ * />
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Compact table for dashboards
+ * <DataTable
+ *   columns={columns}
+ *   data={metrics}
+ *   size="sm"
+ *   density="compact"
+ *   enableSorting
+ *   className="max-w-4xl"
+ * />
+ * ```
+ *
+ * @see {@link https://tanstack.com/table/latest | TanStack Table Docs}
  */
 export function DataTable<TData, TValue>({
   columns,

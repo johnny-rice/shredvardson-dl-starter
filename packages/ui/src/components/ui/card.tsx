@@ -84,6 +84,35 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 );
 Card.displayName = 'Card';
 
+/**
+ * CardHeader - Header section of a Card component
+ *
+ * Container for Card title and description with standard spacing.
+ * Typically contains CardTitle and optionally CardDescription.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Header content (usually CardTitle and CardDescription)
+ *
+ * @example
+ * ```tsx
+ * <CardHeader>
+ *   <CardTitle>Settings</CardTitle>
+ *   <CardDescription>Manage your preferences</CardDescription>
+ * </CardHeader>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Header without description
+ * <CardHeader>
+ *   <CardTitle>Quick Actions</CardTitle>
+ * </CardHeader>
+ * ```
+ *
+ * @see {@link Card} - Parent container component
+ * @see {@link CardTitle} - For the heading element
+ * @see {@link CardDescription} - For optional description text
+ */
 const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('flex flex-col space-y-1.5 p-6', className)} {...props} />
@@ -91,6 +120,28 @@ const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 );
 CardHeader.displayName = 'CardHeader';
 
+/**
+ * CardTitle - Heading element for Card header
+ *
+ * Semantic h3 heading with semibold styling for Card titles.
+ * Maintains proper heading hierarchy and accessibility.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Title text content
+ *
+ * @example
+ * ```tsx
+ * <CardTitle>User Profile</CardTitle>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <CardTitle className="text-destructive">Error</CardTitle>
+ * ```
+ *
+ * @see {@link CardHeader} - Parent container
+ * @see {@link CardDescription} - For supporting description text
+ */
 const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
     <h3
@@ -102,6 +153,32 @@ const CardTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTML
 );
 CardTitle.displayName = 'CardTitle';
 
+/**
+ * CardDescription - Supporting description text for Card header
+ *
+ * Muted paragraph text providing additional context for the Card.
+ * Uses muted foreground color for visual hierarchy.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Description text content
+ *
+ * @example
+ * ```tsx
+ * <CardDescription>
+ *   Configure your account settings and preferences
+ * </CardDescription>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <CardDescription className="text-xs">
+ *   Last updated 2 hours ago
+ * </CardDescription>
+ * ```
+ *
+ * @see {@link CardHeader} - Parent container
+ * @see {@link CardTitle} - For the main heading
+ */
 const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
@@ -110,6 +187,34 @@ const CardDescription = React.forwardRef<
 ));
 CardDescription.displayName = 'CardDescription';
 
+/**
+ * CardContent - Main content area of a Card component
+ *
+ * Container for the primary Card content with consistent padding.
+ * Top padding is removed to maintain proper spacing after CardHeader.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Main content (text, forms, lists, etc.)
+ *
+ * @example
+ * ```tsx
+ * <CardContent>
+ *   <p>Your card content goes here.</p>
+ * </CardContent>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <CardContent className="space-y-4">
+ *   <Input placeholder="Name" />
+ *   <Input placeholder="Email" />
+ * </CardContent>
+ * ```
+ *
+ * @see {@link Card} - Parent container component
+ * @see {@link CardHeader} - For title and description
+ * @see {@link CardFooter} - For action buttons
+ */
 const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
@@ -117,6 +222,34 @@ const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
 );
 CardContent.displayName = 'CardContent';
 
+/**
+ * CardFooter - Footer section of a Card component
+ *
+ * Flex container for Card actions and buttons with center-aligned items.
+ * Typically used for action buttons, links, or metadata.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Footer content (usually buttons or action links)
+ *
+ * @example
+ * ```tsx
+ * <CardFooter>
+ *   <Button variant="outline">Cancel</Button>
+ *   <Button>Save</Button>
+ * </CardFooter>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <CardFooter className="justify-between">
+ *   <Link variant="default" href="/help">Learn more</Link>
+ *   <Button>Continue</Button>
+ * </CardFooter>
+ * ```
+ *
+ * @see {@link Card} - Parent container component
+ * @see {@link CardContent} - For main content area
+ */
 const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('flex items-center p-6 pt-0', className)} {...props} />

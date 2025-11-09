@@ -56,6 +56,22 @@ const DialogPortal = DialogPrimitive.Portal;
 
 const DialogClose = DialogPrimitive.Close;
 
+/**
+ * DialogOverlay - Background overlay for Dialog component
+ *
+ * Semi-transparent overlay that dims the background content when Dialog is open.
+ * Built on Radix UI Dialog.Overlay primitive with smooth fade animations.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ *
+ * @example
+ * ```tsx
+ * <DialogOverlay />
+ * ```
+ *
+ * @see {@link https://www.radix-ui.com/primitives/docs/components/dialog#overlay | Radix UI Dialog.Overlay}
+ * @see {@link DialogContent} - Automatically includes DialogOverlay
+ */
 const DialogOverlay = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
@@ -71,6 +87,46 @@ const DialogOverlay = React.forwardRef<
 ));
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
+/**
+ * DialogContent - Main content container for Dialog
+ *
+ * Centered modal container with overlay, close button, and smooth animations.
+ * Automatically includes DialogOverlay and a close button with accessibility support.
+ * Built on Radix UI Dialog.Content primitive with focus trap and keyboard handling.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Dialog content (typically DialogHeader, content, DialogFooter)
+ *
+ * @example
+ * ```tsx
+ * <DialogContent>
+ *   <DialogHeader>
+ *     <DialogTitle>Confirm Action</DialogTitle>
+ *     <DialogDescription>This action cannot be undone.</DialogDescription>
+ *   </DialogHeader>
+ *   <p>Are you sure you want to continue?</p>
+ *   <DialogFooter>
+ *     <Button variant="outline">Cancel</Button>
+ *     <Button>Confirm</Button>
+ *   </DialogFooter>
+ * </DialogContent>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Wider dialog
+ * <DialogContent className="max-w-3xl">
+ *   <DialogHeader>
+ *     <DialogTitle>Large Content</DialogTitle>
+ *   </DialogHeader>
+ *   <div>Wide content area</div>
+ * </DialogContent>
+ * ```
+ *
+ * @see {@link https://www.radix-ui.com/primitives/docs/components/dialog#content | Radix UI Dialog.Content}
+ * @see {@link DialogHeader} - For title and description
+ * @see {@link DialogFooter} - For action buttons
+ */
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
@@ -102,11 +158,60 @@ const DialogContent = React.forwardRef<
 ));
 DialogContent.displayName = DialogPrimitive.Content.displayName;
 
+/**
+ * DialogHeader - Header section of a Dialog
+ *
+ * Container for DialogTitle and DialogDescription with proper spacing.
+ * Text is centered on mobile and left-aligned on larger screens.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Header content (typically DialogTitle and DialogDescription)
+ *
+ * @example
+ * ```tsx
+ * <DialogHeader>
+ *   <DialogTitle>Delete Account</DialogTitle>
+ *   <DialogDescription>
+ *     This action is permanent and cannot be undone.
+ *   </DialogDescription>
+ * </DialogHeader>
+ * ```
+ *
+ * @see {@link DialogTitle} - For the heading element
+ * @see {@link DialogDescription} - For supporting description
+ */
 const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div className={cn('flex flex-col space-y-1.5 text-center sm:text-left', className)} {...props} />
 );
 DialogHeader.displayName = 'DialogHeader';
 
+/**
+ * DialogFooter - Footer section of a Dialog
+ *
+ * Container for action buttons with responsive layout.
+ * Stacks vertically on mobile (reversed order) and horizontal on larger screens.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Footer content (typically action buttons)
+ *
+ * @example
+ * ```tsx
+ * <DialogFooter>
+ *   <Button variant="outline">Cancel</Button>
+ *   <Button variant="destructive">Delete</Button>
+ * </DialogFooter>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * // Single action
+ * <DialogFooter>
+ *   <Button>Got it</Button>
+ * </DialogFooter>
+ * ```
+ *
+ * @see {@link DialogContent} - Parent container
+ */
 const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
@@ -115,6 +220,32 @@ const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 );
 DialogFooter.displayName = 'DialogFooter';
 
+/**
+ * DialogTitle - Heading element for Dialog
+ *
+ * Semantic heading for Dialog with proper ARIA labeling.
+ * Automatically sets aria-labelledby on DialogContent for accessibility.
+ * Built on Radix UI Dialog.Title primitive.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Title text content
+ *
+ * @example
+ * ```tsx
+ * <DialogTitle>Confirm Deletion</DialogTitle>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <DialogTitle className="text-destructive">
+ *   Warning: Irreversible Action
+ * </DialogTitle>
+ * ```
+ *
+ * @see {@link https://www.radix-ui.com/primitives/docs/components/dialog#title | Radix UI Dialog.Title}
+ * @see {@link DialogHeader} - Parent container
+ * @see {@link DialogDescription} - For supporting description
+ */
 const DialogTitle = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Title>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Title>
@@ -127,6 +258,34 @@ const DialogTitle = React.forwardRef<
 ));
 DialogTitle.displayName = DialogPrimitive.Title.displayName;
 
+/**
+ * DialogDescription - Supporting description text for Dialog
+ *
+ * Muted text providing additional context for the Dialog.
+ * Automatically sets aria-describedby on DialogContent for accessibility.
+ * Built on Radix UI Dialog.Description primitive.
+ *
+ * @param className - Additional CSS classes to merge with base styles
+ * @param children - Description text content
+ *
+ * @example
+ * ```tsx
+ * <DialogDescription>
+ *   This action cannot be undone. Your data will be permanently deleted.
+ * </DialogDescription>
+ * ```
+ *
+ * @example
+ * ```tsx
+ * <DialogDescription className="text-xs">
+ *   Last updated: {new Date().toLocaleDateString()}
+ * </DialogDescription>
+ * ```
+ *
+ * @see {@link https://www.radix-ui.com/primitives/docs/components/dialog#description | Radix UI Dialog.Description}
+ * @see {@link DialogHeader} - Parent container
+ * @see {@link DialogTitle} - For the main heading
+ */
 const DialogDescription = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Description>,
   React.ComponentPropsWithoutRef<typeof DialogPrimitive.Description>
