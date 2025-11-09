@@ -1,0 +1,44 @@
+# Gitleaks Configuration for Secret Scanning
+# https://github.com/gitleaks/gitleaks
+
+title = "DL Starter Secret Scanning"
+
+# Use Gitleaks' comprehensive default rules
+# Covers: AWS, GitHub, Stripe, OpenAI, JWT, database credentials, and more
+[extend]
+useDefault = true
+
+# Project-specific rules (only what defaults don't cover)
+[[rules]]
+id = "supabase-service-key"
+description = "Supabase Service Role Key (CRITICAL - full database access)"
+regex = '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+'''
+tags = ["supabase", "service-role", "critical"]
+keywords = ["service_role", "service-role"]
+
+[[rules]]
+id = "anthropic-api-key"
+description = "Anthropic (Claude) API Key"
+regex = '''sk-ant-api03-[A-Za-z0-9_-]{95}'''
+tags = ["anthropic", "claude", "api-key"]
+keywords = ["anthropic", "claude", "sk-ant"]
+
+# Allowlist for safe patterns
+[allowlist]
+description = "Safe files and test fixtures"
+
+paths = [
+  '''\.md$''',                      # Documentation examples
+  '''\.example$''',                 # Example config files
+  '''tests?/fixtures/.*''',         # Test fixtures
+  '''\.gitleaks\.toml$''',          # This file
+  '''^pnpm-lock\.yaml$''',          # Package lockfile
+]
+
+regexes = [
+  '''sk_test_[A-Za-z0-9]{24}''',    # Stripe test keys (client-safe)
+  '''pk_(test|live)_[A-Za-z0-9]{24}''',  # Stripe publishable keys
+  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9''',  # Supabase demo JWT
+  '''EXAMPLE[_-]?KEY''',            # Placeholder keys
+  '''YOUR[_-]?API[_-]?KEY''',       # Documentation placeholders
+]

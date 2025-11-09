@@ -16,6 +16,45 @@ commit-msg:
 pre-commit:
   parallel: true
   commands:
+    # Secret scanning with Gitleaks (blocks commits with secrets)
+    secret-scan:
+      run: |
+        echo "🔒 Scanning for secrets..."
+        if ! command -v gitleaks &> /dev/null; then
+          echo ""
+          echo "⚠️  Gitleaks not installed! Secret scanning skipped."
+          echo ""
+          echo "📦 Install: brew install gitleaks  (macOS)"
+          echo "           or download from https://github.com/gitleaks/gitleaks/releases"
+          echo ""
+          echo "💡 This check will be enforced in CI/CD pipeline"
+          echo ""
+          exit 0
+        fi
+        if ! gitleaks protect --staged --verbose --redact --config .gitleaks.toml; then
+          echo ""
+          echo "❌ SECRETS DETECTED! Commit blocked for security."
+          echo ""
+          echo "🔍 Gitleaks found potential secrets in your staged files."
+          echo "   Review the output above to identify the leaked credentials."
+          echo ""
+          echo "🔐 Next steps:"
+          echo "   1. Remove the secret from your code"
+          echo "   2. Use environment variables instead (see .env.example)"
+          echo "   3. If this is a false positive, add to .gitleaks.toml allowlist"
+          echo ""
+          echo "⚠️  If you already committed a secret:"
+          echo "   Follow incident response: docs/SECURE_PROMPTING.md Section 10"
+          echo "   - Rotate the credential immediately"
+          echo "   - Treat as compromised"
+          echo ""
+          echo "💡 To bypass this check (NOT recommended):"
+          echo "   git commit --no-verify"
+          echo ""
+          exit 1
+        fi
+        echo "✅ No secrets detected"
+
     # Biome format & lint for instant feedback (<1s)
     biome-check:
       glob: '**/*.{js,ts,jsx,tsx,json}'
