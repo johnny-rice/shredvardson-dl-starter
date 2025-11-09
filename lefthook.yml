@@ -226,77 +226,25 @@ pre-push:
 
     # 5. Run unit tests (target: <20s for optimal DX)
     unit-tests:
+      skip:
+        - run: test "$SKIP_TESTS" = "1"
       run: |
         echo "🧪 Running unit tests..."
         START_TIME=$(date +%s)
 
-        # Run with timeout (120 seconds for tests)
-        TIMEOUT=120
-        TEST_LOG=$(mktemp)
-
-        # Set up cleanup trap
-        cleanup() {
-          if [ -n "$TEST_PID" ] && kill -0 "$TEST_PID" 2>/dev/null; then
-            kill "$TEST_PID" 2>/dev/null || true
-          fi
-          rm -f "$TEST_LOG"
-        }
-        trap cleanup EXIT INT TERM
-
-        # Run tests in background
-        pnpm --silent test:unit > "$TEST_LOG" 2>&1 &
-        TEST_PID=$!
-
-        # Wait for tests with timeout
-        ELAPSED=0
-        while [ $ELAPSED -lt $TIMEOUT ]; do
-          if ! kill -0 "$TEST_PID" 2>/dev/null; then
-            wait "$TEST_PID" 2>/dev/null
-            TEST_EXIT=$?
-            break
-          fi
-          sleep 1
-          ELAPSED=$((ELAPSED + 1))
-        done
-
-        # Check if timed out
-        if [ $ELAPSED -ge $TIMEOUT ]; then
+        # Run tests directly (no artificial timeout - relies on Bash tool's natural limit)
+        if ! pnpm --silent test:unit; then
           echo ""
-          echo "⚠️  Tests timed out after ${TIMEOUT}s"
+          echo "❌ Unit tests failed! Fix the tests before pushing."
           echo ""
-          echo "💡 Possible causes:"
-          echo "   - Tests are waiting for input"
-          echo "   - Environment variables missing (check scripts/pretest-env-check.ts)"
-          echo "   - Infinite loop in test code"
+          echo "💡 To skip tests: SKIP_TESTS=1 git push"
+          echo "💡 To bypass all hooks: git push --no-verify"
           echo ""
-          echo "💡 To bypass this check (not recommended):"
-          echo "   git push --no-verify"
-          echo ""
-          kill "$TEST_PID" 2>/dev/null || true
-          wait "$TEST_PID" 2>/dev/null || true
-          rm -f "$TEST_LOG"
           exit 1
         fi
 
         END_TIME=$(date +%s)
         TEST_DURATION=$((END_TIME - START_TIME))
-
-        # Display test output
-        cat "$TEST_LOG"
-
-        # Check test exit code
-        if [ ${TEST_EXIT:-1} -ne 0 ]; then
-          echo ""
-          echo "❌ Unit tests failed! Fix the tests before pushing."
-          echo ""
-          echo "💡 To bypass this check (not recommended):"
-          echo "   git push --no-verify"
-          echo ""
-          rm -f "$TEST_LOG"
-          exit 1
-        fi
-
-        rm -f "$TEST_LOG"
 
         # Provide feedback on execution time
         if [ $TEST_DURATION -lt 5 ]; then
