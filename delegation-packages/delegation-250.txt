@@ -1,0 +1,317 @@
+=== DELEGATION PACKAGE FOR ISSUE #250 ===
+
+Please implement this following our project standards.
+
+## Issue Details
+
+**#250**: Create SECURE_PROMPTING.md guidelines
+
+## Problem
+
+Team lacks documentation on safe AI tool usage, secure prompting practices, and guidelines for AI-assisted development.
+
+**Source:** AI-Augmented SDLC gaps analysis
+
+## Solution
+
+Create comprehensive secure prompting guidelines document.
+
+## Contents
+
+- [ ] Security risks of AI coding assistants
+- [ ] What NOT to include in prompts (secrets, PII)
+- [ ] Code review requirements for AI-generated code
+- [ ] Testing standards for AI-generated code
+- [ ] Prompt engineering best practices
+- [ ] Examples of secure vs insecure prompts
+- [ ] Incident response (if secrets prompted)
+
+**Priority:** P1 (High) | **Effort:** 3-4 hours | **Lane:** Simple
+
+---
+
+## Spec
+
+---
+title: Create SECURE_PROMPTING.md guidelines
+type: docs
+priority: p1
+status: draft
+lane: simple
+issue: 250
+created: 2025-11-07
+---
+
+# Create SECURE_PROMPTING.md guidelines
+
+## Summary
+
+Create comprehensive documentation on safe AI tool usage, secure prompting practices, and guidelines for AI-assisted development to address gaps in the AI-Augmented SDLC process.
+
+## Problem Statement
+
+The team lacks centralized documentation on secure AI tool usage, creating risks of:
+- Accidental exposure of secrets, PII, or sensitive data in AI prompts
+- Insufficient review of AI-generated code leading to security vulnerabilities
+- Inconsistent testing standards for AI-generated code
+- Lack of awareness about prompt injection risks and secure prompt engineering
+
+Currently, security practices are distributed across multiple documents (SECURITY.md, workflow-security.md, constitution.md) but no single guide addresses AI-specific security concerns comprehensively.
+
+## Proposed Solution
+
+Create `docs/SECURE_PROMPTING.md` as the canonical guide for secure AI tool usage, consolidating existing security patterns and adding AI-specific guidance.
+
+**Structure:**
+1. **Security Risks of AI Coding Assistants** - Document common vulnerabilities (OWASP LLM07:2025)
+2. **What NOT to Include in Prompts** - Clear rules for secrets, PII, credentials
+3. **Data Protection Techniques** - Masking, tokenization, sanitization before LLM input
+4. **Code Review Requirements** - Standards for AI-generated code review
+5. **Testing Standards** - Test coverage and validation requirements
+6. **Prompt Engineering Best Practices** - Safe prompt patterns and techniques
+7. **External Guardrails** - Validation systems outside of LLM (not relying on system prompts)
+8. **Monitoring and Auditing** - Real-time monitoring, audit logs, compliance tracking
+9. **Examples** - Side-by-side secure vs insecure prompt examples
+10. **Incident Response** - Procedures if secrets are accidentally shared with AI
+
+**Leverage Existing Patterns:**
+- Reference existing security documentation (SECURITY.md, workflow-security.md)
+- Apply multi-layer validation patterns from ADR-009
+- Incorporate severity classification framework (CRITICAL/HIGH/MEDIUM/LOW)
+- Use micro-lesson format for specific security patterns
+- Link to OWASP standards and CWE classifications
+
+## Acceptance Criteria
+
+- [ ] `docs/SECURE_PROMPTING.md` created with all 10 sections
+- [ ] Security risks section covers: prompt injection, data leakage, insufficient validation, over-reliance on AI (OWASP LLM07:2025 compliance)
+- [ ] Forbidden content clearly lists: API keys, passwords, PII, credentials, internal IPs, proprietary algorithms
+- [ ] Data protection section documents: PII sanitization, data masking, tokenization techniques
+- [ ] Code review requirements specify: line-by-line review, security-focused testing, edge case validation
+- [ ] Testing standards mandate: 80% coverage minimum, security test requirements, RLS validation for database code
+- [ ] Prompt engineering section includes: safe prompt patterns, context minimization, output validation
+- [ ] External guardrails section explains: validation systems independent of LLM, not relying on system prompts for security
+- [ ] Monitoring section covers: real-time monitoring, audit logs for prompt interactions, compliance tracking
+- [ ] Examples section provides 5+ side-by-side comparisons (insecure → secure)
+- [ ] Incident response section documents: immediate actions, rotation procedures, disclosure requirements
+- [ ] Document references existing security docs (SECURITY.md, workflow-security.md, ADR-009)
+- [ ] Document follows project markdown standards (code blocks with language identifiers)
+- [ ] Added to CONTRIBUTING.md as required reading for AI-assisted development
+- [ ] Passes markdown linting (pnpm lint)
+- [ ] Document includes 2025 statistics (8.5% of prompts contain sensitive data per research)
+
+## Technical Constraints
+
+- Must align with existing security architecture (ADR-009 multi-layer validation pattern)
+- Must reference OWASP standards and CWE classifications where applicable
+- Must integrate with existing quality pipeline and pre-commit hooks
+- Should be concise enough for quick reference (<2000 words recommended)
+- Must use project's documentation structure and formatting conventions
+
+## Success Metrics
+
+- All team members acknowledge reading the guide
+- Zero incidents of secrets being shared in AI prompts post-implementation
+- AI-generated code meets same quality/security standards as human code
+- Code review time for AI-generated code is appropriate (not rubber-stamped)
+
+## Out of Scope
+
+- Automated enforcement of secure prompting rules (future tooling)
+- AI tool vendor security assessments (e.g., Claude, Copilot data retention policies)
+- Fine-tuning or customization of AI models for security
+- Integration with DLP (Data Loss Prevention) tools
+- Comprehensive AI ethics guidelines (separate concern)
+
+## References
+
+**Similar Implementations Found:**
+- [SECURITY.md](SECURITY.md) - Primary security policy with vulnerability reporting and severity levels
+- [docs/workflow-security.md](docs/workflow-security.md) - GitHub Actions security guidelines
+- [docs/adr/009-git-context-security-architecture.md](docs/adr/009-git-context-security-architecture.md) - Multi-layer security boundary pattern
+- [.claude/prompts/security-scanner.md](.claude/prompts/security-scanner.md) - AI security scanner with severity guidelines
+- [docs/constitution.md](docs/constitution.md) - Security-first principles and development standards
+- [docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md](docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md) - Token efficiency patterns
+- [docs/micro-lessons/shell-injection-prevention-execfilesync.md](docs/micro-lessons/shell-injection-prevention-execfilesync.md) - Shell injection prevention
+- [docs/micro-lessons/log-sanitization-pr-security.md](docs/micro-lessons/log-sanitization-pr-security.md) - Log sanitization patterns
+- [docs/micro-lessons/postgres-function-security-patterns.md](docs/micro-lessons/postgres-function-security-patterns.md) - PostgreSQL security patterns
+
+**Architecture Patterns:**
+- Multi-layer input validation (Zod schemas → spawn with shell:false → sanitized errors)
+- Severity classification framework (CRITICAL/HIGH/MEDIUM/LOW)
+- Security-first architecture (secrets management, input validation, secure defaults)
+- Progressive disclosure pattern (metadata → detailed docs → scripts on-demand)
+
+**External Standards:**
+- OWASP LLM07:2025 System Prompt Leakage - https://genai.owasp.org/llmrisk/llm072025-system-prompt-leakage/
+- OWASP Top 10 - https://owasp.org/www-project-top-ten/
+- OWASP Cheat Sheets - https://cheatsheetseries.owasp.org/cheatsheets/
+- OWASP Secrets Management - https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
+- CWE-89 SQL Injection - https://cwe.mitre.org/data/definitions/89.html
+- CWE-79 Cross-Site Scripting - https://cwe.mitre.org/data/definitions/79.html
+- CISA AI Data Security Best Practices (May 2025) - https://media.defense.gov/2025/May/22/2003720601/-1/-1/0/CSI_AI_DATA_SECURITY.PDF
+- Anthropic Claude Skills Documentation - https://docs.claude.com/en/docs/agents-and-tools/agent-skills/overview
+- Research: 8.5% of employee prompts include sensitive data (46% customer info, 27% employee PII, 15% legal/financial)
+
+**Related Issues:**
+- Part of AI-Augmented SDLC gaps analysis
+- Complements Issue #248 (secret scanning pre-commit hook)
+- Supports security-first principles from constitution.md
+---
+
+## Implementation Requirements
+
+### Project Setup (IMPORTANT - Run First!)
+
+Before starting implementation, install dependencies:
+
+```bash
+# Install all dependencies (required for lint, typecheck, build, test)
+pnpm install
+
+# Verify setup works
+pnpm doctor
+```
+
+⚠️ **If `pnpm install` fails**, you may need to install pnpm first:
+- `npm install -g pnpm` (if you have npm)
+- `curl -fsSL https://get.pnpm.io/install.sh | sh -` (standalone installer)
+
+### Git Setup
+
+The spec file is located on branch: `specs/batch-2025-11-07-1502`
+
+To retrieve the spec before starting work:
+
+```bash
+# Fetch the latest changes
+git fetch origin specs/batch-2025-11-07-1502
+
+# Create your feature branch from main/master
+git switch -c feature/250-brief-description
+
+# Copy the spec file from the spec branch
+git checkout origin/specs/batch-2025-11-07-1502 -- specs/250-secure-prompting-guidelines.md
+
+# Commit the spec to your feature branch
+git commit -m "docs: add spec for issue #250"
+```
+
+### Implementation Steps
+
+1. Follow acceptance criteria from spec above
+2. Use conventional commit format: `fix:` or `feat:`
+3. Run these before pushing:
+   - `pnpm typecheck`
+   - `pnpm lint`
+   - `pnpm test`
+4. Reference Spec ID: SPEC-250
+
+---
+
+## PR Template
+
+# Pull Request
+
+> **⚠️ Direct Push Protection Notice**  
+> Direct pushes to `main` are blocked. If you see the 'Block Direct Main Pushes' workflow fail, you attempted a direct push—create or continue a PR instead.
+
+## Summary
+
+_What changed and why in 1–3 sentences._
+
+## Traceability
+
+- **GitHub Issue:** #\_\_\_ (required for spec-driven PRs)
+- **Spec ID:** `SPEC-YYYYMMDD-feature-name` (if applicable)
+- **Plan ID:** `PLAN-YYYYMMDD-feature-name` (if applicable)
+- **Task ID:** `TASK-YYYYMMDD-feature-name` (if applicable)
+
+### ADR (Required for Infrastructure Changes)
+
+ADR: ADR-### | N/A
+
+_**⚠️ REQUIRED for changes to:**_
+
+- _`prompts/**` (AI behavior/prompt engineering)_
+- _`scripts/**` (build/deploy scripts)_
+- _`.github/workflows/**` (CI/CD workflows)_
+- _`docs/wiki/**` (public docs)_
+
+_**Quick create:** `pnpm adr:create "Your Title"` → edit file → add `ADR: ADR-XXX` above | **Emergency:** use `override:adr` label_
+
+## Scope
+
+- [ ] Single task type (feature/refactor/test/docs)
+- [ ] Only touched files listed in docs/llm/context-map.json
+
+## AI Review Status
+
+- [ ] **AI Review:** ⚠️ Not requested / ✅ Requested (`@claude /review`)
+- [ ] **Security Scan:** ⚠️ Not applicable / ✅ Completed automatically
+
+_If AI review completed, paste advisory feedback summary from doctor report below:_
+
+```
+[Paste "🤖 AI Review (Advisory)" or "🛡️ AI Security Review (Advisory)" sections from artifacts/doctor-report.md]
+```
+
+## Verification
+
+Paste real outputs or "OK":
+
+- [ ] `pnpm run doctor:report` (attach artifacts/doctor-report.md)
+- [ ] `pnpm -w turbo run lint`
+- [ ] `pnpm -w turbo run typecheck`
+- [ ] `pnpm -w turbo run build`
+- [ ] `pnpm -w turbo run test:e2e` (or N/A)
+- [ ] `pnpm audit:traceability` (if using specs/plans/tasks)
+- [ ] `pnpm tsx scripts/docs-check.ts` (docs-link-check)
+- [ ] `pnpm learn:index` (if micro-lessons changed)
+
+_💡 **Tip**: If doctor checks fail due to timing issues, comment `/doctor recheck` to manually re-run (maintainers/write access only)._
+
+## Doctor & Quality Checks
+
+- [ ] I ran `pnpm doctor` locally (no fails)
+- [ ] All referenced scripts/paths in my changed docs exist
+- [ ] New `.claude/commands/*` files are linked in `docs/ai/CLAUDE.md`
+- [ ] If I intentionally left placeholders, I added them to `.doctor-allowlist.json` (with comment why)
+- [ ] Prompt files have required headers (Intent, Inputs, Expected Output, Risks/Guardrails)
+- [ ] Doc files have H1, summary, and "When to use" sections
+- [ ] No tracked files in artifacts/ directory
+
+## Learning Loop
+
+- [ ] **Learning reference:** Checked docs/micro-lessons/INDEX.md for relevant patterns
+- [ ] **Pattern application:** Applied relevant micro-lessons to avoid known issues
+- [ ] **New learning:** Created/updated micro-lesson if new pattern emerged
+- [ ] **Saved rework:** Micro-lesson prevented significant debugging/refactoring time
+
+Common patterns to check (as applicable):
+
+- [ ] Isolation hooks checked (no hidden state coupling)
+- [ ] Mock at the **boundary** (env/config or network), not deep internals
+- [ ] Stable React keys (no array indices)
+- [ ] Dead code removed (no unreachable branches after early returns)
+- [ ] Async assertions use Testing Library's `waitFor*` (no flake‑prone timeouts)
+- [ ] Memoize expensive values/objects in render paths
+
+Refs:
+
+- Top‑10 Index: docs/micro-lessons/INDEX.md
+- Template: docs/micro-lessons/template.md
+
+## LLM Guardrails
+
+- [ ] Used adapters (no vendor SDKs in UI)
+- [ ] No hardcoded hex colors (tokenized Tailwind only)
+- [ ] Updated docs and `llm/context-map.json` if scripts/paths changed
+
+## Used Micro-Lesson
+
+_Optional: reference any micro-lesson that helped avoid an issue (e.g., test-isolation-hooks)_
+
+## Breaking changes / Migration
+
+_None_ (or describe + steps)

@@ -1,0 +1,537 @@
+=== DELEGATION PACKAGE FOR ISSUE #282 ===
+
+Please implement this following our project standards.
+
+## Issue Details
+
+**#282**: Add interactive confirmations to destructive script operations
+
+## Problem Statement
+
+Destructive scripts run without user confirmation, creating risk of accidental data loss.
+
+**Current risk:**
+- \`scripts/reset-db.sh\` performs \`supabase db reset\` immediately without confirmation
+- \`scripts/sync-db.sh\` and other scripts may have similar patterns
+- No safety mechanism to prevent accidental execution
+- Easy to run wrong command in wrong environment
+
+**Example scenario:**
+\`\`\`bash
+# User accidentally runs in wrong terminal/directory
+./scripts/reset-db.sh
+# Database immediately wiped with no confirmation!
+\`\`\`
+
+**What we learned from Superclaude:**
+Interactive confirmations before destructive actions prevent costly mistakes.
+
+## Proposed Solution
+
+Add interactive confirmation prompts to all destructive operations with reusable helper utilities and bypass options for CI/CD.
+
+### Confirmation Helper Pattern
+
+\`\`\`bash
+#!/bin/bash
+# scripts/utils/confirm.sh
+
+confirm() {
+  local message="\$1"
+  
+  # Skip in force mode
+  if [[ "\$FORCE" == "true" ]] || [[ "\${BASH_ARGV[0]}" == "--force" ]]; then
+    return 0
+  fi
+  
+  echo "⚠️  WARNING: \$message" >&2
+  echo "" >&2
+  read -p "Type 'yes' to continue: " -r response >&2
+  
+  if [[ "\$response" != "yes" ]]; then
+    echo "Aborted." >&2
+    exit 1
+  fi
+}
+
+export -f confirm
+\`\`\`
+
+### Script Update Pattern
+
+\`\`\`bash
+#!/bin/bash
+# scripts/reset-db.sh
+
+set -e
+source "\$(dirname "\$0")/utils/confirm.sh"
+
+confirm "This will reset your local database and delete all data."
+
+echo "Resetting database..."
+supabase db reset
+echo "✅ Database reset complete"
+\`\`\`
+
+### CI/CD Bypass
+
+\`\`\`yaml
+# .github/workflows/ci.yml
+- name: Reset test database
+  run: ./scripts/reset-db.sh --force
+  env:
+    FORCE: true
+\`\`\`
+
+## Acceptance Criteria
+
+### Phase 1: Identify Destructive Scripts (30 min)
+
+- [ ] Audit all scripts in \`scripts/\` directory
+- [ ] Identify operations that delete data, reset databases, or modify production
+- [ ] Create prioritized list of scripts requiring confirmation
+
+### Phase 2: Add Confirmation Helper (1 hour)
+
+- [ ] Create \`scripts/utils/confirm.sh\` with reusable confirmation function
+- [ ] Add force mode detection (\`--force\` flag or \`FORCE\` env var)
+- [ ] Document usage in \`scripts/README.md\`
+
+### Phase 3: Update Destructive Scripts (1-2 hours)
+
+- [ ] \`scripts/reset-db.sh\` - Confirm before \`supabase db reset\`
+- [ ] \`scripts/sync-db.sh\` - Confirm before sync operations (if destructive)
+- [ ] Any scripts with \`rm -rf\` - Confirm with file list preview
+- [ ] Any scripts with SQL \`DROP\`/\`TRUNCATE\`/\`DELETE\` - Confirm with scope
+
+### Phase 4: Update CI/CD (30 min)
+
+- [ ] Update GitHub workflows to use \`--force\` flag or \`FORCE=true\`
+- [ ] Test workflows pass without hanging on prompts
+- [ ] Document force mode usage in workflow comments
+
+### Phase 5: Documentation (30 min)
+
+- [ ] Create \`docs/scripts/SAFETY.md\` documenting confirmation patterns
+- [ ] Update \`scripts/README.md\` with safety guidelines
+- [ ] Add micro-lesson about script safety best practices
+
+## Benefits
+
+- **Safety:** Prevents accidental data loss from mistyped commands
+- **Clarity:** Users see exactly what will happen before proceeding
+- **Flexibility:** Force mode for automation, confirmation for humans
+- **Consistency:** Reusable pattern across all scripts
+- **Audit trail:** Clear intent when users type "yes"
+
+## Inspiration
+
+Based on [Superclaude](https://github.com/gwendall/superclaude) safety patterns:
+- Interactive CLI with confirmation before destructive actions
+- Clear warnings about what will be affected
+- Explicit "yes" requirement (not shortcuts)
+
+## Related Issues
+
+- Complements existing git safety hooks
+- Part of broader developer experience improvements
+- Reduces risk of environment confusion
+
+---
+
+## Spec
+
+---
+title: Add interactive confirmations to destructive script operations
+type: enhancement
+priority: p1
+status: draft
+lane: simple
+issue: 282
+created: 2025-11-07
+---
+
+# Add interactive confirmations to destructive script operations
+
+## Summary
+
+Add interactive confirmation prompts to all destructive script operations with reusable helper utilities and bypass options for CI/CD, preventing accidental data loss from mistyped commands.
+
+## Problem Statement
+
+Destructive scripts run without user confirmation, creating risk of accidental data loss:
+
+- `scripts/reset-db.sh` performs `supabase db reset` immediately without confirmation
+- Other scripts may have similar patterns (sync, cleanup operations)
+- No safety mechanism to prevent accidental execution
+- Easy to run wrong command in wrong environment/directory
+
+**Example scenario:**
+```bash
+# User accidentally runs in wrong terminal/directory
+./scripts/reset-db.sh
+# Database immediately wiped with no confirmation!
+```
+
+**What we learned from Superclaude:** Interactive confirmations before destructive actions prevent costly mistakes.
+
+## Proposed Solution
+
+Create reusable confirmation helper utilities following existing patterns in the codebase, then apply to all destructive scripts.
+
+### Phase 1: Create Reusable Confirmation Helper
+
+**Bash Pattern** (for bash scripts):
+```bash
+#!/bin/bash
+# scripts/utils/confirm.sh
+
+confirm() {
+  local message="$1"
+
+  # Skip in force mode
+  if [[ "$FORCE" == "true" ]] || [[ "${BASH_ARGV[0]}" == "--force" ]]; then
+    return 0
+  fi
+
+  # Skip in non-interactive mode (CI/CD)
+  if [ ! -t 0 ]; then
+    echo "ERROR: Running in non-interactive mode without --force flag" >&2
+    exit 2
+  fi
+
+  echo "⚠️  WARNING: $message" >&2
+  echo "" >&2
+  read -p "Type 'yes' to continue: " -r response >&2
+
+  if [[ "$response" != "yes" ]]; then
+    echo "Aborted." >&2
+    exit 1
+  fi
+}
+
+export -f confirm
+```
+
+**TypeScript Pattern** (for TypeScript scripts):
+```typescript
+// scripts/utils/confirm.ts
+import readline from 'node:readline';
+
+export async function confirm(message: string): Promise<boolean> {
+  // Skip in force mode
+  if (process.env.FORCE === 'true' || process.argv.includes('--force')) {
+    return true;
+  }
+
+  // Skip in non-interactive mode
+  if (!process.stdin.isTTY) {
+    console.error('ERROR: Running in non-interactive mode without --force flag');
+    process.exit(2);
+  }
+
+  const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stderr,
+  });
+
+  return new Promise((resolve) => {
+    rl.question(`⚠️  WARNING: ${message}\n\nType 'yes' to continue: `, (answer) => {
+      rl.close();
+      resolve(answer === 'yes');
+    });
+  });
+}
+```
+
+### Phase 2: Apply to Destructive Scripts
+
+**Priority Scripts to Update:**
+1. `scripts/reset-db.sh` - Database reset (highest risk)
+2. `scripts/sync-db.sh` - Sync operations (if destructive)
+3. Any scripts with `rm -rf` - File deletion
+4. Any scripts with SQL `DROP`/`TRUNCATE`/`DELETE` - Database operations
+
+**Update Pattern:**
+```bash
+#!/bin/bash
+# scripts/reset-db.sh
+
+set -euo pipefail
+source "$(dirname "$0")/utils/confirm.sh"
+
+confirm "This will reset your local database and delete all data."
+
+echo "Resetting database..."
+supabase db reset
+echo "✅ Database reset complete"
+```
+
+### Phase 3: CI/CD Bypass
+
+**GitHub Workflows:**
+```yaml
+# .github/workflows/ci.yml
+- name: Reset test database
+  run: ./scripts/reset-db.sh --force
+  env:
+    FORCE: true
+```
+
+## Acceptance Criteria
+
+### Phase 1: Create Confirmation Helpers (1 hour)
+
+- [ ] `scripts/utils/confirm.sh` created with bash confirmation function
+- [ ] `scripts/utils/confirm.ts` created with TypeScript confirmation function
+- [ ] Both helpers support `--force` flag and `FORCE` environment variable
+- [ ] Both helpers detect non-interactive mode (CI/CD) via TTY check
+- [ ] Exit code 2 used for safety blocks (vs exit 1 for errors)
+- [ ] Documentation added to `scripts/README.md`
+
+### Phase 2: Audit Destructive Scripts (30 min)
+
+- [ ] All scripts in `scripts/` directory audited
+- [ ] Destructive operations identified (database reset, file deletion, SQL operations)
+- [ ] Prioritized list created with risk assessment
+- [ ] Scripts categorized: HIGH (data loss), MEDIUM (config changes), LOW (reversible)
+
+### Phase 3: Update High-Risk Scripts (1-2 hours)
+
+- [ ] `scripts/reset-db.sh` - Add confirmation before `supabase db reset`
+- [ ] Any scripts with `rm -rf` - Add confirmation with file list preview
+- [ ] Any scripts with SQL `DROP`/`TRUNCATE`/`DELETE` - Add confirmation with scope
+- [ ] Database migration scripts - Add confirmation (if not already using env var guards)
+- [ ] All confirmations use consistent message format
+- [ ] All confirmations work with both `--force` flag and `FORCE` env var
+
+### Phase 4: Update CI/CD (30 min)
+
+- [ ] GitHub workflows updated to use `--force` flag or `FORCE=true`
+- [ ] Workflows tested to ensure no hanging on prompts
+- [ ] Force mode usage documented in workflow comments
+- [ ] CI passes without manual intervention
+
+### Phase 5: Documentation (30 min)
+
+- [ ] `docs/scripts/SAFETY.md` created documenting confirmation patterns
+- [ ] `scripts/README.md` updated with safety guidelines
+- [ ] Micro-lesson added about script safety best practices
+- [ ] Examples provided for both bash and TypeScript patterns
+- [ ] Integration with existing safety docs (ADR-009, workflow-security.md)
+
+## Technical Constraints
+
+- Must align with existing safety patterns:
+  - Environment variable gates (`ALLOW_<OPERATION>=1` pattern from rollback-migration.ts)
+  - Interactive detection (`[ -t 0 ]` from create-package.sh)
+  - Exit code semantics (0=success, 1=error, 2=safety-block)
+  - Confirmation response validation (`[[ $REPLY =~ ^[Yy]$ ]]` pattern)
+- Must support both bash and TypeScript scripts
+- Must not break existing CI/CD workflows
+- Must follow bash strict mode (`set -euo pipefail`)
+- Should integrate with shellcheck compliance patterns
+- Must use structured error messages to stderr (not stdout)
+
+## Success Metrics
+
+- Zero incidents of accidental data loss from mistyped destructive commands
+- All CI/CD workflows pass without hanging on prompts
+- Team feedback confirms safety improvements without workflow friction
+- Code review comments confirm proper confirmation usage in new scripts
+- Pre-commit hooks validate new scripts follow confirmation patterns
+
+## Out of Scope
+
+- Automated detection of destructive operations (requires static analysis)
+- Global confirmation system for all git operations (separate concern)
+- Undo/rollback functionality for destructive operations (future enhancement)
+- Comprehensive backup/restore system (separate infrastructure)
+- GUI-based confirmation dialogs (CLI-only scope)
+
+## References
+
+**Similar Implementations Found:**
+
+**High Relevance - Direct Patterns:**
+- [scripts/delegation/create-package.sh](scripts/delegation/create-package.sh) - Interactive confirmation with timeout, TTY detection
+- [scripts/db/migrate.ts](scripts/db/migrate.ts) - TypeScript readline confirmation for rollback/apply
+- [.claude/skills/supabase-integration/scripts/rollback-migration.ts](.claude/skills/supabase-integration/scripts/rollback-migration.ts) - Env var guard pattern (`ALLOW_DB_ROLLBACK=1`)
+- [scripts/cleanup-branches.sh](scripts/cleanup-branches.sh) - Advanced safety with `--dry-run`, protected branch checks, merged verification
+- [.claude/commands/git/shared/error-handling.md](.claude/commands/git/shared/error-handling.md) - Comprehensive git error handling with confirmations
+- [packages/git-context/src/exec-safe.ts](packages/git-context/src/exec-safe.ts) - Defense-in-depth execution safety
+- [scripts/validators/index.ts](scripts/validators/index.ts) - Destructive operation detection (DROP TABLE, TRUNCATE)
+
+**Documentation:**
+- [docs/micro-lessons/20251027-083654-destructive-operation-confirmation-guards.md](docs/micro-lessons/20251027-083654-destructive-operation-confirmation-guards.md) - Complete guide on confirmation guards
+- [docs/micro-lessons/20251022-093043-input-validation-cli-scripts.md](docs/micro-lessons/20251022-093043-input-validation-cli-scripts.md) - CLI input validation patterns
+- [docs/micro-lessons/shell-injection-prevention-execfilesync.md](docs/micro-lessons/shell-injection-prevention-execfilesync.md) - Shell injection prevention
+
+**Architecture Patterns:**
+- `set -euo pipefail` - Bash strict mode (fail on errors, undefined vars, pipe failures)
+- Environment variable gates (`ALLOW_<OPERATION>=1` for explicit opt-in)
+- Exit code semantics (0=success, 1=error, 2=safety block)
+- Interactive detection (`[ -t 0 ]` TTY check)
+- `read -p` with timeout and `-r` flag for raw input
+- Confirmation response validation (`[[ $REPLY =~ ^[Yy]$ ]]`)
+- Dry-run mode flags (`--dry-run` for preview)
+- Protected resource lists (main/master/develop branch protection)
+- Trap-based cleanup (`trap cleanup EXIT`)
+- TypeScript readline.createInterface() for async prompts
+- execFileSync with argv arrays (not execSync with strings)
+- Zod schema validation for input sanitization
+- Defense-in-depth layering (validation → safe exec → path verification)
+
+**External Standards:**
+- OWASP Command Injection - https://owasp.org/www-community/attacks/Command_Injection
+- Node.js Security Best Practices - https://nodejs.org/en/docs/guides/security/
+- Superclaude safety patterns - https://github.com/gwendall/superclaude
+
+**Related Issues:**
+- Complements existing git safety hooks
+- Part of broader developer experience improvements
+- Reduces risk of environment confusion
+- Supports security-first principles from constitution.md
+
+---
+
+## Implementation Requirements
+
+### Git Setup
+
+The spec file is located on branch: `specs/batch-2025-11-07-1502`
+
+To retrieve the spec before starting work:
+
+```bash
+# Fetch the latest changes
+git fetch origin specs/batch-2025-11-07-1502
+
+# Create your feature branch from main/master
+git switch -c feature/282-brief-description
+
+# Copy the spec file from the spec branch
+git checkout origin/specs/batch-2025-11-07-1502 -- specs/282-interactive-confirmation-destructive-scripts.md
+
+# Commit the spec to your feature branch
+git commit -m "docs: add spec for issue #282"
+```
+
+### Implementation Steps
+
+1. Follow acceptance criteria from spec above
+2. Use conventional commit format: `fix:` or `feat:`
+3. Run these before pushing:
+   - `pnpm typecheck`
+   - `pnpm lint`
+   - `pnpm test`
+4. Reference Spec ID: SPEC-282
+
+---
+
+## PR Template
+
+# Pull Request
+
+> **⚠️ Direct Push Protection Notice**  
+> Direct pushes to `main` are blocked. If you see the 'Block Direct Main Pushes' workflow fail, you attempted a direct push—create or continue a PR instead.
+
+## Summary
+
+_What changed and why in 1–3 sentences._
+
+## Traceability
+
+- **GitHub Issue:** #\_\_\_ (required for spec-driven PRs)
+- **Spec ID:** `SPEC-YYYYMMDD-feature-name` (if applicable)
+- **Plan ID:** `PLAN-YYYYMMDD-feature-name` (if applicable)
+- **Task ID:** `TASK-YYYYMMDD-feature-name` (if applicable)
+
+### ADR (Required for Infrastructure Changes)
+
+ADR: ADR-### | N/A
+
+_**⚠️ REQUIRED for changes to:**_
+
+- _`prompts/**` (AI behavior/prompt engineering)_
+- _`scripts/**` (build/deploy scripts)_
+- _`.github/workflows/**` (CI/CD workflows)_
+- _`docs/wiki/**` (public docs)_
+
+_**Quick create:** `pnpm adr:create "Your Title"` → edit file → add `ADR: ADR-XXX` above | **Emergency:** use `override:adr` label_
+
+## Scope
+
+- [ ] Single task type (feature/refactor/test/docs)
+- [ ] Only touched files listed in docs/llm/context-map.json
+
+## AI Review Status
+
+- [ ] **AI Review:** ⚠️ Not requested / ✅ Requested (`@claude /review`)
+- [ ] **Security Scan:** ⚠️ Not applicable / ✅ Completed automatically
+
+_If AI review completed, paste advisory feedback summary from doctor report below:_
+
+```
+[Paste "🤖 AI Review (Advisory)" or "🛡️ AI Security Review (Advisory)" sections from artifacts/doctor-report.md]
+```
+
+## Verification
+
+Paste real outputs or "OK":
+
+- [ ] `pnpm run doctor:report` (attach artifacts/doctor-report.md)
+- [ ] `pnpm -w turbo run lint`
+- [ ] `pnpm -w turbo run typecheck`
+- [ ] `pnpm -w turbo run build`
+- [ ] `pnpm -w turbo run test:e2e` (or N/A)
+- [ ] `pnpm audit:traceability` (if using specs/plans/tasks)
+- [ ] `pnpm tsx scripts/docs-check.ts` (docs-link-check)
+- [ ] `pnpm learn:index` (if micro-lessons changed)
+
+_💡 **Tip**: If doctor checks fail due to timing issues, comment `/doctor recheck` to manually re-run (maintainers/write access only)._
+
+## Doctor & Quality Checks
+
+- [ ] I ran `pnpm doctor` locally (no fails)
+- [ ] All referenced scripts/paths in my changed docs exist
+- [ ] New `.claude/commands/*` files are linked in `docs/ai/CLAUDE.md`
+- [ ] If I intentionally left placeholders, I added them to `.doctor-allowlist.json` (with comment why)
+- [ ] Prompt files have required headers (Intent, Inputs, Expected Output, Risks/Guardrails)
+- [ ] Doc files have H1, summary, and "When to use" sections
+- [ ] No tracked files in artifacts/ directory
+
+## Learning Loop
+
+- [ ] **Learning reference:** Checked docs/micro-lessons/INDEX.md for relevant patterns
+- [ ] **Pattern application:** Applied relevant micro-lessons to avoid known issues
+- [ ] **New learning:** Created/updated micro-lesson if new pattern emerged
+- [ ] **Saved rework:** Micro-lesson prevented significant debugging/refactoring time
+
+Common patterns to check (as applicable):
+
+- [ ] Isolation hooks checked (no hidden state coupling)
+- [ ] Mock at the **boundary** (env/config or network), not deep internals
+- [ ] Stable React keys (no array indices)
+- [ ] Dead code removed (no unreachable branches after early returns)
+- [ ] Async assertions use Testing Library's `waitFor*` (no flake‑prone timeouts)
+- [ ] Memoize expensive values/objects in render paths
+
+Refs:
+
+- Top‑10 Index: docs/micro-lessons/INDEX.md
+- Template: docs/micro-lessons/template.md
+
+## LLM Guardrails
+
+- [ ] Used adapters (no vendor SDKs in UI)
+- [ ] No hardcoded hex colors (tokenized Tailwind only)
+- [ ] Updated docs and `llm/context-map.json` if scripts/paths changed
+
+## Used Micro-Lesson
+
+_Optional: reference any micro-lesson that helped avoid an issue (e.g., test-isolation-hooks)_
+
+## Breaking changes / Migration
+
+_None_ (or describe + steps)

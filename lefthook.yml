@@ -4,6 +4,14 @@
 # This configuration provides auto-installing git hooks with parallel execution
 # for faster validation and better developer experience.
 
+# Commit-msg: Validate commit message format (<1s target)
+commit-msg:
+  commands:
+    commitlint:
+      run: |
+        echo "🔍 Validating commit message..."
+        npx --no-install commitlint --edit $1
+
 # Pre-commit: Fast checks for instant feedback (<3s target)
 pre-commit:
   parallel: true

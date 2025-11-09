@@ -32,6 +32,14 @@ _**Quick create:** `pnpm adr:create "Your Title"` → edit file → add `ADR: AD
 - [ ] Single task type (feature/refactor/test/docs)
 - [ ] Only touched files listed in docs/llm/context-map.json
 
+## Commit Message Standards
+
+- [ ] All commits follow [Conventional Commits](../docs/git/COMMIT_CONVENTIONS.md) format
+- [ ] Commit messages use imperative mood ("add" not "added")
+- [ ] Header length under 100 characters
+
+_See [Commit Conventions Guide](../docs/git/COMMIT_CONVENTIONS.md) for format details and examples._
+
 ## AI Review Status
 
 - [ ] **AI Review:** ⚠️ Not requested / ✅ Requested (`@claude /review`)

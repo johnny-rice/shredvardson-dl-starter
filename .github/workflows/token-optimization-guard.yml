@@ -170,14 +170,14 @@ jobs:
           threshold=500
           warned=0
 
-          for doc in $(find docs/ -name "*.md" -type f); do
+          while IFS= read -r -d '' doc; do
             lines=$(wc -l < "$doc")
 
             if [ "$lines" -gt "$threshold" ]; then
               echo "::warning file=$doc::Documentation file exceeds $threshold lines ($lines lines). Consider splitting or moving to docs/archive/"
               warned=1
             fi
-          done
+          done < <(find docs/ -name "*.md" -type f -print0)
 
           if [ $warned -eq 1 ]; then
             echo "⚠️  Large documentation files detected. See docs/llm/TOKEN_OPTIMIZATION_GUIDELINES.md#2-reference-dont-duplicate"
