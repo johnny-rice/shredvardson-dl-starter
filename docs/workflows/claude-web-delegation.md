@@ -6,15 +6,15 @@
 
 ### Single Issue Workflow (4 steps)
 
-1. **You (Desktop):** Ask if issue is suitable → `/specify Issue #XXX`
+1. **You (Desktop):** Ask if issue is suitable → `/spec:specify Issue #XXX`
 2. **You (Desktop):** Review spec → `/delegate Issue #XXX`
 3. **Delegate:** Paste into Claude web
 4. **You (Desktop):** Review PR, fix metadata, merge
 
 ### Batch Workflow (for 3-5 issues in parallel)
 
-1. **You (Desktop):** Create specs → `/specify Issue #123`, `/specify Issue #124`, ...
-2. **You (Desktop):** Batch delegate → `/batch-delegate Issue #123, Issue #124, Issue #125`
+1. **You (Desktop):** Create specs → `/spec:specify Issue #123`, `/spec:specify Issue #124`, ...
+2. **You (Desktop):** Batch delegate → `/git:batch-delegate Issue #123, Issue #124, Issue #125`
 3. **Delegate:** Open 3+ Claude web sessions, paste each package
 4. **You (Desktop):** Review all PRs, fix metadata, merge
 
@@ -48,7 +48,7 @@ Ask Claude: "Is issue #XXX suitable for Claude web delegation?"
 
 ```bash
 # For simple lane issues:
-/specify Issue #XXX
+/spec:specify Issue #XXX
 
 # Review and edit the spec if needed
 # Ensures: specs/XXX-feature-name.md
@@ -258,9 +258,9 @@ Use batch delegation when you have:
 Create specs for each issue individually:
 
 ```bash
-/specify Issue #123  # Creates specs/123-feature-one.md
-/specify Issue #124  # Creates specs/124-feature-two.md
-/specify Issue #125  # Creates specs/125-feature-three.md
+/spec:specify Issue #123  # Creates specs/123-feature-one.md
+/spec:specify Issue #124  # Creates specs/124-feature-two.md
+/spec:specify Issue #125  # Creates specs/125-feature-three.md
 ```
 
 Review each spec to ensure quality before delegation.
@@ -270,7 +270,7 @@ Review each spec to ensure quality before delegation.
 Commit all specs to a batch branch:
 
 ```bash
-/batch-commit-specs Issue #123, Issue #124, Issue #125
+/git:batch-commit-specs Issue #123, Issue #124, Issue #125
 ```
 
 This creates:
@@ -285,7 +285,7 @@ This creates:
 Or use the all-in-one command:
 
 ```bash
-/batch-delegate Issue #123, Issue #124, Issue #125
+/git:batch-delegate Issue #123, Issue #124, Issue #125
 ```
 
 This automatically:
@@ -365,18 +365,18 @@ gh pr checkout 124
 
 ```bash
 # Create specs (one by one)
-/specify Issue #123
-/specify Issue #124
-/specify Issue #125
+/spec:specify Issue #123
+/spec:specify Issue #124
+/spec:specify Issue #125
 
 # Option A: Two-step batch delegation
-/batch-commit-specs Issue #123, Issue #124, Issue #125
+/git:batch-commit-specs Issue #123, Issue #124, Issue #125
 /delegate Issue #123  # Generates package with batch branch reference
 /delegate Issue #124
 /delegate Issue #125
 
 # Option B: One-step batch delegation (recommended)
-/batch-delegate Issue #123, Issue #124, Issue #125
+/git:batch-delegate Issue #123, Issue #124, Issue #125
 # Outputs 3 packages ready to paste
 
 # After PRs created

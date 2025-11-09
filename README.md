@@ -288,7 +288,34 @@ See plan file at [plans/292-auth-module-mvp.md](plans/292-auth-module-mvp.md) fo
 
 ## Deployment
 
-Ready to ship? See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for comprehensive deployment instructions covering:
+Automatic preview deployments on every PR, production deployments on merge to `main`.
+
+### Quick Start
+
+1. **Connect to Vercel**
+   - Import your repository on [vercel.com](https://vercel.com)
+   - Vercel auto-detects Next.js and Turborepo configuration
+   - Configure environment variables (production vs. preview)
+
+2. **Automatic Deployments**
+   - **Preview**: Every PR gets a unique preview URL
+   - **Production**: Automatic deployment on merge to `main`
+   - **Comments**: Vercel bot posts preview URLs on PRs
+
+3. **Environment Variables**
+   - Set production credentials in Vercel dashboard
+   - Use test/dev credentials for preview deployments
+   - See [.env.example](./.env.example) for required variables
+
+### Configuration Files
+
+- `vercel.json` - Vercel project configuration (build settings, framework)
+
+**See [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) for detailed setup instructions, environment variable configuration, and troubleshooting.**
+
+### Full Documentation
+
+Ready to ship? See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for comprehensive deployment instructions covering:
 
 - Vercel deployment with GitHub integration
 - Environment variable configuration

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm turbo run build --filter=web",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "outputDirectory": "apps/web/.next",
+  "devCommand": "pnpm turbo run dev --filter=web",
+  "ignoreCommand": "npx turbo-ignore",
+  "git": {
+    "deploymentEnabled": {
+      "main": true
+    }
+  },
+  "github": {
+    "autoAlias": true,
+    "autoJobCancelation": true,
+    "enabled": true,
+    "silent": false
+  },
+  "crons": []
+}

@@ -9,12 +9,14 @@
 ## What Was Over-Engineered
 
 **Before (Claude Web):** 1,126 lines
+
 - 242-line custom GitHub workflow (vs 24 lines with official action)
 - 168-line config with 16 custom rules (vs 44 lines leveraging defaults)
 - 677-line documentation (vs 146 lines with links to official docs)
 - Custom PR comments, labeling, doctor integration (duplicated official action features)
 
 **After (MVP):** 210 lines (87% reduction)
+
 - Official `gitleaks/gitleaks-action@v2` (battle-tested, maintained)
 - `useDefault = true` for 100+ built-in patterns (only 2 project-specific rules)
 - Focused documentation linking to official Gitleaks docs

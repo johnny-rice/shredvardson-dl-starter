@@ -33,3 +33,9 @@ reviews:
     - 'docs/scripts/**'     # Script documentation and safety guidelines
     - 'CONTRIBUTING.md'     # Workflow rules - LLMs follow these
     - 'SECURITY.md'         # Security policy - Critical for all code
+
+    # Include infrastructure and deployment configuration
+    - 'vercel.json'         # Vercel deployment config - affects production builds
+    - 'docs/DEPLOYMENT.md'  # Deployment procedures - critical for production
+    - 'README.md'           # Main documentation - developer entry point
+    - '.env.example'        # Environment variable templates - security check

@@ -162,7 +162,7 @@ SUPABASE_SERVICE_ROLE_KEY=<prod-service-key> # Production only!
 - [.github/workflows/](../.github/workflows/) - Existing CI/CD workflows
 - [vercel.json](../vercel.json) - Vercel configuration file (if exists)
 - [.env.example](../.env.example) - Environment variable reference (Issue #297)
-- [DEPLOYMENT.md](../DEPLOYMENT.md) - Deployment guide (Issue #297)
+- [docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md) - Deployment guide (Issue #297)
 
 ### External Documentation
 
