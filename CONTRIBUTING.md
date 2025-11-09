@@ -23,7 +23,14 @@ pnpm doctor && pnpm lint && pnpm typecheck && pnpm build && pnpm test
 
 ## Development Workflow
 
-1. **Setup:** `pnpm install`
+1. **Setup:**
+   ```bash
+   pnpm install
+   cp .env.example .env.local
+   # Edit .env.local with your local development values
+   ```
+   See [.env.example](.env.example) for all available environment variables and setup instructions.
+
 2. **Start dev server:** `pnpm dev`
 3. **Make changes** following the architecture guardrails
 4. **Run quality checks** (see above)

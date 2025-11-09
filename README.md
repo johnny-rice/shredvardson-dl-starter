@@ -286,6 +286,16 @@ Production-ready authentication with Supabase Auth:
 
 See plan file at [plans/292-auth-module-mvp.md](plans/292-auth-module-mvp.md) for architecture details.
 
+## Deployment
+
+Ready to ship? See [DEPLOYMENT.md](docs/DEPLOYMENT.md) for comprehensive deployment instructions covering:
+
+- Vercel deployment with GitHub integration
+- Environment variable configuration
+- Database setup (Supabase migrations and RLS)
+- Third-party service setup (Stripe, email, AI providers)
+- First-deploy checklist and troubleshooting
+
 ## Optional Integrations
 
 - **Sentry**: Set `SENTRY_DSN` to enable error tracking (silent if not set)
