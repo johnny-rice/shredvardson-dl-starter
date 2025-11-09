@@ -19,7 +19,9 @@ This project has custom commands/skills with built-in quality gates, sub-agent o
 
 **Common Examples:**
 
-- Git operations → Check for `/git:*` commands FIRST
+- Git operations → Use `/git branch`, `/git commit`, `/git pr prepare` (NOT `git commit`, `gh pr create`)
+  - ❌ `git add . && git commit -m "..." && gh pr create`
+  - ✅ `/git commit` → `/git pr prepare` (90% fewer tokens + quality gates)
 - Database changes → Check for `/db:*` commands FIRST
 - Test creation → Check for `/test:*` commands FIRST
 - Spec/implementation → Check for `/spec:*`, `/code` commands FIRST
@@ -72,7 +74,7 @@ Specify → Plan → Tasks → Implement → Refactor/Secure → Prepare PR → 
 
 **Quick flow:** Fix immediately → Create PR → Create issue retroactively → Link them
 
-**Commands:** `/git:branch` → `/git:prepare-pr` → `/github:create-issue`
+**Commands:** `/git branch` → `/git pr prepare` → `/github:create-issue`
 
 **Why acceptable:** Bugs should be fixed immediately. Retroactive docs maintain audit trail.
 
@@ -111,16 +113,11 @@ Custom commands include quality gates and PR workflows that native tools bypass.
 - /github:create-issue → ../../.claude/commands/github/create-issue.md
 - /github:github-learning-capture → ../../.claude/commands/github/capture-learning.md
 - /quality:run-linter → ../../.claude/commands/quality/run-linter.md
-- /git:branch → ../../.claude/commands/git/branch.md
-- /git:commit → ../../.claude/commands/git/commit.md
-- /git:workflow → ../../.claude/commands/git/workflow.md
-- /git:prepare-pr → ../../.claude/commands/git/prepare-pr.md
-- /git:fix-pr → ../../.claude/commands/git/fix-pr.md
+- /git → ../../.claude/commands/git.md (unified: branch, commit, pr prepare/fix, workflow, tag)
 - /review:self-critique → ../../.claude/commands/review/self-critique.md
 - /review:ai-powered → AI-powered PR review via GitHub Action (mention-only)
 - /security:scan → Advisory security review for vulnerabilities
 - /docs:generate → ../../.claude/commands/docs/generate.md
-- /git:tag-release → ../../.claude/commands/git/tag-release.md
 - /README → ../../.claude/commands/README.md
 
 ## Learning Loop (Micro-Lessons + PR Checklist)
@@ -143,7 +140,7 @@ Minimal learnings capture system to reduce repeat mistakes and keep agent contex
 
 When you open a PR:
 
-- **Documentation check runs automatically** via `/git:prepare-pr` — advisory/non-blocking, runs before commit (checks for gaps in slash commands, package.json scripts, env vars, API routes). Applies to both workflows.
+- **Documentation check runs automatically** via `/git pr prepare` — advisory/non-blocking, runs before commit (checks for gaps in slash commands, package.json scripts, env vars, API routes). Applies to both workflows.
 - Use a **specific, action-oriented title** (e.g., `feat: add user auth with OAuth2`, `fix: resolve memory leak in cache`)
 - Set the PR body from `.github/pull_request_template.md` and **fill sections**:
   - Summary (1–3 sentences), Scope, Verification (paste command results), Breaking changes/Migration

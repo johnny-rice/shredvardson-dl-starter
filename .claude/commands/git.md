@@ -8,6 +8,8 @@ description: Unified git workflow automation with intelligent routing
 
 # /git - Unified Git Workflow
 
+> **Note:** The deprecated `/git:branch` and `/git:commit` commands have been removed. Use the unified `/git` workflow instead.
+
 **Purpose:** Consolidated git operations replacing 5+ separate commands
 
 **Usage:**

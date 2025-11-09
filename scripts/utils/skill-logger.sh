@@ -8,7 +8,6 @@ set -euo pipefail
 # Configuration
 LOG_FILE="${LOG_FILE:-.logs/skill-usage.csv}"
 # Use Python for millisecond precision (cross-platform compatible)
-START_TIME
 START_TIME=$(python3 -c 'import time; print(int(time.time() * 1000))' 2>/dev/null || echo $(($(date +%s) * 1000)))
 
 # Initialize logging infrastructure
@@ -45,14 +44,15 @@ log_skill_invocation() {
 # Setup automatic logging on script exit
 # Args: $1=skill_name, $2=action
 setup_skill_logging() {
-  local skill=$1
-  local action=$2
+  # Export as global variables so trap can access them
+  export SKILL_NAME=$1
+  export SKILL_ACTION=$2
 
   # Initialize logging
   init_skill_logging
 
   # Setup trap to log on exit (use single quotes to delay expansion)
-  trap 'log_skill_invocation "$skill" "$action"' EXIT
+  trap 'log_skill_invocation "$SKILL_NAME" "$SKILL_ACTION"' EXIT
 }
 
 # Export functions for use in other scripts

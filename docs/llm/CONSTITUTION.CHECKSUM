@@ -1,11 +1,11 @@
 {
-  "generated": "2025-11-08T21:39:45.070Z",
+  "generated": "2025-11-09T10:27:30.164Z",
   "version": "0.1.1",
   "algorithm": "sha256-trunc16",
   "checksums": {
     "apps/web/app.config.ts": "73fba51f5be58666",
-    "docs/ai/CLAUDE.md": "9e40edadd7cfc267",
-    "docs/commands/index.json": "7b1a237aed8b30d5",
+    "docs/ai/CLAUDE.md": "7f246710e0b02b32",
+    "docs/commands/index.json": "9c24e9af90c3698a",
     "docs/constitution.md": "b8da9035ccc21214",
     "docs/llm/context-map.json": "0bba540bffae23f2",
     "docs/llm/CONTRIBUTING_LLMS.md": "0362984efe675fb0",

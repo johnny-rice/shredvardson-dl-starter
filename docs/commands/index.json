@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2025-11-07T10:05:02.751Z",
+  "generated": "2025-11-09T10:16:30.430Z",
   "commands": [
     {
       "name": "_shared/branch-validation",
@@ -199,28 +199,6 @@
       "example": "Standard development workflow",
       "riskLevel": "LOW",
       "requiresHITL": false
-    },
-    {
-      "name": "git:branch",
-      "path": ".claude/commands/git/branch.md",
-      "category": "Git Workflow",
-      "tags": ["git", "branch-management", "workflow"],
-      "when": "General development tasks",
-      "purpose": "Create a new git branch following standardized naming conventions.",
-      "example": "Standard development workflow",
-      "riskLevel": "LOW",
-      "requiresHITL": false
-    },
-    {
-      "name": "git:commit",
-      "path": ".claude/commands/git/commit.md",
-      "category": "Git Workflow",
-      "tags": ["git", "conventional-commits"],
-      "when": "General development tasks",
-      "purpose": "Generate a Conventional Commit message for staged changes.",
-      "example": "Create conventional commit for completed feature",
-      "riskLevel": "MEDIUM",
-      "requiresHITL": true
     },
     {
       "name": "git:fix-pr",
