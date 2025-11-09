@@ -1,149 +1,391 @@
-# Product Requirements Document (Agentic PRD Template)
+# Product Requirements Document: DL Starter Template
 
-## 1. Overview
-
-- **Product/Agent Name:** DLStarter AI-Assisted Development Platform
-- **Version:** 1.0
-- **Status:** Approved
-- **Team:** PM, Eng Lead, Stakeholders
-- **Target Release:** Q1 2025
-
-## 2. Objective & Strategic Context
-
-- **Business Problem:** Developers need a faster, safer way to build and ship features with AI assistance while maintaining code quality and security standards, but existing tools either sacrifice quality for speed or are too complex for individual developers.
-- **Target Persona:** Individual developers and small teams who want AI-powered development workflows without sacrificing quality or introducing security risks.
-- **Strategic Goal:** Enable developers to ship quality features 3x faster through structured AI collaboration while maintaining security and reliability standards.
-
-## 3. Agentic Specifications
-
-### 3.1 Purpose & Scope
-
-- **Core Purpose:** Provide a Next.js/Supabase starter kit with dual-lane spec-driven workflows and AI collaboration guardrails for safe, fast feature development.
-- **In Scope:**
-  - Dual-lane workflow system (Simple vs Spec-driven)
-  - Slash command automation for structured development
-  - Quality gates integration (TypeScript, linting, security, testing)
-  - AI collaboration framework with safety boundaries
-  - Template generation and scaffolding
-- **Out of Scope:**
-  - Deployment or infrastructure management
-  - Supporting arbitrary tech stacks beyond Next.js/Supabase
-  - Replacing human decision-making or architectural judgment
-  - Complex multi-agent orchestration
-- **Delegation & Scaling Logic:** Simple lane for <15 step changes, Spec lane for complex features requiring planning; escalate to human for architectural decisions or security-sensitive changes.
-
-### 3.2 Input/Output Schema
-
-- **Input Schema:**
-  ```typescript
-  interface FeatureRequest {
-    description: string;
-    complexity: 'simple' | 'complex';
-    constraints?: string[];
-    securitySensitive?: boolean;
-  }
-  ```
-- **Output Schema:**
-  ```typescript
-  interface ImplementationPlan {
-    lane: 'simple' | 'spec';
-    steps: string[];
-    testPlan: string[];
-    risks: string[];
-    estimatedEffort: number;
-  }
-  ```
-
-### 3.3 System Instructions & Guardrails
-
-- **Persona & Role:** "You are an expert development assistant that helps developers implement features safely and efficiently using structured workflows."
-- **Core Directives:**
-  - Prioritize security and code quality over speed
-  - Always follow TDD (tests before implementation)
-  - Use conventional commits and maintain git hygiene
-- **Decision-Making Heuristics:**
-  - Escalate to human if security implications unclear
-  - Use Spec lane if feature touches authentication/authorization
-  - Require human approval for architectural changes
-- **Responsible AI Guardrails:**
-  - Never modify CI/CD workflows, environment files, or security policies
-  - No secrets or credentials in prompts or code
-  - Always maintain human oversight for final decisions
-
-### 3.4 Orchestration & Workflow
-
-- **Pattern:** Manager-Worker (human decides lane, AI executes workflow)
-- **Frameworks:** Custom slash commands with TodoWrite/TodoRead for task tracking
-- **Workflow Diagram:** Simple → Plan → Implement vs Specify → Plan → Tasks → Implement
-
-## 4. Execution & Validation
-
-### 4.1 Definition of Done (Process-Oriented)
-
-- [ ] Feature request assessed and appropriate lane selected
-- [ ] Implementation plan created with test strategy
-- [ ] Tests scaffolded before implementation
-- [ ] Code generated to pass tests with quality gates
-- [ ] All quality gates pass (TypeScript, lint, test, build)
-- [ ] PR created with proper documentation
-- [ ] Human review and approval obtained
-
-### 4.2 Tooling & MCP Permissions
-
-| Tool Name       | Description       | Operations                        | Risk Level |
-| --------------- | ----------------- | --------------------------------- | ---------- |
-| Read/Write/Edit | File operations   | Create, modify, read source files | High       |
-| Bash            | Command execution | Run scripts, git operations       | High       |
-| TodoWrite/Read  | Task tracking     | Manage development tasks          | Low        |
-| Grep/Glob       | Code search       | Find patterns and files           | Low        |
-
-### 4.3 Metrics & Success Criteria
-
-- **Primary Metric (Must-Meet):** 80% of features pass quality gates on first attempt
-- **Guardrails:**
-  - Security violations: 0 tolerance
-  - Human intervention rate: <10% for Simple lane, <30% for Spec lane
-  - Time to first value: <30 minutes for new developers
-- **Business Metric:** 3x faster feature development vs traditional workflows
+**Version**: 1.0
+**Last Updated**: 2025-11-09
+**Status**: Active
 
 ---
 
-**Example (short form):**
+## Problem Statement
 
-> _DLStarter guides developers through dual-lane workflows (Simple/Spec) with AI assistance. Input = feature description + complexity. Output = working implementation with tests and documentation. DoD = all quality gates pass, PR ready for human review._
+Building production-ready SaaS applications requires solving the same foundational problems repeatedly: authentication, testing infrastructure, database migrations, CI/CD pipelines, and quality gates. Most developers either start from scratch (wasting weeks) or use minimal templates that leave critical infrastructure gaps.
+
+**Worse**, traditional development assumes solo coding. Modern development is **human-AI collaboration**, but existing templates provide no guidance on effectively working with AI assistants like Claude.
+
+## Target Users
+
+### Primary: Solo Developers & Small Teams (1-3 people)
+
+- Building production SaaS applications
+- Want to ship fast without cutting corners on quality
+- Comfortable with AI pair programming (Claude Code)
+- Value automation and guardrails over manual processes
+
+### Secondary: AI-First Developers
+
+- Developers who primarily work through AI assistants
+- Need structured workflows to maintain quality with AI
+- Want self-improving documentation that prevents repeat mistakes
+
+### Anti-Personas (Who This Is NOT For)
+
+- Developers building static sites (use Astro/Hugo)
+- Rapid prototypers who plan to throw away code (too much infrastructure)
+- Teams who prefer minimal structure (will fight the opinions)
+- Projects without databases (unnecessary complexity)
+
+## Solution: Production-Ready Starter with AI Collaboration Built In
+
+A **Next.js monorepo starter template** that provides:
+
+1. **Complete infrastructure** (auth, testing, DB migrations, CI/CD)
+2. **AI collaboration tools** (slash commands, sub-agents, progressive disclosure)
+3. **Self-improving docs** (micro-lessons that evolve with your codebase)
+4. **Automated quality gates** (pre-commit, pre-push, CI checks)
+
+**Not just a template—a development methodology.**
 
 ---
 
-## 5. Core Jobs-To-Be-Done
+## MVP Scope (What's Included NOW)
 
-- **JTBD-1:** As a developer, I want to quickly plan and implement small features so I can maintain development velocity
-- **JTBD-2:** As a developer, I want to safely collaborate with AI on complex features so I can leverage AI capabilities without introducing risks
-- **JTBD-3:** As a team lead, I want consistent quality and security across AI-assisted development so I can maintain codebase standards
+### Core Infrastructure ✅
 
-## 6. Success Metrics (Founder KPIs)
+- **Next.js 15** monorepo with Turbo
+- **TypeScript** strict mode with shared configs
+- **Tailwind CSS** + shadcn/ui component library
+- **Supabase** integration (auth + database)
+- **Authentication module** (email/password, protected routes, password reset)
 
-- **Activation:** Successfully complete first feature using dual-lane workflow within 30 minutes
-- **Weekly Active Users (WAU):** Developers actively using slash commands and quality gates weekly
-- **Task Success Rate:** 80% of features pass quality gates on first attempt
+### Testing Infrastructure ✅
 
-## 7. Non-Goals (for clarity)
+- **Vitest** for unit tests with React Testing Library
+- **Playwright** for E2E tests + accessibility validation
+- **Coverage contracts** (70% target with pragmatic exclusions)
+- **pgTAP** for database-level RLS testing
+- **Test isolation helpers** (no manual cleanup, no flaky tests)
 
-- Replace human developers or decision-making
-- Support every possible development workflow or tech stack
-- Provide deployment or infrastructure management
+### Quality Gates ✅
 
-## 8. Constraints & Guardrails
+- **Pre-commit**: Biome formatting/linting (<1s), auto-stage fixes
+- **Pre-push**: Tests + typecheck + lint (8-15s target)
+- **CI/CD**: Full pipeline (lint, typecheck, build, test, doctor checks)
+- **CodeRabbit**: Free AI code reviews on every PR
 
-- Platform & stack constraints (see [Architecture](./wiki/WIKI-Architecture.md))
-- Security & quality requirements (see [Quality Gates](./wiki/WIKI-Quality-Gates.md))
-- Process workflows (see [Spec System](./wiki/WIKI-Spec-System.md) & [Commands](./wiki/WIKI-Commands.md))
+### Database Workflow ✅
 
-## 9. Reference
+- **Migration validation** (catches destructive operations)
+- **Seed scripts** (dev and test environments)
+- **RLS policy templates** with dual-layer validation
+- **Type generation** from database schema
 
-- **Design System:** shadcn/ui with CSS custom properties and design tokens
-- **Telemetry:** Optional analytics tracking with feature flags for privacy control
-- **Project Principles:** See [WIKI-Home](./wiki/WIKI-Home.md) for DLStarter philosophy and core values
+### Design System ✅
+
+- **Semantic design tokens** (CSS variables for colors, spacing, typography)
+- **Component playground** at `/design` route (live examples with code snippets)
+- **shadcn/ui integration** (40+ components with consistent theming)
+- **Accessibility built-in** (ARIA attributes, keyboard navigation, screen reader support)
+- **External library patterns** (tremor, dnd-kit templates ready for integration)
+
+### AI Collaboration Tools ✅
+
+- **40+ slash commands** organized into Skills (git, db, test, spec, code, design, etc.)
+- **5 discovery commands** as entry points (`/git`, `/db`, `/test`, `/spec`, `/code`)
+- **Command discovery protocol** (check for custom commands before native tools)
+- **Sub-agent architecture** (specialized agents for template-based tasks)
+- **Spec-driven workflow** (`/specify`, `/plan`, `/tasks` with Socratic design discovery)
+
+### Documentation System ✅
+
+- **Constitution** (binding architectural decisions)
+- **CLAUDE.md** (AI workflow rules and command index)
+- **Testing guides** (comprehensive philosophy and troubleshooting)
+- **Recipe docs** (database, components, common workflows)
+- **Design system docs** (component patterns, token usage, accessibility guidelines)
+
+### Security & Best Practices ✅
+
+- **Row-Level Security (RLS)** with test templates
+- **Secret scanning** (Gitleaks pre-commit + CI)
+- **Type-safe env vars** with validation
+- **Doctor checks** (23 rules validated on every commit)
 
 ---
 
-_This PRD follows the DLStarter principles of lightweight, AI-native development with quality-first guardrails (see [WIKI-Home](./wiki/WIKI-Home.md))._
+## Explicit Non-Goals (What's NOT Included)
+
+### Infrastructure Features (Post-MVP)
+
+These are planned for **after** core MVP is stable:
+
+- ⏳ **Payments integration** (Stripe) - Issue #293 (recipe doc exists)
+- ⏳ **Email service** (Resend) - Issue #295 (planned)
+- ⏳ **AI integration** (Vercel AI SDK) - Issue #294 (OpenAI + Anthropic)
+- ⏳ **Internationalization (i18n)** - Issue #296 (next-intl)
+- ⏳ **Deployment docs** - Issue #297 (Vercel + Supabase setup)
+- ❌ **Multi-tenancy/organizations** - Beyond MVP scope
+- ❌ **Advanced auth** (OAuth, SSO, MFA) - Basic email/password sufficient
+- ❌ **File uploads** - Add when needed per project
+- ❌ **Background jobs** - Add when needed per project
+
+### Testing Features (In Scope for MVP)
+
+These ARE part of MVP (Epic #303 - Autonomous AI-Powered E2E Testing):
+
+- ✅ **Playwright MCP integration** - Already working (manual UI testing)
+- ⏳ **Auth E2E tests** - Issue #304 (codify validated flows)
+- ⏳ **Playwright native agents** - Issue #305 (planner, generator, healer)
+- ⏳ **Self-healing test loop** - Issue #306 (automated PR fixes)
+- ⏳ **Visual regression testing** - Issue #307 (screenshot comparison)
+- ⏳ **Design token compliance** - Issue #308 (automated enforcement)
+
+**Pragmatic Limits:**
+
+- ❌ **100% code coverage** - 70% target is sufficient
+- ❌ **Performance testing** - Add when performance issues arise
+- ❌ **Cross-browser E2E** (Chrome only for MVP)
+
+### Documentation (YAGNI)
+
+- ❌ **Comprehensive API docs** - Code comments + TypeScript types sufficient
+- ❌ **Video tutorials** - Written docs sufficient
+- ❌ **Automated changelog** - Manual release notes sufficient
+
+---
+
+## Design Principles
+
+### 1. Starter Template First, Production App Second
+
+**Principle**: Keep it simple and demonstrable. Show patterns, don't build the world.
+
+- ✅ One example of auth (email/password)
+- ❌ Five auth providers (OAuth, SSO, MFA, etc.)
+- ✅ One RLS policy template per table type
+- ❌ Complex multi-tenant authorization framework
+
+**Why**: Users will customize. Show them how, don't overwhelm them with options.
+
+### 2. MVP Over Feature Completeness
+
+**Principle**: Build only what's needed for acceptance criteria. Document the rest.
+
+- ✅ Basic secret scanning (Gitleaks defaults + 2 custom rules)
+- ❌ 13 custom rules for every possible secret type (use defaults)
+- ✅ Pre-push hook runs tests (<15s)
+- ❌ Pre-push hook runs tests + E2E + coverage report (too slow)
+
+**Why**: 87% less code to maintain. Users can add complexity when needed.
+
+**Reference**: See micro-lesson `docs/learning/mvp-scope-creep-detection.md`
+
+### 3. AI Collaboration as First-Class Citizen
+
+**Principle**: Optimize for human-AI pair programming, not solo human coding.
+
+- ✅ Slash commands with quality gates built in
+- ✅ Command discovery protocol (check commands before native tools)
+- ✅ Sub-agents for specialized tasks (cost-optimized with Haiku)
+- ❌ Assume developers read all docs and remember all commands
+
+**Why**: Modern development IS AI collaboration. Template should make that excellent.
+
+### 4. Automation Over Documentation
+
+**Principle**: Encode knowledge in scripts and quality gates, not just docs.
+
+- ✅ Doctor checks validate 23 rules on every commit
+- ✅ Pre-push hook prevents 100% of lint/type/test failures before CI
+- ✅ Migration validation catches destructive operations before deploy
+- ❌ "Remember to run tests before pushing" in docs (humans forget)
+
+**Why**: Machines enforce consistently. Humans forget under pressure.
+
+### 5. Progressive Enhancement, Not Big Bang
+
+**Principle**: Ship working features incrementally. Table non-critical enhancements.
+
+- ✅ Auth module: Email/password working end-to-end
+- ❌ Auth module: Email/password + OAuth + magic links + MFA (scope creep)
+- ✅ Testing: 70% coverage with pragmatic exclusions
+- ❌ Testing: 100% coverage with zero exclusions (diminishing returns)
+
+**Why**: Perfect is the enemy of shipped. Iterate based on real usage.
+
+### 6. Convention Over Configuration (With Escape Hatches)
+
+**Principle**: Opinionated defaults, but allow bypass when needed.
+
+- ✅ Pre-push hook runs tests (bypass with `--no-verify`)
+- ✅ 70% coverage target (configurable in `vitest.config.ts`)
+- ✅ Conventional commits enforced (bypass with `--no-verify`)
+- ❌ Zero escape hatches (forces developers to work around system)
+
+**Why**: Guardrails prevent mistakes. Escape hatches prevent frustration.
+
+---
+
+## Success Criteria
+
+### For Template Maintainers (Us)
+
+- ✅ New developer can clone and run locally in <15 minutes
+- ✅ All CI checks pass on main branch (green build)
+- ✅ Doctor checks validate 23 rules without manual intervention
+- ✅ Test coverage meets 70% threshold with pragmatic exclusions
+- ✅ Auth flow works end-to-end (signup → login → protected route)
+- ✅ Database migrations run cleanly with RLS policies validated
+
+### For Template Users (Developers Using This)
+
+- ✅ Can scaffold new app with `pnpm tsx scripts/new-app.ts`
+- ✅ Can understand two-lane workflow (simple vs. spec-driven) in <10 minutes
+- ✅ Can find relevant slash commands via `QUICK_REFERENCE.md`
+- ✅ Can deploy to Vercel + Supabase with recipe docs
+- ✅ Pre-push hook catches 100% of lint/type/test failures before CI
+- ✅ CodeRabbit provides helpful feedback on PRs (not just noise)
+
+### For AI Collaboration (Claude)
+
+- ✅ Command discovery protocol prevents bypass of quality gates
+- ✅ Constitution prevents architectural rule violations
+- ✅ Sub-agents can execute template-based tasks autonomously
+- ✅ Doctor checks provide clear feedback when quality rules violated
+- ✅ Slash commands include enough context to execute correctly
+
+---
+
+## Out of Scope (For This PRD)
+
+### Features Documented for Later
+
+These are **not anti-goals**—they're just **not MVP**. Recipe docs or specs exist for future implementation.
+
+- **Stripe payments** - Recipe doc at `docs/recipes/stripe.md`
+- **Email service (Resend)** - Planned, not yet implemented
+- **Skills system** - Spec complete, implementation deferred
+- **Micro-lessons system** - Deprecated, replaced with simpler approach
+
+### True Anti-Goals (Don't Build)
+
+These are things we **explicitly don't want**, even in future phases.
+
+- ❌ **CMS integration** - Out of scope for starter template
+- ❌ **GraphQL layer** - REST + tRPC sufficient
+- ❌ **Multiple database support** - Supabase (Postgres) only
+- ❌ **Mobile app** - Web only
+- ❌ **Real-time collaboration features** - Beyond MVP scope
+
+---
+
+## Future Phases (Roadmap Preview)
+
+### Phase 1: Skills System (Deferred)
+
+Progressive disclosure architecture for AI collaboration:
+
+- Metadata (always loaded) → Instructions (on-trigger) → Resources (on-demand)
+- 11 built-in Skills (database, testing, git, documentation, etc.)
+- 51-90% token reduction for multi-step workflows
+- Spec complete, implementation deferred until proven necessary
+
+### Phase 2: Stripe Integration (Planned)
+
+Production-ready payments:
+
+- Subscription management (create, cancel, update)
+- Webhook handling with signature verification
+- Customer portal integration
+- Recipe doc exists at `docs/recipes/stripe.md`
+
+### Phase 3: Email Service (Planned)
+
+Transactional emails via Resend:
+
+- Welcome emails, password reset, notifications
+- Template system with brand consistency
+- Tracking and analytics integration
+
+### Phase 4: Advanced Auth (Maybe)
+
+Only if strong user demand:
+
+- OAuth providers (Google, GitHub)
+- Magic link authentication
+- Multi-factor authentication (MFA)
+
+---
+
+## Measures of Success (3-6 Months Post-Launch)
+
+### Adoption Metrics
+
+- **5+ developers** using template for production projects
+- **10+ GitHub stars** (indicates external interest)
+- **0 critical bugs** reported in core infrastructure (auth, migrations, CI)
+
+### Quality Metrics
+
+- **<5 minute setup time** for new developers (clone → local dev)
+- **90%+ CI pass rate** on PRs (pre-push hook prevents most failures)
+- **Zero RLS bypass incidents** (validation catches all missing policies)
+
+### Efficiency Metrics
+
+- **3x faster** to production vs. starting from create-next-app
+- **50% fewer review cycles** (automated quality gates catch issues early)
+- **90% fewer "how do I..." questions** (docs + slash commands + doctor checks)
+
+---
+
+## When to Revisit This PRD
+
+### Required Reviews
+
+- **Quarterly** (every 3 months) - Are principles still serving us?
+- **After major features** - Does new feature align with MVP scope?
+- **When users report confusion** - Are non-goals clear enough?
+
+### Triggers for Updates
+
+- ✅ User feedback indicates missing critical feature (re-evaluate non-goals)
+- ✅ New AI capabilities unlock better collaboration patterns (update principles)
+- ✅ Testing strategy needs adjustment (update coverage targets)
+- ✅ Performance issues arise (add performance testing to scope)
+
+**Next Review**: 2026-02-09
+
+---
+
+## Appendix: Key Documents
+
+### For Human Developers
+
+- [README.md](../README.md) - Quick start and feature overview
+- [GETTING_STARTED.md](./GETTING_STARTED.md) - Step-by-step setup (Issue #197, not yet created)
+- [Testing Guide](./testing/TESTING_GUIDE.md) - Comprehensive testing philosophy
+- [Database Recipe](./recipes/db.md) - Migration and RLS workflow
+
+### For AI Assistants (Claude)
+
+- [CLAUDE.md](./ai/CLAUDE.md) - Workflow rules and command index
+- [Constitution](./constitution.md) - Binding architectural decisions
+- [QUICK_REFERENCE.md](./.claude/commands/QUICK_REFERENCE.md) - Command discovery
+
+### Contracts & Standards
+
+- [Coverage Contract](./testing/coverage-contract.md) - Testing thresholds and philosophy
+- [RLS Implementation Guide](./database/rls-implementation.md) - Security policy standards
+- [Database Standards](./database/standards.md) - Schema and migration conventions
+
+---
+
+## Changelog
+
+### v1.0 (2025-11-09)
+
+- Initial PRD created
+- Clarified MVP scope vs. non-goals
+- Documented 6 design principles
+- Defined success criteria for template maintainers, users, and AI
+- Established quarterly review cadence
