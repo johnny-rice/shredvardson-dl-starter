@@ -12,6 +12,9 @@ START_TIME=$(python3 -c 'import time; print(int(time.time() * 1000))' 2>/dev/nul
 
 # Initialize logging infrastructure
 init_skill_logging() {
+  # Skip if logging is disabled (tests set LOG_FILE=/dev/null)
+  [[ "${LOG_FILE:-}" == "/dev/null" ]] && return 0
+
   # Create logs directory if it doesn't exist
   mkdir -p .logs
 
@@ -24,6 +27,9 @@ init_skill_logging() {
 # Log a skill invocation
 # Args: $1=skill_name, $2=action, $3=exit_code (optional, defaults to $?)
 log_skill_invocation() {
+  # Skip if logging is disabled
+  [[ "${LOG_FILE:-}" == "/dev/null" ]] && return 0
+
   local skill=$1
   local action=$2
   local exit_code=${3:-$?}

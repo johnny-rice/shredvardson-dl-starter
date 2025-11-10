@@ -108,7 +108,7 @@ fi
 if [[ "$HAS_ERRORS" == "false" ]]; then
   echo "→ Coverage..." >&2
   COVERAGE_OUTPUT=$(pnpm test:coverage --silent 2>&1 || true)
-  COVERAGE=$(echo "$COVERAGE_OUTPUT" | grep -oP '\d+\.\d+(?=%)' | head -1 || echo "0")
+  COVERAGE=$(echo "$COVERAGE_OUTPUT" | grep -o '[0-9][0-9]*\.[0-9][0-9]*%' | sed 's/%//' | head -1 || echo "0")
 
   # Use awk for portable numeric comparison (no bc dependency)
   if awk -v cov="$COVERAGE" 'BEGIN { exit (cov >= 70 ? 0 : 1) }'; then

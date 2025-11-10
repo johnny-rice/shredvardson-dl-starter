@@ -41,7 +41,7 @@ if [[ "$CURRENT_BRANCH" != "$PR_BRANCH" ]]; then
     error: "Wrong branch",
     current_branch: $current,
     expected_branch: $expected,
-    suggestion: "Switch to PR branch with: git switch " + $expected
+    suggestion: "Switch to PR branch with: git switch \($expected)"
   }'
   exit 1
 fi

@@ -76,7 +76,8 @@ if [[ "$CURRENT_BRANCH" =~ ^[^/]+/([0-9]+)- ]]; then
 fi
 
 # Detect default remote branch (supports main, master, etc.)
-DEFAULT_BRANCH=$(git symbolic-ref -q --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##')
+# Use || true to prevent pipefail from exiting when symbolic-ref fails (common in bare repos)
+DEFAULT_BRANCH=$(git symbolic-ref -q --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##' || true)
 DEFAULT_BRANCH=${DEFAULT_BRANCH:-main}
 
 # Get commit history for PR body context
@@ -107,8 +108,8 @@ jq -n \
           "Read .github/pull_request_template.md",
           "Analyze commits and changes",
           "Generate PR title: type: description (Issue #X)",
-          "Generate PR body with all sections. IMPORTANT: If issue number exists, add 'Closes #X' at the end of the Summary section to auto-close the issue when merged",
-          "Create PR: gh pr create --title \"...\" --body \"...\""
+          "Generate PR body with all sections. IMPORTANT: If issue number exists, add \"Closes #X\" at the end of the Summary section to auto-close the issue when merged",
+          "Create PR: gh pr create --title ... --body ..."
         ]
       }
     ]

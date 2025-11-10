@@ -11,15 +11,23 @@ setup_skill_logging "git" "workflow"
 
 # Get current branch and status
 CURRENT_BRANCH=$(git branch --show-current)
-IS_CLEAN=$(git diff-index --quiet HEAD 2>/dev/null && echo "true" || echo "false")
+IS_CLEAN=$(test -z "$(git status --porcelain)" && echo "true" || echo "false")
 
 # Get branch status
-BEHIND_MAIN=""
-AHEAD_MAIN=""
+BEHIND_MAIN="0"
+AHEAD_MAIN="0"
 if [[ "$CURRENT_BRANCH" != "main" ]]; then
+  # Try to fetch from origin, fall back to local main if no origin
   git fetch origin main >/dev/null 2>&1 || true
-  BEHIND_MAIN=$(git rev-list --count HEAD..origin/main 2>/dev/null || echo "0")
-  AHEAD_MAIN=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "0")
+
+  # Use origin/main if it exists, otherwise fall back to main
+  if git rev-parse --verify origin/main >/dev/null 2>&1; then
+    BEHIND_MAIN=$(git rev-list --count HEAD..origin/main 2>/dev/null || echo "0")
+    AHEAD_MAIN=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "0")
+  else
+    BEHIND_MAIN=$(git rev-list --count HEAD..main 2>/dev/null || echo "0")
+    AHEAD_MAIN=$(git rev-list --count main..HEAD 2>/dev/null || echo "0")
+  fi
 fi
 
 # Determine workflow stage

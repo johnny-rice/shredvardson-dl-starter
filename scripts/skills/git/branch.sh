@@ -63,7 +63,7 @@ if git show-ref --quiet "refs/heads/$BRANCH_NAME"; then
   jq -n --arg branch "$BRANCH_NAME" '{
     error: "Branch already exists",
     branch: $branch,
-    suggestion: "Switch to it with: git switch " + $branch
+    suggestion: "Switch to it with: git switch \($branch)"
   }'
   exit 1
 fi

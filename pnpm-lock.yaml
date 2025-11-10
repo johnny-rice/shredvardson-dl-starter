@@ -39,6 +39,15 @@ importers:
       '@types/handlebars':
         specifier: ^4.1.0
         version: 4.1.0
+      bats:
+        specifier: ^1.13.0
+        version: 1.13.0
+      bats-assert:
+        specifier: ^2.2.4
+        version: 2.2.4(bats-support@0.3.0(bats@1.13.0))(bats@1.13.0)
+      bats-support:
+        specifier: ^0.3.0
+        version: 0.3.0(bats@1.13.0)
       commander:
         specifier: ^14.0.1
         version: 14.0.1
@@ -2836,6 +2845,21 @@ packages:
 
   baseline-browser-mapping@2.8.9:
     resolution: {integrity: sha512-hY/u2lxLrbecMEWSB0IpGzGyDyeoMFQhCvZd2jGFSE5I17Fh01sYUBPCJtkWERw7zrac9+cIghxm/ytJa2X8iA==}
+    hasBin: true
+
+  bats-assert@2.2.4:
+    resolution: {integrity: sha512-EcaY4Z+Tbz1c7pnC1SrVSq0epr7tLwFpz6qt7KUW9K8uSw8V12DTfH9d2HxZWvBEATaCuMsZ7KoZMFiSQPRoXw==}
+    peerDependencies:
+      bats: 0.4 || ^1
+      bats-support: ^0.3
+
+  bats-support@0.3.0:
+    resolution: {integrity: sha512-z+2WzXbI4OZgLnynydqH8GpI3+DcOtepO66PlK47SfEzTkiuV9hxn9eIQX+uLVFbt2Oqoc7Ky3TJ/N83lqD+cg==}
+    peerDependencies:
+      bats: 0.4 || ^1
+
+  bats@1.13.0:
+    resolution: {integrity: sha512-giSYKGTOcPZyJDbfbTtzAedLcNWdjCLbXYU3/MwPnjyvDXzu6Dgw8d2M+8jHhZXSmsCMSQqCp+YBsJ603UO4vQ==}
     hasBin: true
 
   better-path-resolve@1.0.0:
@@ -8463,6 +8487,17 @@ snapshots:
   baseline-browser-mapping@2.8.18: {}
 
   baseline-browser-mapping@2.8.9: {}
+
+  bats-assert@2.2.4(bats-support@0.3.0(bats@1.13.0))(bats@1.13.0):
+    dependencies:
+      bats: 1.13.0
+      bats-support: 0.3.0(bats@1.13.0)
+
+  bats-support@0.3.0(bats@1.13.0):
+    dependencies:
+      bats: 1.13.0
+
+  bats@1.13.0: {}
 
   better-path-resolve@1.0.0:
     dependencies:

@@ -1,0 +1,154 @@
+name: Skills Validation
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/skills/**"
+      - "scripts/skills/__tests__/**"
+      - ".github/workflows/skills-validation.yml"
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "scripts/skills/**"
+      - "scripts/skills/__tests__/**"
+      - ".github/workflows/skills-validation.yml"
+
+jobs:
+  test-skills:
+    name: Test Skills
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Configure git for tests
+        run: |
+          git config --global user.name "CI Test"
+          git config --global user.email "ci@test.com"
+          git config --global commit.gpgsign false
+          git config --global tag.gpgsign false
+
+      - name: Run Skills tests
+        run: pnpm test:skills
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: skills-test-results
+          path: |
+            scripts/skills/__tests__/**/*.tap
+            scripts/skills/__tests__/**/*.xml
+          retention-days: 30
+          if-no-files-found: ignore
+
+  lint-skills:
+    name: Lint Skills Scripts
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+
+      - name: Run shellcheck on Skills
+        run: |
+          find scripts/skills -name "*.sh" -type f ! -path "*/node_modules/*" ! -path "*/__tests__/*" -exec shellcheck --exclude=SC1091 {} +
+
+      - name: Check shell script formatting (shfmt)
+        run: |
+          # Install shfmt
+          wget -O /tmp/shfmt https://github.com/mvdan/sh/releases/download/v3.8.0/shfmt_v3.8.0_linux_amd64
+          chmod +x /tmp/shfmt
+
+          # Check formatting (don't auto-fix in CI)
+          find scripts/skills -name "*.sh" -type f ! -path "*/node_modules/*" ! -path "*/__tests__/*" -exec /tmp/shfmt -d {} +
+
+  validate-coverage:
+    name: Validate Test Coverage
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: test-skills
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Configure git for tests
+        run: |
+          git config --global user.name "CI Test"
+          git config --global user.email "ci@test.com"
+          git config --global commit.gpgsign false
+
+      - name: Count Skills files
+        id: count
+        run: |
+          TOTAL_SKILLS=$(find scripts/skills -name "*.sh" -type f ! -path "*/__tests__/*" ! -path "*/node_modules/*" | wc -l)
+          TOTAL_TESTS=$(find scripts/skills/__tests__ -name "*.bats" -type f | wc -l)
+
+          echo "total_skills=$TOTAL_SKILLS" >> $GITHUB_OUTPUT
+          echo "total_tests=$TOTAL_TESTS" >> $GITHUB_OUTPUT
+
+          echo "Skills found: $TOTAL_SKILLS"
+          echo "Test files found: $TOTAL_TESTS"
+
+      - name: Validate coverage threshold
+        run: |
+          TOTAL_SKILLS=${{ steps.count.outputs.total_skills }}
+          TOTAL_TESTS=${{ steps.count.outputs.total_tests }}
+
+          if [ "$TOTAL_TESTS" -lt "$TOTAL_SKILLS" ]; then
+            echo "❌ Not all Skills have test files!"
+            echo "Skills: $TOTAL_SKILLS, Test files: $TOTAL_TESTS"
+            exit 1
+          else
+            echo "✅ All Skills have test coverage"
+          fi
