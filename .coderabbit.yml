@@ -16,10 +16,8 @@ reviews:
     - '!tasks/**'
     - '!docs/micro-lessons/**'
     - '!docs/research/**'
-    - '!**/*.spec.*'
-    - '!**/*.test.*'
 
-    # Include all code (including scripts - they're critical!)
+    # Include all code (including scripts and tests - they're critical!)
     - 'apps/**'
     - 'packages/**'
     - 'scripts/**'         # Database migrations, destructive ops, production scripts

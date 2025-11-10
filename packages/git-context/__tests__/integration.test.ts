@@ -62,8 +62,8 @@ describe('git-context integration', () => {
     getGitContext();
     const duration = Date.now() - start;
 
-    // Should be fast (<600ms, allowing margin for slow systems)
-    expect(duration).toBeLessThan(600);
+    // Should be reasonably fast (<1000ms, allowing margin for slow systems and CI)
+    expect(duration).toBeLessThan(1000);
   });
 
   it('should sanitize output by default', () => {

@@ -11,7 +11,7 @@
  * @module exec-safe
  */
 
-import { spawnSync } from 'child_process';
+import { spawnSync } from 'node:child_process';
 import { gitArgsSchema } from './validators.js';
 
 /**
@@ -205,6 +205,7 @@ export function execGitSafeDetailed(
  * Redactions:
  * - Home paths (/Users/username → ~)
  * - Credentials in URLs (https://user:pass@host → https://***:***@host)
+ * - HTTP URLs normalized to HTTPS (http://user:pass@host → https://***:***@host)
  * - Absolute paths in temp directories
  *
  * @param message - Error message to sanitize
@@ -215,6 +216,13 @@ export function execGitSafeDetailed(
  * const error = '/Users/alice/repo/file.txt not found';
  * const sanitized = sanitizeError(error);
  * console.log(sanitized); // '~/repo/file.txt not found'
+ * ```
+ *
+ * @example
+ * ```typescript
+ * const error = 'Clone failed: http://user:token@github.com/repo.git';
+ * const sanitized = sanitizeError(error);
+ * console.log(sanitized); // 'Clone failed: https://***:***@github.com/repo.git'
  * ```
  */
 export function sanitizeError(message: string): string {

@@ -125,10 +125,20 @@ export function sanitizeFilePath(filePath: string): string {
   return (
     filePath
       // Redact home directories (macOS/Linux)
-      .replace(/\/Users\/[^/]+/g, '~')
-      .replace(/\/home\/[^/]+/g, '~')
+      // Use replacement function to preserve path structure for nested home directories
+      .replace(/\/Users\/[^/]+/g, (_match, offset) => {
+        // If not at start of string, preserve the leading separator
+        return offset > 0 ? '/~' : '~';
+      })
+      .replace(/\/home\/[^/]+/g, (_match, offset) => {
+        // If not at start of string, preserve the leading separator
+        return offset > 0 ? '/~' : '~';
+      })
       // Redact Windows home directories
-      .replace(/C:\\Users\\[^\\]+/g, '~')
+      .replace(/C:\\Users\\[^\\]+/g, (_match, offset) => {
+        // If not at start of string, preserve the leading separator
+        return offset > 0 ? '\\~' : '~';
+      })
       // Redact temp directories
       .replace(/\/tmp\/[^/]+/g, '/tmp/***')
       .replace(/\/var\/tmp\/[^/]+/g, '/var/tmp/***')
