@@ -10,6 +10,9 @@
   "types": "./src/types.ts",
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "db:types": "supabase gen types typescript --schema public > src/types.ts",
     "db:migrate": "supabase db push --include-all",
     "db:reset": "supabase db reset",
@@ -24,6 +27,7 @@
     "@shared/config": "workspace:*",
     "@types/node": "^24",
     "typescript": "^5",
-    "supabase": "^2"
+    "supabase": "^2",
+    "vitest": "^3.2.4"
   }
 }

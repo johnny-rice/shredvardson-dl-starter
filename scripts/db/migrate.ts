@@ -17,7 +17,7 @@
 import { execSync } from 'node:child_process';
 import { mkdirSync, readdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { confirm } from './utils/confirm';
+import { confirm } from '../utils/confirm';
 
 type Action = 'create' | 'validate' | 'apply' | 'rollback';
 
@@ -241,7 +241,9 @@ async function applyMigrations(): Promise<void> {
   console.log('Running validation first...\n');
   await validateMigrations();
 
-  await confirm('About to apply migrations to local database. This operation cannot be undone easily.');
+  await confirm(
+    'About to apply migrations to local database. This operation cannot be undone easily.'
+  );
 
   try {
     // Apply migrations
@@ -309,7 +311,6 @@ async function rollbackMigration(): Promise<void> {
     process.exit(1);
   }
 }
-
 
 // CLI
 const action = process.argv[2] as Action;
