@@ -99,5 +99,165 @@ for (const viewport of VIEWPORTS) {
         fullPage: true,
       });
     });
+
+    test('Complete signup flow works on mobile', async ({ page: browserPage }) => {
+      await browserPage.goto('http://localhost:3000/signup');
+
+      const email = `test-mobile-${Date.now()}@example.com`;
+      const password = 'TestPassword123!';
+
+      // Fill form using touch/tap interactions
+      const emailInput = browserPage.locator('input[name="email"]');
+      const passwordInput = browserPage.locator('input[name="password"]');
+
+      await emailInput.tap();
+      await emailInput.fill(email);
+
+      await passwordInput.tap();
+      await passwordInput.fill(password);
+
+      // Submit using tap
+      const submitButton = browserPage.locator('button[type="submit"]');
+      await submitButton.tap();
+
+      // Should redirect after successful signup
+      await browserPage.waitForURL((url) => url.pathname === '/' || url.pathname === '/dashboard', {
+        timeout: 10000,
+      });
+
+      // Verify no horizontal scroll on success page
+      const bodyWidth = await browserPage.evaluate(() => document.body.scrollWidth);
+      const viewportWidth = await browserPage.evaluate(() => window.innerWidth);
+      expect(bodyWidth).toBeLessThanOrEqual(viewportWidth);
+    });
+
+    test('Complete login flow works on mobile', async ({ page: browserPage }) => {
+      // First create a user
+      const email = `test-mobile-login-${Date.now()}@example.com`;
+      const password = 'TestPassword123!';
+
+      await browserPage.goto('http://localhost:3000/signup');
+      await browserPage.fill('input[name="email"]', email);
+      await browserPage.fill('input[name="password"]', password);
+      await browserPage.locator('button[type="submit"]').tap();
+      await browserPage.waitForURL((url) => url.pathname === '/' || url.pathname === '/dashboard');
+
+      // Sign out
+      await browserPage.goto('http://localhost:3000/dashboard');
+      await browserPage.locator('button:has-text("Sign out")').tap();
+      await browserPage.waitForURL('/login');
+
+      // Now test login on mobile
+      await browserPage.goto('http://localhost:3000/login');
+
+      const emailInput = browserPage.locator('input[name="email"]');
+      const passwordInput = browserPage.locator('input[name="password"]');
+
+      await emailInput.tap();
+      await emailInput.fill(email);
+
+      await passwordInput.tap();
+      await passwordInput.fill(password);
+
+      const submitButton = browserPage.locator('button[type="submit"]');
+      await submitButton.tap();
+
+      // Should redirect to home or dashboard
+      await browserPage.waitForURL((url) => url.pathname === '/' || url.pathname === '/dashboard', {
+        timeout: 10000,
+      });
+
+      // Verify no horizontal scroll
+      const bodyWidth = await browserPage.evaluate(() => document.body.scrollWidth);
+      const viewportWidth = await browserPage.evaluate(() => window.innerWidth);
+      expect(bodyWidth).toBeLessThanOrEqual(viewportWidth);
+    });
+
+    test('Password reset form is usable on mobile', async ({ page: browserPage }) => {
+      await browserPage.goto('http://localhost:3000/reset-password');
+
+      const email = `test-mobile-reset-${Date.now()}@example.com`;
+
+      const emailInput = browserPage.locator('input[name="email"]');
+      await emailInput.tap();
+      await emailInput.fill(email);
+
+      const submitButton = browserPage.locator('button[type="submit"]');
+      await submitButton.tap();
+
+      // Should show success message
+      await expect(browserPage.locator('text=/check your email/i')).toBeVisible({
+        timeout: 10000,
+      });
+
+      // Verify no horizontal scroll after success
+      const bodyWidth = await browserPage.evaluate(() => document.body.scrollWidth);
+      const viewportWidth = await browserPage.evaluate(() => window.innerWidth);
+      expect(bodyWidth).toBeLessThanOrEqual(viewportWidth);
+    });
+
+    test('Navigation links work on mobile', async ({ page: browserPage }) => {
+      await browserPage.goto('http://localhost:3000/login');
+
+      // Test signup link
+      const signupLink = browserPage.locator('a[href="/signup"]');
+      await expect(signupLink).toBeVisible();
+      await signupLink.tap();
+      await expect(browserPage).toHaveURL('/signup');
+
+      // Test login link
+      const loginLink = browserPage.locator('a[href="/login"]');
+      await expect(loginLink).toBeVisible();
+      await loginLink.tap();
+      await expect(browserPage).toHaveURL('/login');
+
+      // Test reset password link
+      const resetLink = browserPage.locator('a[href="/reset-password"]');
+      await expect(resetLink).toBeVisible();
+      await resetLink.tap();
+      await expect(browserPage).toHaveURL('/reset-password');
+    });
+
+    test('Error messages are visible on mobile', async ({ page: browserPage }) => {
+      await browserPage.goto('http://localhost:3000/login');
+
+      // Trigger multiple errors
+      await browserPage.fill('input[name="email"]', 'invalid');
+      await browserPage.locator('input[name="email"]').blur();
+      await browserPage.waitForTimeout(200);
+
+      const emailError = browserPage.locator('text=/invalid email/i').first();
+      await expect(emailError).toBeVisible();
+
+      // Error should not cause horizontal scroll
+      const bodyWidth = await browserPage.evaluate(() => document.body.scrollWidth);
+      const viewportWidth = await browserPage.evaluate(() => window.innerWidth);
+      expect(bodyWidth).toBeLessThanOrEqual(viewportWidth);
+
+      // Error should not overflow container
+      const errorBox = await emailError.boundingBox();
+      if (errorBox) {
+        expect(errorBox.x + errorBox.width).toBeLessThanOrEqual(viewport.width);
+      }
+    });
+
+    test('Forms are scrollable when keyboard is open (viewport height check)', async ({
+      page: browserPage,
+    }) => {
+      await browserPage.goto('http://localhost:3000/signup');
+
+      // Focus on password field (typically near bottom of form)
+      const passwordInput = browserPage.locator('input[name="password"]');
+      await passwordInput.tap();
+
+      // Verify input is in viewport
+      const isVisible = await passwordInput.isVisible();
+      expect(isVisible).toBeTruthy();
+
+      // Verify submit button is accessible (can scroll to it)
+      const submitButton = browserPage.locator('button[type="submit"]');
+      await submitButton.scrollIntoViewIfNeeded();
+      await expect(submitButton).toBeVisible();
+    });
   });
 }

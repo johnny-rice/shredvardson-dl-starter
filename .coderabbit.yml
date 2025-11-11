@@ -18,9 +18,9 @@ reviews:
     - '!docs/research/**'
 
     # Include all code (including scripts and tests - they're critical!)
-    - 'apps/**'
-    - 'packages/**'
-    - 'scripts/**'         # Database migrations, destructive ops, production scripts
+    - 'apps/**'              # Includes E2E tests (*.spec.ts) - critical for production confidence
+    - 'packages/**'          # Includes unit tests (*.test.ts) - validates core logic
+    - 'scripts/**'           # Database migrations, destructive ops, production scripts
 
     # Include critical LLM-facing documentation
     - '.claude/**'          # Skills, commands, prompts - LLMs execute these
