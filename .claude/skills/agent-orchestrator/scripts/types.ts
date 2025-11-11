@@ -247,8 +247,5 @@ export function isSecurityResponse(obj: unknown): obj is SecurityResponse {
 export function isTestResponse(obj: unknown): obj is TestResponse {
   if (!obj || typeof obj !== 'object') return false;
   const data = obj as Record<string, unknown>;
-  return (
-    typeof data.success === 'boolean' &&
-    typeof data.message === 'string'
-  );
+  return typeof data.success === 'boolean' && typeof data.message === 'string';
 }

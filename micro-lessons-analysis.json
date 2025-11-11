@@ -1,0 +1,1329 @@
+[
+  {
+    "file": "064-yaml-parser-quote-handling.md",
+    "title": "Prevents data corruption when parsing YAML frontmatter with single-quoted values",
+    "tags": [
+      "yaml",
+      "parsing",
+      "metadata",
+      "data-integrity",
+      "code-quality"
+    ],
+    "usedBy": 0,
+    "severity": "high"
+  },
+  {
+    "file": "196-lefthook-biome-quality-gates.md",
+    "title": "Lefthook + Biome for Instant Feedback and 2x Faster Validation",
+    "tags": [
+      "git-hooks",
+      "lefthook",
+      "biome",
+      "quality-gates",
+      "performance",
+      "dx"
+    ],
+    "category": "tooling",
+    "date": "2025-10-25",
+    "relatedIssues": [
+      "196"
+    ]
+  },
+  {
+    "file": "20250124-183900-pnpm-workspace-script-dependency-resolution.md",
+    "title": "Lesson: pnpm Workspace Script Dependency Resolution",
+    "tags": [
+      "pnpm",
+      "workspace",
+      "monorepo",
+      "dependency-resolution",
+      "typescript",
+      "scripts",
+      "hoisting",
+      "phase-4"
+    ],
+    "category": "monorepo"
+  },
+  {
+    "file": "20250124-184000-semantic-tokens-over-hardcoded-colors.md",
+    "title": "Lesson: Semantic Tokens Over Hardcoded Colors in Templates",
+    "tags": [
+      "design-tokens",
+      "semantic-tokens",
+      "hardcoded-colors",
+      "theme-compatibility",
+      "design-system",
+      "tremor",
+      "tailwind",
+      "phase-4"
+    ]
+  },
+  {
+    "file": "20250124-184100-handlebars-root-scope-nested-loops.md",
+    "title": "Lesson: Handlebars @root.name for Nested Loop Component Names",
+    "tags": [
+      "handlebars",
+      "templates",
+      "nested-loops",
+      "scope-resolution",
+      "root-context",
+      "jsx-generation",
+      "phase-4"
+    ]
+  },
+  {
+    "file": "20250124-192500-pnpm-lockfile-sync-after-package-json-edit.md",
+    "title": "ERR_PNPM_OUTDATED_LOCKFILE: Always Run `pnpm install` After Editing package.json",
+    "tags": [
+      "pnpm",
+      "lockfile",
+      "ci",
+      "dependencies",
+      "frozen-lockfile",
+      "monorepo",
+      "phase-4",
+      "pr-190"
+    ],
+    "usedBy": 0,
+    "severity": "high",
+    "category": "monorepo"
+  },
+  {
+    "file": "20250124-192600-atomic-file-writes-temp-rename-pattern.md",
+    "title": "Atomic File Writes: Use Temp + Rename to Prevent Partial Writes",
+    "tags": [
+      "filesystem",
+      "atomic-writes",
+      "file-safety",
+      "error-handling",
+      "corruption-prevention",
+      "json",
+      "registry",
+      "phase-4",
+      "coderabbit"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "20250124-193000-remove-unused-imports-immediately.md",
+    "title": "Remove Unused Imports Immediately During Code Review",
+    "tags": [
+      "code-quality",
+      "imports",
+      "refactoring",
+      "pr-review",
+      "typescript"
+    ],
+    "date": "2025-01-24T19",
+    "severity": "low",
+    "usedBy": 0
+  },
+  {
+    "file": "20250124-193100-provenance-metadata-for-config.md",
+    "title": "Add Provenance Metadata for Drift-Prone Configuration Facts",
+    "tags": [
+      "data-integrity",
+      "configuration",
+      "metadata",
+      "documentation",
+      "provenance",
+      "phase-4"
+    ],
+    "date": "2025-01-24T19",
+    "severity": "normal",
+    "usedBy": 0
+  },
+  {
+    "file": "20250124-193200-extract-security-utilities-proactively.md",
+    "title": "Extract Shared Security Utilities Before Code Review",
+    "tags": [
+      "security",
+      "duplication",
+      "refactoring",
+      "utilities",
+      "sanitization",
+      "path-traversal",
+      "phase-4"
+    ],
+    "date": "2025-01-24T19",
+    "severity": "normal",
+    "usedBy": 0,
+    "category": "security"
+  },
+  {
+    "file": "20251022-093015-iterator-consumption-bug.md",
+    "title": "JavaScript Iterators Are Single-Use: Dont Reuse matchAll Results",
+    "tags": [
+      "javascript",
+      "iterators",
+      "regex",
+      "bugs"
+    ],
+    "date": "2025-10-21",
+    "category": "debugging",
+    "severity": "high"
+  },
+  {
+    "file": "20251022-093043-input-validation-cli-scripts.md",
+    "title": "Always Validate CLI Arguments Before Shell Command Construction",
+    "tags": [
+      "security",
+      "validation",
+      "command-injection",
+      "path-traversal"
+    ],
+    "date": "2025-10-21",
+    "category": "security",
+    "severity": "critical"
+  },
+  {
+    "file": "20251022-093918-stdio-inherit-vs-capture.md",
+    "title": "stdio: inherit Prevents Output Capture in execSync",
+    "tags": [
+      "nodejs",
+      "child_process",
+      "execSync",
+      "stdio"
+    ],
+    "date": "2025-10-21",
+    "category": "nodejs",
+    "severity": "medium"
+  },
+  {
+    "file": "20251022-100250-jq-arg-vs-argjson.md",
+    "title": "Use --argjson for JSON Values in jq, Not --arg",
+    "tags": [
+      "jq",
+      "json",
+      "bash",
+      "data-types"
+    ],
+    "date": "2025-10-21",
+    "category": "shell-scripting",
+    "severity": "critical"
+  },
+  {
+    "file": "20251022-100327-sequential-json-output-bug.md",
+    "title": "Never Output Multiple JSON Objects in Bash Scripts - Breaks Parsing",
+    "tags": [
+      "json",
+      "bash",
+      "error-handling",
+      "structured-output"
+    ],
+    "date": "2025-10-21",
+    "category": "shell-scripting",
+    "severity": "critical"
+  },
+  {
+    "file": "20251022-115900-shellcheck-logging-patterns.md",
+    "title": "ShellCheck Best Practices for Bash Logging Utilities",
+    "tags": []
+  },
+  {
+    "file": "20251022-142600-command-index-regeneration.md",
+    "title": "Command Index Must Be Regenerated After Adding Commands",
+    "tags": [
+      "commands",
+      "index",
+      "ci",
+      "routing-contract",
+      "automation",
+      "phase-4b"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "20251022-142630-constitution-checksum-command-index.md",
+    "title": "Constitution Checksum Invalidates After Command Index Changes",
+    "tags": [
+      "constitution",
+      "checksum",
+      "commands",
+      "ci",
+      "doctor",
+      "binding-sources",
+      "phase-4b"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "20251022-142700-phase-based-pr-strategy.md",
+    "title": "Phase-Based PR Strategy Reduces Risk and Enables Data-Driven Decisions",
+    "tags": [
+      "git",
+      "workflow",
+      "pr-strategy",
+      "data-driven",
+      "phase-gating",
+      "observability",
+      "phase-4"
+    ],
+    "usedBy": 0,
+    "severity": "normal",
+    "category": "git"
+  },
+  {
+    "file": "20251025-082837-comprehensive-pre-push-validation.md",
+    "title": "Comprehensive Pre-Push Validation Prevents CI Failures",
+    "tags": []
+  },
+  {
+    "file": "20251026-084605-external-library-cva-integration.md",
+    "title": "External Library Design System Integration Pattern",
+    "tags": []
+  },
+  {
+    "file": "20251026-084606-accessible-table-row-selection.md",
+    "title": "Accessible Table Row Selection Implementation",
+    "tags": []
+  },
+  {
+    "file": "20251026-084607-tanstack-table-selection-state.md",
+    "title": "TanStack Table Selection State Management",
+    "tags": []
+  },
+  {
+    "file": "20251027-080956-pre-commit-markdown-linting.md",
+    "title": "Pre-Commit Markdown Linting Prevents Bulk Review Comments",
+    "tags": [
+      "markdown",
+      "linting",
+      "pre-commit",
+      "code-review",
+      "automation",
+      "pr-quality",
+      "coderabbit",
+      "documentation"
+    ],
+    "usedBy": 0,
+    "severity": "high"
+  },
+  {
+    "file": "20251027-081022-json-pointer-config-references.md",
+    "title": "JSON Pointer Syntax for Config File References",
+    "tags": [
+      "json-pointer",
+      "config",
+      "metadata",
+      "validation",
+      "yaml",
+      "documentation",
+      "code-quality",
+      "rfc6901"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "20251027-081050-execsync-error-typing.md",
+    "title": "Proper TypeScript Error Typing for execSync",
+    "tags": [
+      "typescript",
+      "error-handling",
+      "child-process",
+      "type-safety",
+      "biome",
+      "linting",
+      "node-js",
+      "execsync"
+    ],
+    "usedBy": 0,
+    "severity": "normal",
+    "category": "typescript"
+  },
+  {
+    "file": "20251027-083626-skill-verbose-env-pattern.md",
+    "title": "SKILL_VERBOSE Environment Pattern for Credential Protection",
+    "tags": [
+      "security",
+      "skills",
+      "environment-variables",
+      "shell-scripts"
+    ],
+    "date": "2025-10-27",
+    "category": "security"
+  },
+  {
+    "file": "20251027-083654-destructive-operation-confirmation-guards.md",
+    "title": "Destructive Operation Confirmation Guards",
+    "tags": [
+      "safety",
+      "database",
+      "rollback",
+      "shell-scripts",
+      "skills"
+    ],
+    "date": "2025-10-27"
+  },
+  {
+    "file": "20251027-083728-configurable-execsync-timeouts-for-ci.md",
+    "title": "Configurable execSync Timeouts for CI Reliability",
+    "tags": [
+      "ci",
+      "shell-scripts",
+      "reliability",
+      "environment-variables",
+      "skills"
+    ],
+    "date": "2025-10-27",
+    "category": "ci-cd"
+  },
+  {
+    "file": "20251031-144000-traceability-frontmatter-requirements.md",
+    "title": "Traceability Frontmatter Requirements (ID Prefixes and ParentIDs)",
+    "tags": [
+      "traceability",
+      "validation",
+      "frontmatter",
+      "spec-driven"
+    ],
+    "date": "2025-10-31"
+  },
+  {
+    "file": "20251031-144100-adr-compliance-override-label.md",
+    "title": "ADR Compliance - When to Use override:adr Label",
+    "tags": [
+      "adr",
+      "ci",
+      "workflow",
+      "architecture"
+    ],
+    "date": "2025-10-31"
+  },
+  {
+    "file": "20251031-144200-pgtap-pg-tle-schema-clarification.md",
+    "title": "pgTAP Setup - Why pg_tle Doesnt Specify Schema",
+    "tags": [
+      "pgtap",
+      "postgres",
+      "supabase",
+      "extensions"
+    ],
+    "date": "2025-10-31"
+  },
+  {
+    "file": "20251031-144300-plan-document-unchecked-criteria.md",
+    "title": "Plan Documents Should Have Unchecked Success Criteria",
+    "tags": [
+      "documentation",
+      "planning",
+      "spec-driven"
+    ],
+    "date": "2025-10-31"
+  },
+  {
+    "file": "20251102-092100-sub-agent-structured-output-enhancement.md",
+    "title": "Sub-Agent Structured Output Enhancement Pattern",
+    "tags": [
+      "sub-agents",
+      "structured-output",
+      "severity-levels",
+      "confidence",
+      "testing"
+    ],
+    "date": "2025-11-02"
+  },
+  {
+    "file": "20251102-212810-traceability-frontmatter-id-format.md",
+    "title": "Add confidence levels to Socratic planning",
+    "tags": []
+  },
+  {
+    "file": "20251103-144900-git-double-dash-separator-conditional.md",
+    "title": "Git `--` Separator Requires Conditional Logic",
+    "tags": [
+      "git",
+      "security",
+      "command-injection",
+      "defense-in-depth",
+      "typescript"
+    ],
+    "usedBy": 0,
+    "severity": "high",
+    "category": "git"
+  },
+  {
+    "file": "20251103-145000-input-validation-before-sanitization.md",
+    "title": "Input Validation Must Happen Before Any Processing",
+    "tags": [
+      "security",
+      "input-validation",
+      "zod",
+      "typescript",
+      "api-design",
+      "defense-in-depth"
+    ],
+    "usedBy": 0,
+    "severity": "high",
+    "category": "security"
+  },
+  {
+    "file": "20251103-145100-eliminate-redundant-sanitization-passes.md",
+    "title": "Eliminate Redundant Sanitization with Single Final Pass",
+    "tags": [
+      "performance",
+      "sanitization",
+      "optimization",
+      "api-design",
+      "typescript"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "20251107-122933-constitution-checksum-timestamp-normalization.md",
+    "title": "Constitution Checksum Timestamp Normalization",
+    "tags": [
+      "constitution",
+      "checksum",
+      "timestamp",
+      "normalization",
+      "json",
+      "ci",
+      "doctor",
+      "data-integrity"
+    ]
+  },
+  {
+    "file": "20251107-192000-traceability-validation-spec-requirements.md",
+    "title": "Traceability Validation: Plans Require Parent Specs",
+    "tags": []
+  },
+  {
+    "file": "20251108-234509-nextjs-link-button-asChild-pattern.md",
+    "title": "Next.js Link with Button asChild Pattern for Client-Side Navigation",
+    "tags": []
+  },
+  {
+    "file": "20251109-113443-constitution-checksum-regeneration-instability.md",
+    "title": "Constitution Checksum Regeneration Instability",
+    "tags": [
+      "constitution",
+      "checksum",
+      "ci",
+      "command-index",
+      "doctor",
+      "validation",
+      "issue-322",
+      "non-deterministic",
+      "build-order"
+    ]
+  },
+  {
+    "file": "20251109-134641-pre-push-hook-timeout-optimization.md",
+    "title": "Pre-Push Hook Timeout Optimization",
+    "tags": [
+      "lefthook",
+      "pre-push",
+      "timeout",
+      "performance",
+      "git-hooks",
+      "optimization",
+      "dx",
+      "developer-experience"
+    ]
+  },
+  {
+    "file": "20251109-151935-bash-file-paths-with-spaces.md",
+    "title": "Bash loops with file paths containing spaces",
+    "tags": [
+      "bash",
+      "ci",
+      "workflows",
+      "shell-scripts",
+      "validation"
+    ],
+    "date": "2025-11-09",
+    "category": "bash"
+  },
+  {
+    "file": "20251109-161522-mvp-scope-creep-detection.md",
+    "title": "Micro-Lesson: MVP Scope Creep Detection and Simplification",
+    "tags": []
+  },
+  {
+    "file": "20251109-223017-pr-review-iteration-pattern.md",
+    "title": "PR Review Iteration Pattern for Delegated Work",
+    "tags": [
+      "pr-review",
+      "code-quality",
+      "git-workflow",
+      "issue-351",
+      "claude-web",
+      "delegation"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "20251109-223018-accessibility-first-examples.md",
+    "title": "Accessibility-First Example Files Teach Best Practices",
+    "tags": [
+      "accessibility",
+      "examples",
+      "documentation",
+      "aria",
+      "semantic-html",
+      "wcag",
+      "education"
+    ],
+    "usedBy": 0,
+    "severity": "high",
+    "category": "accessibility"
+  },
+  {
+    "file": "20251109-223019-form-state-examples.md",
+    "title": "Form Examples Should Demonstrate Complete State Handling",
+    "tags": [
+      "forms",
+      "react",
+      "state-management",
+      "examples",
+      "education",
+      "select",
+      "best-practices"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "20251110-120000-git-diff-index-untracked-files.md",
+    "title": "git diff-index Doesn't Detect Untracked Files",
+    "tags": []
+  },
+  {
+    "file": "20251110-120100-grep-perl-regex-portability.md",
+    "title": "grep -P Not Portable Across Systems",
+    "tags": []
+  },
+  {
+    "file": "20251110-120200-shfmt-pipe-operator-style.md",
+    "title": "shfmt Enforces Spaces Around Pipe Operators in Case Patterns",
+    "tags": []
+  },
+  {
+    "file": "259-structured-prompt-validation.md",
+    "title": "Structured Prompt Templates - Phase 3 Validation Results",
+    "tags": [
+      "ai",
+      "sub-agents",
+      "prompt-engineering",
+      "quality",
+      "validation"
+    ],
+    "category": "prompt-engineering",
+    "date": "2025-11-03"
+  },
+  {
+    "file": "adr-reference-pattern-matching.md",
+    "title": "ADR Reference Pattern Matching with Slugs",
+    "tags": []
+  },
+  {
+    "file": "adr-script-documentation.md",
+    "title": "ADR for Script-Heavy Features Must Document Runtime Context",
+    "tags": [
+      "adr",
+      "documentation",
+      "scripts",
+      "governance",
+      "ci-cd",
+      "traceability"
+    ],
+    "usedBy": 1,
+    "severity": "normal"
+  },
+  {
+    "file": "adr-template-status.md",
+    "title": "ADR Templates Should Use \"Proposed\" Status",
+    "tags": [
+      "adr",
+      "templates",
+      "status",
+      "documentation",
+      "governance"
+    ],
+    "usedBy": 0,
+    "severity": "low"
+  },
+  {
+    "file": "awk-field-splitting-spaces.md",
+    "title": "Handle Filenames with Spaces in AWK Field Processing",
+    "tags": [
+      "awk",
+      "shell",
+      "filenames",
+      "spaces",
+      "field-splitting",
+      "parsing",
+      "coderabbit"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "ci-dependency-availability.md",
+    "title": "CI Dependency Availability Guards",
+    "tags": []
+  },
+  {
+    "file": "ci-tsx-availability.md",
+    "title": "Ensure tsx Binary Availability in CI Workflows",
+    "tags": []
+  },
+  {
+    "file": "command-index-sync-after-changes.md",
+    "title": "Command Index Must Be Regenerated After Modifying Command Frontmatter",
+    "tags": [
+      "commands",
+      "index",
+      "frontmatter",
+      "yaml",
+      "ci",
+      "routing-contract",
+      "generated-files"
+    ],
+    "usedBy": 1,
+    "severity": "normal"
+  },
+  {
+    "file": "component-packaging-api-patterns.md",
+    "title": "Component Packaging and API Patterns",
+    "tags": [
+      "packaging",
+      "forwardref",
+      "typescript",
+      "radix-ui",
+      "npm",
+      "monorepo"
+    ],
+    "category": "react",
+    "date": "2025-01-29"
+  },
+  {
+    "file": "configurable-scripts.md",
+    "title": "Make Scripts Configurable via Environment Variables",
+    "tags": [
+      "scripts",
+      "configuration",
+      "environment",
+      "maintainability",
+      "coderabbit"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "consistent-path-resolution.md",
+    "title": "Use Consistent Path Resolution Utilities Across Scripts",
+    "tags": [
+      "paths",
+      "consistency",
+      "utilities",
+      "maintainability",
+      "scripts",
+      "coderabbit"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "constitution-checksum-merge-invalidation.md",
+    "title": "Constitution Checksum Invalidates After Merging Main",
+    "tags": [
+      "constitution",
+      "checksum",
+      "merge",
+      "git",
+      "ci",
+      "doctor",
+      "wiki",
+      "generated-artifacts"
+    ],
+    "usedBy": 1,
+    "severity": "high"
+  },
+  {
+    "file": "cross-platform-entrypoint-detection.md",
+    "title": "Cross-Platform ESM Entrypoint Detection",
+    "tags": []
+  },
+  {
+    "file": "document-required-optional-parameters.md",
+    "title": "Explicitly Document Required vs Optional Parameters",
+    "tags": [
+      "api",
+      "parameters",
+      "documentation",
+      "clarity",
+      "prompts",
+      "json-schema"
+    ],
+    "category": "api-design",
+    "date": "2025-11-03"
+  },
+  {
+    "file": "duplicate-config-entries.md",
+    "title": "Prevent Duplicate Configuration Entries",
+    "tags": [
+      "configuration",
+      "gitignore",
+      "duplicates",
+      "maintenance",
+      "coderabbit"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "eslint-semantic-rules-over-paid-tools.md",
+    "title": "Free Static Analysis Tools Can Replace Expensive Code Review Services",
+    "tags": [
+      "eslint",
+      "typescript",
+      "code-quality",
+      "cost-optimization",
+      "developer-experience"
+    ],
+    "usedBy": 1,
+    "severity": "normal"
+  },
+  {
+    "file": "esm-entrypoint-detection.md",
+    "title": "Use ESM-Safe Entrypoint Detection",
+    "tags": []
+  },
+  {
+    "file": "esm-require-compatibility.md",
+    "title": "Avoid require() in ESM-Compatible Code",
+    "tags": [
+      "esm",
+      "modules",
+      "compatibility",
+      "imports",
+      "typescript",
+      "coderabbit"
+    ],
+    "usedBy": 0,
+    "severity": "high"
+  },
+  {
+    "file": "external-service-misconfiguration.md",
+    "title": "External Service Misconfiguration",
+    "tags": [],
+    "category": "operational"
+  },
+  {
+    "file": "framer-motion-function-variants-preservation.md",
+    "title": "Preserve Function-Based Variants in Framer Motion Transformations",
+    "tags": [
+      "framer-motion",
+      "animations",
+      "variants",
+      "function-types",
+      "type-checking",
+      "javascript",
+      "transformation",
+      "accessibility"
+    ],
+    "usedBy": 1,
+    "severity": "high"
+  },
+  {
+    "file": "framer-motion-variants-static-objects.md",
+    "title": "Framer Motion Variants Are Static - Document Adaptation Requirements",
+    "tags": [
+      "framer-motion",
+      "animations",
+      "accessibility",
+      "prefers-reduced-motion",
+      "documentation",
+      "jsdoc",
+      "wcag",
+      "motion-sensitivity"
+    ],
+    "usedBy": 1,
+    "severity": "high"
+  },
+  {
+    "file": "gh-api-jq-piping.md",
+    "title": "Use External jq with gh api Commands",
+    "tags": []
+  },
+  {
+    "file": "gh-cli-flag-compatibility.md",
+    "title": "GitHub CLI Commands Don't All Support --json Flag",
+    "tags": [],
+    "usedBy": 1,
+    "severity": "normal"
+  },
+  {
+    "file": "git-fork-safe-remote-operations.md",
+    "title": "Git Fork-Safe Remote Operations",
+    "tags": []
+  },
+  {
+    "file": "git-squash-merge-detection.md",
+    "title": "Git Squash Merge Detection",
+    "tags": []
+  },
+  {
+    "file": "git-tracked-files-check.md",
+    "title": "Check Git-Tracked Files Instead of File Presence",
+    "tags": []
+  },
+  {
+    "file": "github-actions-pnpm-setup-reliability.md",
+    "title": "Reliable pnpm Setup in GitHub Actions",
+    "tags": [
+      "github-actions",
+      "pnpm",
+      "ci-cd",
+      "package-manager",
+      "reliability",
+      "setup"
+    ],
+    "usedBy": 1,
+    "severity": "medium",
+    "category": "git"
+  },
+  {
+    "file": "github-actions-pr-body-escaping.md",
+    "title": "GitHub Actions PR Body Must Be Escaped in Bash Conditionals",
+    "tags": [
+      "github-actions",
+      "bash",
+      "escaping",
+      "pr-body",
+      "workflow",
+      "syntax-error",
+      "shell-injection"
+    ],
+    "usedBy": 0,
+    "severity": "high",
+    "category": "git"
+  },
+  {
+    "file": "github-event-payload-over-cli.md",
+    "title": "Prefer GitHub Event Payload Over CLI for Reliability",
+    "tags": []
+  },
+  {
+    "file": "github-step-summary-usage.md",
+    "title": "GitHub Step Summary for Enhanced CI UX",
+    "tags": []
+  },
+  {
+    "file": "hardcoded-paths.md",
+    "title": "Avoid Hardcoded Paths in Scripts",
+    "tags": [
+      "scripts",
+      "paths",
+      "resilience",
+      "coderabbit"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "icon-buttons-aria-label.md",
+    "title": "Icon-Only Buttons Must Have aria-label",
+    "tags": [
+      "accessibility",
+      "aria-label",
+      "buttons",
+      "icons",
+      "screen-readers",
+      "wcag",
+      "a11y",
+      "semantic-html"
+    ],
+    "usedBy": 1,
+    "severity": "high",
+    "category": "accessibility"
+  },
+  {
+    "file": "interface-method-typing-precision.md",
+    "title": "Interface Method Typing Precision",
+    "tags": []
+  },
+  {
+    "file": "javascript-typeof-null-quirk.md",
+    "title": "JavaScript typeof null Returns 'object'",
+    "tags": [
+      "javascript",
+      "typeof",
+      "null",
+      "type-checking",
+      "defensive-programming",
+      "edge-cases",
+      "runtime-validation"
+    ],
+    "usedBy": 1,
+    "severity": "normal"
+  },
+  {
+    "file": "llm-documentation-navigation-patterns.md",
+    "title": "LLM Documentation Must Have Multiple Discovery Paths",
+    "tags": [
+      "documentation",
+      "navigation",
+      "llm-agents",
+      "discoverability",
+      "information-architecture"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "log-sanitization-pr-security.md",
+    "title": "Log Sanitization for Security in PR Bodies",
+    "tags": [
+      "security",
+      "pr-automation",
+      "sanitization",
+      "secrets",
+      "jwt",
+      "tokens"
+    ],
+    "usedBy": 1,
+    "severity": "high",
+    "category": "security"
+  },
+  {
+    "file": "markdown-code-blocks.md",
+    "title": "Always Specify Language Identifiers in Markdown Code Blocks",
+    "tags": [
+      "markdown",
+      "documentation",
+      "linting",
+      "accessibility",
+      "best-practices"
+    ],
+    "category": "documentation",
+    "date": "2025-11-03"
+  },
+  {
+    "file": "markdown-link-anchors.md",
+    "title": "Handle Anchors and Query Params in Markdown Link Checking",
+    "tags": []
+  },
+  {
+    "file": "markdown-link-over-inline-code.md",
+    "title": "Prefer Clickable Links Over Inline Code for Existing Paths",
+    "tags": []
+  },
+  {
+    "file": "monorepo-package-exports-dual-location.md",
+    "title": "Monorepo Packages Need Exports in Both src/index.ts and Root index.ts",
+    "tags": [
+      "monorepo",
+      "typescript",
+      "exports",
+      "package-resolution",
+      "module-resolution",
+      "turborepo",
+      "pnpm"
+    ],
+    "usedBy": 1,
+    "severity": "normal",
+    "category": "monorepo"
+  },
+  {
+    "file": "nested-relative-paths.md",
+    "title": "Fix Relative Paths When Moving Files to Nested Directories",
+    "tags": [
+      "documentation",
+      "relative-paths",
+      "file-organization",
+      "links",
+      "coderabbit"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "nextjs-client-directive-for-hooks.md",
+    "title": "Next.js App Router Requires 'use client' for React Hooks",
+    "tags": [
+      "nextjs",
+      "react",
+      "hooks",
+      "use-client",
+      "app-router",
+      "build-errors",
+      "server-components"
+    ],
+    "usedBy": 1,
+    "severity": "high",
+    "category": "react"
+  },
+  {
+    "file": "nextjs-turbopack-css-cache-invalidation.md",
+    "title": "Severity: high - Prevents hours of debugging configuration when the real issue is stale cache",
+    "tags": [
+      "nextjs",
+      "turbopack",
+      "tailwind",
+      "css",
+      "caching",
+      "dev-server",
+      "debugging",
+      "build-tools"
+    ],
+    "usedBy": 0,
+    "severity": "high",
+    "category": "react"
+  },
+  {
+    "file": "pnpm-lock-merge-conflicts.md",
+    "title": "pnpm-lock.yaml Merge Conflicts: Always Accept Main Branch Version",
+    "tags": [
+      "git",
+      "merge",
+      "pnpm",
+      "lockfile",
+      "dependencies",
+      "conflict-resolution"
+    ],
+    "usedBy": 1,
+    "severity": "normal",
+    "category": "git"
+  },
+  {
+    "file": "pnpm-version-mismatch-workflows.md",
+    "title": "Micro Lesson: pnpm Version Mismatch in GitHub Workflows",
+    "tags": []
+  },
+  {
+    "file": "polymorphic-component-ref-typing.md",
+    "title": "Polymorphic Component Ref Typing",
+    "tags": [
+      "react",
+      "typescript",
+      "forwardRef",
+      "polymorphic-components",
+      "ref-typing",
+      "type-safety"
+    ],
+    "usedBy": 1,
+    "severity": "normal",
+    "category": "react"
+  },
+  {
+    "file": "postgres-function-security-patterns.md",
+    "title": "PostgreSQL Function Security Patterns",
+    "tags": []
+  },
+  {
+    "file": "postgrest-health-check-syntax.md",
+    "title": "PostgREST Health Check Syntax",
+    "tags": []
+  },
+  {
+    "file": "prompt-header-standards.md",
+    "title": "Follow Standard Prompt Header Format",
+    "tags": []
+  },
+  {
+    "file": "react-component-quality-patterns.md",
+    "title": "React Component Quality Patterns",
+    "tags": [
+      "accessibility",
+      "typescript",
+      "api-design",
+      "components"
+    ],
+    "category": "react",
+    "date": "2025-01-29"
+  },
+  {
+    "file": "react-void-elements-no-children.md",
+    "title": "React Void Elements Cannot Have Children",
+    "tags": [
+      "react",
+      "void-elements",
+      "html",
+      "component-playground",
+      "dynamic-rendering"
+    ],
+    "usedBy": 0,
+    "severity": "normal",
+    "category": "react"
+  },
+  {
+    "file": "recursive-file-search-patterns.md",
+    "title": "Recursive File Search in Node.js",
+    "tags": []
+  },
+  {
+    "file": "regex-word-boundaries-grep.md",
+    "title": "Regex Word Boundaries and Deduplication in grep",
+    "tags": []
+  },
+  {
+    "file": "release-script-robustness.md",
+    "title": "Make Release Scripts Robust to Empty Commits",
+    "tags": []
+  },
+  {
+    "file": "rls-policy-sql-syntax.md",
+    "title": "RLS Policy SQL Syntax",
+    "tags": []
+  },
+  {
+    "file": "robust-pr-diff-base.md",
+    "title": "Use Robust PR Base Detection for Git Diffs",
+    "tags": []
+  },
+  {
+    "file": "robust-yaml-field-matching.md",
+    "title": "Robust YAML Field Matching with grep",
+    "tags": []
+  },
+  {
+    "file": "safe-file-writing-patterns.md",
+    "title": "Safe File Writing Patterns",
+    "tags": []
+  },
+  {
+    "file": "shadcn-cli-requires-full-setup.md",
+    "title": "shadcn CLI Requires Full Tailwind Setup in Package",
+    "tags": [
+      "shadcn",
+      "cli",
+      "tailwind",
+      "setup",
+      "components",
+      "ui-library",
+      "configuration"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "shared-enum-constants-dry.md",
+    "title": "Shared Enum Constants (DRY Principle)",
+    "tags": []
+  },
+  {
+    "file": "shell-injection-prevention-execfilesync.md",
+    "title": "Shell Injection Prevention with execFileSync",
+    "tags": [
+      "security",
+      "shell-injection",
+      "execfilesync",
+      "command-execution",
+      "user-input"
+    ],
+    "usedBy": 1,
+    "severity": "high",
+    "category": "security"
+  },
+  {
+    "file": "spacing-rhythm-consistency.md",
+    "title": "Spacing Rhythm Consistency",
+    "tags": []
+  },
+  {
+    "file": "sql-identifier-validation.md",
+    "title": "SQL Identifier Validation",
+    "tags": []
+  },
+  {
+    "file": "stateful-class-analysis-reset.md",
+    "title": "Reset Stateful Class Analysis to Prevent Double-Counting",
+    "tags": []
+  },
+  {
+    "file": "supabase-anon-rls-policies.md",
+    "title": "Supabase Anonymous RLS Policies",
+    "tags": []
+  },
+  {
+    "file": "supabase-rls-testing-jwt-sessions.md",
+    "title": "Severity: high - Prevents RLS tests from silently passing when they should fail",
+    "tags": [
+      "supabase",
+      "rls",
+      "testing",
+      "jwt",
+      "auth",
+      "row-level-security",
+      "test-infrastructure",
+      "sessions"
+    ],
+    "usedBy": 0,
+    "severity": "high",
+    "category": "database"
+  },
+  {
+    "file": "svg-accessibility-aria-hidden.md",
+    "title": "SVG Accessibility: Use aria-hidden NOT title for Decorative Icons",
+    "tags": [
+      "svg",
+      "accessibility",
+      "aria-hidden",
+      "a11y",
+      "screen-reader",
+      "decorative-icons"
+    ],
+    "usedBy": 0,
+    "severity": "normal"
+  },
+  {
+    "file": "test-isolation-hooks.md",
+    "title": "Test Isolation with Suite Hooks",
+    "tags": [
+      "testing",
+      "mocks",
+      "isolation",
+      "vitest",
+      "ci",
+      "hooks"
+    ],
+    "usedBy": 0,
+    "severity": "high # common failure pattern",
+    "category": "testing"
+  },
+  {
+    "file": "test-runner-exit-codes.md",
+    "title": "Ensure Test Runners Exit Non-Zero on Failures",
+    "tags": [
+      "testing",
+      "ci",
+      "exit-codes",
+      "test-runners",
+      "failure-detection",
+      "coderabbit"
+    ],
+    "usedBy": 0,
+    "severity": "high",
+    "category": "testing"
+  },
+  {
+    "file": "typescript-event-handler-precise-types.md",
+    "title": "Use Precise Types for Event Handlers Not Unions",
+    "tags": [
+      "typescript",
+      "event-handlers",
+      "type-safety",
+      "api-contracts",
+      "web-apis",
+      "media-queries",
+      "type-precision"
+    ],
+    "usedBy": 1,
+    "severity": "normal",
+    "category": "typescript"
+  },
+  {
+    "file": "yaml-validation-leniency.md",
+    "title": "Be Lenient with YAML Validation and Coerce Types",
+    "tags": []
+  }
+]

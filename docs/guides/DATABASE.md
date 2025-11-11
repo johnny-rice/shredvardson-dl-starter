@@ -108,6 +108,7 @@ pnpm db:status
 **3. Access Studio:**
 
 Open [http://localhost:54323](http://localhost:54323) to access Supabase Studio for:
+
 - Table editor
 - SQL editor
 - Authentication management

@@ -1,0 +1,507 @@
+================================================================================
+DELEGATION PROMPT #1: Issue #357
+================================================================================
+Title: Add comprehensive test coverage for Git Context package
+Repository: Shredvardson/dl-starter
+Issue: https://github.com/Shredvardson/dl-starter/issues/357
+
+Task:
+Add comprehensive test coverage for the **security-critical** `@shared/git-context` package, which currently has **zero test coverage** despite handling shell command execution and git operations.
+
+**Priority:** 🔴 **HIGH** - This package executes shell commands and sanitizes inputs for AI context injection.
+
+## Context
+
+- **Package:** `packages/git-context/`
+- **Current Coverage:** 0%
+- **Target Coverage:** 80%+
+- **Lines of Code:** ~700 lines across 8 modules
+- **Risk Level:** HIGH (shell execution, input sanitization)
+
+## Tasks
+
+### 1. Test `git-commands.ts` (Shell Execution Safety)
+- [ ] Test all exported functions: `getGitStatus`, `getGitDiff`, `getGitLog`, `getGitBranches`, `getCurrentBranch`, `getGitRoot`, `isGitRepository`, `getMainBranch`
+- [ ] Mock `execa` to prevent actual shell execution
+- [ ] Test error handling for failed git commands
+- [ ] Test timeout handling
+- [ ] Verify command arguments are properly escaped
+
+### 2. Test `sanitization.ts` ⚠️ **CRITICAL - SECURITY**
+- [ ] Test `sanitizeGitCommand()` against command injection attempts:
+  - Shell metacharacters: `;`, `|`, `&&`, `||`, `$()`, `` ` ``
+  - Path traversal: `../`, `../../`
+  - Null bytes, newlines
+- [ ] Test `sanitizeBranchName()` with invalid characters
+- [ ] Test `sanitizeCommitMessage()` with special characters
+- [ ] Verify sanitization doesn't break valid inputs
+
+### 3. Test Parsing Logic
+- [ ] Test `git-diff.ts`: `parseDiffOutput`, `getDiffForFile`, `getDiffSummary`
+- [ ] Test `git-log.ts`: `parseGitLog`, `getRecentCommits`, `getCommitsBetween`
+- [ ] Test `git-status.ts`: `parseGitStatus`, `getStatusSummary`, `hasChanges`
+- [ ] Test edge cases: empty output, malformed git output, large outputs
+
+### 4. Test `types.ts` (Zod Schema Validation)
+- [ ] Test all Zod schemas with valid inputs:
+  - `GitStatusSchema`, `GitDiffSchema`, `GitLogSchema`, `GitBranchSchema`, `GitCommitSchema`
+- [ ] Test schemas with invalid inputs (wrong types, missing fields)
+- [ ] Test schema refinements and transformations
+
+### 5. Test `utils.ts` (Helper Functions)
+- [ ] Test `formatDate`, `parseDate`, `isValidSha`, `shortSha`
+- [ ] Test edge cases: invalid dates, malformed SHAs
+- [ ] Test performance with large inputs
+
+### 6. Integration Tests
+- [ ] Create temporary git repos for integration testing
+- [ ] Test real git operations in isolated environment
+- [ ] Verify context extraction produces correct output
+- [ ] Test cleanup of temporary repos
+
+## Acceptance Criteria
+
+- [ ] All 8 modules have corresponding `.test.ts` files
+- [ ] Test coverage ≥80% for the entire package
+- [ ] All security-critical sanitization functions have 100% coverage
+- [ ] Tests use proper mocking (no actual shell execution in unit tests)
+- [ ] Integration tests properly clean up temporary resources
+- [ ] All tests pass in CI/CD pipeline
+
+## Testing Framework
+
+- **Framework:** Vitest
+- **Mocking:** Use `vi.mock()` for `execa`
+- **Assertions:** Standard Vitest assertions
+- **File naming:** `{module-name}.test.ts`
+
+## Reference Files
+
+- Existing test pattern: `packages/ui/src/components/ui/button.test.tsx`
+- Package structure: `packages/git-context/src/`
+- Related: Recently merged Skills tests in `scripts/skills/__tests__/*.bats`
+
+💡 **Tip:** Start with `sanitization.ts` as it's the most security-critical module.
+
+================================================================================
+DELEGATION PROMPT #2: Issue #358
+================================================================================
+Title: Add test coverage for package utilities
+Repository: Shredvardson/dl-starter
+Issue: https://github.com/Shredvardson/dl-starter/issues/358
+
+Task:
+Add comprehensive test coverage for shared utility packages that currently have **zero test coverage**.
+
+## Context
+
+- **Packages:** `@shared/utils`, `@shared/db`
+- **Current Coverage:** 0%
+- **Target Coverage:** 80%+
+- **Priority:** MEDIUM
+
+## Tasks
+
+### 1. Test `packages/utils/src/date.ts`
+
+**Exported Functions:**
+- `formatDate()` - Date formatting
+- `parseDate()` - Date parsing
+- `isValidDate()` - Date validation
+- `getRelativeTime()` - Human-readable relative time
+- `formatDuration()` - Duration formatting
+
+**Test Coverage:**
+- [ ] Test `formatDate()` with various date formats
+- [ ] Test `parseDate()` with valid/invalid inputs
+- [ ] Test `isValidDate()` with edge cases (null, undefined, invalid dates)
+- [ ] Test `getRelativeTime()` with past/future dates
+- [ ] Test `formatDuration()` with various durations (seconds, minutes, hours, days)
+- [ ] Test timezone handling
+- [ ] Test edge cases: leap years, DST transitions, epoch time
+
+### 2. Test `packages/db/src/client.ts`
+
+**Supabase Client Initialization:**
+- `createClient()` - Browser client
+- `createServerClient()` - Server-side client (SSR)
+
+**Test Coverage:**
+- [ ] Test browser client creation with valid env vars
+- [ ] Test server client creation with valid env vars
+- [ ] Test error handling for missing `NEXT_PUBLIC_SUPABASE_URL`
+- [ ] Test error handling for missing `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- [ ] Test client singleton behavior (if applicable)
+- [ ] Mock Supabase SDK for unit tests
+- [ ] Verify client configuration (auth, realtime settings)
+
+### 3. Test `packages/db/src/types.ts`
+
+**Database Type Definitions:**
+- Type imports from Supabase generated types
+- Type safety validation
+
+**Test Coverage:**
+- [ ] Test that generated types exist and are importable
+- [ ] Test type compatibility with Supabase client methods
+- [ ] Create test fixtures for common database operations
+- [ ] Verify type narrowing for RLS policies (if applicable)
+
+## Acceptance Criteria
+
+- [ ] All 3 modules have corresponding `.test.ts` files
+- [ ] Test coverage ≥80% for each module
+- [ ] Tests properly mock external dependencies (Supabase SDK, Date APIs)
+- [ ] All tests pass in CI/CD pipeline
+- [ ] Tests follow project conventions (match existing test patterns)
+
+## Testing Framework
+
+- **Framework:** Vitest
+- **Mocking:** Use `vi.mock()` for Supabase SDK, `vi.useFakeTimers()` for dates
+- **File naming:** `{module-name}.test.ts`
+
+## Reference Files
+
+- Existing test patterns: `packages/ui/src/lib/animations.test.ts`, `packages/ui/src/lib/use-reduced-motion.test.ts`
+- Package structure: `packages/utils/src/`, `packages/db/src/`
+
+💡 **Tip:** Start with `date.ts` as it has no external dependencies and is straightforward to test.
+
+================================================================================
+DELEGATION PROMPT #3: Issue #359
+================================================================================
+Title: Expand E2E test coverage for authentication flows
+Repository: Shredvardson/dl-starter
+Issue: https://github.com/Shredvardson/dl-starter/issues/359
+
+Task:
+Expand end-to-end test coverage for the complete authentication module implemented in PR #321. While basic auth pages exist, comprehensive E2E testing across all flows is needed.
+
+## Context
+
+- **Auth Module:** Implemented in PR #321 (merged Nov 8)
+- **Auth Pages:**
+  - `apps/web/src/app/(auth)/login/page.tsx`
+  - `apps/web/src/app/(auth)/signup/page.tsx`
+  - `apps/web/src/app/(auth)/reset-password/page.tsx`
+  - `apps/web/src/app/(auth)/update-password/page.tsx`
+  - `apps/web/src/app/(protected)/dashboard/page.tsx`
+- **Existing E2E:** `apps/web/tests/e2e/mobile-responsive.spec.ts` (basic coverage)
+- **Testing Framework:** Playwright
+
+## Tasks
+
+### 1. Login Flow Tests (`apps/web/tests/e2e/auth-login.spec.ts`)
+
+- [ ] **Successful login:** User enters valid credentials, form submits, user redirected to dashboard, session persists across page reload
+- [ ] **Failed login:** Invalid email format shows validation error, wrong password shows error message, non-existent user shows error message, error messages are accessible (aria-live)
+- [ ] **Form validation:** Email field requires valid email, password field requires non-empty value, submit button disabled when form invalid, loading state shown during submission
+
+### 2. Signup Flow Tests (`apps/web/tests/e2e/auth-signup.spec.ts`)
+
+- [ ] **Successful signup:** User enters valid email/password, form submits, confirmation email sent (check UI message), user redirected to appropriate page
+- [ ] **Failed signup:** Duplicate email shows error, weak password rejected, password confirmation mismatch, invalid email format rejected
+- [ ] **Form validation:** All required fields validated, password strength indicator (if implemented), terms of service checkbox (if required), real-time validation feedback
+
+### 3. Password Reset Flow Tests (`apps/web/tests/e2e/auth-password-reset.spec.ts`)
+
+- [ ] **Request password reset:** User enters email, form submits, success message shown, reset link sent
+- [ ] **Complete password reset:** User clicks reset link (simulate with token), user enters new password, password updated successfully, user redirected to login, old password no longer works, new password works
+- [ ] **Invalid reset tokens:** Expired token shows error, invalid token shows error, already-used token shows error
+
+### 4. Update Password Flow Tests (`apps/web/tests/e2e/auth-update-password.spec.ts`)
+
+- [ ] **Successful password update:** User must be logged in, enters current password, enters new password, confirms new password, password updated successfully
+- [ ] **Failed password update:** Wrong current password rejected, new password same as old rejected (if enforced), password mismatch rejected, weak new password rejected
+
+### 5. Protected Routes Tests (`apps/web/tests/e2e/auth-protected-routes.spec.ts`)
+
+- [ ] **Dashboard access:** Unauthenticated user redirected to login, redirect includes return URL, after login user redirected back to dashboard
+- [ ] **Session persistence:** User stays logged in after page reload, user stays logged in after browser close/reopen (if "remember me"), session expires after timeout (if implemented)
+- [ ] **Logout:** User can log out, after logout protected routes inaccessible, after logout user redirected to login
+
+### 6. Mobile Responsive Auth Tests (Expand `mobile-responsive.spec.ts`)
+
+- [ ] Test all auth flows on mobile viewport (375px)
+- [ ] Test on tablet viewport (768px)
+- [ ] Touch interactions work correctly
+- [ ] Forms are usable on small screens
+- [ ] Error messages visible on mobile
+
+### 7. Accessibility Tests (`apps/web/tests/e2e/auth-accessibility.spec.ts`)
+
+- [ ] **Keyboard navigation:** Can tab through all form fields, can submit forms with Enter key, focus indicators visible, focus order logical
+- [ ] **Screen reader support:** Form labels properly associated, error messages announced (aria-live), loading states announced, success messages announced
+- [ ] **WCAG compliance:** Color contrast sufficient, error messages not color-only, forms have proper landmark roles, headings properly structured
+
+## Acceptance Criteria
+
+- [ ] All auth flows have comprehensive E2E coverage
+- [ ] Tests cover happy paths, error cases, and edge cases
+- [ ] Tests are reliable (no flaky tests)
+- [ ] Tests run in CI/CD pipeline
+- [ ] Mobile and accessibility tests included
+- [ ] All tests pass consistently
+
+💡 **Tip:** Start with the login flow as it's the foundation for testing protected routes.
+
+================================================================================
+DELEGATION PROMPT #4: Issue #360
+================================================================================
+Title: Create comprehensive developer documentation suite
+Repository: Shredvardson/dl-starter
+Issue: https://github.com/Shredvardson/dl-starter/issues/360
+
+Task:
+Create comprehensive developer documentation to improve onboarding, maintainability, and LLM-friendliness of the codebase.
+
+**Priority:** HIGH - Documentation is critical for LLM-friendly architecture (core MVP goal)
+
+## Context
+
+- **Current State:** Minimal documentation exists
+- **Existing Docs:** `docs/DEPLOYMENT.md`, `docs/PRD.md`, basic READMEs
+- **Missing:** Testing guides, architecture docs, database guides, Skills documentation
+- **Target Audience:** Human developers + AI agents (Claude, etc.)
+
+## Tasks
+
+### 1. Testing Guide (`docs/guides/TESTING.md`)
+
+- [ ] Testing philosophy and goals (70% coverage target)
+- [ ] Testing stack overview (Vitest, Playwright, BATS)
+- [ ] Unit testing patterns and conventions
+- [ ] Component testing guide
+- [ ] E2E testing guide
+- [ ] Skills testing with BATS
+- [ ] Running tests locally
+- [ ] CI/CD test pipeline
+- [ ] Test coverage guidelines
+- [ ] Common testing pitfalls and solutions
+
+### 2. Database Guide (`docs/guides/DATABASE.md`)
+
+- [ ] Supabase setup and configuration
+- [ ] Database schema overview
+- [ ] Migration workflow
+- [ ] Row Level Security (RLS) patterns
+- [ ] Seeding data
+- [ ] Query patterns
+- [ ] Performance optimization
+- [ ] Troubleshooting common issues
+
+### 3. Skills System Documentation (`docs/guides/SKILLS.md`)
+
+- [ ] What are Skills?
+- [ ] Skills architecture
+- [ ] Using existing Skills
+- [ ] Creating new Skills
+- [ ] Testing Skills
+- [ ] Skills in CI/CD
+- [ ] Integration with Claude Code
+
+### 4. Git Context Package API (`packages/git-context/README.md`)
+
+- [ ] Package overview
+- [ ] Installation and setup
+- [ ] Core API
+- [ ] API reference for all exported functions
+- [ ] Security considerations
+- [ ] Usage examples
+- [ ] Performance optimization tips
+- [ ] Troubleshooting
+
+### 5. Architecture Guide (`docs/guides/ARCHITECTURE.md`)
+
+- [ ] Monorepo structure
+- [ ] Package dependency graph
+- [ ] Application architecture
+- [ ] Shared packages
+- [ ] Build and deployment
+- [ ] Development workflow
+- [ ] Design system
+- [ ] LLM-friendly architecture patterns
+
+## Acceptance Criteria
+
+- [ ] All 5 documentation files created
+- [ ] Documentation is clear, concise, and actionable
+- [ ] Code examples are correct and tested
+- [ ] Links between docs are functional
+- [ ] Markdown formatting follows project standards
+- [ ] Diagrams included where helpful (Mermaid syntax)
+- [ ] Documentation is LLM-friendly (clear structure, good headings, code blocks)
+
+## Documentation Standards
+
+- **Markdown format:** GitHub-flavored markdown
+- **Code blocks:** Use language tags (```typescript, ```bash, ```sql)
+- **Headings:** Use semantic heading levels (h1 → h2 → h3)
+- **Links:** Use relative paths for internal links
+- **Examples:** Include realistic, working examples
+
+💡 **Tip:** Start with TESTING.md and DATABASE.md as they have the most immediate practical value.
+
+================================================================================
+DELEGATION PROMPT #5: Issue #361
+================================================================================
+Title: Synthesize 123 micro-lessons into actionable pattern documentation
+Repository: Shredvardson/dl-starter
+Issue: https://github.com/Shredvardson/dl-starter/issues/361
+
+Task:
+Extract and synthesize knowledge from **123 micro-lessons** accumulated in `docs/micro-lessons/` into structured, actionable pattern guides. This transforms scattered learnings into reusable, searchable documentation for both humans and LLMs.
+
+**Priority:** ⭐ HIGH - Compounds value over time, improves LLM code generation quality
+
+## Context
+
+- **Micro-lessons:** 123 lessons in `docs/micro-lessons/*.md`
+- **Learning System:** Scripts exist for indexing (`pnpm learn:index`) and archiving
+- **Current State:** Lessons are isolated, not synthesized into patterns
+- **Goal:** Create pattern guides that promote recurring lessons (≥2× occurrence) to "Recipes"
+
+## Tasks
+
+### Phase 1: Analysis & Categorization
+
+- [ ] **Analyze all 123 micro-lessons:** Read each lesson and extract theme/category, core pattern or principle, tags and related issues, frequency of occurrence
+- [ ] **Group lessons by theme:** Bash scripting, git operations, testing, CI/CD, security, React/Next.js, TypeScript, database/Supabase, accessibility, performance, documentation, monorepo/tooling
+- [ ] **Identify recurring patterns:** Lessons that appear 2+ times → promote to "Recipe", lessons with "high blast radius" → promote to "Recipe"
+
+### Phase 2: Pattern Guide Creation
+
+Create comprehensive pattern guides in `docs/patterns/`:
+
+1. **`bash-safety-patterns.md`**: Safe command execution, input validation, cross-platform compatibility, error handling, logging, ShellCheck compliance, path handling, command injection prevention
+
+2. **`git-workflow-patterns.md`**: Safe git operations, branch management, PR workflow, git hooks (Lefthook), remote operations safety, merge strategies, GitHub CLI usage
+
+3. **`testing-patterns.md`**: Test isolation strategies, mocking patterns (Vitest, Playwright), E2E best practices, RLS policy testing, test data management, CI/CD test optimization, coverage measurement, flaky test prevention
+
+4. **`security-patterns.md`**: Input validation, SQL injection prevention, command injection prevention, RLS policy templates, secrets management, authentication patterns, authorization strategies, security testing
+
+5. **`ci-cd-patterns.md`**: GitHub Actions best practices, workflow optimization, cache strategies, matrix testing, artifact management, PR automation, release workflows, monorepo CI patterns
+
+6. **`react-patterns.md`**: Next.js App Router patterns, server vs. client components, React hooks, component composition, TypeScript type patterns, accessibility patterns, performance optimization, animation patterns (Framer Motion)
+
+7. **`typescript-patterns.md`**: Strict typing strategies, generic patterns, type narrowing, utility types, discriminated unions, type guards, avoiding `any`
+
+8. **`database-patterns.md`**: Supabase client patterns, RLS policy templates, migration strategies, query optimization, type generation, testing database code
+
+### Phase 3: Cross-Referencing & Integration
+
+- [ ] **Create pattern index:** `docs/patterns/README.md` with overview and links to all patterns
+- [ ] **Update micro-lessons:** Add "Promoted to Pattern" badges to lessons synthesized into patterns
+- [ ] **Create gaps report:** Identify areas with no documented learnings
+- [ ] **Generate usage analytics:** Which patterns have most supporting micro-lessons? Which patterns are most recent?
+
+### Phase 4: LLM Optimization
+
+- [ ] **Optimize for LLM consumption:** Clear headings and structure, code examples with language tags, consistent formatting, internal links for navigation
+- [ ] **Create pattern summaries:** One-line summary for each pattern, use cases and anti-patterns, quick reference tables
+
+## Acceptance Criteria
+
+- [ ] All 123 micro-lessons analyzed and categorized
+- [ ] 6-8 pattern guides created in `docs/patterns/`
+- [ ] Each pattern guide has: Overview, 3-5 concrete examples from micro-lessons, code samples, links back to source micro-lessons, use cases and anti-patterns
+- [ ] Pattern index (`docs/patterns/README.md`) created
+- [ ] Cross-references between patterns and lessons
+- [ ] Gaps report identifying missing knowledge areas
+- [ ] All markdown formatting follows project standards
+
+🚀 **Impact:** Transforms 123 scattered learnings into 8 searchable, actionable pattern guides.
+
+================================================================================
+DELEGATION PROMPT #6: Issue #362
+================================================================================
+Title: Improve type safety by eliminating 'any' types
+Repository: Shredvardson/dl-starter
+Issue: https://github.com/Shredvardson/dl-starter/issues/362
+
+Task:
+Eliminate `any` types across the codebase and improve type safety, particularly in Skills implementations and command execution logic.
+
+**Priority:** MEDIUM - Improves code quality, prevents runtime errors, enhances LLM code generation
+
+## Context
+
+- **Current State:** 50+ instances of `: any` or `<any>` found in codebase
+- **Most Affected:** Skills implementations in `apps/claude-agent/src/skills/`
+- **Impact:** Type safety issues, potential runtime errors, poor IDE support
+- **Goal:** Strict typing with proper type definitions
+
+## Tasks
+
+### 1. Fix Skills Implementation Types
+
+**Files:** `apps/claude-agent/src/skills/*.ts`
+
+Skills with `any` types:
+- [ ] `bash.ts` - Command execution results
+- [ ] `read.ts` - File reading arguments
+- [ ] `glob.ts` - Pattern matching arguments
+- [ ] `grep.ts` - Search arguments
+- [ ] `web-search.ts` - API response types
+
+**For each Skill:**
+- [ ] Define strict input schema types (use Zod)
+- [ ] Define strict output types
+- [ ] Add return type annotations to all functions
+- [ ] Type command execution results properly
+- [ ] Add JSDoc type annotations where needed
+
+### 2. Create Skill Type Definitions
+
+**File:** `apps/claude-agent/src/skills/types.ts`
+
+- [ ] Create base `Skill` interface
+- [ ] Define common types: `SkillInput`, `SkillOutput<T>`, `SkillError`, `CommandResult`
+- [ ] Create discriminated union for all Skills
+
+### 3. Fix Command Execution Types
+
+- [ ] Create `ExecResult` interface for command outputs
+- [ ] Implement `safeExec()` function with proper typing
+- [ ] Replace all `any` command results with typed results
+
+### 4. Add Type Annotations to Weak Inference
+
+- [ ] Fix functions with implicit `any` return types
+- [ ] Add types to arrow functions with unclear parameter types
+- [ ] Add type annotations to object properties
+- [ ] Fix array operations that lose type information
+
+### 5. Improve JSDoc Type Annotations
+
+- [ ] Add comprehensive JSDoc to functions where TypeScript inference is weak
+- [ ] Include parameter types, return types, and error conditions
+
+### 6. Enable Stricter TypeScript Checks (Optional)
+
+Consider enabling in `tsconfig.json`:
+- `noImplicitAny`
+- `strictNullChecks`
+- `strictFunctionTypes`
+- `noImplicitThis`
+
+## Acceptance Criteria
+
+- [ ] All Skills have strict input/output types (no `any`)
+- [ ] Command execution results are properly typed
+- [ ] Type definitions file created (`skills/types.ts`)
+- [ ] All functions have explicit return types
+- [ ] JSDoc annotations added where TypeScript inference is weak
+- [ ] TypeScript compilation succeeds with no `any` errors
+- [ ] IDE autocomplete works correctly for all Skills
+- [ ] All tests still pass
+
+💡 **Tip:** Start with one Skill (e.g., `bash.ts`) as a template, then apply the pattern to others.
+
+🎯 **Benefit:** Improved IDE support, catch errors at compile-time, better LLM code suggestions.
+
+================================================================================
+END OF DELEGATION PROMPTS
+================================================================================

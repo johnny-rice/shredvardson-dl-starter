@@ -33,9 +33,9 @@ test.describe('Password Reset Flow - Request Reset', () => {
     await page.click('button[type="submit"]');
 
     // Should show success message
-    await expect(
-      page.locator('text=/check your email for a password reset link/i')
-    ).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('text=/check your email for a password reset link/i')).toBeVisible({
+      timeout: 10000,
+    });
 
     // Success message should have proper accessibility
     const successMessage = page.locator('output[aria-live="polite"]');

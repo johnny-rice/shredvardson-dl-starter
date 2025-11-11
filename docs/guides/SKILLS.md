@@ -21,12 +21,14 @@ Comprehensive guide to the Skills system in dl-starter - a progressive disclosur
 ### What Problem Do Skills Solve?
 
 Traditional approach to AI-assisted development:
+
 - **Verbose prompts**: 5,000+ tokens per workflow
 - **Context pollution**: Every detail loaded every time
 - **Inconsistency**: Manual workflows prone to errors
 - **Poor UX**: Users memorize complex commands
 
 Skills approach:
+
 - **Progressive disclosure**: Load only what's needed (Tier 1 → 2 → 3)
 - **Token efficiency**: 65% average token savings
 - **Automation**: Scripts handle repetitive tasks
@@ -86,6 +88,7 @@ scripts/skills/                 # Executable bash scripts
 ### Definition
 
 **Skills** are automated workflows that combine:
+
 1. **Progressive disclosure docs** (`.claude/commands/*.md`)
 2. **Executable scripts** (`scripts/skills/*.sh`)
 3. **LLM orchestration** (Claude Code integration)
@@ -139,12 +142,14 @@ User: /git branch Issue #123: Add dark mode
 **Why Progressive Disclosure?**
 
 Traditional approach loads everything:
+
 ```
 User: "Create a feature branch"
 LLM Context: 5,000 tokens (entire git workflow guide)
 ```
 
 Progressive approach loads on-demand:
+
 ```
 User: "/git branch Issue #123"
 Tier 1: 50 tokens (metadata)
@@ -419,6 +424,7 @@ Claude: Lists all available slash commands with descriptions
 #### `/git` - Git Workflow Automation
 
 **Actions:**
+
 - `branch <issue>` - Create feature branch from issue
 - `commit [message]` - Smart commit with conventions
 - `pr create` - Create PR with template
@@ -439,6 +445,7 @@ Claude: Lists all available slash commands with descriptions
 #### `/db` - Database Operations
 
 **Actions:**
+
 - `migrate create <name>` - Create new migration
 - `migrate apply` - Apply pending migrations
 - `migrate validate` - Validate migration syntax
@@ -456,6 +463,7 @@ Claude: Lists all available slash commands with descriptions
 #### `/test` - Testing Workflows
 
 **Actions:**
+
 - `unit` - Run unit tests
 - `e2e` - Run E2E tests
 - `coverage` - Generate coverage report
@@ -473,6 +481,7 @@ Claude: Lists all available slash commands with descriptions
 #### `/spec` - Specification Analysis
 
 **Actions:**
+
 - `specify` - Create spec file from description
 - `plan` - Generate implementation plan from spec
 - `tasks` - Break down spec into tasks
@@ -487,6 +496,7 @@ Claude: Lists all available slash commands with descriptions
 #### `/code` - Code Quality
 
 **Actions:**
+
 - `review` - Review current changes
 - `lint` - Run linters
 - `format` - Format code
@@ -502,6 +512,7 @@ Claude: Lists all available slash commands with descriptions
 #### `/design` - Design System
 
 **Actions:**
+
 - `audit` - Audit components for design system compliance
 - `generate <component>` - Generate component from design
 - `tokens` - List design tokens
@@ -550,6 +561,7 @@ Claude:
 ### When to Create a Skill
 
 Create a Skill when:
+
 - ✅ Workflow is repeated frequently (>3 times)
 - ✅ Process has clear steps (automatable)
 - ✅ High token cost (>1,000 tokens traditionally)
@@ -557,6 +569,7 @@ Create a Skill when:
 - ✅ Users would benefit from discoverability
 
 Don't create a Skill for:
+
 - ❌ One-off tasks
 - ❌ Highly variable workflows (no clear pattern)
 - ❌ Simple operations (<200 tokens)
@@ -566,6 +579,7 @@ Don't create a Skill for:
 #### 1. Plan the Skill
 
 **Define:**
+
 - **Name**: Short, memorable (e.g., `/deploy`, `/lint`)
 - **Category**: workflow, testing, database, code, etc.
 - **Actions**: Sub-commands (e.g., `start`, `stop`, `status`)
@@ -810,6 +824,7 @@ Claude: Executes script, parses JSON output, presents results
 ### Best Practices
 
 **Scripts:**
+
 - ✅ Use `set -euo pipefail` for safety
 - ✅ Return JSON for structured output
 - ✅ Validate inputs, provide helpful errors
@@ -817,12 +832,14 @@ Claude: Executes script, parses JSON output, presents results
 - ✅ Add `--help` flag for documentation
 
 **Commands:**
+
 - ✅ Keep Tier 2 concise (≤500 tokens)
 - ✅ Include examples for every action
 - ✅ Document output format
 - ✅ Link to Tier 3 if needed
 
 **Testing:**
+
 - ✅ Test all actions
 - ✅ Test error handling
 - ✅ Validate JSON output
@@ -1050,6 +1067,7 @@ git add -u
 ### Continuous Validation
 
 Skills ensure consistency:
+
 - **Git workflow**: Branch naming, commit messages, PR templates
 - **Testing**: Coverage thresholds, test performance
 - **Database**: Migration validation, RLS policies
@@ -1062,11 +1080,13 @@ Skills ensure consistency:
 ### How Claude Code Uses Skills
 
 **1. Discovery:**
+
 - Claude Code reads `.claude/commands/` directory
 - Loads command metadata (Tier 1)
 - Makes commands available via slash syntax
 
 **2. Invocation:**
+
 ```
 User: /git branch Issue #123
 ↓
@@ -1077,6 +1097,7 @@ Claude Code:
 ```
 
 **3. Execution:**
+
 ```
 Claude Code:
 4. Executes script
@@ -1085,6 +1106,7 @@ Claude Code:
 ```
 
 **4. Presentation:**
+
 ```
 Claude Code:
 7. Formats output for user
@@ -1119,6 +1141,7 @@ Total: 550 tokens (89% savings)
 ### Progressive Loading
 
 **Scenario 1: Pure Automation**
+
 ```
 User: /git branch Issue #123
 Tier 1: 50 tokens (metadata)
@@ -1128,6 +1151,7 @@ Savings: 89%
 ```
 
 **Scenario 2: LLM-Assisted**
+
 ```
 User: /spec plan docs/specs/feature.md
 Tier 1: 50 tokens
@@ -1172,6 +1196,7 @@ Savings: 62%
 **Symptoms**: `/skill-name` not recognized
 
 **Solution**:
+
 ```bash
 # Verify command file exists
 ls -la .claude/commands/skill-name.md
@@ -1191,6 +1216,7 @@ version: 1.0.0
 **Symptoms**: Script returns errors
 
 **Solution**:
+
 ```bash
 # Test script directly
 bash scripts/skills/skill-name.sh action args
@@ -1207,6 +1233,7 @@ bash -x scripts/skills/skill-name.sh action args
 **Symptoms**: JSON parsing errors
 
 **Solution**:
+
 ```bash
 # Validate JSON manually
 bash scripts/skills/skill-name.sh action | jq .
@@ -1223,6 +1250,7 @@ jq -n --arg value "data" '{ key: $value }'
 **Symptoms**: BATS tests fail
 
 **Solution**:
+
 ```bash
 # Run tests with verbose output
 bats -t scripts/skills/__tests__/skill.bats
@@ -1239,6 +1267,7 @@ source scripts/skills/__tests__/test_helper/common.bash
 **Symptoms**: Skill uses more tokens than expected
 
 **Solution**:
+
 - Move implementation details to Tier 3
 - Keep Tier 2 under 500 tokens
 - Use scripts for automation (not LLM)
@@ -1249,6 +1278,7 @@ source scripts/skills/__tests__/test_helper/common.bash
 **Symptoms**: Skills take >5s to execute
 
 **Solution**:
+
 ```bash
 # Profile script execution
 time bash scripts/skills/skill-name.sh action

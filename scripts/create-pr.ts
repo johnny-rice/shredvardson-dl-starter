@@ -16,7 +16,11 @@ const run = (command: string): string => {
       .toString()
       .trim();
   } catch (error: unknown) {
-    const e = error as { stderr?: { toString?: () => string }; stdout?: { toString?: () => string }; message?: string };
+    const e = error as {
+      stderr?: { toString?: () => string };
+      stdout?: { toString?: () => string };
+      message?: string;
+    };
     const stderr = e?.stderr?.toString?.() ?? '';
     const stdout = e?.stdout?.toString?.() ?? '';
     const msg = e?.message ?? String(e);
@@ -161,7 +165,10 @@ async function main() {
     ).trim();
     console.log(`✅ PR created: ${prUrl}`);
   } catch (error: unknown) {
-    const errorObj = error as { stderr?: { toString?: () => string }; stdout?: { toString?: () => string } };
+    const errorObj = error as {
+      stderr?: { toString?: () => string };
+      stdout?: { toString?: () => string };
+    };
     const stderr = errorObj?.stderr?.toString?.() ?? '';
     const stdout = errorObj?.stdout?.toString?.() ?? '';
     console.error(`❌ Failed to create PR:\n${stderr || stdout || error}`);
