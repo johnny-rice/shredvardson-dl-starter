@@ -10,7 +10,7 @@
 
 1. `pnpm i`
 2. `pnpm tsx scripts/new-app.ts`
-3. Fill `docs/product/PRD.md` MVP scope (acceptance + anti-goals)
+3. Fill `docs/PRD.md` MVP scope (acceptance + anti-goals)
 4. `pnpm tsx scripts/starter-doctor.ts`
 5. `pnpm turbo run dev --filter=<APP_SLUG>`
 6. Plan → Scaffold Tests → Implement → Prepare PR (see `/prompts/tasks`)
@@ -20,7 +20,7 @@
 1. `pnpm i`
 2. `pnpm tsx scripts/new-repo-from-template.ts`
 3. `cd ../<APP_SLUG> && pnpm i`
-4. Fill `docs/product/PRD.md` MVP scope
+4. Fill `docs/PRD.md` MVP scope
 5. `pnpm tsx scripts/starter-doctor.ts`
 6. `pnpm dev`
 
@@ -140,12 +140,39 @@ Documentation that **evolves with your codebase**, not against it.
 - **Micro-Lessons**: 90-second notes on "gotchas" you encountered
 - **Heat Ranking**: Most useful lessons rise to Top-10 automatically
 - **ADR System**: Architectural decisions with full traceability
+- **Pattern Synthesis**: 123+ micro-lessons synthesized into 8 searchable pattern guides (bash safety, git workflows, testing, security, CI/CD, React, TypeScript, database)
 
 **Unlike static docs**, the micro-lesson system prevents knowledge rot:
 
 - Old lessons fade (recency decay)
 - Useful lessons get boosted (usage tracking)
 - No single lesson monopolizes the top (capped contribution)
+- Recurring patterns promoted to "Recipes" for reusability
+
+**Knowledge Extraction Workflow**: The `/ops:learning-capture` command captures solutions as micro-lessons automatically. Over time, these lessons are analyzed and synthesized into comprehensive pattern guides in `docs/patterns/`.
+
+### 🚀 Claude Code Web Delegation
+
+**Maximize productivity by running 6+ tasks in parallel** using Claude Code Web.
+
+When you have multiple independent tasks (tests, documentation, type safety improvements), delegate them to Claude Code Web for parallel execution:
+
+1. **Create GitHub issues** with the `claude-web` label
+2. **Generate delegation prompts** using `/git:batch-delegate`
+3. **Copy prompts to clipboard** - one per task
+4. **Paste into Claude Code Web** - run all 6+ simultaneously
+
+**Example batch**: Testing (3 tasks), documentation (2 tasks), type safety (1 task) = **40-52 hours of work done in parallel**.
+
+**What to delegate**:
+- ✅ Test coverage gaps (unit, E2E, integration)
+- ✅ Documentation generation (guides, API docs, pattern synthesis)
+- ✅ Type safety improvements (eliminating `any` types)
+- ✅ Component JSDoc generation
+- ✅ Knowledge extraction (micro-lessons → pattern guides)
+- ❌ Core business logic (keep in main Claude Code session)
+
+See [delegation-packages/](delegation-packages/) for example prompts and [.claude/commands/git/batch-delegate.md](.claude/commands/git/batch-delegate.md) for the complete workflow.
 
 ### 🏗️ Two Skill Workflows
 
@@ -249,7 +276,8 @@ See [Database Recipe](docs/recipes/db.md) for the complete workflow.
 | Feature                | create-next-app | vercel/commerce | **This Starter**                       |
 | ---------------------- | --------------- | --------------- | -------------------------------------- |
 | AI Collaboration Tools | ❌              | ❌              | ✅ 5 discovery commands + 11 Skills    |
-| Self-Learning Docs     | ❌              | ❌              | ✅ Micro-lessons + heat ranking        |
+| Claude Web Delegation  | ❌              | ❌              | ✅ Parallel task execution (6+ tasks)  |
+| Self-Learning Docs     | ❌              | ❌              | ✅ Micro-lessons + pattern synthesis   |
 | Automated PR Fixes     | ❌              | ❌              | ✅ `/git:fix-pr`                       |
 | Testing Infrastructure | ⚠️ Basic        | ⚠️ Partial      | ✅ Full (70% coverage)                 |
 | Database Migrations    | ❌              | ⚠️ Basic        | ✅ Validated + seeded                  |
@@ -261,6 +289,7 @@ See [Database Recipe](docs/recipes/db.md) for the complete workflow.
 ## Docs for LLMs
 
 - `CLAUDE.md` (operational workflow index + rules)
+- `docs/PRD.md` (product requirements for DL Starter template)
 - `docs/llm/context-map.json` (monorepo routing map)
 - `docs/llm/STARTER_MANIFEST.json` (what to customize per app)
 - `docs/llm/DESIGN_CONSTITUTION.md` (architecture binding rules)

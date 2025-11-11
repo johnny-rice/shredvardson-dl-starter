@@ -1,5 +1,7 @@
 # Product Requirements Document: DL Starter Template
 
+> **📌 Note:** This is the PRD for the **DL Starter template itself** (the meta-product). When creating a new app from this template, you'll create your own PRD specific to that app.
+
 **Version**: 1.0
 **Last Updated**: 2025-11-09
 **Status**: Active
@@ -94,6 +96,7 @@ A **Next.js monorepo starter template** that provides:
 - **Command discovery protocol** (check for custom commands before native tools)
 - **Sub-agent architecture** (specialized agents for template-based tasks)
 - **Spec-driven workflow** (`/specify`, `/plan`, `/tasks` with Socratic design discovery)
+- **Claude Code Web delegation** (parallel task execution for tests, docs, type safety - 40-52 hours in batch)
 
 ### Documentation System ✅
 
@@ -102,6 +105,8 @@ A **Next.js monorepo starter template** that provides:
 - **Testing guides** (comprehensive philosophy and troubleshooting)
 - **Recipe docs** (database, components, common workflows)
 - **Design system docs** (component patterns, token usage, accessibility guidelines)
+- **Micro-lessons system** (123+ lessons synthesized into 8 pattern guides)
+- **Delegation workflow** (batch task generation in `delegation-packages/` directory)
 
 ### Security & Best Practices ✅
 
