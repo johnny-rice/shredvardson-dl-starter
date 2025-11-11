@@ -9,7 +9,52 @@ interface CheckResult {
   status: 'pass' | 'fail' | 'warn';
   message: string;
   fix?: string;
-  auditInfo?: unknown;
+  auditInfo?: AuditInfo;
+}
+
+interface AuditInfo {
+  rule: string;
+  status: string;
+  prNumber: number;
+  prUrl: string;
+  usedLabel?: string;
+  prAuthor?: string;
+  [key: string]: unknown;
+}
+
+interface GithubLabel {
+  name: string;
+  [key: string]: unknown;
+}
+
+interface WorkspacePackage {
+  name: string;
+  dir: string;
+  scripts: Record<string, string>;
+}
+
+interface CommandInventory {
+  generated: string;
+  packages: Record<string, { scripts: Record<string, string>; dir: string }>;
+  commandDocs: Record<string, { scripts: string[]; paths: string[]; anchors: string[] }>;
+  orphanedDocs: string[];
+  turboTasks: Record<string, unknown>;
+}
+
+interface DoctorAllowlist {
+  missingScripts?: string[];
+  missingPaths?: string[];
+  missingAnchors?: string[];
+  [key: string]: unknown;
+}
+
+interface ExecError {
+  stderr?: { toString(): string };
+  stdout?: { toString(): string };
+}
+
+function isExecError(e: unknown): e is ExecError {
+  return typeof e === 'object' && e !== null && ('stderr' in e || 'stdout' in e);
 }
 
 function checkLearningsIndex(): CheckResult {
@@ -165,8 +210,7 @@ function checkDisplaySuites(): CheckResult {
       status: 'pass',
       message: 'All @display suites properly isolated',
     };
-  } catch (error: any) {
-    const _output = error.stdout || error.message || 'Unknown error';
+  } catch (error: unknown) {
     return {
       name: 'Display Suites',
       status: 'fail',
@@ -289,11 +333,12 @@ function checkEnvironment(): CheckResult {
   // First validate environment schema
   try {
     require('../apps/web/src/lib/env').env;
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     return {
       name: 'Environment Check',
       status: 'fail',
-      message: `Environment validation failed: ${error.message}`,
+      message: `Environment validation failed: ${errorMessage}`,
       fix: 'Check .env.local values against schema in apps/web/src/lib/env.ts',
     };
   }
@@ -759,7 +804,7 @@ function generateReportMarkdown(results: CheckResult[]): string {
       // Show top issues with quick fixes
       const allIssues = [...issues.fails, ...issues.warns].slice(0, 5);
       for (const issue of allIssues) {
-        const statusIcon = issue.status === 'fail' ? '❌' : '⚠️';
+        const statusIcon = issue.status === 'fail' ? '❌' : '��️';
         report += `${statusIcon} **${issue.message}**\n`;
         if (issue.fix) {
           report += `   💡 *Fix: ${issue.fix}*\n`;
@@ -825,13 +870,13 @@ function generateReportMarkdown(results: CheckResult[]): string {
   return report;
 }
 
-function generateCommandInventory(): any {
-  const inventory = {
+function generateCommandInventory(): CommandInventory {
+  const inventory: CommandInventory = {
     generated: new Date().toISOString(),
     packages: {} as Record<string, { scripts: Record<string, string>; dir: string }>,
     commandDocs: {} as Record<string, { scripts: string[]; paths: string[]; anchors: string[] }>,
     orphanedDocs: [] as string[],
-    turboTasks: {} as Record<string, any>,
+    turboTasks: {} as Record<string, unknown>,
   };
 
   // Package scripts inventory
@@ -932,24 +977,24 @@ function generateCommandInventory(): any {
   return inventory;
 }
 
-function loadDoctorAllowlist(): any {
+function loadDoctorAllowlist(): DoctorAllowlist {
   const allowlistPath = resolve('.doctor-allowlist.json');
   if (!existsSync(allowlistPath)) return {};
 
   try {
-    return JSON.parse(readFileSync(allowlistPath, 'utf8'));
+    return JSON.parse(readFileSync(allowlistPath, 'utf8')) as DoctorAllowlist;
   } catch {
     return {};
   }
 }
 
-function loadWorkspacePackages(): any[] {
+function loadWorkspacePackages(): WorkspacePackage[] {
   // Simplified version for inventory - reuse the logic from checkCommandDocs
   const candidates = [
     ...safeListDirs('apps').map((d) => `apps/${d}`),
     ...safeListDirs('packages').map((d) => `packages/${d}`),
   ];
-  const out: any[] = [];
+  const out: WorkspacePackage[] = [];
 
   for (const dir of candidates) {
     const pj = join(dir, 'package.json');
@@ -976,7 +1021,7 @@ function loadWorkspacePackages(): any[] {
   return out;
 }
 
-function loadTurboPipeline(): Record<string, any> {
+function loadTurboPipeline(): Record<string, unknown> {
   try {
     const turboPath = resolve('turbo.json');
     if (!existsSync(turboPath)) return {};
@@ -1259,12 +1304,14 @@ function checkRestrictedPaths(): CheckResult {
       status: 'pass',
       message: '🤖 Bot branch respects path restrictions',
     };
-  } catch (error: any) {
-    const details = (error?.stderr?.toString?.() || error?.stdout?.toString?.() || '')
-      .split('\n')
-      .slice(-5)
-      .join(' ')
-      .trim();
+  } catch (error: unknown) {
+    const details = isExecError(error)
+      ? (error.stderr?.toString() || error.stdout?.toString() || '')
+          .split('\n')
+          .slice(-5)
+          .join(' ')
+          .trim()
+      : '';
     return {
       name: 'Restricted Paths',
       status: 'fail',
@@ -1326,7 +1373,7 @@ function checkAILabelHygiene(): CheckResult {
       message: `🤖 Bot branch AI artifacts detected - verify PR has labels: ${missingLabels.join(', ')}`,
       fix: 'Ensure workflows apply correct labels when AI reviews complete',
     };
-  } catch (_error: any) {
+  } catch (_error: unknown) {
     return {
       name: 'AI Label Hygiene',
       status: 'warn',
@@ -1999,7 +2046,7 @@ function _checkForOverrideLabel(): boolean {
         env,
       });
       const labels = JSON.parse(labelsJson).labels || [];
-      const hasOverride = labels.some((label: any) => {
+      const hasOverride = labels.some((label: GithubLabel) => {
         const labelName = (label.name || '').toLowerCase();
         return labelName === 'override:adr' || labelName === 'security:break-glass';
       });
@@ -2029,7 +2076,7 @@ function checkForOverrideLabelWithAudit(): {
   hasOverride: boolean;
   usedLabel?: string;
   prAuthor?: string;
-  auditInfo?: any;
+  auditInfo?: AuditInfo;
 } {
   const prNumber =
     process.env.GITHUB_PR_NUMBER ||
@@ -2094,7 +2141,7 @@ function checkForOverrideLabelWithAudit(): {
 
       // Check for manual override labels
       const overrideLabels = ['override:adr', 'security:break-glass'];
-      const foundLabel = labels.find((label: any) => {
+      const foundLabel = labels.find((label: GithubLabel) => {
         const labelName = (label.name || '').toLowerCase();
         return overrideLabels.includes(labelName);
       });

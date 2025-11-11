@@ -23,6 +23,9 @@ import type {
   TestResponse,
 } from './types.js';
 
+/** Union type for all possible agent findings */
+type AgentFindings = ResearchResponse | SecurityResponse | TestResponse | MultiAgentFindings;
+
 /**
  * Main orchestration function
  *
@@ -230,7 +233,7 @@ async function promiseWithTimeout<T>(promise: Promise<T>, timeoutMs: number): Pr
  * @param findings - Agent findings
  * @returns Estimated token count
  */
-function estimateTokens(findings: any): number {
+function estimateTokens(findings: AgentFindings): number {
   const jsonString = JSON.stringify(findings);
   return Math.ceil(jsonString.length / 4);
 }
@@ -241,7 +244,7 @@ function estimateTokens(findings: any): number {
  * @param findings - Agent findings
  * @returns Confidence level
  */
-function extractConfidence(findings: any): ConfidenceLevel {
+function extractConfidence(findings: AgentFindings): ConfidenceLevel {
   if (findings && typeof findings === 'object' && 'confidence' in findings) {
     return findings.confidence as ConfidenceLevel;
   }

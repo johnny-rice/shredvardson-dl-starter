@@ -28,8 +28,11 @@ Handlebars.registerHelper('kebabCase', (str: string) => {
     .toLowerCase();
 });
 
-Handlebars.registerHelper('eq', (a: any, b: any) => a === b);
-Handlebars.registerHelper('gt', (a: any, b: any) => a > b);
+Handlebars.registerHelper('eq', (a: unknown, b: unknown) => a === b);
+Handlebars.registerHelper('gt', (a: unknown, b: unknown) => {
+  if (typeof a === 'number' && typeof b === 'number') return a > b;
+  return false;
+});
 
 interface GeneratedFile {
   path: string;
@@ -69,7 +72,7 @@ interface ComponentConfig {
     type: string;
     description: string;
     required?: boolean;
-    testValue?: any;
+    testValue?: unknown;
   }>;
   baseClasses?: string;
   componentDescription?: string;
@@ -83,12 +86,12 @@ interface ComponentConfig {
   needsContrastTest?: boolean;
   hasAriaLabel?: boolean;
   exampleContent?: string;
-  exampleProps?: Record<string, any>;
+  exampleProps?: Record<string, unknown>;
   usedTokens?: Array<{ token: string; description: string }>;
   patternFile?: string;
-  argTypes?: any[];
-  defaultArgs?: Record<string, any>;
-  requiredProps?: Array<{ name: string; testValue: any }>;
+  argTypes?: unknown[];
+  defaultArgs?: Record<string, unknown>;
+  requiredProps?: Array<{ name: string; testValue: unknown }>;
 }
 
 interface ComponentGenerationOutput {
@@ -492,14 +495,15 @@ async function generateComponent(args: string[]): Promise<ComponentGenerationOut
         ? ['Component is production-ready']
         : ['Apply suggested improvements', 'Run validation again'],
     };
-  } catch (error: any) {
-    console.error(`  ✗ Error: ${error.message}`);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error(`  ✗ Error: ${errorMessage}`);
     return {
       success: false,
       componentName,
       variant,
       files,
-      summary: `Failed to generate component: ${error.message}`,
+      summary: `Failed to generate component: ${errorMessage}`,
       nextSteps: ['Check error message', 'Ensure templates exist'],
     };
   }

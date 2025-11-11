@@ -15,8 +15,8 @@ const run = (command: string): string => {
     })
       .toString()
       .trim();
-  } catch (error) {
-    const e: any = error;
+  } catch (error: unknown) {
+    const e = error as { stderr?: { toString?: () => string }; stdout?: { toString?: () => string }; message?: string };
     const stderr = e?.stderr?.toString?.() ?? '';
     const stdout = e?.stdout?.toString?.() ?? '';
     const msg = e?.message ?? String(e);
@@ -160,9 +160,10 @@ async function main() {
       { encoding: 'utf-8' }
     ).trim();
     console.log(`✅ PR created: ${prUrl}`);
-  } catch (error: any) {
-    const stderr = error?.stderr?.toString?.() ?? '';
-    const stdout = error?.stdout?.toString?.() ?? '';
+  } catch (error: unknown) {
+    const errorObj = error as { stderr?: { toString?: () => string }; stdout?: { toString?: () => string } };
+    const stderr = errorObj?.stderr?.toString?.() ?? '';
+    const stdout = errorObj?.stdout?.toString?.() ?? '';
     console.error(`❌ Failed to create PR:\n${stderr || stdout || error}`);
     process.exit(1);
   } finally {

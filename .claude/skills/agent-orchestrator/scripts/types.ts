@@ -175,6 +175,18 @@ export interface SecurityResponse {
 }
 
 /**
+ * Test case structure for generated tests
+ */
+export interface TestCase {
+  /** Test name or description */
+  name: string;
+  /** Test file path */
+  file_path: string;
+  /** Test type (unit, integration, e2e, etc.) */
+  type: string;
+}
+
+/**
  * Test Generator response schema (stub for future implementation)
  */
 export interface TestResponse {
@@ -183,7 +195,7 @@ export interface TestResponse {
   /** Message about test generation status */
   message: string;
   /** Generated test cases (future) */
-  test_cases?: any[];
+  test_cases?: TestCase[];
 }
 
 /**
@@ -201,42 +213,42 @@ export interface MultiAgentFindings {
 /**
  * Type guard for ResearchResponse
  */
-export function isResearchResponse(obj: any): obj is ResearchResponse {
+export function isResearchResponse(obj: unknown): obj is ResearchResponse {
+  if (!obj || typeof obj !== 'object') return false;
+  const data = obj as Record<string, unknown>;
   return (
-    obj &&
-    typeof obj === 'object' &&
-    Array.isArray(obj.key_findings) &&
-    Array.isArray(obj.architecture_patterns) &&
-    Array.isArray(obj.recommendations) &&
-    Array.isArray(obj.code_locations) &&
-    Array.isArray(obj.external_references) &&
-    (obj.research_depth === 'shallow' || obj.research_depth === 'deep') &&
-    (obj.confidence === 'high' || obj.confidence === 'medium' || obj.confidence === 'low')
+    Array.isArray(data.key_findings) &&
+    Array.isArray(data.architecture_patterns) &&
+    Array.isArray(data.recommendations) &&
+    Array.isArray(data.code_locations) &&
+    Array.isArray(data.external_references) &&
+    (data.research_depth === 'shallow' || data.research_depth === 'deep') &&
+    (data.confidence === 'high' || data.confidence === 'medium' || data.confidence === 'low')
   );
 }
 
 /**
  * Type guard for SecurityResponse
  */
-export function isSecurityResponse(obj: any): obj is SecurityResponse {
+export function isSecurityResponse(obj: unknown): obj is SecurityResponse {
+  if (!obj || typeof obj !== 'object') return false;
+  const data = obj as Record<string, unknown>;
   return (
-    obj &&
-    typeof obj === 'object' &&
-    Array.isArray(obj.vulnerabilities) &&
-    Array.isArray(obj.rls_gaps) &&
-    Array.isArray(obj.recommendations) &&
-    (obj.confidence === 'high' || obj.confidence === 'medium' || obj.confidence === 'low')
+    Array.isArray(data.vulnerabilities) &&
+    Array.isArray(data.rls_gaps) &&
+    Array.isArray(data.recommendations) &&
+    (data.confidence === 'high' || data.confidence === 'medium' || data.confidence === 'low')
   );
 }
 
 /**
  * Type guard for TestResponse
  */
-export function isTestResponse(obj: any): obj is TestResponse {
+export function isTestResponse(obj: unknown): obj is TestResponse {
+  if (!obj || typeof obj !== 'object') return false;
+  const data = obj as Record<string, unknown>;
   return (
-    obj &&
-    typeof obj === 'object' &&
-    typeof obj.success === 'boolean' &&
-    typeof obj.message === 'string'
+    typeof data.success === 'boolean' &&
+    typeof data.message === 'string'
   );
 }

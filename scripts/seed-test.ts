@@ -87,11 +87,12 @@ export async function seedTest(config: SeedConfig = {}): Promise<SeedResult> {
     console.log(`\n✅ Test seeding complete in ${result.duration}ms`);
 
     return result;
-  } catch (error: any) {
-    result.errors.push(error.message);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    result.errors.push(errorMessage);
     result.duration = Date.now() - startTime;
 
-    console.error(`\n❌ Test seeding failed: ${error.message}`);
+    console.error(`\n❌ Test seeding failed: ${errorMessage}`);
 
     return result;
   }

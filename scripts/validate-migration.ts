@@ -103,9 +103,10 @@ export async function validateAllMigrations(): Promise<void> {
     let sql: string;
     try {
       sql = fs.readFileSync(filePath, 'utf-8');
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       console.log(`❌ ${file}`);
-      console.log(`   ERROR: Unable to read file - ${error.message}`);
+      console.log(`   ERROR: Unable to read file - ${errorMessage}`);
       hasErrors = true;
       continue;
     }

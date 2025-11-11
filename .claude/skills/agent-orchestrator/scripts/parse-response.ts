@@ -136,7 +136,7 @@ export function sanitizeError(error: Error | string): string {
  * @param requiredFields - Array of required field names
  * @returns True if all required fields exist, false otherwise
  */
-export function validateRequiredFields(obj: any, requiredFields: string[]): boolean {
+export function validateRequiredFields(obj: unknown, requiredFields: string[]): boolean {
   if (!obj || typeof obj !== 'object') {
     return false;
   }

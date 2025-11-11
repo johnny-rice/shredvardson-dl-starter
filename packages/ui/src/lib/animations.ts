@@ -145,6 +145,7 @@ export function getReducedMotionVariants(variants: Variants): Variants {
 
     // Handle function-based variants (common when using custom props)
     if (typeof variant === 'function') {
+      // biome-ignore lint/suspicious/noExplicitAny: Framer Motion library interop requires any for variant function signatures
       reduced[key] = ((custom?: any, current?: any, velocity?: any) => {
         const resolved = variant(custom, current, velocity);
         if (resolved && typeof resolved === 'object') {

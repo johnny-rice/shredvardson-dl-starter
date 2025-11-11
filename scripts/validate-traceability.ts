@@ -78,7 +78,7 @@ class TraceabilityValidator {
   }
 
   private validateMetadata(
-    data: any,
+    data: Record<string, unknown>,
     filename: string,
     expectedType: 'spec' | 'plan' | 'task'
   ): boolean {

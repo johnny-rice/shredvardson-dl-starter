@@ -17,6 +17,19 @@ import { createSafeComponentPath } from './utils.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Type definitions
+interface ViewerExample {
+  title: string;
+  description: string;
+  code: string;
+}
+
+interface ChartDataPoint {
+  name: string;
+  value: number;
+  [key: string]: string | number;
+}
+
 // Load component registry
 const registryPath = path.join(__dirname, '../component-registry.json');
 
@@ -438,7 +451,7 @@ describe('AreaChart', () => {
 import { DonutChart as TremorDonutChart } from "@tremor/react";
 
 export interface DonutChartProps {
-  data: Array<{ name: string; value: number; [key: string]: any }>;
+  data: Array<{ name: string; value: number; [key: string]: string | number }>;
   category?: string;
   index?: string;
   colors?: string[];
@@ -760,7 +773,7 @@ async function main() {
         'Add these examples to `apps/web/src/app/design/page.tsx` to showcase this component.\n\n';
       readmeContent += `## Import\n\n\`\`\`tsx\nimport { ${componentName} } from '@ui/components';\n\`\`\`\n\n`;
 
-      templates.viewerExamples.forEach((example: any, idx: number) => {
+      templates.viewerExamples.forEach((example: ViewerExample, idx: number) => {
         readmeContent += `## Example ${idx + 1}: ${example.title}\n\n`;
         readmeContent += `${example.description}\n\n`;
         readmeContent += `\`\`\`tsx\n<ComponentExample\n  title="${example.title}"\n  code={\`${example.code}\`}\n  onCopy={copyCode}\n  copied={copiedCode}\n>\n  {/* Add rendered example here */}\n</ComponentExample>\n\`\`\`\n\n`;

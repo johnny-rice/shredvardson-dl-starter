@@ -41,9 +41,10 @@ function validateEnvironment() {
 
       console.log('✅ Production safety checks passed');
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error('❌ Environment validation failed:');
-    console.error(error.message);
+    console.error(errorMessage);
     return false;
   }
 

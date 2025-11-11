@@ -9,9 +9,22 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
+interface ShadcnComponent {
+  path: string;
+  variants?: string[];
+  useCases?: string[];
+  [key: string]: unknown;
+}
+
+interface CustomComponent {
+  createdAt: string;
+  reason: string;
+  [key: string]: unknown;
+}
+
 interface ComponentRegistry {
-  shadcnComponents: Record<string, any>;
-  customComponents: Record<string, any>;
+  shadcnComponents: Record<string, ShadcnComponent>;
+  customComponents: Record<string, CustomComponent>;
   aliases: Record<string, string>;
   similarityGroups: Record<string, string[]>;
   domainSpecific: {
@@ -297,11 +310,12 @@ if (require.main === module) {
   try {
     const result = checkComponentExists(componentName);
     console.log(JSON.stringify(result, null, 2));
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     console.error(
       JSON.stringify(
         {
-          error: error.message,
+          error: errorMessage,
         },
         null,
         2

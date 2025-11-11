@@ -8,8 +8,8 @@ describe('RLS: User Data Isolation', () => {
   let adminClient: ReturnType<typeof createAdminClient>;
   let user1: TestUser;
   let user2: TestUser;
-  let user1Data: any;
-  let user2Data: any;
+  let user1Data: Record<string, unknown>;
+  let user2Data: Record<string, unknown>;
 
   beforeEach(async () => {
     // Create admin client for test setup

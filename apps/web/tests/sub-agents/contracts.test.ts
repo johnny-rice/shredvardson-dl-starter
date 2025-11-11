@@ -59,6 +59,7 @@ describe('Research Agent Contract', () => {
     };
 
     const result = await invokeAgent(agentType, input);
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic agent output requires any for test assertions
     const output = result.output as Record<string, any>;
 
     expect(result.output).toHaveProperty('key_findings');
@@ -97,6 +98,7 @@ describe('Research Agent Contract', () => {
     };
 
     const result = await invokeAgent(agentType, input);
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic agent output requires any for test assertions
     const output = result.output as Record<string, any>;
 
     // Check that referenced files exist
@@ -147,6 +149,7 @@ describe('Security Scanner Contract', () => {
     };
 
     const result = await invokeAgent(agentType, input);
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic agent output requires any for test assertions
     const output = result.output as Record<string, any>;
 
     expect(result.output).toHaveProperty('findings');
@@ -167,6 +170,7 @@ describe('Security Scanner Contract', () => {
     };
 
     const result = await invokeAgent(agentType, input);
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic agent output requires any for test assertions
     const output = result.output as Record<string, any>;
 
     if (output.findings.length > 0) {
@@ -236,6 +240,7 @@ describe('Test Generator Contract', () => {
     };
 
     const result = await invokeAgent(agentType, input);
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic agent output requires any for test assertions
     const output = result.output as Record<string, any>;
 
     expect(result.output).toHaveProperty('tests');
@@ -255,6 +260,7 @@ describe('Test Generator Contract', () => {
     };
 
     const result = await invokeAgent(agentType, input);
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic agent output requires any for test assertions
     const output = result.output as Record<string, any>;
 
     const generatedTest = output.tests[0];
@@ -323,6 +329,7 @@ describe('Refactor Analyzer Contract', () => {
     };
 
     const result = await invokeAgent(agentType, input);
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic agent output requires any for test assertions
     const output = result.output as Record<string, any>;
 
     expect(result.output).toHaveProperty('opportunities');
@@ -341,6 +348,7 @@ describe('Refactor Analyzer Contract', () => {
     };
 
     const result = await invokeAgent(agentType, input);
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic agent output requires any for test assertions
     const output = result.output as Record<string, any>;
 
     if (output.opportunities.length > 0) {
@@ -412,6 +420,7 @@ describe('Documentation Writer Contract', () => {
     };
 
     const result = await invokeAgent(agentType, input);
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic agent output requires any for test assertions
     const output = result.output as Record<string, any>;
 
     expect(result.output).toHaveProperty('documentation');
@@ -429,6 +438,7 @@ describe('Documentation Writer Contract', () => {
     };
 
     const result = await invokeAgent(agentType, input);
+    // biome-ignore lint/suspicious/noExplicitAny: Dynamic agent output requires any for test assertions
     const output = result.output as Record<string, any>;
 
     const doc = output.documentation[0];
