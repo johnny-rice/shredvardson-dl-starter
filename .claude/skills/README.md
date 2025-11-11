@@ -83,6 +83,8 @@ Skills are the successor to slash commands, offering:
 - Generate TypeScript types
 - Execute deterministic scripts without context pollution
 
+→ **See comprehensive Skills documentation**: [docs/guides/SKILLS.md](../../docs/guides/SKILLS.md)
+
 **Usage**:
 
 ```bash

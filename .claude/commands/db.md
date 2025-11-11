@@ -109,3 +109,9 @@ This command simply routes the request to the appropriate Skill script.
 - Skill: `.claude/skills/supabase-integration/`
 - ADR: [002-skills-architecture.md](../../docs/adr/002-skills-architecture.md)
 - Patterns: [RLS_PATTERNS.md](../../docs/database/RLS_PATTERNS.md)
+
+**Comprehensive Documentation:**
+
+- [Complete Database Guide](../../docs/guides/DATABASE.md) - Supabase, migrations, RLS, and optimization
+- [RLS Implementation](../../docs/database/rls-implementation.md) - Row Level Security patterns
+- [RLS Optimization](../../docs/database/RLS_OPTIMIZATION.md) - Performance optimization techniques

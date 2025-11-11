@@ -92,3 +92,8 @@ This command routes the request to the appropriate Skill action.
 - Skill: `.claude/skills/test-scaffolder/`
 - ADR: [002-skills-architecture.md](../../docs/adr/002-skills-architecture.md)
 - Contract: [coverage-contract.md](../../docs/testing/coverage-contract.md)
+
+**Comprehensive Documentation:**
+
+- [Complete Testing Guide](../../docs/guides/TESTING.md) - Unit, E2E, database, and Skills testing
+- [Testing Guide (Detailed)](../../docs/testing/TESTING_GUIDE.md) - Additional testing patterns
