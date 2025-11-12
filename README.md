@@ -4,7 +4,81 @@
 
 **Not just a template—a development methodology.** Two-lane workflow (simple vs. spec-driven), slash commands for common tasks, and a micro-lesson system that gets smarter with every PR.
 
-## New App from Template (choose mode):
+## Prerequisites
+
+Before getting started, ensure you have the following installed:
+
+- ✅ **Node.js 20+** - Use [nvm](https://github.com/nvm-sh/nvm) for easy version switching
+
+  ```bash
+  nvm install 20 && nvm use 20
+  ```
+
+- ✅ **pnpm 9+** - Fast, disk-efficient package manager
+
+  ```bash
+  npm install -g pnpm@latest
+  ```
+
+- ✅ **Docker** - Required for local Supabase (database)
+  - Install [Docker Desktop](https://docs.docker.com/get-docker/) and ensure it's running
+- ✅ **Git** - Configure user name and email
+
+  ```bash
+  git config --global user.name "Your Name"
+  git config --global user.email "you@example.com"
+  ```
+
+- ✅ **Supabase CLI** - For database management
+
+  ```bash
+  pnpm install -g supabase
+  ```
+
+**Validate your setup:**
+
+```bash
+pnpm preflight:check
+```
+
+This command checks all prerequisites and guides you through any missing setup.
+
+## Quick Start
+
+1. **Clone and install dependencies**
+
+   ```bash
+   git clone <repo-url>
+   cd dl-starter
+   pnpm install
+   ```
+
+2. **Set up environment variables**
+
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your configuration
+   ```
+
+3. **Start Supabase (database)**
+
+   ```bash
+   pnpm db:start
+   ```
+
+   This starts local Supabase on `http://localhost:54321` (Studio at `http://localhost:54323`)
+
+4. **Start development server**
+
+   ```bash
+   pnpm dev
+   ```
+
+   Visit `http://localhost:3000` to see your app
+
+**Estimated setup time:** 15-20 minutes (first time)
+
+## New App from Template (choose mode)
 
 **Monorepo (portfolio)** – new app inside this repo
 
@@ -165,6 +239,7 @@ When you have multiple independent tasks (tests, documentation, type safety impr
 **Example batch**: Testing (3 tasks), documentation (2 tasks), type safety (1 task) = **40-52 hours of work done in parallel**.
 
 **What to delegate**:
+
 - ✅ Test coverage gaps (unit, E2E, integration)
 - ✅ Documentation generation (guides, API docs, pattern synthesis)
 - ✅ Type safety improvements (eliminating `any` types)

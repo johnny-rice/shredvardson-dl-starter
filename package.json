@@ -5,10 +5,6 @@
   "engines": {
     "node": ">=20"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "prepare": "lefthook install",
     "dev": "turbo run dev --filter=web",
@@ -66,6 +62,7 @@
     "ai-review": "tsx scripts/ai-review-analyzer.ts",
     "ai-review:report": "tsx scripts/ai-review-analyzer.ts --report",
     "preflight": "tsx scripts/preflight.ts",
+    "preflight:check": "tsx scripts/check-prerequisites.ts",
     "constitution:update": "tsx scripts/update-constitution-checksum.ts",
     "check:react-versions": "node scripts/check-react-versions.mjs",
     "preflight:placeholders": "bash -lc 'PATTERN=\"{{\"; PATTERN+=\"PLACEHOLDER\"; PATTERN+=\"}}\"; ! grep -R \"$PATTERN\" . -n --exclude-dir=node_modules --exclude-dir=.turbo'",
